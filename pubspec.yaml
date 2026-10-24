@@ -1,0 +1,13 @@
+name: hermanas_aventura
+version: 0.1.1+2
+description: Prototipo gráfico Android de las dos hermanas.
+publish_to: none
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
