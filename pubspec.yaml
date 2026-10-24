@@ -1,13 +1,19 @@
 name: hermanas_aventura
-version: 0.1.1+2
-description: Prototipo gráfico Android de las dos hermanas.
+description: Hermanas Pixel - Demo Android de plataformas pixel art
 publish_to: none
+version: 0.7.0+14
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:
   flutter:
     sdk: flutter
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/
+    - assets/images/level_pixel.png
+    - assets/images/crate.png
+    - assets/images/coin.png
+    - assets/images/frames/
