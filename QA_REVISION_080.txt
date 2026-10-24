@@ -1,0 +1,24 @@
+LAS AVENTURAS DE MIREN Y SARA 0.8.0 — REVISION DE PREENTREGA
+
+VERIFICADO LOCALMENTE:
+- 12 PNG originales (4 por personaje) idénticos byte a byte a 0.7.1.
+- Fondo del edificio inicial idéntico byte a byte a 0.7.1.
+- Pantalla de inicio usa la composición aprobada con título dentro de cuadro y sin coche superpuesto.
+- Recursos del perro: 8 ficheros RGBA, todos dentro de límites, sin figuras cortadas en bordes.
+- Fondos independientes: inicio, Ayuntamiento, Estafeta, Plaza del Castillo.
+- Logo TWC obtenido de una referencia visual de la pantalla TIKU; comprobar en Android.
+- Icono Android 48/72/96/144/192 px y adaptativo.
+- Archivos PNG íntegros con validación CRC y datos comprimidos.
+- Llaves y paréntesis de Dart equilibrados según comprobación estructural básica.
+- Código con selección previa a capítulo, dos corazones, guardado persistente, padre solo en intro y ataque del perro.
+- Los tests y tareas del workflow están declarados en el ZIP.
+
+NO VERIFICADO EN ESTE ENTORNO:
+- Compilación Flutter real (SDK Flutter y emulador no disponibles).
+- Resultado exacto de animaciones, colisiones y rendimiento en un Android concreto.
+- Persistencia después de actualizaciones firmadas con claves diferentes (requiere firma estable).
+
+CONOCIDAS LIMITACIONES ARTISTICAS:
+- Escenarios de Ayuntamiento/Estafeta/Plaza creados a partir de ilustraciones conceptuales recortadas, y su paralaje es limitado.
+- Ataques de Miren/Sara con proyectiles y efectos; no hay nuevas poses detalladas de lanzar balón/peine.
+- El perro usa varias poses distinguidas y estrellas/retroceso, no animación artesanal de ocho fotogramas por estado.

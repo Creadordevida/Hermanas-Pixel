@@ -1,67 +1,59 @@
-**Corrección 0.7.1:** solucionado error de tipos en `lib/main.dart` (velocidad del balón). GitHub informó de una única incidencia en `flutter analyze` para la versión 0.7.0. **No se ha ejecutado Flutter localmente**, por lo que falta verificar el resultado del workflow.
+# Las aventuras de Miren y Sara — prueba Android 0.8.0
 
-# Hermanas Pixel 0.7.1 — demo gráfica Android
+**Proyecto Flutter, diseñado para instalarse en Android mediante GitHub Actions.**
 
-Proyecto Flutter de plataformas 2D para **Android horizontal**, preparado para compilarse con GitHub Actions. No es un mockup de imágenes fijas: los actores, monedas, cajas y balón se renderizan como entidades independientes.
+## Base y fidelidad visual
 
-## Cambios sobre las versiones 0.6.x
+Esta entrega CONSERVA SIN CAMBIOS los doce PNG originales de los personajes y el fondo inicial de la **0.7.1**, la versión que funcionó en el móvil y cuya calidad gráfica fue aprobada. Las poses no se han sustituido por figuras simplificadas. La pantalla de inicio utiliza la composición aprobada con el edificio gris, Miren, Sara y el padre sin coche superpuesto. El título queda completo dentro del área horizontal.
 
-- **12 sprites RGBA nuevos**: 4 poses por personaje (espera, 2 pasos diferentes y salto). Se han extraído de una hoja de producción elaborada según la referencia aprobada, no de las figuras simplificadas de las versiones 0.4–0.6.
-- Rostros con ojos verdes, peinados, ropa, altura relativa y colores correspondientes al objetivo visual.
-- Escenario ilustrado independiente de los personajes: fachada con balcones, vegetación, farolas en escala coherente, acera, fachada y vehículo plateado.
-- Suelo y cajas con colisión; saltos sometidos a gravedad; controles táctiles; cambiar entre hermanas; padre y hermana no seleccionada con seguimiento independiente.
-- Monedas, balón que destruye cajas y doble salto de la bailarina; una zona final de prueba cerca del coche.
-- Test de carga de recursos Flutter y verificación Python de PNG previa a compilar.
+El distintivo inferior se ha preparado a partir de una referencia TWC de la pantalla de TIKU. Es una extracción rasterizada (no un archivo vectorial corporativo), que convendría sustituir en una versión comercial por el archivo maestro oficial.
 
-## Estado de la revisión
+## Cambios incluidos respecto a la 0.7.1
 
-✅ Se comprobó localmente la presencia y validez de los archivos PNG, CRC, dimensiones RGBA, independencia de los 12 fotogramas, márgenes transparentes y representación de los 3 personajes sobre el escenario.
+1. **Pantalla de inicio** con «Nueva partida» y «Continuar». El botón Continuar está deshabilitado cuando todavía no hay partida guardada.
+2. **Guardar partida localmente** con `shared_preferences`, autoguardado durante el recorrido, puntos de control y al cerrar/pausar; reanudar desde el capítulo y el progreso guardados. Nueva partida solicita confirmación si existe guardado.
+3. **Selección de protagonista antes del capítulo**, Miren o Sara, sin cambiar durante el nivel. Dos corazones por hermana.
+4. **Movimiento independiente**: las órdenes de movimiento, salto y ataque son únicamente para la protagonista seleccionada. La otra sigue con retraso y movimiento propio. El padre **solo aparece en la conversación inicial**, no en el gameplay.
+5. **Cuatro tramos jugables con transiciones de capítulo**: salida de casa, Ayuntamiento de Pamplona, Calle Estafeta y quiosco de Plaza del Castillo. No se representan Ayuntamiento y quiosco como edificios contiguos. Más monedas y obstáculos.
+6. **Primer enemigo: perro**: patrulla, detecta, persigue, intenta morder, quita un corazón (con invulnerabilidad temporal), recibe impactos y queda aturdido/derrotado. Pose/animación revisada: reposo, andar, alerta, carrera, mordisco, impacto, aturdimiento y derrota. La derrota es cómica, sin violencia gráfica explícita.
+7. **Miren lanza balón** y **Sara lanza peine**. Ambos son proyectiles diferentes con colisión contra el perro y las cajas.
+8. **Icono Android propio** en resoluciones mipmap y modo adaptativo. El nombre visible pasa a «Miren y Sara» para caber bajo el icono.
+9. **Identidad visual de The Wolf Company** pequeña y centrada en el pie del menú.
 
-✅ Se ejecutó `python3 qa/verify_resources.py` satisfactoriamente.
+### Controles
 
-⚠️ **No se ha compilado ni probado el APK en un dispositivo Android desde este entorno.** Los tests de Flutter y el análisis Dart los ejecutará el workflow de GitHub Actions. No presentar estas comprobaciones como sustitución de la prueba real.
+- Flechas inferiores izquierda/derecha: mover solo a Miren o Sara.
+- Flecha superior (inferior derecha): saltar.
+- Botón de balón o peine: atacar (dependiendo de protagonista).
+- Pausa (parte superior derecha): reanudar o volver al menú, conservando progreso.
+- Al superar cada capítulo aparece la opción de volver a elegir protagonista.
 
-⚠️ Para no introducir rostros deformados, esta demo utiliza solo **2 dibujos de paso distintos por personaje**, además de espera y salto. Son sprites de gran calidad visual, pero aún no son ciclos largos de animación de 6–8 dibujos independientes. El salto tiene una pose, no un arco entero. Es una demo gráfica y física corta, no un nivel completo de varios minutos.
+### Estructura
 
-⚠️ El edificio es una interpretación artística del objetivo aprobado, no una copia exacta de la fachada real original.
+- `lib/main.dart`: código jugable, pantallas, física, guardado, IA del perro y dibujado.
+- `assets/images/frames`: los sprites aprobados de padre, Miren y Sara.
+- `assets/images/dog`: sprites nuevos, ocho estados diferenciados.
+- `assets/images/level_*`: los fondos para cada tramo.
+- `assets/images/title_approved.png`: pantalla de inicio aprobada.
+- `assets/images/brand_logo_twc.png`: insignia TWC basada en TIKU.
+- `launcher/res`: recursos nativos del icono (se copian después de `flutter create`).
+- `.github/workflows/build.yml`: compilación APK release con análisis y tests.
+- `qa/verify_resources.py`: comprobación local de PNGs y recursos.
 
 ## Subir a GitHub
 
-1. Descargar y **descomprimir** el ZIP.
-2. En el repositorio `Hermanas-Pixel`, sustituir los anteriores `lib/main.dart`, `pubspec.yaml`, `assets/images/` y `test/` por los nuevos. Evitar conservar sprites antiguos con nombres parecidos.
-3. Para `.github`, como Windows suele impedir subir esa carpeta, ir al repositorio, abrir el archivo `.github/workflows/build.yml` en el editor web y sustituir **todo** su contenido por el de este ZIP. Si no existe, usar **Add file → Create new file** y poner el nombre `.github/workflows/build.yml`.
-4. Si quedan otros archivos `.yml` dentro de `.github/workflows/` de versiones antiguas, desactivarlos o eliminarlos para no obtener dos APK diferentes.
-5. Hacer **Commit changes**. Ir a **Actions → Compilar Hermanas Pixel APK**.
-6. Confirmar que el test, análisis y compilación aparecen en verde. Descargar desde **Artifacts → Hermanas-Pixel-0.7.1-Android**.
-7. Instalar el `app-release.apk` en el teléfono.
+**Primero sube a la raíz del repositorio todo el contenido del ZIP descomprimido. No subas el ZIP cerrado ni una carpeta contenedora.** Mantén `lib/main.dart`, `pubspec.yaml`, `assets`, `launcher`, `qa` y `test`.
 
-**Atención**: los archivos `pubspec.yaml` y `lib/main.dart` deben estar en la **raíz del repositorio**, no dentro de otra carpeta. Si se sube solo el ZIP, GitHub no podrá compilarlo.
+La carpeta `.github` suele dar problemas al subirla desde el navegador: abre en GitHub `.github/workflows/build.yml`, pulsa el lápiz y pega el contenido del `build.yml` del ZIP. Si todavía no existe, `Add file > Create new file` y escribe el nombre `.github/workflows/build.yml`.
 
-## Controles
+En **Actions > Compilar Miren y Sara 0.8.0** comenzará la compilación después de hacer commit. Si termina en verde, descarga el APK en **Artifacts** bajo el nombre `Las-aventuras-de-Miren-y-Sara-0.8.0`.
 
-- Izquierda / derecha: caminar.
-- Flecha arriba: saltar.
-- ↔: cambiar de hermana.
-- Balón (hermana mayor): disparo que puede destruir cajas.
-- ✦ (hermana pequeña): segundo impulso de salto.
-- El padre sigue como acompañante no jugable.
+Si falla `flutter analyze`, envía el error del primer paso rojo; NO cambies nada al azar. Para versiones futuras, una firma estable de aplicación será necesaria si quieres actualizar un APK sin perder guardados. En este prototipo puede ser necesario desinstalar el APK anterior si las firmas de compilación difieren.
 
-## Principios de diseño 16 bits
+## Revisiones realizadas, y límites
 
-La SNES trabajaba con gráficos organizados en tiles pequeños y sprites independientes, con prioridades de capas y animaciones por fotogramas. Esta demo **se inspira** en esos principios artísticos, pero no limita la paleta ni la resolución al hardware original. Véase: https://snes.nesdev.org/wiki/Sprites y https://snes.nesdev.org/wiki/Tiles
+Se ejecutaron scripts locales que verifican la integridad de 30 imágenes, los iconos Android, estructura, pantalla y referencias, así como una auditoría visual de los sprites del perro y escenas. Se compararon los 13 recursos aprobados de 0.7.1 con los originales: son idénticos byte a byte.
 
-## Estructura
+**No se dispone de Flutter/Dart ni de un emulador Android en el entorno de preparación.** Por tanto, la compilación real, el analizador Dart y los tests Flutter deben ejecutarse en GitHub Actions. Las vistas previas adjuntas son composiciones con assets reales, no capturas del APK.
 
-```
-.github/workflows/build.yml   -> GitHub Actions
-lib/main.dart                  -> gameplay Flutter y pintado
-pubspec.yaml                   -> dependencias y activos
-assets/images/level_pixel.png -> fondo detallado, sin personajes
-assets/images/frames/         -> sprites por personaje y pose
-assets/images/crate.png        -> caja
-assets/images/coin.png         -> moneda
-reference/                     -> objetivos artísticos aprobados
-qa/verify_resources.py         -> validación reproducible sin librerías
-qa/sprite_audit.json           -> resultado de inspección de sprites
-test/                          -> pruebas Flutter
-```
+La demo es una prueba ampliada, no un juego completo: los fondos nuevos provienen de ilustraciones conceptuales y deben revisarse en el móvil. Los ataques de las hermanas utilizan efectos y las poses aprobadas existentes: todavía no cuentan con secuencias de lanzamiento dibujadas a mano fotograma a fotograma.
