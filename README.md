@@ -1,4 +1,6 @@
-# Hermanas Pixel 0.7.0 — demo gráfica Android
+**Corrección 0.7.1:** solucionado error de tipos en `lib/main.dart` (velocidad del balón). GitHub informó de una única incidencia en `flutter analyze` para la versión 0.7.0. **No se ha ejecutado Flutter localmente**, por lo que falta verificar el resultado del workflow.
+
+# Hermanas Pixel 0.7.1 — demo gráfica Android
 
 Proyecto Flutter de plataformas 2D para **Android horizontal**, preparado para compilarse con GitHub Actions. No es un mockup de imágenes fijas: los actores, monedas, cajas y balón se renderizan como entidades independientes.
 
@@ -30,7 +32,7 @@ Proyecto Flutter de plataformas 2D para **Android horizontal**, preparado para c
 3. Para `.github`, como Windows suele impedir subir esa carpeta, ir al repositorio, abrir el archivo `.github/workflows/build.yml` en el editor web y sustituir **todo** su contenido por el de este ZIP. Si no existe, usar **Add file → Create new file** y poner el nombre `.github/workflows/build.yml`.
 4. Si quedan otros archivos `.yml` dentro de `.github/workflows/` de versiones antiguas, desactivarlos o eliminarlos para no obtener dos APK diferentes.
 5. Hacer **Commit changes**. Ir a **Actions → Compilar Hermanas Pixel APK**.
-6. Confirmar que el test, análisis y compilación aparecen en verde. Descargar desde **Artifacts → Hermanas-Pixel-0.7.0-Android**.
+6. Confirmar que el test, análisis y compilación aparecen en verde. Descargar desde **Artifacts → Hermanas-Pixel-0.7.1-Android**.
 7. Instalar el `app-release.apk` en el teléfono.
 
 **Atención**: los archivos `pubspec.yaml` y `lib/main.dart` deben estar en la **raíz del repositorio**, no dentro de otra carpeta. Si se sube solo el ZIP, GitHub no podrá compilarlo.

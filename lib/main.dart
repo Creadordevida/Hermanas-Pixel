@@ -263,7 +263,7 @@ class _HermanasGameState extends State<HermanasGame>
     if (selected == 0) {
       footballX = a.x + 26 * a.direction;
       footballY = a.y - 30;
-      footballVX = 280 * a.direction;
+      footballVX = 280.0 * a.direction;
       footballVY = -40;
       ballLife = 0;
     } else if (a.onGround) {
@@ -347,7 +347,7 @@ class _HermanasGameState extends State<HermanasGame>
             const Center(child: CircularProgressIndicator(color: Colors.white))
           else ...[
             Positioned(left: offX + 12 * scale, top: offY + 8 * scale,
-              child: Text('HERMANAS PIXEL · DEMO 0.7.0',
+              child: Text('HERMANAS PIXEL · DEMO 0.7.1',
                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
                     fontSize: 14 * scale, shadows: const [Shadow(color: Colors.black, blurRadius: 4)]))),
             Positioned(right: offX + 16 * scale, top: offY + 8 * scale,
