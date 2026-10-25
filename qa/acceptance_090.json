@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "base_version": "0.8.0",
+  "target_version": "0.9.0",
+  "policy": "RECHAZAR NO VERIFICADO; nunca mostrar ilustraciones como capturas reales",
+  "release_status": "BLOQUEADO",
+  "items": {
+    "personajes originales": {
+      "graphic_review": "REFERENCIA CONGELADA",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "escenarios 1-4": {
+      "graphic_review": "REFERENCIA CONGELADA",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "perro original": {
+      "graphic_review": "REFERENCIA CONGELADA",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "perro dálmata": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "perro dóberman": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "paloma": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "gato": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "rata": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "estatua viviente": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "futbolista rival": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "árbitro": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "bailarina novata": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "breakdancer": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "alumno abusón": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "profesor exigente": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "atuendo fútbol de Miren": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "atuendo danza de Sara": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "mapa Pamplona": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "capítulo fútbol": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "capítulo danza": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "capítulo colegio": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "objetos personalizados": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "plataformas integradas": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "animaciones de impactos": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "revisión suelos/fondos": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "flujo selección capítulos": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "guardado/progreso": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "marca TWC oficial": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    },
+    "pruebas de jugabilidad 7 capítulos": {
+      "graphic_review": "PENDIENTE",
+      "animation_review": "PENDIENTE",
+      "functional_review": "PENDIENTE",
+      "runtime_evidence": "PENDIENTE",
+      "approved_asset_sha256": null,
+      "notes": ""
+    }
+  },
+  "qa_runs": {
+    "flutter_analyze": "PENDIENTE",
+    "flutter_test": "PENDIENTE",
+    "flutter_build_apk": "PENDIENTE",
+    "android_device_test": "PENDIENTE",
+    "real_screenshots": "PENDIENTE",
+    "android_animation_review": "PENDIENTE",
+    "chapter_timings": "PENDIENTE"
+  },
+  "build_name": "0.9.0-dev.1 - BLOCKED",
+  "changes_done_since_080": [
+    "Variantes caninas procedentes del mismo modelo original (alfa idéntico)",
+    "Escalado original de personajes y suelo conservado",
+    "Salida del padre y la hermana no activa a la izquierda",
+    "Color por interlocutor en el diálogo",
+    "Caja se fragmenta durante 0.45 segundos usando el PNG aprobado",
+    "Pruebas de mecánicas de perros y preservación de PNG base"
+  ],
+  "still_not_implemented_or_not_verified": [
+    "Mapa de Pamplona con arte final",
+    "Nueva escuela/colegio con calidad aprobada",
+    "Capítulo de fútbol completo con calidad aprobada",
+    "Capítulo de danza completo con calidad aprobada",
+    "Cuatro enemigos urbanos nuevos con sprites finales",
+    "Seis enemigos temáticos con sprites finales",
+    "Obstáculos temáticos dibujados con calidad aprobada",
+    "7 recorridos terminados y 5 min medidos en móvil",
+    "Compilación Flutter Android local",
+    "Revisión visual del APK real"
+  ]
+}

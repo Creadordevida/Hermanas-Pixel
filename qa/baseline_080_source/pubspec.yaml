@@ -1,0 +1,28 @@
+name: hermanas_aventura
+description: Las aventuras de Miren y Sara - demo Android 0.8.0
+publish_to: none
+version: 0.8.0+18
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  shared_preferences: ^2.3.2
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/title_approved.png
+    - assets/images/brand_logo_twc.png
+    - assets/images/level_pixel.png
+    - assets/images/level_ayuntamiento.png
+    - assets/images/level_estafeta.png
+    - assets/images/level_plaza_castillo.png
+    - assets/images/crate.png
+    - assets/images/coin.png
+    - assets/images/ball.png
+    - assets/images/comb.png
+    - assets/images/frames/
+    - assets/images/dog/

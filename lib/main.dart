@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 const double viewW = 800;
 const double viewH = 450;
 const double groundY = 390;
-const double stageWidth = 40000;
+const double stageWidth = 36500; // ~3.6 minutes walking, closer to 5 including obstacles and enemies.
 const double actorRadius = 14;
 const double actorHeight = 91;
 const String saveKey = 'miren_sara_v090_save';
@@ -114,7 +114,10 @@ void main() async {
 }
 
 class HermanasGame extends StatefulWidget {
-  const HermanasGame({super.key});
+  const HermanasGame({super.key, this.qaStage, this.qaMap = false});
+  /// Entradas de diagnóstico usadas solo por testWidgets; en Android son null/false.
+  final int? qaStage;
+  final bool qaMap;
   @override
   State<HermanasGame> createState() => _HermanasGameState();
 }
@@ -159,7 +162,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       final paths = <String,String>{
         'title':'assets/images/title_approved.png',
         'logo':'assets/images/brand_logo_twc.png',
-        'map':'assets/images/map_pamplona.png',
+        'map':'assets/images/worldmap/pamplona.png',
         'crate':'assets/images/crate.png',
         'coin':'assets/images/coin.png',
         'ball':'assets/images/ball.png',
@@ -196,7 +199,15 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         images[item.key] = (await codec.getNextFrame()).image;
         codec.dispose();
       }
-      _layoutStage();
+      if (widget.qaStage != null) {
+        stage = widget.qaStage!.clamp(0, 6);
+        selected = level.forcedSara ? 1 : 0;
+        _layoutStage();
+        screen = Screen.playing;
+      } else {
+        _layoutStage();
+        if (widget.qaMap) screen = Screen.map;
+      }
       if (mounted) setState(() => resourcesReady = true);
     } catch (e,stack) {
       debugPrint('Recursos incompletos: $e\n$stack');
@@ -210,21 +221,21 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     final rng = math.Random(1001 + stage * 117);
     // The authored world's length gives roughly 4 minutes of traversing at 169px/s,
     // plus platforming, combat and exploration. Actual ~5min must be device-playtested.
-    for (double x = 520; x<stageWidth-260; x+= 380 + rng.nextInt(235)) {
+    for (double x = 520; x<stageWidth-260; x+= 545 + rng.nextInt(260)) {
       final y=groundY- (stage==5 ? 38.0 : 43.0);
       obstacles.add(Obstacle(x,y,stage==5?72:44,groundY-y,level.prop));
-      if (rng.nextDouble()>.7) obstacles.add(Obstacle(x+70,groundY-40,42,40,level.prop));
+      if (rng.nextDouble()>.84) obstacles.add(Obstacle(x+70,groundY-40,42,40,level.prop));
     }
-    for (double x=930; x<stageWidth-450; x+=1220 + rng.nextInt(320)) {
-      final yy = groundY- (84+rng.nextInt(32));
-      platforms.add(Rect.fromLTWH(x,yy,155+rng.nextInt(60).toDouble(),16));
+    for (double x=1000; x<stageWidth-450; x+=1680 + rng.nextInt(350)) {
+      final yy = groundY- (55+rng.nextInt(17)); // jump apex 87.55 px, so 55-71 is reachable.
+      platforms.add(Rect.fromLTWH(x,yy,125+rng.nextInt(25).toDouble(),15));
       for (int i=0;i<3;i++) coins.add(Offset(x+32+i*47, yy-34));
     }
     for (double x=300; x<stageWidth-300; x+=136 + rng.nextInt(45)) {
       coins.add(Offset(x, rng.nextBool()?groundY-55:groundY-112));
     }
     final kinds=level.enemies;
-    for (double x=820; x<stageWidth-300; x+=710+rng.nextInt(240)) {
+    for (double x=820; x<stageWidth-300; x+=930+rng.nextInt(300)) {
       final prog=x/stageWidth;
       String type=kinds[rng.nextInt(kinds.length)];
       if (prog<.3 && ['referee','breakdancer','teacher','statue','dog_doberman'].contains(type)) {
@@ -553,7 +564,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     Offset(683,128),Offset(637,349),Offset(233,361),
   ];
   Widget _map() => Stack(children:[
-    Positioned.fill(child:Image.asset('assets/images/map_pamplona.png',fit:BoxFit.cover)),
+    Positioned.fill(child:Image.asset('assets/images/worldmap/pamplona.png',fit:BoxFit.cover)),
     Positioned(left:9,right:9,top:5,child:Container(height:44,alignment:Alignment.center,
       decoration:BoxDecoration(color:const Color(0xe00b3052),borderRadius:BorderRadius.circular(7)),
       child:const Text('MAPA DE PAMPLONA · ELIGE UN CAPÍTULO',
@@ -588,12 +599,13 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   ]);
   Widget _chooseCard(int index,double x) {
     final role=index==0?'futbolista':'bailarina';
+    final folder=((stage==4 && index==0)||(stage==5 && index==1))?'outfits':'frames';
     return Positioned(left:x,top:74,width:242,height:346,child:GestureDetector(onTap:()=>_choose(index),
       child:Container(decoration:BoxDecoration(color:const Color(0xee0b305a),borderRadius:BorderRadius.circular(11),
         border:Border.all(color:index==0?const Color(0xffffc748):const Color(0xffffa6d1),width:4)),
         child:Column(children:[const SizedBox(height:9),Text(index==0?'MIREN':'SARA',
           style:const TextStyle(fontSize:24,color:Colors.white,fontWeight:FontWeight.w900)),
-          SizedBox(height:209,child:Image.asset('assets/images/frames/${role}_idle_0.png',fit:BoxFit.contain)),
+          SizedBox(height:209,child:Image.asset('assets/images/$folder/${role}_idle_0.png',fit:BoxFit.contain)),
           Text(index==0?'BALÓN  ⚽':'PEINE  ✦',style:const TextStyle(color:Color(0xffffd783),fontSize:18,fontWeight:FontWeight.w900)),
           const Text('♥  ♥',style:TextStyle(color:Colors.redAccent,fontSize:28)),
           const Text('TOCA PARA ELEGIR',style:TextStyle(color:Colors.white,fontSize:12,fontWeight:FontWeight.bold)),
@@ -677,24 +689,44 @@ class StagePainter extends CustomPainter {
   void paint(Canvas canvas,Size size) {
     canvas.save();canvas.clipRect(const Rect.fromLTWH(0,0,viewW,viewH));
     canvas.drawColor(const Color(0xff79a9d5),BlendMode.src);
-    _background(canvas);
-    _ground(canvas);
-    for(final p in platforms) {
-      final x=p.left-cameraX;
-      if(x< -250 || x>850)continue;
-      canvas.drawRect(Rect.fromLTWH(x,p.top,p.width,p.height),Paint()..color=stage==5?const Color(0xff9a633d):const Color(0xff957a5a));
-      canvas.drawRect(Rect.fromLTWH(x,p.top,p.width,5),Paint()..color=stage==5?const Color(0xffe8bd78):const Color(0xffadd373));
-      for(double i=12;i<p.width;i+=28)canvas.drawRect(Rect.fromLTWH(x+i,p.top+8,4,7),Paint()..color=const Color(0xff554a38));
+    _background(canvas); // Includes the APPROVED original street pavement; never add a fake second floor.
+    // Low, reachable elevated surfaces made of integrated benches/platform props.
+    // Exact collision rectangles and visible surfaces share the same coordinates.
+    for (final p in platforms) {
+      final x = p.left - cameraX;
+      if (x < -225 || x > 850) continue;
+      final prop = images[stage == 5 ? 'gym_bench' : stage == 6 ? 'backpack' : stage == 4 ? 'cone' : 'crate'];
+      if (prop != null) {
+        if (stage >= 4 && stage <= 6) {
+          _sprite(canvas, images[stage == 5 ? 'gym_bench' : stage == 6 ? 'gym_bench' : 'gym_bench'],
+              Rect.fromLTWH(x, p.top, p.width, groundY - p.top));
+        } else {
+          // Crate clusters support the upper stone paving; no floating rectangles.
+          _sprite(canvas, images['crate'], Rect.fromLTWH(x+5,p.top+10,48,groundY-p.top-10));
+          _sprite(canvas, images['crate'], Rect.fromLTWH(x+p.width-54,p.top+10,48,groundY-p.top-10));
+          _sprite(canvas, images['crate'], Rect.fromLTWH(x+37,p.top,56,groundY-p.top));
+        }
+      }
     }
     for(final o in obstacles) {
       final x=o.x-cameraX;if(x< -90 || x>880)continue;
       if(o.destroyed) {
         if(time-o.smashedAt<.48) {
           final elapsed=time-o.smashedAt;
-          for(int k=0;k<7;k++){
-            final a=(k*2*math.pi/7),r=elapsed*91;
-            canvas.drawRect(Rect.fromCenter(center:Offset(x+o.w/2+r*math.cos(a),o.y+15+r*math.sin(a)+elapsed*35),width:5,height:5),
-              Paint()..color=k.isEven?const Color(0xffd6ac71):const Color(0xff865942));
+          final texture=images[o.kind];
+          if(texture!=null) {
+            // Pieces come from the SAME obstacle texture (not crude flat shapes).
+            for(int k=0;k<9;k++) {
+              final a=k*2*math.pi/9;
+              final radial=elapsed*(55+(k%3)*19);
+              final sx=(texture.width*(k%3)/3).floorToDouble();
+              final sy=(texture.height*(k~/3)/3).floorToDouble();
+              final sw=texture.width/3.0,sh=texture.height/3.0;
+              _sprite(canvas,texture,Rect.fromCenter(center:Offset(
+                x+o.w/2+radial*math.cos(a),o.y+o.h/2+radial*math.sin(a)+elapsed*29),
+                width:math.max(5,o.w/4),height:math.max(5,o.h/4)),
+                source:Rect.fromLTWH(sx,sy,sw,sh));
+            }
           }
         }
         continue;
@@ -723,19 +755,24 @@ class StagePainter extends CustomPainter {
         final mode=foe.defeated?'defeated':foe.stunned>0?'hit':foe.t%1>.5?'run':'walk';
         _sprite(canvas,images['dog_${variant}_$mode'],Rect.fromLTWH(x-48,y-44,96,78));
       } else if(['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'].contains(foe.kind)) {
-        final frame=foe.defeated?4:foe.stunned>0?4:foe.launched?3:(foe.t*5).floor()%3;
+        final frame=foe.defeated?4:foe.stunned>0?3:foe.launched?3:(foe.t*6).floor()%3;
         final img=images['enemy_${foe.kind}_$frame'];
         if(img!=null) {
           final hh=foe.kind=='breakdancer'?91.0:foe.kind=='referee'?100.0:
             foe.kind=='novice'?85.0:foe.kind=='pigeon'?59.0:
             foe.kind=='rat'?46.0:foe.kind=='cat'?67.0:
             foe.kind=='teacher'?100.0:foe.kind=='statue'?102.0:90.0;
-          final ww=hh*img.width/img.height;
-          _sprite(canvas,img,Rect.fromLTWH(x-ww/2,groundY-hh+(foe.aerial?-58:3),ww,hh));
+          // Fixed scale and feet anchor across every pose. A lying sprite may be
+          // wider, but it NEVER gets the idle character's full vertical height.
+          final rest=images['enemy_${foe.kind}_0'];
+          final baseW=rest == null ? hh*.65 : hh*rest.width/rest.height;
+          final dead=foe.defeated || foe.stunned>0;
+          final maxWidth=baseW*(dead ? 1.8 : 1.10);
+          final scale=math.min(hh/img.height, maxWidth/img.width);
+          final ww=img.width*scale;
+          final actualHeight=img.height*scale;
+          _sprite(canvas,img,Rect.fromLTWH(x-ww/2,groundY-actualHeight+(foe.aerial?-58:3),ww,actualHeight));
         }
-      } else {
-        // Lightweight procedural silhouettes until distinct approved enemy frame sheets exist.
-        _fallbackEnemy(canvas,foe,x);
       }
       if(foe.defeated)canvas.restore();
       canvas.restore();
@@ -769,37 +806,40 @@ class StagePainter extends CustomPainter {
   }
 
   void _background(Canvas canvas) {
-    final img=stage==6 && cameraX>26000 ? images['scene_school_computers'] :
-      stage==6 && cameraX>12500 ? images['scene_school_classroom'] : images['scene_$stage'];
-    if(img==null)return;
-    // Three moving visual planes: distant low-parallax upper skyline, near wall/facades,
-    // collision/foreground ground rendered separately. Each source tile is repeated,
-    // not stretched over the 40k-world width.
-    final w=stage<4?1230.0:1150.0;
-    final layerSpeed=.68;
-    final shift=(cameraX*layerSpeed)%w;
-    for(double px=-shift-w;px<viewW+w;px+=w) {
-      _sprite(canvas,img,Rect.fromLTWH(px,0,w,groundY+10));
-    }
-    // Foreground fixtures remain visually at world camera speed.
-    // Seam-covering dark strip immediately above the playable floor.
-    canvas.drawRect(const Rect.fromLTWH(0,groundY-1,viewW,3),Paint()..color=stage==5?const Color(0xffd4a265):const Color(0xff8a9a67));
-  }
-  void _ground(Canvas canvas) {
-    final base=stage==4?const Color(0xff4b793f):stage==5?const Color(0xffbd8757):stage==6?const Color(0xffa37b56):const Color(0xff7f7665);
-    canvas.drawRect(const Rect.fromLTWH(0,groundY,viewW,viewH-groundY),Paint()..color=base);
-    canvas.drawRect(const Rect.fromLTWH(0,groundY,viewW,6),Paint()..color=stage==4?const Color(0xff7abd54):const Color(0xffd5ba88));
-    final offset=cameraX%42;
-    for(double x=-offset;x<viewW;x+=42) {
-      canvas.drawLine(Offset(x,groundY+19),Offset(x+1,viewH),Paint()..color=const Color(0x44242b32)..strokeWidth=2);
-      canvas.drawLine(Offset(x,groundY+35),Offset(x+42,groundY+35),Paint()..color=const Color(0x44643b28)..strokeWidth=2);
+    // The world floor is INSIDE the original 0.8.0 image. It is not painted again.
+    // Each tile has 1570 world units, matching the scale of 0.8.0 stage rendering.
+    const tileWorldWidth = 1570.0;
+    final first = (cameraX / tileWorldWidth).floor() - 1;
+    for (int n = first; n <= first + 3; n++) {
+      if (n < 0) continue;
+      // The school changes rooms at fixed WORLD sections, never abruptly
+      // when the camera crosses a threshold within a visible tile.
+      final image = stage == 6
+          ? images[n >= 16 ? 'scene_school_computers'
+              : n >= 8 ? 'scene_school_classroom' : 'scene_$stage']
+          : images['scene_$stage'];
+      if (image == null) continue;
+      final dx = n * tileWorldWidth - cameraX;
+      if (dx > viewW || dx + tileWorldWidth < 0) continue;
+      // Reflect alternating blocks so the two joining edges have matching colors.
+      // This avoids the vertical cuts visible in the rejected prototype.
+      canvas.save();
+      if (n.isOdd) {
+        canvas.translate(2 * dx + tileWorldWidth, 0);
+        canvas.scale(-1, 1);
+      }
+      final dst = Rect.fromLTWH(dx, 0, tileWorldWidth, viewH);
+      final src = Rect.fromLTWH(0, 0, image.width.toDouble(),
+          math.min(image.height.toDouble(), 450.0));
+      _sprite(canvas, image, dst, source: src);
+      canvas.restore();
     }
   }
   void _actor(Canvas canvas,Character c,String role,int index,bool active) {
     final pose=!c.grounded?'jump_0':c.vx.abs()>15?'walk_${(c.travelled/23).floor()%2}':'idle_0';
     final costume=(stage==4 && role=='futbolista')||(stage==5 && role=='bailarina');
     final img=images['${costume?'costume_':''}${role}_$pose'];if(img==null)return;
-    final scale=index == 1 ? .40 : .36;
+    final scale=index == 1 ? .49 : .43;
     final w=img.width*scale,h=img.height*scale,x=c.x-cameraX;
     if(x< -120 || x>900)return;
     if(time<c.hurtUntil && (time*12).floor().isEven)return;
@@ -810,41 +850,14 @@ class StagePainter extends CustomPainter {
     if(active)canvas.drawArc(Rect.fromCenter(center:Offset(x,c.y+4),width:38,height:11),0,math.pi,false,
       Paint()..color=const Color(0xffffdf73)..style=PaintingStyle.stroke..strokeWidth=2);
   }
-  void _fallbackEnemy(Canvas c,Enemy e,double x) {
-    final y=groundY;
-    final p=Paint();
-    if(e.kind=='pigeon') {
-      p.color=const Color(0xff7a859b);c.drawOval(Rect.fromLTWH(x-20,y-103,42,26),p);
-      p.color=const Color(0xff566075);c.drawOval(Rect.fromLTWH(x-14,y-112-5*math.sin(e.t*8),27,16),p);
-      p.color=Colors.white;c.drawCircle(Offset(x+12,y-93),4,p);
-      p.color=const Color(0xffdd9b45);c.drawRect(Rect.fromLTWH(x+19,y-94,11,4),p);
-    } else if(e.kind=='rat' || e.kind=='cat') {
-      p.color=e.kind=='rat'?const Color(0xff6d6474):const Color(0xffbd8b50);
-      c.drawOval(Rect.fromLTWH(x-25,y-37,45,24),p);
-      c.drawCircle(Offset(x+17,y-28),12,p);
-      c.drawLine(Offset(x-25,y-24),Offset(x-44,y-39),Paint()..color=p.color..strokeWidth=4);
-      if(e.kind=='cat') {
-        c.drawPath(Path()..moveTo(x+8,y-33)..lineTo(x+11,y-51)..lineTo(x+20,y-36)..close(),p);
-      }
-      p.color=Colors.white;c.drawCircle(Offset(x+23,y-30),3,p);
-    } else {
-      final color=e.kind=='bully'?const Color(0xff31558c):e.kind=='teacher'?const Color(0xff64545c):const Color(0xffa77f53);
-      p.color=color;
-      c.drawRect(Rect.fromLTWH(x-23,y-80,46,50),p);
-      c.drawCircle(Offset(x,y-92),19,Paint()..color=const Color(0xffe1ad81));
-      c.drawRect(Rect.fromLTWH(x-19,y-30,14,30),p);c.drawRect(Rect.fromLTWH(x+5,y-30,14,30),p);
-      if(e.kind=='bully'){c.drawRect(Rect.fromLTWH(x+16,y-72,14,38),Paint()..color=const Color(0xffae723d));}
-      if(e.kind=='teacher'){_outlined(c,'3',Offset(x-1,y-72),Colors.red,17);}
-    }
-  }
   static void _outlined(Canvas c,String s,Offset center,Color color,double font) {
     final tp=TextPainter(text:TextSpan(text:s,style:TextStyle(color:color,fontSize:font,
       fontWeight:FontWeight.w900,shadows:const [Shadow(color:Colors.black,blurRadius:3)])),
       textDirection:TextDirection.ltr)..layout();tp.paint(c,Offset(center.dx-tp.width/2,center.dy));
   }
-  static void _sprite(Canvas c,ui.Image? img,Rect target,{bool pixelated=true}) {
+  static void _sprite(Canvas c,ui.Image? img,Rect target,{bool pixelated=true, Rect? source}) {
     if(img==null)return;
-    c.drawImageRect(img,Rect.fromLTWH(0,0,img.width.toDouble(),img.height.toDouble()),target,
+    c.drawImageRect(img,source ?? Rect.fromLTWH(0,0,img.width.toDouble(),img.height.toDouble()),target,
       Paint()..filterQuality=pixelated?FilterQuality.none:FilterQuality.low);
   }
   @override

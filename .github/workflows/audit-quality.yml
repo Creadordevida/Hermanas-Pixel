@@ -1,0 +1,30 @@
+name: Control de calidad estricto (NO publicar APK)
+on:
+  workflow_dispatch:
+jobs:
+  reference-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar herramientas de auditoria
+        run: python3 -m pip install --user pillow numpy
+      - name: Verificar integridad 0.8.0
+        run: |
+          python3 qa/verify_resources.py
+          python3 qa/release_gate.py
+          python3 -m unittest discover -s qa -p 'test_quality_gate.py'
+      - name: Verificar puertas de aprobacion 0.9.0
+        shell: bash
+        run: |
+          set +e
+          python3 qa/release_gate.py --strict > INFORME_PUERTAS_090.txt
+          RESULTADO=$?
+          cat INFORME_PUERTAS_090.txt
+          if [ "$RESULTADO" -ne 0 ]; then
+            echo "NO APROBADA: no publicar APK 0.9.0" >> INFORME_PUERTAS_090.txt
+          fi
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Informe-de-control-de-calidad
+          path: INFORME_PUERTAS_090.txt

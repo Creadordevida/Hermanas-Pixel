@@ -1,0 +1,49 @@
+{
+  "reference": {
+    "file": "reference/ENEMIGOS_4_REFERENCIA_VISUAL_APROBADA_NO_USABLE_COMO_SPRITES.png",
+    "sha256": "4d4bef34d073fd51b46dbd78a647b69ed4455f6c78495e726f23d9c7b2adcd3d",
+    "type": "referencia conceptual aprobada, NO extraíble tal cual como sprites"
+  },
+  "failed_090_screenshots": [
+    {
+      "fallo": 1,
+      "file": "qa/ejemplos_rechazados_090/fallo_01.png",
+      "sha256": "f110eb19e5b63ec8b30dfb421c05de955b49d1895631d8cf9fc4f508ac099533"
+    },
+    {
+      "fallo": 2,
+      "file": "qa/ejemplos_rechazados_090/fallo_02.png",
+      "sha256": "b7d8fdd20049a6e7a5a9cb72c80d50ed5efed08a9d81eff0732c4da1c5a788b7"
+    },
+    {
+      "fallo": 3,
+      "file": "qa/ejemplos_rechazados_090/fallo_03.png",
+      "sha256": "9407ce19c62f810ceaf04be35613bbc42a27b57477b04243b3f0e57eb2bba1d4"
+    },
+    {
+      "fallo": 4,
+      "file": "qa/ejemplos_rechazados_090/fallo_04.png",
+      "sha256": "2239e532add7d7dfbc72f6f39aa3f9126fc2356dac8fcf787db699f5b1e7b19d"
+    },
+    {
+      "fallo": 5,
+      "file": "qa/ejemplos_rechazados_090/fallo_05.png",
+      "sha256": "2b0aa520f0756e8e828acba4c7521c235e86f3fac9a4ba51570321283c74601a"
+    },
+    {
+      "fallo": 6,
+      "file": "qa/ejemplos_rechazados_090/fallo_06.png",
+      "sha256": "86f36de25b530efac7101e173928d9b4d0093570e6aed8baf6ca38017ca8591f"
+    },
+    {
+      "fallo": 7,
+      "file": "qa/ejemplos_rechazados_090/fallo_07.png",
+      "sha256": "4846f4c9849d66a9d71d3a4acdf7e61c00a99bf48c0ab34880b1dc79d74bfedf"
+    },
+    {
+      "fallo": 8,
+      "file": "qa/ejemplos_rechazados_090/fallo_08.png",
+      "sha256": "8f238c1a91ddd9bf5ac2029c1c31abb7a80616f79395a8b4a28e97982e72c0d4"
+    }
+  ]
+}

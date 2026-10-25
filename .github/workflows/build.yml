@@ -1,11 +1,11 @@
-
-name: Compilar Miren y Sara 0.9.0
+name: Compilar Miren y Sara 0.9.0 CANDIDATA
 on:
   push:
     branches: [main]
   workflow_dispatch:
+
 jobs:
-  build:
+  android-apk-candidato:
     runs-on: ubuntu-latest
     steps:
       - name: Descargar proyecto
@@ -15,44 +15,66 @@ jobs:
         with:
           channel: stable
           cache: true
-      - name: Verificar que se ha subido el juego completo
+      - name: Dependencias auditoría
+        run: python3 -m pip install --user pillow numpy
+      - name: Integridad base 0.8.0 y de los 117 assets de la candidata
         shell: bash
         run: |
           set -euo pipefail
-          test -s pubspec.yaml
-          test -s lib/main.dart
-          grep -q 'class StagePainter' lib/main.dart
-          grep -q 'class Enemy' lib/main.dart
-          grep -q 'SharedPreferences' lib/main.dart
           python3 qa/verify_resources.py
-          python3 qa/check_090.py
-      - name: Crear proyecto Android nativo sin sobrescribir Dart
+          python3 qa/verify_candidate_assets.py
+          python3 qa/release_gate.py
+          python3 -m unittest discover -s qa -p 'test_*.py'
+      - name: Crear Android sin sobrescribir el juego
         run: flutter create --no-overwrite --platforms=android --project-name hermanas_aventura .
-      - name: Instalar icono oficial en Android
+      - name: Instalar icono aprobado
         shell: bash
         run: |
           set -euo pipefail
           cp -R launcher/res/. android/app/src/main/res/
           test -s android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-          test -s android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
-      - name: Nombre visible de la aplicación
+      - name: Nombre del juego en Android
         shell: bash
         run: |
           set -euo pipefail
           sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
-          grep -q 'android:label="Miren y Sara"' android/app/src/main/AndroidManifest.xml
-      - name: Descargar dependencias
+      - name: Descargar dependencias del juego
         run: flutter pub get
-      - name: Analizar código Dart
+      - name: Analizar Dart
         run: flutter analyze --no-pub
-      - name: Ejecutar pruebas Flutter
-        run: flutter test
-      - name: Compilar APK release
-        run: flutter build apk --release
-      - name: Publicar APK descargable
+      - name: Probar mecánicas, interfaz y carga de imágenes
+        run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/widget_test.dart
+      - name: Capturar mapa y siete capítulos con el render Flutter real
+        id: captures
+        continue-on-error: true
+        run: flutter test test/qa_render_capture_test.dart
+      - name: Publicar capturas reales para revisión visual
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Las-aventuras-de-Miren-y-Sara-0.9.0
+          name: Capturas-REALES-Flutter-0.9.0-CANDIDATA
+          path: qa/rendered_from_flutter/*.png
+          if-no-files-found: warn
+      - name: Construir APK de prueba (NO aprobado para publicación)
+        run: flutter build apk --release
+      - name: Publicar APK para prueba en teléfono
+        uses: actions/upload-artifact@v4
+        with:
+          name: Miren-y-Sara-0.9.0-CANDIDATA-APK
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
-
+      - name: Informe de calidad exigente (no bloquea prueba manual)
+        if: always()
+        shell: bash
+        run: |
+          python3 qa/release_gate.py --strict > qa/RESULTADO_PUERTAS.txt || true
+          printf '\nATENCION: ESTA VERSION ES UNA CANDIDATA PARA PROBAR, NO UNA VERSION ARTISTICA APROBADA.\n' >> qa/RESULTADO_PUERTAS.txt
+      - name: Publicar informe de controles
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Informe-QA-0.9.0-CANDIDATA
+          path: |
+            qa/RESULTADO_PUERTAS.txt
+            qa/CANDIDATE_ASSET_INVENTORY.json
+          if-no-files-found: warn

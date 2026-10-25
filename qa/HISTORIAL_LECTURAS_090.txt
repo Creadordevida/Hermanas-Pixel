@@ -1,0 +1,42 @@
+# Las aventuras de Miren y Sara — 0.9.0 CANDIDATA DE PRUEBAS
+
+**Punto de partida: código y gráficos de 0.8.0 protegidos. NO es un lanzamiento aprobado.**
+
+Contiene la implementación candidata de mapa libre, siete capítulos ampliados, enemigos temáticos, obstáculos, controles y guardado. Las 31 imágenes congeladas de la 0.8.0 no han sido alteradas. Incluye todos los nuevos PNG usados por el motor y la configuración GitHub Actions para que puedas descargar el APK y probarlo en tu teléfono.
+
+## Compilación en GitHub
+
+1. Descarga y **descomprime** el ZIP. Sube **el contenido de su raíz** al repositorio, sin subir el ZIP ni una carpeta contenedora. GitHub web puede requerir varias tandas de archivos.
+2. **Sobrescribe** el archivo `.github/workflows/build.yml` manualmente en GitHub si no te permite subir el workflow; usa literalmente el `build.yml` incluido.
+3. Accede a Actions → `Compilar Miren y Sara 0.9.0 CANDIDATA` → ejecuta el workflow, o deja que se lance tras un push a main.
+4. Si todo termina correctamente, descarga el artifact **`Miren-y-Sara-0.9.0-CANDIDATA-APK`** e instala el `app-release.apk`. Otro artifact contendrá capturas de Flutter obtenidas del render del proyecto y NO simulaciones externas.
+5. Si falla, copia el primer error rojo del workflow. No suprimas verificaciones para conseguir un APK.
+
+**Advertencia sobre actualizaciones:** el APK de GitHub está firmado de manera diferente a builds anteriores y podría requerir desinstalar el APK anterior para instalarlo. Esto podría borrar datos locales; guarda lo que necesites antes.
+
+## Características programadas
+
+- Mapa de siete capítulos libremente seleccionables; se guardan capítulos completados y monedas.
+- Cuatro episodios urbanos basados en sus fondos 0.8.0, Miren fútbol, Sara danza, colegio compartido.
+- Elección Miren/Sara en capítulos compartidos; dos corazones, balón/peine y botón específico.
+- Perros dálmata, marrón, dóberman (dos golpes), paloma, gato, rata, estatua, futbolista rival, árbitro, bailarina rival, bailarín de breakdance, abusón y profesor exigente.
+- Ataques por contacto o con proyectiles de tarjeta roja, zapatilla, borrador, con periodos de recuperación; enemigos difíciles requieren tres impactos.
+- Obstáculos personalizados: cajones, macetas, conos, banco, mochilas; reacción con fragmentos del propio dibujo.
+- Padre y hermana que no se controla salen andando después de la introducción; no siguen al jugador.
+- Fondos originales sin el segundo suelo artificial, zonas elevadas con colisión y alturas alcanzables en el cálculo del salto.
+
+## Limitaciones de esta candidata
+
+**No se ha podido ejecutar Flutter/Android en el entorno donde se empaquetó este ZIP.** Las pruebas locales solo analizan archivos, geometría y conservación de originales; el primer `flutter analyze`, `flutter test` y `flutter build apk` reales se producirán en GitHub Actions.
+
+**Los gráficos nuevos NO tienen aún aprobación artística final:** hay adaptaciones de los trajes pendientes de perfeccionar, los fondos de escuela de informática/aula comparten todavía gran parte del pasillo escolar, y las animaciones humanas tienen menos fotogramas únicos que las referencias conceptuales. Las pruebas en el móvil definirán problemas de escala, colisiones, velocidad y continuidad de fondos. La duración de cinco minutos por capítulo es un objetivo, no un resultado cronometrado.
+
+**Importante:** las imágenes ilustrativas aprobadas de enemigos NO equivalen a sus hojas de sprites finales; los sprites empaquetados son los que se verán en el APK. Para revisarlos sin engaños, mira el artifact `Capturas-REALES-Flutter-0.9.0-CANDIDATA` después de que el workflow termine.
+
+## QA
+
+- `python3 qa/verify_resources.py`: comparaciones SHA de gráficos aprobados 0.8.0.
+- `python3 qa/verify_candidate_assets.py`: inventario SHA de todas las 117 imágenes usadas.
+- `python3 -m unittest discover -s qa -p 'test_*.py'`: pruebas estáticas y geométricas.
+- `python3 qa/release_gate.py`: comprobar intangibilidad de la base aprobada.
+- `python3 qa/release_gate.py --strict`: DEBE seguir BLOQUEANDO la aprobación hasta pruebas en el móvil y revisión artística; para **pruebas** sí se genera APK candidato.

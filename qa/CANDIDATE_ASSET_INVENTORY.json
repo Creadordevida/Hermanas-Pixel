@@ -1,0 +1,821 @@
+{
+  "title_approved.png": {
+    "sha256": "36c0bc2e18547b47f96a85b8c707663f875cd99d107a6368f3b7bc512d3df6fa",
+    "size": [
+      1098,
+      617
+    ]
+  },
+  "brand_logo_twc.png": {
+    "sha256": "544ec8891581c8c41f6d47b847621236095d09a07b697750aebdbee98c164d61",
+    "size": [
+      382,
+      129
+    ]
+  },
+  "worldmap/pamplona.png": {
+    "sha256": "bc88ed4203ace17a55aed78673e93d04884e7486463d958132c1b4817670a1cf",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "level_pixel.png": {
+    "sha256": "e2e74fd6b7d17daeae7173a021bb60bf0c05f7772cedf6665f6b70441fa56402",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "level_ayuntamiento.png": {
+    "sha256": "fbdbd59be85d03df1f12819c90b09175208f7195bbbb0b7a5f28cb0e79800793",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "level_estafeta.png": {
+    "sha256": "602df56fedf9030ba0ad86be7d0d77149a9bb315ea29c12897df87d214b619d0",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "level_plaza_castillo.png": {
+    "sha256": "ee10463e1fdf38bc245c12a068fdb1401d7bea9183b5fd51d9b0242123827a98",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "crate.png": {
+    "sha256": "65f03b05b605927bb479d3bd7609bc6099a4173269e85d1f90a8341a488b20fe",
+    "size": [
+      48,
+      48
+    ]
+  },
+  "coin.png": {
+    "sha256": "873751dd3dcb7365b9b2389dc7410733d105131a6150681b92c70b2f5592bfb2",
+    "size": [
+      32,
+      32
+    ]
+  },
+  "ball.png": {
+    "sha256": "fbd0c72d6b0467d1dbca66c2e115446c9c5e69d8ddcda3c36eae2a91e4256120",
+    "size": [
+      96,
+      96
+    ]
+  },
+  "comb.png": {
+    "sha256": "280b33883d609fd1ee48687f7dd5b370ae95f4e3f7ab73c2ade0f1876f74c638",
+    "size": [
+      104,
+      56
+    ]
+  },
+  "scenes/football.png": {
+    "sha256": "23e1cebaa01767aa6ac26d241d2a57348b0aa07cf6658005bf21089f4e81a99d",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "scenes/ballet.png": {
+    "sha256": "f8bff5107fca96db1f399c87515ff4e9f2166f6f9897aba242dd3d529dabe6b2",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "scenes/school.png": {
+    "sha256": "141ec8eb8138974222a4123bce085dfb817bb6a8c9d69a8e89dfc25d3728ec8c",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "scenes/school_classroom.png": {
+    "sha256": "fd4ef4cdd6f92c0bd0df6c271f6ed334d03046b792244070e1da11b41b3211d7",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "scenes/school_computers.png": {
+    "sha256": "ffa4d7e8b422be9c886ea1a2d32e7181f7bb6ccf19e3be1b3cf8eb4dfb90cfde",
+    "size": [
+      1320,
+      480
+    ]
+  },
+  "props/cone.png": {
+    "sha256": "b328e3059bde3a9e899fc02529e7bd9fedc267ef6992ffca73b0a665ce4274cf",
+    "size": [
+      80,
+      92
+    ]
+  },
+  "props/planter.png": {
+    "sha256": "db42c0ba19e586eb192ad992a65d530d1c1ec559d841e56d656400b0b57019fe",
+    "size": [
+      106,
+      105
+    ]
+  },
+  "props/backpack.png": {
+    "sha256": "5f35e5b5b8499303a6045f45bab8ca6d175566a9ac43378829715bf555af66b7",
+    "size": [
+      94,
+      104
+    ]
+  },
+  "props/gym_bench.png": {
+    "sha256": "9c22f0d1579be196e6a8ee297a82f529f52fee340c9a941e96ecdf6411581fe7",
+    "size": [
+      166,
+      110
+    ]
+  },
+  "props/red_card.png": {
+    "sha256": "2e7655eb1983fddbb1873da9760b164019b6efab8fd3fed813bfa86133fec2df",
+    "size": [
+      55,
+      76
+    ]
+  },
+  "props/shoe.png": {
+    "sha256": "8a7c6fb09b17bb463117906267ef24a10b6c545789dc005a4a2e2ab443621dbe",
+    "size": [
+      89,
+      58
+    ]
+  },
+  "props/eraser.png": {
+    "sha256": "096dc51ed29350b1ebc31e4ee1db7de9ec97c045f17aece8b0b36b8b6d67c9a0",
+    "size": [
+      70,
+      46
+    ]
+  },
+  "frames/futbolista_idle_0.png": {
+    "sha256": "1609ada04ad1efb29cd9d5f451f6a17a06595a51f0d2ecd749aad6cb994f619c",
+    "size": [
+      191,
+      321
+    ]
+  },
+  "frames/futbolista_walk_0.png": {
+    "sha256": "9a32941d1ec0724cfede65ddd59eedf73ec1039de498363ef7fd4d97de4e52c5",
+    "size": [
+      219,
+      320
+    ]
+  },
+  "frames/futbolista_walk_1.png": {
+    "sha256": "6af41b640e7adfd21a9abd8a8101f84b6a204e63cbb07d2e43f33ee6cb0a8eff",
+    "size": [
+      234,
+      316
+    ]
+  },
+  "frames/futbolista_jump_0.png": {
+    "sha256": "db08890f45b5008fa35997fbbe861821d20c0cb486239d722afc84b2f903f3f3",
+    "size": [
+      251,
+      284
+    ]
+  },
+  "frames/bailarina_idle_0.png": {
+    "sha256": "4fcc868b9d517e2d4ab43058504537b01ad49308d6d43d19cd62c74b7df64555",
+    "size": [
+      165,
+      259
+    ]
+  },
+  "frames/bailarina_walk_0.png": {
+    "sha256": "068dd7da88d543600fe4aa9426b54abc425e14fffdcf3aab43dc9866c2a423a3",
+    "size": [
+      202,
+      262
+    ]
+  },
+  "frames/bailarina_walk_1.png": {
+    "sha256": "326b7a10ec04d94c68cbcda874eb4d8596e003602b5e303a2b1d346cb8fc03b8",
+    "size": [
+      200,
+      258
+    ]
+  },
+  "frames/bailarina_jump_0.png": {
+    "sha256": "8eb03ec9177703804bd636d3e23f27f7c75521b653c563bb006bc6418e9bc0a0",
+    "size": [
+      217,
+      249
+    ]
+  },
+  "frames/padre_idle_0.png": {
+    "sha256": "3e7fa69040e8590e84b5009dc197eb97d9a7d5c2f17fe10b0c03760b69764b77",
+    "size": [
+      150,
+      344
+    ]
+  },
+  "frames/padre_walk_0.png": {
+    "sha256": "0d5bf48f98a425575ad0d42e0dcf0c0c6149193a36f2df17b9577808952613b2",
+    "size": [
+      212,
+      343
+    ]
+  },
+  "frames/padre_walk_1.png": {
+    "sha256": "43dd7402a7f1079191127a98f5d5142e6e5ba5633e754337518b3d4f6de84f9d",
+    "size": [
+      233,
+      343
+    ]
+  },
+  "frames/padre_jump_0.png": {
+    "sha256": "3a732f9ec476a814cd6f503c3bacf5c065e344a076a7121c06f5ad508137ec9b",
+    "size": [
+      241,
+      292
+    ]
+  },
+  "outfits/futbolista_idle_0.png": {
+    "sha256": "caf58dd7646ece541443785c8df5403facb821ed9f79429b6419ed457c178a8a",
+    "size": [
+      191,
+      321
+    ]
+  },
+  "outfits/futbolista_walk_0.png": {
+    "sha256": "548e156a1445fe0e89cbeccd28444a72999d3ba535814b81ef68d62fbd840da3",
+    "size": [
+      219,
+      320
+    ]
+  },
+  "outfits/futbolista_walk_1.png": {
+    "sha256": "9cae16e0e4fd7391c6fa385c1d3ec60c20a3031244f96e343daf76cbc21d6e3a",
+    "size": [
+      234,
+      316
+    ]
+  },
+  "outfits/futbolista_jump_0.png": {
+    "sha256": "3a2830f0519337a6303c0df22185faab08391607908551e59c21f87060c7ba8b",
+    "size": [
+      251,
+      284
+    ]
+  },
+  "outfits/bailarina_idle_0.png": {
+    "sha256": "08340f6c8a5b065cb556040f537680f055579830a6e2b2d7f5ab3e0efba4a219",
+    "size": [
+      165,
+      259
+    ]
+  },
+  "outfits/bailarina_walk_0.png": {
+    "sha256": "3998aec206d103b305b0c461133213f8a4f51bb250c27359dc57807771a1cf36",
+    "size": [
+      202,
+      262
+    ]
+  },
+  "outfits/bailarina_walk_1.png": {
+    "sha256": "d58fe5bb632e3a7e33d0267a430bb8de75f3fe64f4dd2409699816061e4564e3",
+    "size": [
+      200,
+      258
+    ]
+  },
+  "outfits/bailarina_jump_0.png": {
+    "sha256": "60b804b051303bc8f5b3ca49273e1f0de35e51c22d53b395bafcb90a17c246a2",
+    "size": [
+      217,
+      249
+    ]
+  },
+  "dog/idle.png": {
+    "sha256": "85e620d9d7d9aeac374b164f3358ac7e656c4d659f4bb0b6c3f81fe3bc7fdfe9",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/walk.png": {
+    "sha256": "c5db1912fec58419e86ebd4be3153417def14a6982b41d34538f723981f305fc",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/alert.png": {
+    "sha256": "0060f8faf7a162a4d2f3166d7d1a03ec8ba33b9ddd768ca32b8334291b2f2a61",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/run.png": {
+    "sha256": "d5d9e0fa0d016ab2afcfe5cdd95c3498ae9edba6855420bacb31d88c0f28a386",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/bite.png": {
+    "sha256": "ed408afb9a0ccb6d430f34ffb86957efff3ff66eb42a4f3ef0b131b95120d73e",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/hit.png": {
+    "sha256": "72d7ab2c6b3398a81418b5deafa94c94e16136bad19e002b523ce7d744f6c49c",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/stunned.png": {
+    "sha256": "72d7ab2c6b3398a81418b5deafa94c94e16136bad19e002b523ce7d744f6c49c",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/defeated.png": {
+    "sha256": "a20f7246f547ca529fa710e2e55c85147fa2c998bb81480b98c8e9bbaefd4f45",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/dalmatian/idle.png": {
+    "sha256": "ec56f87e0d8af9ef0fc1ddd59d2b2892922658a2b177ea3075a3be72d4f5834d",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/dalmatian/walk.png": {
+    "sha256": "46ac5691ed11d4f1b7104e6114fc410ed2cc4487c3a74b12d6f646747b8087ec",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/dalmatian/alert.png": {
+    "sha256": "347ac75761a34522d1bc3a053dfc6e08f38fc67b308d416d842d3686b3a8f5d4",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/dalmatian/run.png": {
+    "sha256": "bdc84662a2fe01cbd30f8c4f753f591bf7898bd1adbf1053e86ea879b124f7cb",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/dalmatian/bite.png": {
+    "sha256": "12b8dec03cbad11d27575ddff31a6abf88dc17ee15edee60c84f41cf4688bb96",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/dalmatian/hit.png": {
+    "sha256": "72ac37ed5f0ed2b0a82f2e1b12b49f78274dc36af1437b1b551627eeefd9e0f2",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/dalmatian/stunned.png": {
+    "sha256": "72ac37ed5f0ed2b0a82f2e1b12b49f78274dc36af1437b1b551627eeefd9e0f2",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/dalmatian/defeated.png": {
+    "sha256": "482b13aab9c2aad6e49ace0fe088c63c7f8757773f869e65798b375a59306424",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/doberman/idle.png": {
+    "sha256": "6fef9b5e05c2eef37210ea1b3f2b0834fdceb664cb638eabc56242ad1ed15268",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/doberman/walk.png": {
+    "sha256": "8dc46906ac555d4c8cc559ffccb36ca820390dd289ee0084de85bc34e1fb2ddb",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/doberman/alert.png": {
+    "sha256": "092b60f4edd23e08177ebb9f61ab003ee3e330c89218e9c720d933731b7fe9f9",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/doberman/run.png": {
+    "sha256": "a3868e4eeb7ec54389dd6599890d2152e613ed2b827c35ff5e059595ab5b5520",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/doberman/bite.png": {
+    "sha256": "e19b5c7cfc062e6a3cbf251de744a1806475c70344f0322fc3d0505164263f7c",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/doberman/hit.png": {
+    "sha256": "8ed1299aec5a0d98a35209b76bca58a28ef467cdc98c3d7e69620ee90e238193",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/doberman/stunned.png": {
+    "sha256": "8ed1299aec5a0d98a35209b76bca58a28ef467cdc98c3d7e69620ee90e238193",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "dog/doberman/defeated.png": {
+    "sha256": "c966c9f3a56743b164cae0f1c504e34be1757b05ad84987aaf811e6f9868e4f3",
+    "size": [
+      144,
+      108
+    ]
+  },
+  "enemies/rival_0.png": {
+    "sha256": "65bdd03175869718cc209e133037adf2b887e2bc824b6777e64994b8a2776e80",
+    "size": [
+      57,
+      101
+    ]
+  },
+  "enemies/rival_1.png": {
+    "sha256": "ef7439b9bd6062860e65cb73253fdbd2d13370d713a6427c3ad2e8db6ddba96d",
+    "size": [
+      44,
+      104
+    ]
+  },
+  "enemies/rival_2.png": {
+    "sha256": "c904ac207a8379a501c0bad014e3d5e8bc070d7e658a2bf5368d44d87319fdd4",
+    "size": [
+      60,
+      106
+    ]
+  },
+  "enemies/rival_3.png": {
+    "sha256": "eb0b9084831355043b154b92fd83ccaf531e2be14f84ecf12ffd0cb842666350",
+    "size": [
+      76,
+      116
+    ]
+  },
+  "enemies/rival_4.png": {
+    "sha256": "0b637d26a8073e260794ae208c2f142c31e75199287d72055bcdd3d04f84c825",
+    "size": [
+      122,
+      57
+    ]
+  },
+  "enemies/referee_0.png": {
+    "sha256": "497c67fca89c3bc750d4914bd197bbd1340f6c533484980d5151098107df0bd5",
+    "size": [
+      52,
+      96
+    ]
+  },
+  "enemies/referee_1.png": {
+    "sha256": "3db93c646292a285be50774bdcf5a797fe862e779a8fa57bdba0df98f709db18",
+    "size": [
+      53,
+      106
+    ]
+  },
+  "enemies/referee_2.png": {
+    "sha256": "9adbdc21e19045c4b17e98a2401686caf6adfde091bb6334f4829c41e38d5581",
+    "size": [
+      69,
+      112
+    ]
+  },
+  "enemies/referee_3.png": {
+    "sha256": "142238003ff0ae942d19beef12c9019df4e2b212a1f4cd03a7b9bf770fc67471",
+    "size": [
+      74,
+      107
+    ]
+  },
+  "enemies/referee_4.png": {
+    "sha256": "7bd9fb055dc20f7842ec05306775b72d98ef7e1cfd44db81836dd8c59a3bab3a",
+    "size": [
+      106,
+      74
+    ]
+  },
+  "enemies/novice_0.png": {
+    "sha256": "fc4c348587c2093a92d547929bcbf0aa4963d972169544b2913d264f57da0efc",
+    "size": [
+      72,
+      127
+    ]
+  },
+  "enemies/novice_1.png": {
+    "sha256": "cd4b0cc79bc6c1091e57505f2554bfd243151b394cdcb3145d81daf1feb28359",
+    "size": [
+      67,
+      129
+    ]
+  },
+  "enemies/novice_2.png": {
+    "sha256": "472c3bd1c78d2ac714e817207ee4bdace1f8882fa967e5392f89a4013b0d965a",
+    "size": [
+      69,
+      135
+    ]
+  },
+  "enemies/novice_3.png": {
+    "sha256": "ba35a1f703682bb76b5ffc3b92f7f6655498207efb5a3fd4321706a4d509e8e8",
+    "size": [
+      80,
+      132
+    ]
+  },
+  "enemies/novice_4.png": {
+    "sha256": "0811f286c655dc693bf310592720dd83e0a5cdc4850649384024f59c173847b4",
+    "size": [
+      137,
+      64
+    ]
+  },
+  "enemies/breakdancer_0.png": {
+    "sha256": "e44ff4f91cc750570ca907ce2b3e0f634467c9668018e7f3c029686f7d492721",
+    "size": [
+      53,
+      117
+    ]
+  },
+  "enemies/breakdancer_1.png": {
+    "sha256": "ec9bcff13464366a3085acd58f6f84e35610a96b1972b83a651deed0920ca3d7",
+    "size": [
+      67,
+      123
+    ]
+  },
+  "enemies/breakdancer_2.png": {
+    "sha256": "6bb2d7e82509a70766d02a7c8606515496c73a21b5547b05c45905c6f4a38502",
+    "size": [
+      105,
+      129
+    ]
+  },
+  "enemies/breakdancer_3.png": {
+    "sha256": "3be9f6a413b7b9d02ee3f4a9d6a1845e98778b7150f886b331c79514ab30e8f0",
+    "size": [
+      125,
+      69
+    ]
+  },
+  "enemies/breakdancer_4.png": {
+    "sha256": "7fe33bb06b68eea8256f22979ff76b3805f3e0589628800941f5ed7273fd3174",
+    "size": [
+      114,
+      60
+    ]
+  },
+  "enemies/pigeon_0.png": {
+    "sha256": "1e797202b08709eb3af1123d744194a5350e2a7b92dbf2b0747a5fb6111c521e",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/pigeon_1.png": {
+    "sha256": "0a2cd5904d66405dab3a64e28c9ea293a7fdffedf904338eb0b38bc270d03e4a",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/pigeon_2.png": {
+    "sha256": "9efc46868bbb6d403949bceaa370cbb618ad10e68cc2a743ef660178efd96c74",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/pigeon_3.png": {
+    "sha256": "545e095ee3ab567672fb1f7f48d138b40bda0a52bda789b87a6499b211de8e19",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/pigeon_4.png": {
+    "sha256": "8509d81fadef424223f6b201f9d2c1bcfa51f05d87f33bd80b1c33a07227cfe4",
+    "size": [
+      160,
+      160
+    ]
+  },
+  "enemies/cat_0.png": {
+    "sha256": "2cdd42c0ae8347bf13486e93978b2d8614fb9b371a345133daac1edadda4fb94",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/cat_1.png": {
+    "sha256": "9b9064736785340317367fc186144f17ba5a296e0efecf98f3fdf0367d24e638",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/cat_2.png": {
+    "sha256": "a0eda60288534f0d332d4a8727c38c8a7a5c6b231379ac77ce35e1ce7954c48a",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/cat_3.png": {
+    "sha256": "b75e33486d1c3420591df7fff53f77a61534bf1adeedf23300317258fe6d2d63",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/cat_4.png": {
+    "sha256": "b611998199f9f3bc85f9fe1c87e59c77071fdf807e2fdcfd06924a26c4b71ffa",
+    "size": [
+      160,
+      160
+    ]
+  },
+  "enemies/rat_0.png": {
+    "sha256": "32b99a59ea96fd3af95c28e1e6fd2b62f12f2576ede3aad27efc28235b88e616",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/rat_1.png": {
+    "sha256": "f2c2d80a6d258f1ac5db6f3f5c23dc92422ac3405fa0959cf8707712783dc3f0",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/rat_2.png": {
+    "sha256": "fc599bac2b54dacb25686a44230a64dc586d9c5a79268648637a2ddefbdc0cb8",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/rat_3.png": {
+    "sha256": "0b1a9f4d7c7b8d5d2a8ffe59eb36a69499618770da07f2be7e6e865a2d8d4cff",
+    "size": [
+      128,
+      96
+    ]
+  },
+  "enemies/rat_4.png": {
+    "sha256": "c59fdcadfb49353b7faf23d0ec6aadc5b22a208e7e1c5a9fb7baf5268bcd2238",
+    "size": [
+      160,
+      160
+    ]
+  },
+  "enemies/bully_0.png": {
+    "sha256": "f2b0325deb1eb9fcf5ed07a3f031865e7938317499a94b3c29693da0fd8be87e",
+    "size": [
+      142,
+      147
+    ]
+  },
+  "enemies/bully_1.png": {
+    "sha256": "1f234bdfbdea58608321c3b5eee16e130146f3c4628d3e8302f00231fe5de31a",
+    "size": [
+      142,
+      147
+    ]
+  },
+  "enemies/bully_2.png": {
+    "sha256": "0dac018677a05bc952a86047b789dbc9b9cdae30c04c8648e31bf86af46d35ce",
+    "size": [
+      142,
+      147
+    ]
+  },
+  "enemies/bully_3.png": {
+    "sha256": "53f4c63055a73424cc6ff4d33fe198f63b5fb70145d95b15a874cf600ff4b361",
+    "size": [
+      142,
+      147
+    ]
+  },
+  "enemies/bully_4.png": {
+    "sha256": "c7e16a62bcbad664e6233ff0879d8863926b76951360e068027004153909a21e",
+    "size": [
+      188,
+      185
+    ]
+  },
+  "enemies/teacher_0.png": {
+    "sha256": "ed8135b9dd765a440f475a1666235243d8de07f0d7a0c8e90fb0621160cff00d",
+    "size": [
+      130,
+      177
+    ]
+  },
+  "enemies/teacher_1.png": {
+    "sha256": "ad12849f4c6bf3b8b0d85358678f6e3389f2f43339bcda268b7e5cdfdaf31166",
+    "size": [
+      130,
+      177
+    ]
+  },
+  "enemies/teacher_2.png": {
+    "sha256": "48b15e0548a79a1c9cdc525f5ecc9cee5f67dd610ecbe0517cc800d6c9f2a87a",
+    "size": [
+      130,
+      177
+    ]
+  },
+  "enemies/teacher_3.png": {
+    "sha256": "cb9646299c0a41039fec629cc596dcd0454d74d3f20a40e3de5e5ddc5ba766c4",
+    "size": [
+      130,
+      177
+    ]
+  },
+  "enemies/teacher_4.png": {
+    "sha256": "8dd3636248441f557c04d45352f5422a10a89c8312890c67de83805dfe30ee33",
+    "size": [
+      212,
+      183
+    ]
+  },
+  "enemies/statue_0.png": {
+    "sha256": "5807ee72333ce19482f67fcdcbe7f573e1ede7f1e539c449860886a4bd9fba2b",
+    "size": [
+      150,
+      344
+    ]
+  },
+  "enemies/statue_1.png": {
+    "sha256": "44bedbca50c7819dc85f9e98e9131aacd79ad953d35c377b6a182e4eac9b6d9a",
+    "size": [
+      212,
+      343
+    ]
+  },
+  "enemies/statue_2.png": {
+    "sha256": "0caaeb9111423a56c1c1e808e96879d0f72d15f01e6fcb658ac2b22a167e05ab",
+    "size": [
+      233,
+      343
+    ]
+  },
+  "enemies/statue_3.png": {
+    "sha256": "44bedbca50c7819dc85f9e98e9131aacd79ad953d35c377b6a182e4eac9b6d9a",
+    "size": [
+      212,
+      343
+    ]
+  },
+  "enemies/statue_4.png": {
+    "sha256": "36a678bd4f44967ca1771af9e154e64147573c3ae5c2390ce33b72d50251d6ac",
+    "size": [
+      241,
+      292
+    ]
+  }
+}
