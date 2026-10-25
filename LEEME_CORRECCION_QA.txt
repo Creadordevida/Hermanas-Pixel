@@ -1,0 +1,17 @@
+PARCHE PARA GITHUB DESKTOP - LAS AVENTURAS DE MIREN Y SARA 0.9.0 RC6
+
+Problema: las pruebas de captura Flutter se ejecutaban ~30 veces, cada una volviendo a cargar todos los sprites; además continue-on-error: true ocultaba sus fallos.
+
+Este parche modifica SOLAMENTE:
+ .github/workflows/build.yml
+ lib/main.dart
+ test/qa_render_capture_test.dart
+ test/qa_outfits_capture_test.dart
+
+El contenido artístico, el mapa, las 5 vidas y las mecánicas se conservan.
+
+Instalación: Extraer ZIP, copiar SU CONTENIDO (no carpeta) dentro del repositorio clonado, reemplazar archivos, GitHub Desktop > Commit to main > Push origin.
+
+Al ejecutar Actions, el APK se compila y publica primero; las capturas reales se verifican después. Si fallan, el run se verá ROJO, aunque el APK siga descargable en Artifacts para probar. Esta es la conducta correcta.
+
+Limitación: estos cambios se han comprobado ESTÁTICAMENTE; aquí no se dispone del SDK Flutter para ejecutar testWidgets. La causa concreta de los fallos de la captura previa no está confirmada hasta expandir un error completo. Ahora el registro muestra qué recurso o captura da problemas y evita recargar las imágenes 30 veces.

@@ -159,6 +159,35 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     _loadAssets();
   }
 
+  // En QA, un mismo HermanasGame puede cambiar de capítulo sin volver a cargar
+  // las ~140 imágenes del juego en cada captura. En Android no se emplean estas
+  // propiedades y este método no altera la navegación normal.
+  void _applyQaViewport() {
+    if (widget.qaStage != null) {
+      stage = widget.qaStage!.clamp(0, 6);
+      selected = level.forcedSara ? 1 : 0;
+      _layoutStage();
+      if (widget.qaWorldX != null) {
+        hero.x = widget.qaWorldX!.clamp(actorRadius, stageWidth - actorRadius).toDouble();
+        cameraX = (hero.x - 327).clamp(0.0, stageWidth - viewW).toDouble();
+      }
+      screen = Screen.playing;
+    } else {
+      screen = widget.qaMap ? Screen.map : Screen.title;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant HermanasGame oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (resourcesReady &&
+        (oldWidget.qaStage != widget.qaStage ||
+         oldWidget.qaMap != widget.qaMap ||
+         oldWidget.qaWorldX != widget.qaWorldX)) {
+      _applyQaViewport();
+    }
+  }
+
   Future<void> _loadAssets() async {
     try {
       storage = await SharedPreferences.getInstance();
@@ -206,24 +235,23 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         for (int j=0;j<5;j++) paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
       }
       for (final item in paths.entries) {
+        // Mensajes solo en ejecución de depuración; ayudan a detectar qué
+        // imagen concreta bloquea las capturas, sin alterar el APK release.
+        assert(() {
+          if (images.length % 20 == 0) {
+            debugPrint('QA_RESOURCE_LOAD ${images.length}/${paths.length}: ${item.value}');
+          }
+          return true;
+        }());
         final blob = await rootBundle.load(item.value);
         final codec = await ui.instantiateImageCodec(blob.buffer.asUint8List());
         images[item.key] = (await codec.getNextFrame()).image;
         codec.dispose();
       }
-      if (widget.qaStage != null) {
-        stage = widget.qaStage!.clamp(0, 6);
-        selected = level.forcedSara ? 1 : 0;
-        _layoutStage();
-        if(widget.qaWorldX != null) {
-          hero.x=widget.qaWorldX!.clamp(actorRadius,stageWidth-actorRadius).toDouble();
-          cameraX=(hero.x-327).clamp(0.0,stageWidth-viewW).toDouble();
-        }
-        screen = Screen.playing;
-      } else {
-        _layoutStage();
-        if (widget.qaMap) screen = Screen.map;
-      }
+      // Se sigue preparando el nivel inicial, pero sin cargar repetidamente
+      // los recursos al recorrer las escenas de QA.
+      _layoutStage();
+      _applyQaViewport();
       if (mounted) setState(() => resourcesReady = true);
     } catch (e,stack) {
       debugPrint('Recursos incompletos: $e\n$stack');
