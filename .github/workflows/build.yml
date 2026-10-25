@@ -1,4 +1,4 @@
-name: Compilar Miren y Sara 0.9.0 CANDIDATA
+name: Compilar Miren y Sara 0.9.0 RC6 - ENEMIGOS Y ESCENARIOS
 on:
   push:
     branches: [main]
@@ -17,13 +17,15 @@ jobs:
           cache: true
       - name: Dependencias auditoría
         run: python3 -m pip install --user pillow numpy
-      - name: Integridad base 0.8.0 y de los 117 assets de la candidata
+      - name: Integridad base 0.8.0 y de todos los assets de la candidata
         shell: bash
         run: |
           set -euo pipefail
           python3 qa/verify_resources.py
+          python3 qa/verify_layered_scenes.py
           python3 qa/verify_candidate_assets.py
           python3 qa/release_gate.py
+          python3 qa/scene_metrics_vnext.py
           python3 -m unittest discover -s qa -p 'test_*.py'
       - name: Crear Android sin sobrescribir el juego
         run: flutter create --no-overwrite --platforms=android --project-name hermanas_aventura .
@@ -40,21 +42,21 @@ jobs:
           sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
       - name: Descargar dependencias del juego
         run: flutter pub get
-      - name: Analizar Dart del juego y sus pruebas
+      - name: Analizar Dart
         run: |
           flutter analyze --no-pub lib
           flutter analyze --no-pub test
       - name: Probar mecánicas, interfaz y carga de imágenes
-        run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/widget_test.dart
+        run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/hero_hearts_test.dart test/widget_test.dart
       - name: Capturar mapa y siete capítulos con el render Flutter real
         id: captures
         continue-on-error: true
-        run: flutter test test/qa_render_capture_test.dart
+        run: flutter test test/qa_render_capture_test.dart test/qa_outfits_capture_test.dart
       - name: Publicar capturas reales para revisión visual
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Capturas-REALES-Flutter-0.9.0-CANDIDATA
+          name: Capturas-REALES-Flutter-0.9.0-RC6
           path: qa/rendered_from_flutter/*.png
           if-no-files-found: warn
       - name: Construir APK de prueba (NO aprobado para publicación)
@@ -62,7 +64,7 @@ jobs:
       - name: Publicar APK para prueba en teléfono
         uses: actions/upload-artifact@v4
         with:
-          name: Miren-y-Sara-0.9.0-CANDIDATA-APK
+          name: Miren-y-Sara-0.9.0-RC6-APK
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
       - name: Informe de calidad exigente (no bloquea prueba manual)
@@ -75,8 +77,9 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Informe-QA-0.9.0-CANDIDATA
+          name: Informe-QA-0.9.0-RC6
           path: |
             qa/RESULTADO_PUERTAS.txt
             qa/CANDIDATE_ASSET_INVENTORY.json
+            qa/SCENE_SEAMS_REPORT.json
           if-no-files-found: warn

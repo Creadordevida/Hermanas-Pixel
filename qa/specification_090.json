@@ -1,37 +1,193 @@
 {
-  "project":"Las aventuras de Miren y Sara",
-  "approved_base":"0.8.0",
-  "target":"0.9.0",
-  "release":"BLOCKED_PENDING_REAL_GRAPHICS_AND_ANDROID_EVIDENCE",
-  "gameplay_window_minutes": {"target":5,"verified_in_real_game":false},
-  "all_chapters_unlocked_for_testing":true,
-  "shared_chapter_character_select":true,
-  "health_per_character":2,
-  "chapters":[
-    {"id":0,"name":"La salida de casa","character":"either","setting":"residential street","obstacle":"crate","base_graphics":"approved-080","new_enemies":["dalmatian","brown_dog","pigeon","rat"]},
-    {"id":1,"name":"Ayuntamiento de Pamplona","character":"either","setting":"town hall","obstacle":"crate","base_graphics":"approved-080","new_enemies":["brown_dog","dalmatian","pigeon","living_statue"]},
-    {"id":2,"name":"Calle Estafeta","character":"either","setting":"old town street","obstacle":"crate","base_graphics":"approved-080","new_enemies":["brown_dog","doberman","cat","rat"]},
-    {"id":3,"name":"Plaza del Castillo","character":"either","setting":"square and kiosk","obstacle":"flower_pot","base_graphics":"approved-080","new_enemies":["pigeon","cat","living_statue","rat"]},
-    {"id":4,"name":"Campo de entrenamiento","character":"miren","setting":"soccer field","obstacle":"training_cone","base_graphics":"new-not-yet-approved","new_enemies":["red_footballer","referee"]},
-    {"id":5,"name":"Escuela de danza","character":"sara","setting":"ballet school with barres and mirrors","obstacle":"gym_trestle","base_graphics":"new-not-yet-approved","new_enemies":["novice_ballerina","breakdancer"]},
-    {"id":6,"name":"El colegio","character":"either","setting":"hallway classroom computer room","obstacle":"backpack","base_graphics":"new-not-yet-approved","new_enemies":["school_bully","strict_teacher"]}
-  ],
-  "enemies":{
-    "dalmatian":{"hits":1,"attack":"bite","visual_source":"recolored-approved-dog","detect":"short","attack_interval_min_sec":1.3},
-    "brown_dog":{"hits":1,"attack":"bite","visual_source":"approved-080","detect":"medium","attack_interval_min_sec":1.3},
-    "doberman":{"hits":2,"attack":"bite","visual_source":"recolored-approved-dog","detect":"long","attack_interval_min_sec":1.3},
-    "pigeon":{"hits":1,"attack":"flight_swoop","visual_source":"pending","attack_interval_min_sec":1.2},
-    "cat":{"hits":1,"attack":"jump_ambush","visual_source":"pending","attack_interval_min_sec":1.2},
-    "rat":{"hits":1,"attack":"quick_ground_dash","visual_source":"pending","attack_interval_min_sec":1.2},
-    "living_statue":{"hits":3,"attack":"surprise_projectiles","visual_source":"pending","attack_interval_min_sec":3.4},
-    "red_footballer":{"hits":1,"attack":"running_contact","visual_source":"approved-concept-only","attack_interval_min_sec":1.2},
-    "referee":{"hits":3,"attack":"red_card","visual_source":"approved-concept-only","attack_interval_min_sec":3.4},
-    "novice_ballerina":{"hits":1,"attack":"spinning_contact","visual_source":"approved-concept-only","attack_interval_min_sec":1.2},
-    "breakdancer":{"hits":3,"attack":"flying_sneaker","visual_source":"approved-concept-only","attack_interval_min_sec":3.4},
-    "school_bully":{"hits":1,"attack":"contact_push","visual_source":"pending","attack_interval_min_sec":1.2},
-    "strict_teacher":{"hits":3,"attack":"chalkboard_eraser","visual_source":"pending","attack_interval_min_sec":3.4}
+  "project": "Las aventuras de Miren y Sara",
+  "approved_base": "0.8.0",
+  "target": "0.9.0",
+  "release": "BLOCKED_PENDING_REAL_GRAPHICS_AND_ANDROID_EVIDENCE",
+  "gameplay_window_minutes": {
+    "target": 5,
+    "verified_in_real_game": false
   },
-  "critical_rules":[
+  "all_chapters_unlocked_for_testing": true,
+  "shared_chapter_character_select": true,
+  "health_per_character": 5,
+  "chapters": [
+    {
+      "id": 0,
+      "name": "La salida de casa",
+      "character": "either",
+      "setting": "residential street",
+      "obstacle": "crate",
+      "base_graphics": "approved-080",
+      "new_enemies": [
+        "dalmatian",
+        "brown_dog",
+        "pigeon",
+        "rat"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Ayuntamiento de Pamplona",
+      "character": "either",
+      "setting": "town hall",
+      "obstacle": "crate",
+      "base_graphics": "approved-080",
+      "new_enemies": [
+        "brown_dog",
+        "dalmatian",
+        "pigeon",
+        "living_statue"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Calle Estafeta",
+      "character": "either",
+      "setting": "old town street",
+      "obstacle": "crate",
+      "base_graphics": "approved-080",
+      "new_enemies": [
+        "brown_dog",
+        "doberman",
+        "cat",
+        "rat"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Plaza del Castillo",
+      "character": "either",
+      "setting": "square and kiosk",
+      "obstacle": "flower_pot",
+      "base_graphics": "approved-080",
+      "new_enemies": [
+        "pigeon",
+        "cat",
+        "living_statue",
+        "rat"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Campo de entrenamiento",
+      "character": "miren",
+      "setting": "soccer field",
+      "obstacle": "training_cone",
+      "base_graphics": "new-not-yet-approved",
+      "new_enemies": [
+        "red_footballer",
+        "referee"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Escuela de danza",
+      "character": "sara",
+      "setting": "ballet school with barres and mirrors",
+      "obstacle": "gym_trestle",
+      "base_graphics": "new-not-yet-approved",
+      "new_enemies": [
+        "novice_ballerina",
+        "breakdancer"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "El colegio",
+      "character": "either",
+      "setting": "hallway classroom computer room",
+      "obstacle": "backpack",
+      "base_graphics": "new-not-yet-approved",
+      "new_enemies": [
+        "school_bully",
+        "strict_teacher"
+      ]
+    }
+  ],
+  "enemies": {
+    "dalmatian": {
+      "hits": 1,
+      "attack": "bite",
+      "visual_source": "recolored-approved-dog",
+      "detect": "short",
+      "attack_interval_min_sec": 1.3
+    },
+    "brown_dog": {
+      "hits": 1,
+      "attack": "bite",
+      "visual_source": "approved-080",
+      "detect": "medium",
+      "attack_interval_min_sec": 1.3
+    },
+    "doberman": {
+      "hits": 2,
+      "attack": "bite",
+      "visual_source": "recolored-approved-dog",
+      "detect": "long",
+      "attack_interval_min_sec": 1.3
+    },
+    "pigeon": {
+      "hits": 1,
+      "attack": "flight_swoop",
+      "visual_source": "pending",
+      "attack_interval_min_sec": 1.2
+    },
+    "cat": {
+      "hits": 1,
+      "attack": "jump_ambush",
+      "visual_source": "pending",
+      "attack_interval_min_sec": 1.2
+    },
+    "rat": {
+      "hits": 1,
+      "attack": "quick_ground_dash",
+      "visual_source": "pending",
+      "attack_interval_min_sec": 1.2
+    },
+    "living_statue": {
+      "hits": 3,
+      "attack": "surprise_projectiles",
+      "visual_source": "pending",
+      "attack_interval_min_sec": 3.4
+    },
+    "red_footballer": {
+      "hits": 1,
+      "attack": "running_contact",
+      "visual_source": "approved-concept-only",
+      "attack_interval_min_sec": 1.2
+    },
+    "referee": {
+      "hits": 3,
+      "attack": "red_card",
+      "visual_source": "approved-concept-only",
+      "attack_interval_min_sec": 3.4
+    },
+    "novice_ballerina": {
+      "hits": 1,
+      "attack": "spinning_contact",
+      "visual_source": "approved-concept-only",
+      "attack_interval_min_sec": 1.2
+    },
+    "breakdancer": {
+      "hits": 3,
+      "attack": "flying_sneaker",
+      "visual_source": "approved-concept-only",
+      "attack_interval_min_sec": 3.4
+    },
+    "school_bully": {
+      "hits": 1,
+      "attack": "contact_push",
+      "visual_source": "pending",
+      "attack_interval_min_sec": 1.2
+    },
+    "strict_teacher": {
+      "hits": 3,
+      "attack": "chalkboard_eraser",
+      "visual_source": "pending",
+      "attack_interval_min_sec": 3.4
+    }
+  },
+  "critical_rules": [
     "Do not substitute concept mockups for shipped sprites",
     "Do not introduce flat cartoon placeholder art",
     "Keep original 0.8.0 scenery and pavement aligned with collisions",

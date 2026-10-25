@@ -37,10 +37,13 @@ Future<void> _capture(GlobalKey key,String filename) async {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  final targets=<({String title,int? stage,bool map})>[
-    (title:'titulo_090',stage:null,map:false),
-    (title:'mapa_090',stage:null,map:true),
-    for(var i=0;i<7;i++) (title:'capitulo_${i+1}_090',stage:i,map:false),
+  final targets=<({String title,int? stage,bool map,double? worldX})>[
+    (title:'titulo_090',stage:null,map:false,worldX:null),
+    (title:'mapa_090',stage:null,map:true,worldX:null),
+    for(var i=0;i<7;i++) (title:'capitulo_${i+1}_inicio',stage:i,map:false,worldX:200),
+    for(var i=0;i<7;i++) (title:'capitulo_${i+1}_union',stage:i,map:false,worldX:1380),
+    for(var i=0;i<7;i++) (title:'capitulo_${i+1}_mitad',stage:i,map:false,worldX:18300),
+    for(var i=0;i<7;i++) (title:'capitulo_${i+1}_final',stage:i,map:false,worldX:35650),
   ];
   for(final target in targets) {
     testWidgets('Render real Flutter: ${target.title}',(tester) async {
@@ -49,7 +52,7 @@ void main() {
       final boundaryKey=GlobalKey();
       await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
         key:boundaryKey,
-        child:HermanasGame(qaStage:target.stage,qaMap:target.map),
+        child:HermanasGame(qaStage:target.stage,qaMap:target.map,qaWorldX:target.worldX),
       )));
       await _assetsLoaded(tester);
       // Los recursos se dibujan antes de guardar la imagen del juego real.

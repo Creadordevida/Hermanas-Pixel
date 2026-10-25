@@ -1,0 +1,129 @@
+{
+  "0": {
+    "file": "mid/stage_0.png",
+    "source": "level_pixel.png",
+    "source_crop": [
+      310,
+      330,
+      950,
+      380
+    ],
+    "y_start": 330,
+    "y_end": 380,
+    "width": 640,
+    "sha256": "c5680f8b9c8e201a03ef7e7ea43c2f11b322d0183393761081f550c3483259b8",
+    "edge_mae": 0.0
+  },
+  "1": {
+    "file": "mid/stage_1.png",
+    "source": "level_pixel.png",
+    "source_crop": [
+      310,
+      355,
+      950,
+      390
+    ],
+    "y_start": 355,
+    "y_end": 390,
+    "width": 640,
+    "sha256": "9ca28a6fd86a8ee19ebb46b2dd4b0cad2a56289e07eece804d9252e1cb7f126c",
+    "edge_mae": 0.0
+  },
+  "2": {
+    "file": "mid/stage_2.png",
+    "source": "level_estafeta.png",
+    "source_crop": [
+      260,
+      330,
+      900,
+      390
+    ],
+    "y_start": 330,
+    "y_end": 390,
+    "width": 640,
+    "sha256": "cb1811389b2b05649cb26ad6d7dabc7edfc54a1fb82d66ddcff3e2b3e83e22f3",
+    "edge_mae": 0.0
+  },
+  "3": {
+    "file": "mid/stage_3.png",
+    "source": "level_pixel.png",
+    "source_crop": [
+      310,
+      345,
+      950,
+      390
+    ],
+    "y_start": 345,
+    "y_end": 390,
+    "width": 640,
+    "sha256": "eddac35128195d91bd974d6f55cfcc60f0328ca3af6f4fcbc0dcef034523dc6b",
+    "edge_mae": 0.0
+  },
+  "4": {
+    "file": "mid/stage_4.png",
+    "source": "scenes/football.png",
+    "source_crop": [
+      205,
+      196,
+      845,
+      386
+    ],
+    "y_start": 196,
+    "y_end": 386,
+    "width": 640,
+    "sha256": "76fe2d8fd509bdd0a4daffef998e200b50acd4f5c9f943e3ef44db3b42b3923a",
+    "edge_mae": 0.0
+  },
+  "5": {
+    "file": "mid/stage_5.png",
+    "source": "scenes/ballet_refined.png",
+    "source_crop": [
+      280,
+      170,
+      920,
+      286
+    ],
+    "y_start": 170,
+    "y_end": 286,
+    "width": 640,
+    "sha256": "fecdea89f27f3bcfe97e0bdada3d0edc431ee56d6676e2d371b4533ae0ec1a32",
+    "edge_mae": 0.0
+  },
+  "6": {
+    "file": "mid/stage_6.png",
+    "source": "scenes/school.png",
+    "source_crop": [
+      280,
+      172,
+      920,
+      278
+    ],
+    "y_start": 172,
+    "y_end": 278,
+    "width": 640,
+    "sha256": "2fccebaf4585ad443baa1aa3efc0b76a715276988ad99a38b5099552f5474579",
+    "edge_mae": 0.0
+  },
+  "school_classroom": {
+    "file": "mid/school_classroom.png",
+    "source": "scenes/school_classroom.png",
+    "source_crop": [
+      280,
+      172,
+      920,
+      278
+    ],
+    "sha256": "88db37c4022a3c9d0968334929c2f59ceca944c8de3a3f8b3e96e6c670de4699"
+  },
+  "school_computers": {
+    "file": "mid/school_computers.png",
+    "source": "scenes/school_computers.png",
+    "source_crop": [
+      280,
+      172,
+      920,
+      278
+    ],
+    "sha256": "6844535d1e6b2d420b9da25fa21efc7679b785a34269bd7fb322f7692f77bbb6"
+  }
+}

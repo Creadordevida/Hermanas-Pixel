@@ -1,0 +1,176 @@
+{
+  "futbolista": [
+    {
+      "name": "idle_0",
+      "path": "assets/images/outfits/futbolista_idle_0.png",
+      "size": [
+        301,
+        498
+      ],
+      "sha256": "44e0e09af92902ce252c941f1884ae53931bc59393164406e16d7fd6d776c662",
+      "bbox_original": [
+        15,
+        75,
+        308,
+        565
+      ],
+      "source": "reference/MIREN_FUTBOL_OJOS_MARRONES_APROBADO.png",
+      "manual_repair": null
+    },
+    {
+      "name": "walk_0",
+      "path": "assets/images/outfits/futbolista_walk_0.png",
+      "size": [
+        349,
+        499
+      ],
+      "sha256": "49f88f49507fc0afcac90b299e04fa39342d7c4f73f084ec1f1b06288705f40f",
+      "bbox_original": [
+        395,
+        75,
+        736,
+        566
+      ],
+      "source": "reference/MIREN_FUTBOL_OJOS_MARRONES_APROBADO.png",
+      "manual_repair": null
+    },
+    {
+      "name": "walk_1",
+      "path": "assets/images/outfits/futbolista_walk_1.png",
+      "size": [
+        334,
+        499
+      ],
+      "sha256": "538a2df9c79f2ff6d03800f9ecb14967b34904d8f0b67340d49ffb547c8e228a",
+      "bbox_original": [
+        814,
+        75,
+        1140,
+        566
+      ],
+      "source": "reference/MIREN_FUTBOL_OJOS_MARRONES_APROBADO.png",
+      "manual_repair": null
+    },
+    {
+      "name": "jump_0",
+      "path": "assets/images/outfits/futbolista_jump_0.png",
+      "size": [
+        370,
+        514
+      ],
+      "sha256": "a76e861a60af1a5e0d3a97f4f967be36533584a06cfce0ff2050941acb61ce46",
+      "bbox_original": [
+        128,
+        634,
+        490,
+        1140
+      ],
+      "source": "reference/MIREN_FUTBOL_OJOS_MARRONES_APROBADO.png",
+      "manual_repair": null
+    },
+    {
+      "name": "attack_0",
+      "path": "assets/images/outfits/futbolista_attack_0.png",
+      "size": [
+        539,
+        507
+      ],
+      "sha256": "acc38dafaa3f3433f3f2344f36badd90501b1ae74bda94ab37add61a6e1ec2de",
+      "bbox_original": [
+        592,
+        690,
+        1123,
+        1189
+      ],
+      "source": "reference/MIREN_FUTBOL_OJOS_MARRONES_APROBADO.png",
+      "manual_repair": null
+    }
+  ],
+  "bailarina": [
+    {
+      "name": "idle_0",
+      "path": "assets/images/outfits/bailarina_idle_0.png",
+      "size": [
+        198,
+        354
+      ],
+      "sha256": "6e181909e69ca4d4e8ad448041efc2594c4bc0540506ec18b67da03971f64618",
+      "bbox_original": [
+        0,
+        551,
+        190,
+        897
+      ],
+      "source": "reference/SARA_DANZA_APROBADO.png",
+      "manual_repair": null
+    },
+    {
+      "name": "walk_0",
+      "path": "assets/images/outfits/bailarina_walk_0.png",
+      "size": [
+        228,
+        352
+      ],
+      "sha256": "d153e1bf7dc99b1a15a4e966a68d9d5f12de7430b6ef5673f952c0265bc2e4f2",
+      "bbox_original": [
+        200,
+        555,
+        420,
+        899
+      ],
+      "source": "reference/SARA_DANZA_APROBADO.png",
+      "manual_repair": null
+    },
+    {
+      "name": "walk_1",
+      "path": "assets/images/outfits/bailarina_walk_1.png",
+      "size": [
+        223,
+        345
+      ],
+      "sha256": "2fdc3094d6616b0d65606250b448c230f8ed77fd318d6f959e79eb532760edfd",
+      "bbox_original": [
+        404,
+        562,
+        619,
+        899
+      ],
+      "source": "reference/SARA_DANZA_APROBADO.png",
+      "manual_repair": null
+    },
+    {
+      "name": "jump_0",
+      "path": "assets/images/outfits/bailarina_jump_0.png",
+      "size": [
+        212,
+        342
+      ],
+      "sha256": "155c77d2a1be21a181f2aa475efcf1ee860b011f9886f710d839ea95bc465f8e",
+      "bbox_original": [
+        592,
+        500,
+        796,
+        834
+      ],
+      "source": "reference/SARA_DANZA_APROBADO.png",
+      "manual_repair": null
+    },
+    {
+      "name": "attack_0",
+      "path": "assets/images/outfits/bailarina_attack_0.png",
+      "size": [
+        367,
+        351
+      ],
+      "sha256": "84751782cc4fdf0c1e0926eb12143821edd87456f12ab26ba8af8f2868dbe644",
+      "bbox_original": [
+        789,
+        559,
+        1122,
+        902
+      ],
+      "source": "reference/SARA_DANZA_APROBADO.png",
+      "manual_repair": "mano derecha extendida en borde de hoja"
+    }
+  ]
+}

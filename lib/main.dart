@@ -5,13 +5,15 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'sprite_bounds.g.dart';
+import 'hero_hearts.dart';
 
 const double viewW = 800;
 const double viewH = 450;
 const double groundY = 390;
 const double stageWidth = 36500; // ~3.6 minutes walking, closer to 5 including obstacles and enemies.
 const double actorRadius = 14;
-const double actorHeight = 91;
+const double actorHeight = 118;
 const String saveKey = 'miren_sara_v090_save';
 const String oldSaveKey = 'miren_sara_v080_save';
 const List<String> chapterNames = [
@@ -73,7 +75,7 @@ class Enemy {
     _ => 72,
   };
   double get detection => kind == 'dog_dalmatian' ? 145 : kind == 'dog_doberman' ? 290 : 220;
-  double get height => aerial ? 99 + 30 * math.sin(t * 4) : kind == 'rat' ? 21 : 33;
+  double get height => aerial ? 99 + 30 * math.sin(t * 4) : kind == 'rat' ? 21 : 64;
 }
 
 class Projectile {
@@ -114,10 +116,12 @@ void main() async {
 }
 
 class HermanasGame extends StatefulWidget {
-  const HermanasGame({super.key, this.qaStage, this.qaMap = false});
+  const HermanasGame({super.key, this.qaStage, this.qaMap = false, this.qaWorldX});
   /// Entradas de diagnóstico usadas solo por testWidgets; en Android son null/false.
   final int? qaStage;
   final bool qaMap;
+  /// Posición del recorrido utilizada por capturas de QA, nunca por el juego Android.
+  final double? qaWorldX;
   @override
   State<HermanasGame> createState() => _HermanasGameState();
 }
@@ -139,7 +143,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   final List<Projectile> shots = [];
   final Set<int> collected = {};
   final Set<int> completed = {};
-  int stage = 0, selected = 0, hearts = 2, totalCoins = 0, introLine = 0;
+  int stage = 0, selected = 0, hearts = maxHeroHearts, totalCoins = 0, introLine = 0;
   bool introPlayed = false, leftHeld = false, rightHeld = false;
   double time = 0, levelTime = 0, lastMicros = 0, lastSaveTime = 0;
   double cameraX = 0, lastAttackTime = -10, checkpointX = 145, particlesUntil = -10;
@@ -162,7 +166,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       final paths = <String,String>{
         'title':'assets/images/title_approved.png',
         'logo':'assets/images/brand_logo_twc.png',
-        'map':'assets/images/worldmap/pamplona.png',
+        'map':'assets/images/worldmap/pamplona_aprobado.png',
         'crate':'assets/images/crate.png',
         'coin':'assets/images/coin.png',
         'ball':'assets/images/ball.png',
@@ -170,10 +174,14 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       };
       for (int i=0;i<7;i++) {
         paths['scene_$i'] = i<4 ? 'assets/images/${chapterScenes[i]}.png'
-          : 'assets/images/scenes/${chapterScenes[i]}.png';
+          : 'assets/images/scenes/${i==5 ? 'ballet_refined' : chapterScenes[i]}.png';
+        paths['ground_$i'] = 'assets/images/ground/stage_$i.png';
+        paths['mid_$i'] = 'assets/images/mid/stage_$i.png';
+        if (i == 4) paths['mid_4_plain'] = 'assets/images/mid/stage_4_plain.png';
       }
       for(final kind in ['classroom','computers']) {
         paths['scene_school_$kind'] = 'assets/images/scenes/school_$kind.png';
+        paths['mid_school_$kind'] = 'assets/images/mid/school_$kind.png';
       }
       for (final item in ['cone','planter','backpack','gym_bench','red_card','shoe','eraser']) {
         paths[item] = 'assets/images/props/$item.png';
@@ -182,6 +190,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         for (final pose in ['idle_0','walk_0','walk_1','jump_0']) {
           paths['${role}_$pose'] = 'assets/images/frames/${role}_$pose.png';
           if (role != 'padre') paths['costume_${role}_$pose'] = 'assets/images/outfits/${role}_$pose.png';
+        }
+        // Ataques con el atuendo APROBADO, sin superponer parches de color.
+        if (role != 'padre') {
+          paths['costume_${role}_attack_0'] = 'assets/images/outfits/${role}_attack_0.png';
         }
       }
       for (final pose in ['idle','walk','alert','run','bite','hit','stunned','defeated']) {
@@ -203,6 +215,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         stage = widget.qaStage!.clamp(0, 6);
         selected = level.forcedSara ? 1 : 0;
         _layoutStage();
+        if(widget.qaWorldX != null) {
+          hero.x=widget.qaWorldX!.clamp(actorRadius,stageWidth-actorRadius).toDouble();
+          cameraX=(hero.x-327).clamp(0.0,stageWidth-viewW).toDouble();
+        }
         screen = Screen.playing;
       } else {
         _layoutStage();
@@ -246,7 +262,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     // The chapter's strong thematic opponent always appears near its last segment.
     if (stage>=4) enemies.add(Enemy(enemies.length,level.enemies.last,stageWidth-980));
     hero=Character(145);otherSister=Character(230);father=Character(67);
-    cameraX=0;checkpointX=145;hearts=2;lastAttackTime=-10;
+    cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
     levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
   }
 
@@ -402,7 +418,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         if(!shot.active) continue;
         for(final foe in enemies) {
           if(foe.defeated || foe.stunned>0)continue;
-          final ey=groundY-foe.height;
+          final ey=groundY-(foe.aerial?94:foe.kind=='rat'?24:64);
           if((shot.x-foe.x).abs()<37 && (shot.y-ey).abs()<(foe.aerial?42:51)) {
             foe.hits++;foe.stunned=.66;foe.t=0;shot.active=false;
             particlesUntil=time+.4;
@@ -454,7 +470,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
 
   void _receiveDamage(int direction) {
     if(time<hero.hurtUntil || hearts<=0)return;
-    hearts=math.max(0,hearts-1);
+    hearts=heartsAfterDamage(hearts);
     hero.hurtUntil=time+1.65;
     hero.vx=direction*145;hero.vy=-235;hero.grounded=false;
     particlesUntil=time+.3;
@@ -477,7 +493,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   }
   void _retry() {
     final cp=checkpointX;
-    _layoutStage();hero.x=cp;hearts=2;
+    _layoutStage();hero.x=cp;hearts=maxHeroHearts;
     cameraX=(cp-300).clamp(0.0,stageWidth-viewW).toDouble();
     // Reset only the unfinished part of the chapter after checkpoint.
     screen=Screen.playing;_save();setState((){});
@@ -557,35 +573,47 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       child:Image.asset('assets/images/brand_logo_twc.png',fit:BoxFit.contain))),
   ]);
 
-  // Free chapter selection is intentionally not tied to completed chapters in the test version.
-  // Switch to sequential mode in future without changing level logic.
-  static const List<Offset> mapStops = [
-    Offset(120,275),Offset(349,130),Offset(542,238),Offset(419,312),
-    Offset(683,128),Offset(637,349),Offset(233,361),
+  // Las coordenadas de esta imagen proceden de la ilustración EXACTA aprobada
+  // (1672 x 941). No generar carteles ni duplicar títulos encima del arte.
+  // La selección libre se conserva durante las pruebas de Android.
+  static const double mapArtWidth = 1672;
+  static const double mapArtHeight = 941;
+  static const List<Rect> mapHitboxesOriginal = [
+    Rect.fromLTWH(103,222,211,84),  // Casa
+    Rect.fromLTWH(488,108,214,99),  // Ayuntamiento
+    Rect.fromLTWH(985,262,215,88),  // Estafeta
+    Rect.fromLTWH(691,407,198,80),  // Plaza y quiosco
+    Rect.fromLTWH(1351,165,195,91), // Fútbol
+    Rect.fromLTWH(1299,475,197,81), // Danza
+    Rect.fromLTWH(240,534,220,88),  // Colegio
   ];
   Widget _map() => Stack(children:[
-    Positioned.fill(child:Image.asset('assets/images/worldmap/pamplona.png',fit:BoxFit.cover)),
-    Positioned(left:9,right:9,top:5,child:Container(height:44,alignment:Alignment.center,
-      decoration:BoxDecoration(color:const Color(0xe00b3052),borderRadius:BorderRadius.circular(7)),
-      child:const Text('MAPA DE PAMPLONA · ELIGE UN CAPÍTULO',
-        style:TextStyle(fontSize:20,color:Color(0xffffde88),fontWeight:FontWeight.w900)))),
-    for(int i=0;i<7;i++)Positioned(left:mapStops[i].dx-54,top:mapStops[i].dy-25,
-      child:GestureDetector(onTap:()=>_selectChapter(i),
-        child:Container(width:108,height:56,padding:const EdgeInsets.symmetric(horizontal:3),
-          decoration:BoxDecoration(color:completed.contains(i)?const Color(0xe01c6c47):const Color(0xe00b3766),
-            borderRadius:BorderRadius.circular(8),border:Border.all(color:const Color(0xffffd96c),width:3),
-            boxShadow:const [BoxShadow(color:Colors.black54,blurRadius:3)]),
-          child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
-            Text('${completed.contains(i)?'✓ ':''}CAP. ${i+1}',
-              style:const TextStyle(color:Color(0xffffda66),fontWeight:FontWeight.w900,fontSize:15)),
-            Text(chapterNames[i],textAlign:TextAlign.center,maxLines:2,overflow:TextOverflow.ellipsis,
-              style:const TextStyle(color:Colors.white,fontWeight:FontWeight.bold,fontSize:10)),
-          ])))),
-    Positioned(bottom:7,left:12,child:_pixelButton('◀ MENÚ',_returnTitle,width:125)),
-    Positioned(right:12,bottom:8,child:Container(padding:const EdgeInsets.all(7),
-      decoration:BoxDecoration(color:const Color(0xd00a2d51),borderRadius:BorderRadius.circular(7)),
-      child:Text('COMPLETADOS: ${completed.length}/7   ·   MONEDAS: $totalCoins',
-        style:const TextStyle(color:Colors.white,fontSize:12,fontWeight:FontWeight.bold)))),
+    // Ajuste 1672/941 ≃ 800/450, sin estirar un fondo antiguo del Ayuntamiento.
+    const Positioned.fill(child:Image(image:AssetImage(
+      'assets/images/worldmap/pamplona_aprobado.png'),fit:BoxFit.fill)),
+    for(int i=0;i<mapHitboxesOriginal.length;i++)
+      Positioned(
+        left: mapHitboxesOriginal[i].left*viewW/mapArtWidth,
+        top: mapHitboxesOriginal[i].top*viewH/mapArtHeight,
+        width: mapHitboxesOriginal[i].width*viewW/mapArtWidth,
+        height: mapHitboxesOriginal[i].height*viewH/mapArtHeight,
+        child:Semantics(label:'Capítulo ${i+1}: ${chapterNames[i]}',button:true,
+          child:Material(color:Colors.transparent,
+            child:InkWell(onTap:()=>_selectChapter(i),splashColor:Colors.white24,
+              child:const SizedBox.expand()))),
+      ),
+    // Botón MENÚ que está DIBUJADO en la propia imagen aprobada.
+    Positioned(left:22,top:396,width:122,height:43,
+      child:Material(color:Colors.transparent,child:InkWell(onTap:_returnTitle))),
+    // El contador de la ilustración era de ejemplo (123 monedas): actualizaremos
+    // solo esa cifra dinámica con un recuadro del mismo color y tipografía.
+    Positioned(bottom:5,right:9,child:Container(
+      width:250,height:27,alignment:Alignment.centerRight,
+      padding:const EdgeInsets.symmetric(horizontal:8),
+      decoration:BoxDecoration(color:const Color(0xff08335c),
+        borderRadius:BorderRadius.circular(5)),
+      child:Text('COMPLETADOS: ${completed.length}/7  ·  MONEDAS: $totalCoins',
+        style:const TextStyle(color:Colors.white,fontSize:10,fontWeight:FontWeight.w900)))),
   ]);
 
   Widget _chooseScreen()=>Stack(children:[
@@ -607,21 +635,21 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           style:const TextStyle(fontSize:24,color:Colors.white,fontWeight:FontWeight.w900)),
           SizedBox(height:209,child:Image.asset('assets/images/$folder/${role}_idle_0.png',fit:BoxFit.contain)),
           Text(index==0?'BALÓN  ⚽':'PEINE  ✦',style:const TextStyle(color:Color(0xffffd783),fontSize:18,fontWeight:FontWeight.w900)),
-          const Text('♥  ♥',style:TextStyle(color:Colors.redAccent,fontSize:28)),
+          const HeroHeartsRow(hearts:maxHeroHearts,iconSize:22),
           const Text('TOCA PARA ELEGIR',style:TextStyle(color:Colors.white,fontSize:12,fontWeight:FontWeight.bold)),
         ]))));
   }
 
   Widget _play({bool showFamily=false,Widget? overlay}) => Stack(children:[
     Positioned.fill(child:CustomPaint(painter:StagePainter(
-      images:images,stage:stage,cameraX:cameraX,time:time,hero:hero,
+      images:images,stage:stage,cameraX:cameraX,time:time,lastAttackTime:lastAttackTime,hero:hero,
       otherSister:otherSister,father:father,showFamily:showFamily || exitTime>=0,
       selected:selected,obstacles:obstacles,platforms:platforms,
       coins:coins,collected:collected,enemies:enemies,shots:shots,particlesUntil:particlesUntil))),
     Positioned(left:10,top:9,child:Container(padding:const EdgeInsets.all(8),
       decoration:BoxDecoration(color:const Color(0xdd0d3050),borderRadius:BorderRadius.circular(7)),
       child:Row(children:[Text(selected==0?'MIREN':'SARA',style:const TextStyle(color:Colors.white,fontWeight:FontWeight.w900)),
-        const SizedBox(width:12),Text(List<String>.filled(hearts,'♥').join(' '),style:const TextStyle(color:Color(0xffff6373),fontSize:23)),
+        const SizedBox(width:9),HeroHeartsRow(hearts:hearts,iconSize:18),
         const SizedBox(width:10),Image.asset('assets/images/coin.png',width:25,height:25),
         Text(' $totalCoins',style:const TextStyle(color:Colors.white,fontSize:17,fontWeight:FontWeight.bold))]))),
     Positioned(left:0,right:0,top:10,child:IgnorePointer(child:Text('CAP. ${stage+1} · ${chapterNames[stage]}',
@@ -667,15 +695,25 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       ])))));
 }
 
+// Secciones de fondos: escala nativa y suelo conocido. Prohibido espejar.
+// Los tramos de apoyo deberán sustituirse por arte exclusivo si repiten un hito.
+class SectionArt {
+  const SectionArt(this.assetKey,this.floorInImage,{this.cropStart=0});
+  final String assetKey;
+  final double floorInImage;
+  final double cropStart;
+}
+
 class StagePainter extends CustomPainter {
   StagePainter({required this.images,required this.stage,required this.cameraX,required this.time,
+    required this.lastAttackTime,
     required this.hero,required this.otherSister,required this.father,required this.showFamily,
     required this.selected,required this.obstacles,required this.platforms,
     required this.coins,required this.collected,required this.enemies,required this.shots,
     required this.particlesUntil});
   final Map<String,ui.Image> images;
   final int stage,selected;
-  final double cameraX,time,particlesUntil;
+  final double cameraX,time,particlesUntil,lastAttackTime;
   final Character hero,otherSister,father;
   final bool showFamily;
   final List<Obstacle> obstacles;
@@ -755,23 +793,54 @@ class StagePainter extends CustomPainter {
         final mode=foe.defeated?'defeated':foe.stunned>0?'hit':foe.t%1>.5?'run':'walk';
         _sprite(canvas,images['dog_${variant}_$mode'],Rect.fromLTWH(x-48,y-44,96,78));
       } else if(['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'].contains(foe.kind)) {
-        final frame=foe.defeated?4:foe.stunned>0?3:foe.launched?3:(foe.t*6).floor()%3;
+        // Distinct combat states: a teacher must not run while throwing an exam,
+        // and a referee must actually show his raised red card in wind-up.
+        final int frame;
+        if (foe.defeated) {
+          frame=4;
+        } else if (foe.stunned>0) {
+          frame=foe.ranged ? 1 : 3;
+        } else if (foe.launched) {
+          frame=foe.kind=='referee' ? 2 : foe.kind=='breakdancer' ? 3
+              : foe.kind=='teacher' ? 2 : 3;
+        } else {
+          frame=foe.ranged ? ((foe.t*2).floor()%2) : ((foe.t*6).floor()%3);
+        }
         final img=images['enemy_${foe.kind}_$frame'];
         if(img!=null) {
-          final hh=foe.kind=='breakdancer'?91.0:foe.kind=='referee'?100.0:
-            foe.kind=='novice'?85.0:foe.kind=='pigeon'?59.0:
-            foe.kind=='rat'?46.0:foe.kind=='cat'?67.0:
-            foe.kind=='teacher'?100.0:foe.kind=='statue'?102.0:90.0;
-          // Fixed scale and feet anchor across every pose. A lying sprite may be
-          // wider, but it NEVER gets the idle character's full vertical height.
-          final rest=images['enemy_${foe.kind}_0'];
-          final baseW=rest == null ? hh*.65 : hh*rest.width/rest.height;
-          final dead=foe.defeated || foe.stunned>0;
-          final maxWidth=baseW*(dead ? 1.8 : 1.10);
-          final scale=math.min(hh/img.height, maxWidth/img.width);
-          final ww=img.width*scale;
-          final actualHeight=img.height*scale;
-          _sprite(canvas,img,Rect.fromLTWH(x-ww/2,groundY-actualHeight+(foe.aerial?-58:3),ww,actualHeight));
+          // Una misma escala de píxel para TODOS los fotogramas del enemigo:
+          // jamás normalizar cada frame a una altura arbitraria (causa del gigantismo).
+          final targetHeight = switch(foe.kind) {
+            'rival' => 124.0, 'novice' => 117.0, 'bully' => 137.0,
+            'referee' => 143.0, 'teacher' => 145.0, 'breakdancer' => 126.0,
+            'statue' => 139.0, 'pigeon' => 64.0,
+            'rat' => 41.0, 'cat' => 72.0, _ => 105.0,
+          };
+          final visible=enemyVisibleBounds['${foe.kind}_$frame'];
+          final canonical=enemyVisibleBounds['${foe.kind}_0'];
+          if(visible != null && canonical != null){
+            // The visible body is anchored at the SAME floor and native pixel
+            // scale across idle / run / hit / defeat. Transparent padding in a
+            // source sheet cannot make the character float or grow.
+            final pixelScale=targetHeight/canonical.height;
+            final ww=visible.width*pixelScale;
+            final actualHeight=visible.height*pixelScale;
+            final airborne=foe.aerial ? -58.0 : 0.0;
+            // The pivot is the feet, so a wind-up never slides the enemy off the floor.
+            // Small movement for large characters whose source sheets have
+            // nearly identical waiting/walking poses (not a sprite-scale hack).
+            final lean=foe.launched ? -0.085 :
+              (foe.kind=='bully' && !foe.defeated ? .028*math.sin(foe.t*8) : 0.0);
+            canvas.save();
+            if(lean != 0){
+              canvas.translate(x,groundY+airborne);
+              canvas.rotate(lean);
+              canvas.translate(-x,-groundY-airborne);
+            }
+            _sprite(canvas,img,Rect.fromLTWH(x-ww/2,
+              groundY-actualHeight+airborne,ww,actualHeight),source:visible);
+            canvas.restore();
+          }
         }
       }
       if(foe.defeated)canvas.restore();
@@ -805,41 +874,98 @@ class StagePainter extends CustomPainter {
     canvas.restore();
   }
 
+  // SNES-inspired THREE-PLANE world: distant approved illustration (camera
+  // only pans across it ONCE); independently tileable near fence / garden /
+  // barres; native-pixel paving/turf/parquet with world-speed collisions.
+  // Unlike RC3, no foreground car/town hall/gazebo is duplicated every 1320px.
+  // All original 0.8.0 image files remain untouched and load as far references.
+  static const List<double> _floorArtTop = [380,390,390,390,386,286,278];
+  static const List<double> _midArtTop = [330,355,330,345,196,170,172];
+
+  ui.Image? _schoolImage(int index,bool mid) {
+    final suffix = index==1 ? 'classroom' : 'computers';
+    return images[mid ? 'mid_school_$suffix' : 'scene_school_$suffix'];
+  }
+
+  void _backLayer(Canvas canvas,ui.Image? source,double sceneAlpha,double parallax,{double zoneOrigin=0}) {
+    if(source == null || sceneAlpha <= 0)return;
+    final limit=math.max(0.0,source.width.toDouble()-viewW);
+    // No repeats, mirrors, or stretching of distant landmarks.
+    final scroll=math.min(math.max(0, cameraX-zoneOrigin)*parallax,limit).toDouble();
+    final bottom=math.min(_floorArtTop[stage],source.height.toDouble());
+    final crop=Rect.fromLTWH(scroll,0,viewW,bottom);
+    final dest=Rect.fromLTWH(0,0,viewW,bottom);
+    canvas.drawImageRect(source,crop,dest,
+      Paint()..filterQuality=FilterQuality.none
+             ..color=Colors.white.withValues(alpha:sceneAlpha));
+  }
+
+  void _midLayer(Canvas canvas,ui.Image? tile,double sceneAlpha) {
+    if(tile==null || sceneAlpha<=0)return;
+    final tileW=tile.width.toDouble();
+    final y=_midArtTop[stage];
+    final first=(cameraX/tileW).floor();
+    for(int n=first;n<=first+2;n++) {
+      final dx=n*tileW-cameraX;
+      // The dugout is a UNIQUE recognizable landmark, not an infinite fence
+      // tile. The practice dummies and fence are intentionally repeatable.
+      final art=(stage==4 && n%9!=0) ? (images['mid_4_plain'] ?? tile) : tile;
+      canvas.drawImageRect(art,Rect.fromLTWH(0,0,tileW,art.height.toDouble()),
+        Rect.fromLTWH(dx,y,tileW,tile.height.toDouble()),
+        Paint()..filterQuality=FilterQuality.none
+               ..color=Colors.white.withValues(alpha:sceneAlpha));
+    }
+  }
+
   void _background(Canvas canvas) {
-    // The world floor is INSIDE the original 0.8.0 image. It is not painted again.
-    // Each tile has 1570 world units, matching the scale of 0.8.0 stage rendering.
-    const tileWorldWidth = 1570.0;
-    final first = (cameraX / tileWorldWidth).floor() - 1;
-    for (int n = first; n <= first + 3; n++) {
-      if (n < 0) continue;
-      // The school changes rooms at fixed WORLD sections, never abruptly
-      // when the camera crosses a threshold within a visible tile.
-      final image = stage == 6
-          ? images[n >= 16 ? 'scene_school_computers'
-              : n >= 8 ? 'scene_school_classroom' : 'scene_$stage']
-          : images['scene_$stage'];
-      if (image == null) continue;
-      final dx = n * tileWorldWidth - cameraX;
-      if (dx > viewW || dx + tileWorldWidth < 0) continue;
-      // Reflect alternating blocks so the two joining edges have matching colors.
-      // This avoids the vertical cuts visible in the rejected prototype.
-      canvas.save();
-      if (n.isOdd) {
-        canvas.translate(2 * dx + tileWorldWidth, 0);
-        canvas.scale(-1, 1);
+    // The approved detailed backdrop is a DISTANT vista. Its limited camera
+    // pan cannot wrap the same clock, cathedral, car or kiosk indefinitely.
+    // Foreground structures scroll at full world speed, just like sprites.
+    if(stage != 6) {
+      _backLayer(canvas,images['scene_$stage'],1,0.014);
+      _midLayer(canvas,images['mid_$stage'],1);
+    } else {
+      // Hallway -> classroom -> computer room, once per chapter (not repeated
+      // cyclically as was the case in RC3). The final 700 units of each zone
+      // crossfade; the scenery layer keeps exact pixel dimensions throughout.
+      final zone=stageWidth/3;
+      final int part=(cameraX/zone).floor().clamp(0,2).toInt();
+      final towardsNext=(cameraX-(part+1)*zone+700).clamp(0.0,700.0)/700;
+      final next=math.min(2,part+1);
+      final currentArt=part==0?images['scene_6']:_schoolImage(part,false);
+      final currentMid=part==0?images['mid_6']:_schoolImage(part,true);
+      final nextArt=next==0?images['scene_6']:_schoolImage(next,false);
+      final nextMid=next==0?images['mid_6']:_schoolImage(next,true);
+      _backLayer(canvas,currentArt,1,0.014,zoneOrigin:part*zone);
+      _midLayer(canvas,currentMid,1);
+      if(next!=part && towardsNext>0){
+        _backLayer(canvas,nextArt,towardsNext.toDouble(),0.014,zoneOrigin:next*zone);
+        _midLayer(canvas,nextMid,towardsNext.toDouble());
       }
-      final dst = Rect.fromLTWH(dx, 0, tileWorldWidth, viewH);
-      final src = Rect.fromLTWH(0, 0, image.width.toDouble(),
-          math.min(image.height.toDouble(), 450.0));
-      _sprite(canvas, image, dst, source: src);
-      canvas.restore();
+    }
+    // Rich APPROVED world floor tiles: stone, turf, polished parquet or school
+    // flooring. The exact same groundY governs hero feet and collision tests.
+    final tile=images['ground_$stage'];
+    if(tile!=null){
+      final tileW=tile.width.toDouble();
+      final first=(cameraX/tileW).floor();
+      for(int n=first;n<=first+2;n++){
+        final x=n*tileW-cameraX;
+        _sprite(canvas,tile,Rect.fromLTWH(x,_floorArtTop[stage],tileW,tile.height.toDouble()));
+      }
     }
   }
   void _actor(Canvas canvas,Character c,String role,int index,bool active) {
-    final pose=!c.grounded?'jump_0':c.vx.abs()>15?'walk_${(c.travelled/23).floor()%2}':'idle_0';
     final costume=(stage==4 && role=='futbolista')||(stage==5 && role=='bailarina');
+    // El ataque utiliza la pose auténtica de la hoja aprobada. Solo se activa
+    // en protagonistas con atuendo temático; padre/hermana no se ven afectados.
+    final isCostumeAttack=active && costume && time-lastAttackTime>=0 && time-lastAttackTime<.23;
+    final pose=isCostumeAttack?'attack_0':!c.grounded?'jump_0':
+      c.vx.abs()>15?'walk_${(c.travelled/23).floor()%2}':'idle_0';
     final img=images['${costume?'costume_':''}${role}_$pose'];if(img==null)return;
-    final scale=index == 1 ? .49 : .43;
+    final base=images['${costume?'costume_':''}${role}_idle_0'];
+    final standardHeight=role=='padre'?134.0:role=='bailarina'?112.0:124.0;
+    final scale=standardHeight/(base?.height ?? img.height);
     final w=img.width*scale,h=img.height*scale,x=c.x-cameraX;
     if(x< -120 || x>900)return;
     if(time<c.hurtUntil && (time*12).floor().isEven)return;

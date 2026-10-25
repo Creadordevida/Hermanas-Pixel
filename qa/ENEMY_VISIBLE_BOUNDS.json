@@ -1,0 +1,702 @@
+{
+  "rival_0": {
+    "bounds": [
+      0,
+      2,
+      55,
+      99
+    ],
+    "image_size": [
+      57,
+      101
+    ],
+    "sha256": "65bdd03175869718cc209e133037adf2b887e2bc824b6777e64994b8a2776e80",
+    "canvas_edge_touch": true
+  },
+  "rival_1": {
+    "bounds": [
+      6,
+      6,
+      60,
+      102
+    ],
+    "image_size": [
+      72,
+      114
+    ],
+    "sha256": "0ce9cdbe523b5aa925dc8f196b7f3b9df00aee8aaf2c1ff7dbb016105f35c0dc",
+    "canvas_edge_touch": false
+  },
+  "rival_2": {
+    "bounds": [
+      6,
+      6,
+      83,
+      104
+    ],
+    "image_size": [
+      95,
+      116
+    ],
+    "sha256": "cc361db5ea1306ac7be502092b0baccce07ab74c6e55ea0851202fe1e9104813",
+    "canvas_edge_touch": false
+  },
+  "rival_3": {
+    "bounds": [
+      6,
+      6,
+      90,
+      106
+    ],
+    "image_size": [
+      102,
+      118
+    ],
+    "sha256": "52bd5f5b1593e4902b37c017da7e7f6e8da82e5aff9f08905370eaeb169953c9",
+    "canvas_edge_touch": false
+  },
+  "rival_4": {
+    "bounds": [
+      0,
+      2,
+      120,
+      55
+    ],
+    "image_size": [
+      122,
+      57
+    ],
+    "sha256": "0b637d26a8073e260794ae208c2f142c31e75199287d72055bcdd3d04f84c825",
+    "canvas_edge_touch": true
+  },
+  "referee_0": {
+    "bounds": [
+      1,
+      2,
+      49,
+      92
+    ],
+    "image_size": [
+      52,
+      96
+    ],
+    "sha256": "497c67fca89c3bc750d4914bd197bbd1340f6c533484980d5151098107df0bd5",
+    "canvas_edge_touch": false
+  },
+  "referee_1": {
+    "bounds": [
+      2,
+      2,
+      49,
+      104
+    ],
+    "image_size": [
+      53,
+      106
+    ],
+    "sha256": "3db93c646292a285be50774bdcf5a797fe862e779a8fa57bdba0df98f709db18",
+    "canvas_edge_touch": true
+  },
+  "referee_2": {
+    "bounds": [
+      6,
+      6,
+      60,
+      94
+    ],
+    "image_size": [
+      72,
+      106
+    ],
+    "sha256": "74d6bffd0a3af04e6c5fb551ffa977a8e9812aad255f11a4debfeff40799f38b",
+    "canvas_edge_touch": false
+  },
+  "referee_3": {
+    "bounds": [
+      6,
+      6,
+      60,
+      96
+    ],
+    "image_size": [
+      72,
+      108
+    ],
+    "sha256": "b8bb61dca5a9080fa44f53eccad0c5de7cacfa00b1d22b0c34f5038a8f528c1e",
+    "canvas_edge_touch": false
+  },
+  "referee_4": {
+    "bounds": [
+      7,
+      7,
+      94,
+      55
+    ],
+    "image_size": [
+      108,
+      69
+    ],
+    "sha256": "b42ae52e371d9a2b6433d0a147f4189f5ece16dc319455aaf1cb728a2c10b515",
+    "canvas_edge_touch": false
+  },
+  "novice_0": {
+    "bounds": [
+      0,
+      0,
+      70,
+      127
+    ],
+    "image_size": [
+      72,
+      127
+    ],
+    "sha256": "fc4c348587c2093a92d547929bcbf0aa4963d972169544b2913d264f57da0efc",
+    "canvas_edge_touch": true
+  },
+  "novice_1": {
+    "bounds": [
+      0,
+      0,
+      65,
+      129
+    ],
+    "image_size": [
+      67,
+      129
+    ],
+    "sha256": "cd4b0cc79bc6c1091e57505f2554bfd243151b394cdcb3145d81daf1feb28359",
+    "canvas_edge_touch": true
+  },
+  "novice_2": {
+    "bounds": [
+      0,
+      0,
+      69,
+      135
+    ],
+    "image_size": [
+      69,
+      135
+    ],
+    "sha256": "472c3bd1c78d2ac714e817207ee4bdace1f8882fa967e5392f89a4013b0d965a",
+    "canvas_edge_touch": true
+  },
+  "novice_3": {
+    "bounds": [
+      2,
+      0,
+      78,
+      132
+    ],
+    "image_size": [
+      80,
+      132
+    ],
+    "sha256": "ba35a1f703682bb76b5ffc3b92f7f6655498207efb5a3fd4321706a4d509e8e8",
+    "canvas_edge_touch": true
+  },
+  "novice_4": {
+    "bounds": [
+      7,
+      7,
+      132,
+      92
+    ],
+    "image_size": [
+      146,
+      106
+    ],
+    "sha256": "353946895aa70ae5461b8b417feedc7bceb6faa7fafe294983a5ce1f823c5b5e",
+    "canvas_edge_touch": false
+  },
+  "breakdancer_0": {
+    "bounds": [
+      2,
+      0,
+      49,
+      115
+    ],
+    "image_size": [
+      53,
+      117
+    ],
+    "sha256": "e44ff4f91cc750570ca907ce2b3e0f634467c9668018e7f3c029686f7d492721",
+    "canvas_edge_touch": true
+  },
+  "breakdancer_1": {
+    "bounds": [
+      5,
+      2,
+      60,
+      119
+    ],
+    "image_size": [
+      67,
+      123
+    ],
+    "sha256": "ec9bcff13464366a3085acd58f6f84e35610a96b1972b83a651deed0920ca3d7",
+    "canvas_edge_touch": false
+  },
+  "breakdancer_2": {
+    "bounds": [
+      11,
+      4,
+      90,
+      119
+    ],
+    "image_size": [
+      105,
+      129
+    ],
+    "sha256": "6bb2d7e82509a70766d02a7c8606515496c73a21b5547b05c45905c6f4a38502",
+    "canvas_edge_touch": false
+  },
+  "breakdancer_3": {
+    "bounds": [
+      4,
+      5,
+      119,
+      61
+    ],
+    "image_size": [
+      125,
+      69
+    ],
+    "sha256": "3be9f6a413b7b9d02ee3f4a9d6a1845e98778b7150f886b331c79514ab30e8f0",
+    "canvas_edge_touch": false
+  },
+  "breakdancer_4": {
+    "bounds": [
+      8,
+      8,
+      90,
+      64
+    ],
+    "image_size": [
+      106,
+      80
+    ],
+    "sha256": "9dec031b3d973225ef0d4b8830cde53b8f8bfe1fea1e3ec3fe331cc9f3558ffb",
+    "canvas_edge_touch": false
+  },
+  "pigeon_0": {
+    "bounds": [
+      28,
+      18,
+      71,
+      74
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "7766728cfec2646933deef3258d56f15cbdb87a3d6388ad82ab30ab69a06bf5d",
+    "canvas_edge_touch": false
+  },
+  "pigeon_1": {
+    "bounds": [
+      28,
+      18,
+      70,
+      73
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "152471fc8873c7435c063fdb0a46a7e2df35e506a93a951ea328d020b9918444",
+    "canvas_edge_touch": false
+  },
+  "pigeon_2": {
+    "bounds": [
+      28,
+      26,
+      71,
+      66
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "a6fc63003ae8e4bb842365787d8d40eaf819b5e32923fb1b33928e0a76de4552",
+    "canvas_edge_touch": false
+  },
+  "pigeon_3": {
+    "bounds": [
+      31,
+      18,
+      63,
+      70
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "1ed0f8591cd720d83f2f10c607c3bc8e2a9810ec0e3fec1f3fba1eea98431aa8",
+    "canvas_edge_touch": false
+  },
+  "pigeon_4": {
+    "bounds": [
+      26,
+      18,
+      69,
+      73
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "08de02c2de164cdec7865c9a1ca94b30daf8f46fe946470f9b463ae2fc4bf965",
+    "canvas_edge_touch": false
+  },
+  "cat_0": {
+    "bounds": [
+      8,
+      13,
+      118,
+      75
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "2cdd42c0ae8347bf13486e93978b2d8614fb9b371a345133daac1edadda4fb94",
+    "canvas_edge_touch": false
+  },
+  "cat_1": {
+    "bounds": [
+      8,
+      15,
+      118,
+      75
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "9b9064736785340317367fc186144f17ba5a296e0efecf98f3fdf0367d24e638",
+    "canvas_edge_touch": false
+  },
+  "cat_2": {
+    "bounds": [
+      8,
+      12,
+      118,
+      75
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "a0eda60288534f0d332d4a8727c38c8a7a5c6b231379ac77ce35e1ce7954c48a",
+    "canvas_edge_touch": false
+  },
+  "cat_3": {
+    "bounds": [
+      8,
+      6,
+      120,
+      85
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "b75e33486d1c3420591df7fff53f77a61534bf1adeedf23300317258fe6d2d63",
+    "canvas_edge_touch": true
+  },
+  "cat_4": {
+    "bounds": [
+      32,
+      17,
+      111,
+      103
+    ],
+    "image_size": [
+      160,
+      160
+    ],
+    "sha256": "b611998199f9f3bc85f9fe1c87e59c77071fdf807e2fdcfd06924a26c4b71ffa",
+    "canvas_edge_touch": false
+  },
+  "rat_0": {
+    "bounds": [
+      3,
+      31,
+      125,
+      59
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "32b99a59ea96fd3af95c28e1e6fd2b62f12f2576ede3aad27efc28235b88e616",
+    "canvas_edge_touch": true
+  },
+  "rat_1": {
+    "bounds": [
+      3,
+      33,
+      125,
+      59
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "f2c2d80a6d258f1ac5db6f3f5c23dc92422ac3405fa0959cf8707712783dc3f0",
+    "canvas_edge_touch": true
+  },
+  "rat_2": {
+    "bounds": [
+      3,
+      30,
+      125,
+      59
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "fc599bac2b54dacb25686a44230a64dc586d9c5a79268648637a2ddefbdc0cb8",
+    "canvas_edge_touch": true
+  },
+  "rat_3": {
+    "bounds": [
+      3,
+      6,
+      125,
+      87
+    ],
+    "image_size": [
+      128,
+      96
+    ],
+    "sha256": "0b1a9f4d7c7b8d5d2a8ffe59eb36a69499618770da07f2be7e6e865a2d8d4cff",
+    "canvas_edge_touch": true
+  },
+  "rat_4": {
+    "bounds": [
+      38,
+      37,
+      92,
+      104
+    ],
+    "image_size": [
+      160,
+      160
+    ],
+    "sha256": "c59fdcadfb49353b7faf23d0ec6aadc5b22a208e7e1c5a9fb7baf5268bcd2238",
+    "canvas_edge_touch": false
+  },
+  "bully_0": {
+    "bounds": [
+      6,
+      6,
+      150,
+      147
+    ],
+    "image_size": [
+      162,
+      159
+    ],
+    "sha256": "5965e756036418497960f8d3bba80eb0132a4ac1544a9970fcae3f16a974a15c",
+    "canvas_edge_touch": false
+  },
+  "bully_1": {
+    "bounds": [
+      6,
+      6,
+      150,
+      147
+    ],
+    "image_size": [
+      162,
+      159
+    ],
+    "sha256": "ecc6039ef6c69f9f7e93a6783adced7de03ac607eac4f17a9ff7bf824bed2bd1",
+    "canvas_edge_touch": false
+  },
+  "bully_2": {
+    "bounds": [
+      6,
+      6,
+      149,
+      147
+    ],
+    "image_size": [
+      161,
+      159
+    ],
+    "sha256": "2a80a742420edd7639bd55e94565d7a3b5038a28146db7f550d2ec0b10169361",
+    "canvas_edge_touch": false
+  },
+  "bully_3": {
+    "bounds": [
+      6,
+      6,
+      150,
+      147
+    ],
+    "image_size": [
+      162,
+      159
+    ],
+    "sha256": "3de86e1d0113e1dcdff73027e08810aaea85ca55767b4c81cb06a6d4d252bfb2",
+    "canvas_edge_touch": false
+  },
+  "bully_4": {
+    "bounds": [
+      18,
+      23,
+      167,
+      153
+    ],
+    "image_size": [
+      188,
+      185
+    ],
+    "sha256": "c7e16a62bcbad664e6233ff0879d8863926b76951360e068027004153909a21e",
+    "canvas_edge_touch": false
+  },
+  "teacher_0": {
+    "bounds": [
+      6,
+      6,
+      147,
+      247
+    ],
+    "image_size": [
+      159,
+      259
+    ],
+    "sha256": "c3f91c572d30741f623e6cc1a5f1dd7626a93a515feeea670e46720aa64ec35d",
+    "canvas_edge_touch": false
+  },
+  "teacher_1": {
+    "bounds": [
+      6,
+      6,
+      147,
+      247
+    ],
+    "image_size": [
+      159,
+      259
+    ],
+    "sha256": "1560b9038969edc7794f2aceb9009b5f72cb51e25f72181f04b9f9e978852b7c",
+    "canvas_edge_touch": false
+  },
+  "teacher_2": {
+    "bounds": [
+      6,
+      6,
+      147,
+      247
+    ],
+    "image_size": [
+      159,
+      259
+    ],
+    "sha256": "66e8d014ccf5ae87ff1aa717871f4982066ace8ede8ae9837b0c26184e226632",
+    "canvas_edge_touch": false
+  },
+  "teacher_3": {
+    "bounds": [
+      6,
+      6,
+      147,
+      247
+    ],
+    "image_size": [
+      159,
+      259
+    ],
+    "sha256": "ff69f9fdb4c5dd112056efddaa31978a90e51b4eba6dceeb504dd535944209f6",
+    "canvas_edge_touch": false
+  },
+  "teacher_4": {
+    "bounds": [
+      7,
+      7,
+      257,
+      170
+    ],
+    "image_size": [
+      271,
+      184
+    ],
+    "sha256": "ea15056dfb9bd89da7347d3810b0bbad6ff58c8286523bd10ded758571f50eff",
+    "canvas_edge_touch": false
+  },
+  "statue_0": {
+    "bounds": [
+      12,
+      12,
+      126,
+      320
+    ],
+    "image_size": [
+      150,
+      344
+    ],
+    "sha256": "5807ee72333ce19482f67fcdcbe7f573e1ede7f1e539c449860886a4bd9fba2b",
+    "canvas_edge_touch": false
+  },
+  "statue_1": {
+    "bounds": [
+      12,
+      12,
+      188,
+      319
+    ],
+    "image_size": [
+      212,
+      343
+    ],
+    "sha256": "44bedbca50c7819dc85f9e98e9131aacd79ad953d35c377b6a182e4eac9b6d9a",
+    "canvas_edge_touch": false
+  },
+  "statue_2": {
+    "bounds": [
+      12,
+      12,
+      209,
+      319
+    ],
+    "image_size": [
+      233,
+      343
+    ],
+    "sha256": "0caaeb9111423a56c1c1e808e96879d0f72d15f01e6fcb658ac2b22a167e05ab",
+    "canvas_edge_touch": false
+  },
+  "statue_3": {
+    "bounds": [
+      12,
+      12,
+      188,
+      319
+    ],
+    "image_size": [
+      212,
+      343
+    ],
+    "sha256": "44bedbca50c7819dc85f9e98e9131aacd79ad953d35c377b6a182e4eac9b6d9a",
+    "canvas_edge_touch": false
+  },
+  "statue_4": {
+    "bounds": [
+      12,
+      10,
+      217,
+      270
+    ],
+    "image_size": [
+      241,
+      292
+    ],
+    "sha256": "36a678bd4f44967ca1771af9e154e64147573c3ae5c2390ce33b72d50251d6ac",
+    "canvas_edge_touch": false
+  }
+}

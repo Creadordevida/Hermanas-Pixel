@@ -1,0 +1,35 @@
+{
+  "approved_map_sha256": "0bb7bf217d14fdd98ecc436e873748c892afc644f66b103132d36498dc99b030",
+  "no_horizontal_mirroring": true,
+  "no_world_stretch": true,
+  "bounded_landmark_background": true,
+  "native_world_ground_tiles": {
+    "stage_0": 0.0,
+    "stage_1": 0.0,
+    "stage_2": 0.0,
+    "stage_3": 0.0,
+    "stage_4": 0.0,
+    "stage_5": 0.0,
+    "stage_6": 0.0
+  },
+  "native_world_midground_tiles": {
+    "stage_0": 0.0,
+    "stage_1": 0.0,
+    "stage_2": 0.0,
+    "stage_3": 0.0,
+    "stage_4": 0.0,
+    "stage_5": 0.0,
+    "stage_6": 0.0
+  },
+  "legacy_original_edge_differences_NOT_USED_AS_TILES": {
+    "level_pixel": 80.68,
+    "level_ayuntamiento": 80.25,
+    "level_estafeta": 83.32,
+    "level_plaza_castillo": 64.85,
+    "football": 41.4,
+    "ballet": 39.65,
+    "school": 3.92
+  },
+  "artist_review": "PENDING: tile repetition, garment naturalness and all enemy poses need human QA",
+  "android_execution": "PENDING: Flutter not installed in author environment"
+}

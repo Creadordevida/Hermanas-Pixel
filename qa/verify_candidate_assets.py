@@ -6,12 +6,16 @@ from PIL import Image
 ROOT=Path(__file__).resolve().parents[1]
 P=ROOT/'assets/images'
 files=[
- 'title_approved.png','brand_logo_twc.png','worldmap/pamplona.png',
+ 'title_approved.png','brand_logo_twc.png','worldmap/pamplona_aprobado.png','scenes/ballet_refined.png',
+ *[f'ground/stage_{i}.png' for i in range(7)],
+ *[f'mid/stage_{i}.png' for i in range(7)],
+ 'mid/stage_4_plain.png',
+ 'mid/school_classroom.png','mid/school_computers.png',
  *[f'{k}.png' for k in ['level_pixel','level_ayuntamiento','level_estafeta','level_plaza_castillo','crate','coin','ball','comb']],
  *[f'scenes/{k}.png' for k in ['football','ballet','school','school_classroom','school_computers']],
  *[f'props/{k}.png' for k in ['cone','planter','backpack','gym_bench','red_card','shoe','eraser']],
  *[f'frames/{r}_{pose}.png' for r in ['futbolista','bailarina','padre'] for pose in ['idle_0','walk_0','walk_1','jump_0']],
- *[f'outfits/{r}_{pose}.png' for r in ['futbolista','bailarina'] for pose in ['idle_0','walk_0','walk_1','jump_0']],
+ *[f'outfits/{r}_{pose}.png' for r in ['futbolista','bailarina'] for pose in ['idle_0','walk_0','walk_1','jump_0','attack_0']],
  *[f'dog/{prefix}{pose}.png' for prefix in ['', 'dalmatian/','doberman/'] for pose in ['idle','walk','alert','run','bite','hit','stunned','defeated']],
  *[f'enemies/{r}_{i}.png' for r in ['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'] for i in range(5)],
 ]

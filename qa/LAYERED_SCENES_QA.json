@@ -1,0 +1,90 @@
+{
+  "mechanical_ok": true,
+  "errors": [],
+  "source_floor_lines": [
+    380,
+    390,
+    390,
+    390,
+    386,
+    286,
+    278
+  ],
+  "source_mid_lines": [
+    330,
+    355,
+    330,
+    345,
+    196,
+    170,
+    172
+  ],
+  "ground_tiles": [
+    {
+      "source": "level_pixel.png",
+      "source_floor_row": 380,
+      "width": 540,
+      "edge_mae": 0.0,
+      "raw_edge_mismatch": 10.22,
+      "source_offset_x": 458,
+      "sha256": "5e06698650a6cbaf016795587e8a753894954b2adfd6024790a026ac0d6e3c2f"
+    },
+    {
+      "source": "level_ayuntamiento.png",
+      "source_floor_row": 390,
+      "width": 540,
+      "edge_mae": 0.0,
+      "raw_edge_mismatch": 10.46,
+      "source_offset_x": 500,
+      "sha256": "1cd92cf7884b9168ee99f9d266f030808c3348ff1d8ff250d0bba58b3d270dab"
+    },
+    {
+      "source": "level_estafeta.png",
+      "source_floor_row": 390,
+      "width": 540,
+      "edge_mae": 0.0,
+      "raw_edge_mismatch": 9.66,
+      "source_offset_x": 458,
+      "sha256": "7ca6ad61532deea08b7cbf090b23dcd7706b728e6112d6f8217254f9b82ef4f9"
+    },
+    {
+      "source": "level_plaza_castillo.png",
+      "source_floor_row": 390,
+      "width": 540,
+      "edge_mae": 0.0,
+      "raw_edge_mismatch": 10.34,
+      "source_offset_x": 562,
+      "sha256": "8126cfd32c4042d1582e6dd2973fc576878a72c90920d83c6f92c1c213dca15b"
+    },
+    {
+      "source": "scenes/football.png",
+      "source_floor_row": 386,
+      "width": 540,
+      "edge_mae": 0.0,
+      "raw_edge_mismatch": 0.0,
+      "source_offset_x": 50,
+      "sha256": "bfd53c8971964db894e231d883773e83df3a854e8f1c86eea80ea7dd85c2ff5f"
+    },
+    {
+      "source": "scenes/ballet_refined.png",
+      "source_floor_row": 286,
+      "width": 540,
+      "edge_mae": 0.0,
+      "raw_edge_mismatch": 2.22,
+      "source_offset_x": 108,
+      "sha256": "6c5f07759497971829bed0004e011387ce2aede141cc811bad239f84f8eb0621"
+    },
+    {
+      "source": "scenes/school.png",
+      "source_floor_row": 278,
+      "width": 540,
+      "edge_mae": 0.0,
+      "raw_edge_mismatch": 3.13,
+      "source_offset_x": 196,
+      "sha256": "9fdb02d847ce194e734b480e4f687254af316e56502cee7cc50e7462f406de9a"
+    }
+  ],
+  "artist_review": "PENDING: tests cannot judge architecture, clothing, or gameplay",
+  "flutter_capture": "PENDING until GitHub test pipeline",
+  "android_qa": "PENDING until user installs candidate"
+}

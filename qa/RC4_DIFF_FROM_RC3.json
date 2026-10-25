@@ -1,0 +1,216 @@
+{
+  "source": "RC3 0.9.0 (exact available project)",
+  "files_changed_or_added": 42,
+  "changes": [
+    {
+      "path": ".github/workflows/build.yml",
+      "status": "modified",
+      "sha256": "81b7b815dbb66e23396dfe2650aca6224ae9a8093ce5289b9a5bd3045adf5726"
+    },
+    {
+      "path": "README.md",
+      "status": "modified",
+      "sha256": "7f3d2a503437dce06f4e691a452dfbbc0d9dbe19fbb962be3da9963f4cf3f325"
+    },
+    {
+      "path": "README_GITHUB_Y_PRUEBAS.md",
+      "status": "modified",
+      "sha256": "6c7690344082ab1438a74d38a703f470c72eb68562c1dcdecc563f769f169ace"
+    },
+    {
+      "path": "README_RC4.md",
+      "status": "added",
+      "sha256": "1b0f1450c5b49a47ba0a94ab12f1269e131e21d749d5084c877a88f6b210edab"
+    },
+    {
+      "path": "assets/images/ground/stage_0.png",
+      "status": "added",
+      "sha256": "5e06698650a6cbaf016795587e8a753894954b2adfd6024790a026ac0d6e3c2f"
+    },
+    {
+      "path": "assets/images/ground/stage_1.png",
+      "status": "added",
+      "sha256": "1cd92cf7884b9168ee99f9d266f030808c3348ff1d8ff250d0bba58b3d270dab"
+    },
+    {
+      "path": "assets/images/ground/stage_2.png",
+      "status": "added",
+      "sha256": "7ca6ad61532deea08b7cbf090b23dcd7706b728e6112d6f8217254f9b82ef4f9"
+    },
+    {
+      "path": "assets/images/ground/stage_3.png",
+      "status": "added",
+      "sha256": "8126cfd32c4042d1582e6dd2973fc576878a72c90920d83c6f92c1c213dca15b"
+    },
+    {
+      "path": "assets/images/ground/stage_4.png",
+      "status": "added",
+      "sha256": "bfd53c8971964db894e231d883773e83df3a854e8f1c86eea80ea7dd85c2ff5f"
+    },
+    {
+      "path": "assets/images/ground/stage_5.png",
+      "status": "added",
+      "sha256": "6c5f07759497971829bed0004e011387ce2aede141cc811bad239f84f8eb0621"
+    },
+    {
+      "path": "assets/images/ground/stage_6.png",
+      "status": "added",
+      "sha256": "9fdb02d847ce194e734b480e4f687254af316e56502cee7cc50e7462f406de9a"
+    },
+    {
+      "path": "assets/images/mid/school_classroom.png",
+      "status": "added",
+      "sha256": "88db37c4022a3c9d0968334929c2f59ceca944c8de3a3f8b3e96e6c670de4699"
+    },
+    {
+      "path": "assets/images/mid/school_computers.png",
+      "status": "added",
+      "sha256": "6844535d1e6b2d420b9da25fa21efc7679b785a34269bd7fb322f7692f77bbb6"
+    },
+    {
+      "path": "assets/images/mid/stage_0.png",
+      "status": "added",
+      "sha256": "c5680f8b9c8e201a03ef7e7ea43c2f11b322d0183393761081f550c3483259b8"
+    },
+    {
+      "path": "assets/images/mid/stage_1.png",
+      "status": "added",
+      "sha256": "9ca28a6fd86a8ee19ebb46b2dd4b0cad2a56289e07eece804d9252e1cb7f126c"
+    },
+    {
+      "path": "assets/images/mid/stage_2.png",
+      "status": "added",
+      "sha256": "cb1811389b2b05649cb26ad6d7dabc7edfc54a1fb82d66ddcff3e2b3e83e22f3"
+    },
+    {
+      "path": "assets/images/mid/stage_3.png",
+      "status": "added",
+      "sha256": "eddac35128195d91bd974d6f55cfcc60f0328ca3af6f4fcbc0dcef034523dc6b"
+    },
+    {
+      "path": "assets/images/mid/stage_4.png",
+      "status": "added",
+      "sha256": "76fe2d8fd509bdd0a4daffef998e200b50acd4f5c9f943e3ef44db3b42b3923a"
+    },
+    {
+      "path": "assets/images/mid/stage_5.png",
+      "status": "added",
+      "sha256": "fecdea89f27f3bcfe97e0bdada3d0edc431ee56d6676e2d371b4533ae0ec1a32"
+    },
+    {
+      "path": "assets/images/mid/stage_6.png",
+      "status": "added",
+      "sha256": "2fccebaf4585ad443baa1aa3efc0b76a715276988ad99a38b5099552f5474579"
+    },
+    {
+      "path": "assets/images/scenes/ballet_refined.png",
+      "status": "added",
+      "sha256": "c4b33f54ba823a17bfc2de2f35d265d419859d09532c59da0d59cabe7656956e"
+    },
+    {
+      "path": "lib/main.dart",
+      "status": "modified",
+      "sha256": "bd86565849197205907d15f36350e86b0532d5689b135b1c875f7cfee2998a68"
+    },
+    {
+      "path": "lib/sprite_bounds.g.dart",
+      "status": "added",
+      "sha256": "a69d111a6c47c7beb6b44e3e5124001e6b8a36d1a37a97ede7047bb3132d6f7b"
+    },
+    {
+      "path": "pubspec.yaml",
+      "status": "modified",
+      "sha256": "3eb2c1745e805e0455a87f8fab447b901ffc829a84d9666a8220ed2c6ff7975e"
+    },
+    {
+      "path": "qa/CANDIDATE_ASSET_INVENTORY.json",
+      "status": "modified",
+      "sha256": "6d0a1a1ded75867d55c0f045faa3373e924453febd379df5d0b0b2a16db74a30"
+    },
+    {
+      "path": "qa/ENEMY_VISIBLE_BOUNDS.json",
+      "status": "added",
+      "sha256": "eae172727c9d3040dd921187bc743494264a4e7dd4c0ab2d6e95e1f6d6f247a3"
+    },
+    {
+      "path": "qa/GROUND_TILES_MANIFEST.json",
+      "status": "added",
+      "sha256": "45e5bdf34e12afe504d6799f70b1285f93e11eca0eaa26a544fc719ab1f6b856"
+    },
+    {
+      "path": "qa/INFORME_REAL_090_RC4.md",
+      "status": "added",
+      "sha256": "be88221db2612538f7918dd62c2a63cd2b8152faa320b32a457a26039cb5d897"
+    },
+    {
+      "path": "qa/LAYERED_SCENES_QA.json",
+      "status": "added",
+      "sha256": "3f2ec065c5330af1a5580e33a7cb670f20bfaa0f90c0eaa512042b30d22a9558"
+    },
+    {
+      "path": "qa/MIDGROUND_TILES_MANIFEST.json",
+      "status": "added",
+      "sha256": "253ba14c7c121cd8808a1e161311da9dd89253fa115b79ce02d4cb999f3124fd"
+    },
+    {
+      "path": "qa/SCENE_SEAMS_REPORT.json",
+      "status": "modified",
+      "sha256": "aad38395a9c43a8b06f0a7f7e846fc57b7540da513ff6ceda03e5ec90d8af3a5"
+    },
+    {
+      "path": "qa/scene_metrics_vnext.py",
+      "status": "modified",
+      "sha256": "2a06380f74217a141da07e6b8bad5dce5f185d033294efe9b6a8c53c3fa1f53b"
+    },
+    {
+      "path": "qa/test_enemy_anchors.py",
+      "status": "added",
+      "sha256": "121fd86be03fbfb7986a59f17d73302cb2e6b9302eba8a037fa7554efb267b7d"
+    },
+    {
+      "path": "qa/test_layered_qa.py",
+      "status": "added",
+      "sha256": "c9bf15e71f3a8cd173cb43f841b1864f67e892fedde4d55605ebae444d6b4715"
+    },
+    {
+      "path": "qa/test_vnext_engine.py",
+      "status": "modified",
+      "sha256": "3b62a222c5b1a2b831d6df3d2e42f1ecbae05bb30f1efd4663fd73fc5a0347d0"
+    },
+    {
+      "path": "qa/verify_candidate_assets.py",
+      "status": "modified",
+      "sha256": "0fd68f6be354724064aeb77ef046305b50de0e88ea3974d8373be44f37f7ea21"
+    },
+    {
+      "path": "qa/verify_layered_scenes.py",
+      "status": "added",
+      "sha256": "00fda808dd11d09955eca13b9637cdd26292baecd286bb8285f6bbe3b3cd25bf"
+    },
+    {
+      "path": "reference/approved_ballet_enemy_scene.png",
+      "status": "added",
+      "sha256": "01525265d20101f71fb6bcc40229272da6346510e8c614978be839c2becdc765"
+    },
+    {
+      "path": "tools/export_sprite_bounds.py",
+      "status": "added",
+      "sha256": "181357c3a3b937f821169c3926b0f3df72719c9616ef31222da087d0fa7be7a2"
+    },
+    {
+      "path": "tools/generate_ground_tiles.py",
+      "status": "added",
+      "sha256": "3fdc4bb9b51afe96a2207d2c14c07a3eab47542f9ff6dbf9d91f1ab043826bc1"
+    },
+    {
+      "path": "tools/generate_midground_tiles.py",
+      "status": "added",
+      "sha256": "edd0f6b817835118ac6dc6a7301b21381100a3fb8bc8e45f307890f21a716197"
+    },
+    {
+      "path": "tools/rebuild_ballet_floor.py",
+      "status": "added",
+      "sha256": "39dbd54186e2376bb76fccae3dbcc7fcc8d24b5135ce6a7f85f4e67078d56b82"
+    }
+  ]
+}
