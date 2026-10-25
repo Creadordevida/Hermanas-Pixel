@@ -9,79 +9,108 @@ import 'package:shared_preferences/shared_preferences.dart';
 const double viewW = 800;
 const double viewH = 450;
 const double groundY = 390;
-const double stageWidth = 1570;
+const double stageWidth = 40000;
 const double actorRadius = 14;
 const double actorHeight = 91;
-const String saveKey = 'miren_sara_v080_save';
-
+const String saveKey = 'miren_sara_v090_save';
+const String oldSaveKey = 'miren_sara_v080_save';
 const List<String> chapterNames = [
-  'La salida de casa',
-  'Ayuntamiento de Pamplona',
-  'Calle Estafeta',
-  'Plaza del Castillo',
+  'La salida de casa', 'Ayuntamiento de Pamplona', 'Calle Estafeta',
+  'Plaza del Castillo', 'Campo de entrenamiento', 'Escuela de danza',
+  'El colegio',
 ];
-const List<String> sceneryFiles = [
-  'level_pixel',
-  'level_ayuntamiento',
-  'level_estafeta',
-  'level_plaza_castillo',
+const List<String> chapterScenes = [
+  'level_pixel', 'level_ayuntamiento', 'level_estafeta',
+  'level_plaza_castillo', 'football', 'ballet', 'school',
 ];
+const List<String> chapterProps = [
+  'crate', 'crate', 'crate', 'planter', 'cone', 'gym_bench', 'backpack',
+];
+const List<String> enemyKinds = [
+  'dog_dalmatian', 'dog_brown', 'dog_doberman', 'pigeon', 'cat', 'statue',
+  'rat', 'rival', 'referee', 'novice', 'breakdancer', 'bully', 'teacher',
+];
+const List<String> poses = ['idle', 'walk', 'attack', 'hit', 'defeated'];
 
-enum GameScreen { title, choose, introduction, playing, chapterEnd, gameOver, victory, paused }
-enum DogMood { idle, walk, alert, run, bite, hit, stunned, defeated }
+enum Screen { title, map, choose, introduction, playing, chapterEnd, gameOver, paused }
 
 class Character {
   Character(this.x, {this.y = groundY});
-  double x;
-  double y;
-  double vx = 0;
-  double vy = 0;
-  double travelled = 0;
+  double x, y;
+  double vx = 0, vy = 0, travelled = 0, hurtUntil = 0;
   int facing = 1;
   bool grounded = true;
-  double hurtUntil = 0;
 }
 
-class DogEnemy {
-  DogEnemy(this.id, this.x)
-      : origin = x,
-        patrolLeft = x - 95,
-        patrolRight = x + 95;
+class Obstacle {
+  Obstacle(this.x, this.y, this.w, this.h, this.kind, {this.breakable = true});
+  final double x, y, w, h;
+  final String kind;
+  final bool breakable;
+  Rect get rect => Rect.fromLTWH(x, y, w, h);
+  double smashedAt = -100;
+  bool get destroyed => smashedAt >= 0;
+}
+
+class Enemy {
+  Enemy(this.id, this.kind, this.x) : home = x;
   final int id;
-  final double origin;
-  final double patrolLeft;
-  final double patrolRight;
+  final String kind;
+  final double home;
   double x;
-  int facing = -1;
-  DogMood mood = DogMood.walk;
-  double modeTime = 0;
-  double cooldown = 0;
-  bool hasBitThisAttack = false;
+  int facing = -1, hits = 0;
+  double t = 0, attackCooldown = 1, stunned = 0, deathAt = -1;
+  bool launched = false;
+  bool get defeated => deathAt >= 0;
+  bool get ranged => ['referee','breakdancer','teacher','statue'].contains(kind);
+  bool get dog => kind.startsWith('dog_');
+  bool get aerial => kind == 'pigeon';
+  int get hp => kind == 'dog_doberman' ? 2 : ranged ? 3 : 1;
+  double get speed => switch(kind) {
+    'dog_dalmatian' => 56, 'dog_doberman' => 112,
+    'rat' => 118, 'cat' => 92, 'pigeon' => 84,
+    'rival' => 90, 'novice' => 94, 'bully' => 90,
+    _ => 72,
+  };
+  double get detection => kind == 'dog_dalmatian' ? 145 : kind == 'dog_doberman' ? 290 : 220;
+  double get height => aerial ? 99 + 30 * math.sin(t * 4) : kind == 'rat' ? 21 : 33;
 }
 
-class FlyingItem {
-  FlyingItem({required this.x, required this.y, required this.vx, required this.kind});
-  double x;
-  double y;
-  double vx;
-  double vy = -45;
-  final int kind; // 0 balón de Miren, 1 peine de Sara.
-  double life = 0;
+class Projectile {
+  Projectile({required this.x, required this.y, required this.vx,
+    required this.kind, this.fromEnemy = false});
+  double x, y, vx;
+  double vy = -24, life = 0;
+  final String kind;
+  final bool fromEnemy;
   bool active = true;
+}
+
+class StageData {
+  const StageData(this.index);
+  final int index;
+  String get name => chapterNames[index];
+  String get prop => chapterProps[index];
+  bool get forcedMiren => index == 4;
+  bool get forcedSara => index == 5;
+  String get sceneKey => chapterScenes[index];
+  List<String> get enemies => switch (index) {
+    0 => ['dog_dalmatian','dog_brown','rat','pigeon'],
+    1 => ['dog_brown','pigeon','statue','dog_dalmatian'],
+    2 => ['dog_brown','cat','rat','dog_doberman'],
+    3 => ['pigeon','cat','statue','dog_doberman','rat'],
+    4 => ['rival','referee'],
+    5 => ['novice','breakdancer'],
+    _ => ['bully','teacher'],
+  };
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeLeft,
-    DeviceOrientation.landscapeRight,
-  ]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'Las aventuras de Miren y Sara',
-    home: HermanasGame(),
-  ));
+  runApp(const MaterialApp(debugShowCheckedModeBanner: false,
+    title: 'Las aventuras de Miren y Sara', home: HermanasGame()));
 }
 
 class HermanasGame extends StatefulWidget {
@@ -90,997 +119,734 @@ class HermanasGame extends StatefulWidget {
   State<HermanasGame> createState() => _HermanasGameState();
 }
 
-class _HermanasGameState extends State<HermanasGame>
-    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late final AnimationController ticker;
   final Map<String, ui.Image> images = {};
   SharedPreferences? storage;
-  bool resourcesReady = false;
-  bool savedAvailable = false;
+  bool resourcesReady = false, savedAvailable = false, saving = false;
   String? loadError;
-  GameScreen screen = GameScreen.title;
-  final List<Character> sisters = [Character(160), Character(97)];
-  final Character father = Character(45);
-  final List<int> hearts = [2, 2];
-  final List<Rect> obstacles = [];
+  Screen screen = Screen.title;
+  Character hero = Character(140);
+  Character father = Character(70);
+  Character otherSister = Character(190);
+  final List<Obstacle> obstacles = [];
+  final List<Rect> platforms = [];
   final List<Offset> coins = [];
+  final List<Enemy> enemies = [];
+  final List<Projectile> shots = [];
   final Set<int> collected = {};
-  final Set<int> smashedCrates = {};
-  final Set<int> defeatedDogs = {};
-  final List<DogEnemy> dogs = [];
-  final List<FlyingItem> projectiles = [];
-  int stage = 0;
-  int selected = 0;
-  int totalCoins = 0;
-  int finishedStage = 0;
-  int introLine = 0;
-  bool introPlayed = false;
-  bool leftHeld = false;
-  bool rightHeld = false;
-  double time = 0;
-  double lastMicroseconds = 0;
-  double lastSaveTime = 0;
-  double cameraX = 0;
-  double effectUntil = 0;
-  double lastAttackTime = -10;
-  double lastCheckpointX = 135;
-  bool saving = false;
-
-  Character get active => sisters[selected];
-  Character get follower => sisters[1 - selected];
+  final Set<int> completed = {};
+  int stage = 0, selected = 0, hearts = 2, totalCoins = 0, introLine = 0;
+  bool introPlayed = false, leftHeld = false, rightHeld = false;
+  double time = 0, levelTime = 0, lastMicros = 0, lastSaveTime = 0;
+  double cameraX = 0, lastAttackTime = -10, checkpointX = 145, particlesUntil = -10;
+  double exitTime = -1;
+  StageData get level => StageData(stage);
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     ticker = AnimationController(vsync: this, duration: const Duration(days: 1))
-      ..addListener(_tick)
-      ..forward();
-    _loadAll();
+      ..addListener(_tick)..forward();
+    _loadAssets();
   }
 
-  Future<void> _loadAll() async {
+  Future<void> _loadAssets() async {
     try {
       storage = await SharedPreferences.getInstance();
-      savedAvailable = storage?.getString(saveKey) != null;
-      final paths = <String, String>{
-        'title': 'assets/images/title_approved.png',
-        'logo': 'assets/images/brand_logo_twc.png',
-        'crate': 'assets/images/crate.png',
-        'coin': 'assets/images/coin.png',
-        'ball': 'assets/images/ball.png',
-        'comb': 'assets/images/comb.png',
+      savedAvailable = storage?.getString(saveKey) != null || storage?.getString(oldSaveKey) != null;
+      final paths = <String,String>{
+        'title':'assets/images/title_approved.png',
+        'logo':'assets/images/brand_logo_twc.png',
+        'map':'assets/images/map_pamplona.png',
+        'crate':'assets/images/crate.png',
+        'coin':'assets/images/coin.png',
+        'ball':'assets/images/ball.png',
+        'comb':'assets/images/comb.png',
       };
-      for (int i = 0; i < sceneryFiles.length; i++) {
-        paths['scene_$i'] = 'assets/images/${sceneryFiles[i]}.png';
+      for (int i=0;i<7;i++) {
+        paths['scene_$i'] = i<4 ? 'assets/images/${chapterScenes[i]}.png'
+          : 'assets/images/scenes/${chapterScenes[i]}.png';
       }
-      for (final role in ['futbolista', 'bailarina', 'padre']) {
-        for (final pose in ['idle_0', 'walk_0', 'walk_1', 'jump_0']) {
+      for(final kind in ['classroom','computers']) {
+        paths['scene_school_$kind'] = 'assets/images/scenes/school_$kind.png';
+      }
+      for (final item in ['cone','planter','backpack','gym_bench','red_card','shoe','eraser']) {
+        paths[item] = 'assets/images/props/$item.png';
+      }
+      for (final role in ['futbolista','bailarina','padre']) {
+        for (final pose in ['idle_0','walk_0','walk_1','jump_0']) {
           paths['${role}_$pose'] = 'assets/images/frames/${role}_$pose.png';
+          if (role != 'padre') paths['costume_${role}_$pose'] = 'assets/images/outfits/${role}_$pose.png';
         }
       }
-      for (final pose in ['idle', 'walk', 'alert', 'run', 'bite', 'hit', 'stunned', 'defeated']) {
-        paths['dog_$pose'] = 'assets/images/dog/$pose.png';
+      for (final pose in ['idle','walk','alert','run','bite','hit','stunned','defeated']) {
+        paths['dog_brown_$pose'] = 'assets/images/dog/$pose.png';
+        for (final v in ['dalmatian','doberman']) {
+          paths['dog_${v}_$pose'] = 'assets/images/dog/$v/$pose.png';
+        }
       }
-      for (final entry in paths.entries) {
-        final data = await rootBundle.load(entry.value);
-        final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
-        final frame = await codec.getNextFrame();
-        images[entry.key] = frame.image;
+      for (final v in ['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue']) {
+        for (int j=0;j<5;j++) paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
+      }
+      for (final item in paths.entries) {
+        final blob = await rootBundle.load(item.value);
+        final codec = await ui.instantiateImageCodec(blob.buffer.asUint8List());
+        images[item.key] = (await codec.getNextFrame()).image;
         codec.dispose();
       }
       _layoutStage();
       if (mounted) setState(() => resourcesReady = true);
-    } catch (e, stack) {
-      debugPrint('No se pudieron cargar recursos: $e\n$stack');
+    } catch (e,stack) {
+      debugPrint('Recursos incompletos: $e\n$stack');
       if (mounted) setState(() => loadError = '$e');
     }
   }
 
   void _layoutStage() {
-    obstacles.clear();
-    coins.clear();
-    dogs.clear();
-    collected.clear();
-    smashedCrates.clear();
-    defeatedDogs.clear();
-    // Obstáculos separados de las fachadas para que suelo y colisiones coincidan.
-    for (final x in [460.0, 760.0, 1015.0, 1290.0]) {
-      obstacles.add(Rect.fromLTWH(x + stage % 2 * 14, groundY - 42, 42, 42));
+    obstacles.clear(); platforms.clear(); coins.clear(); enemies.clear();
+    collected.clear(); shots.clear();
+    final rng = math.Random(1001 + stage * 117);
+    // The authored world's length gives roughly 4 minutes of traversing at 169px/s,
+    // plus platforming, combat and exploration. Actual ~5min must be device-playtested.
+    for (double x = 520; x<stageWidth-260; x+= 380 + rng.nextInt(235)) {
+      final y=groundY- (stage==5 ? 38.0 : 43.0);
+      obstacles.add(Obstacle(x,y,stage==5?72:44,groundY-y,level.prop));
+      if (rng.nextDouble()>.7) obstacles.add(Obstacle(x+70,groundY-40,42,40,level.prop));
     }
-    if (stage >= 1) obstacles.add(const Rect.fromLTWH(1030, groundY - 73, 42, 31));
-    for (int i = 0; i < 16; i++) {
-      final double x = 270 + i * 78.0;
-      double y = 348.0;
-      if (i % 5 == 2) y = 299;
-      if (i % 5 == 3) y = 309;
-      if (i == 10 || i == 13) y = 288;
-      coins.add(Offset(x, y));
+    for (double x=930; x<stageWidth-450; x+=1220 + rng.nextInt(320)) {
+      final yy = groundY- (84+rng.nextInt(32));
+      platforms.add(Rect.fromLTWH(x,yy,155+rng.nextInt(60).toDouble(),16));
+      for (int i=0;i<3;i++) coins.add(Offset(x+32+i*47, yy-34));
     }
-    if (stage == 0) {
-      dogs.add(DogEnemy(0, 1140));
-    } else if (stage == 1) {
-      dogs.add(DogEnemy(0, 820));
-      dogs.add(DogEnemy(1, 1250));
-    } else if (stage == 2) {
-      dogs.add(DogEnemy(0, 685));
-      dogs.add(DogEnemy(1, 1300));
-    } else {
-      dogs.add(DogEnemy(0, 980));
+    for (double x=300; x<stageWidth-300; x+=136 + rng.nextInt(45)) {
+      coins.add(Offset(x, rng.nextBool()?groundY-55:groundY-112));
     }
+    final kinds=level.enemies;
+    for (double x=820; x<stageWidth-300; x+=710+rng.nextInt(240)) {
+      final prog=x/stageWidth;
+      String type=kinds[rng.nextInt(kinds.length)];
+      if (prog<.3 && ['referee','breakdancer','teacher','statue','dog_doberman'].contains(type)) {
+        type=kinds.first;
+      }
+      enemies.add(Enemy(enemies.length,type,x));
+    }
+    // The chapter's strong thematic opponent always appears near its last segment.
+    if (stage>=4) enemies.add(Enemy(enemies.length,level.enemies.last,stageWidth-980));
+    hero=Character(145);otherSister=Character(230);father=Character(67);
+    cameraX=0;checkpointX=145;hearts=2;lastAttackTime=-10;
+    levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
   }
 
-  void _setStageStart({double initialX = 145}) {
-    sisters[selected] = Character(initialX);
-    sisters[1 - selected] = Character(math.max(38.0, initialX - 68));
-    father.x = 48;
-    father.y = groundY;
-    cameraX = 0;
-    projectiles.clear();
-    lastCheckpointX = 145;
-    lastAttackTime = -10;
-    leftHeld = false;
-    rightHeld = false;
-    _layoutStage();
-  }
-
-  Future<void> _beginFreshGame() async {
+  Future<void> _startNew() async {
     if (savedAvailable) {
-      final answer = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('¿Comenzar nueva partida?'),
-          content: const Text('Se sustituirá el progreso guardado de la partida anterior.'),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('CANCELAR')),
-            FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('NUEVA PARTIDA')),
-          ],
-        ),
-      );
-      if (answer != true || !mounted) return;
+      final confirm=await showDialog<bool>(context: context,builder: (ctx)=>AlertDialog(
+        title: const Text('¿Nueva partida?'),
+        content: const Text('Se reiniciará el progreso guardado de la versión 0.9.0.'),
+        actions: [TextButton(onPressed:()=>Navigator.pop(ctx,false),child:const Text('CANCELAR')),
+          FilledButton(onPressed:()=>Navigator.pop(ctx,true),child:const Text('NUEVA PARTIDA'))]));
+      if (confirm!=true || !mounted) return;
     }
+    completed.clear();totalCoins=0;introPlayed=false;stage=0;selected=0;
+    _layoutStage();savedAvailable=false;
     await storage?.remove(saveKey);
-    stage = 0;
-    selected = 0;
-    totalCoins = 0;
-    hearts[0] = 2;
-    hearts[1] = 2;
-    introPlayed = false;
-    introLine = 0;
-    savedAvailable = false;
-    _setStageStart();
-    if (mounted) setState(() => screen = GameScreen.choose);
+    await storage?.remove(oldSaveKey);
+    if (mounted) setState(()=>screen=Screen.map);
   }
 
-  void _choose(int index) {
-    selected = index;
-    hearts[selected] = hearts[selected].clamp(1, 2).toInt();
-    _setStageStart();
-    if (stage == 0 && !introPlayed) {
-      introLine = 0;
-      screen = GameScreen.introduction;
-    } else {
-      screen = GameScreen.playing;
-    }
-    _saveGame();
-    setState(() {});
-  }
-
-  Future<void> _continueGame() async {
-    final text = storage?.getString(saveKey);
-    if (text == null) return;
+  Future<void> _continue() async {
+    final raw=storage?.getString(saveKey) ?? storage?.getString(oldSaveKey);
+    if (raw==null) return;
     try {
-      final json = jsonDecode(text) as Map<String, dynamic>;
-      stage = ((json['stage'] as num?)?.toInt() ?? 0).clamp(0, 3).toInt();
-      selected = ((json['selected'] as num?)?.toInt() ?? 0).clamp(0, 1).toInt();
-      totalCoins = ((json['totalCoins'] as num?)?.toInt() ?? 0).clamp(0, 9999).toInt();
-      hearts[0] = ((json['mirenHearts'] as num?)?.toInt() ?? 2).clamp(0, 2).toInt();
-      hearts[1] = ((json['saraHearts'] as num?)?.toInt() ?? 2).clamp(0, 2).toInt();
-      introPlayed = true;
-      _setStageStart();
-      active.x = ((json['x'] as num?)?.toDouble() ?? 145).clamp(40.0, stageWidth - 35).toDouble();
-      follower.x = math.max(35.0, active.x - 65);
-      cameraX = (active.x - 300).clamp(0.0, stageWidth - viewW).toDouble();
-      for (final x in (json['coins'] as List<dynamic>? ?? [])) {
-        final index = (x as num).toInt();
-        if (index >= 0 && index < coins.length) collected.add(index);
+      final s=jsonDecode(raw) as Map<String,dynamic>;
+      stage=((s['stage'] as num?)?.toInt()??0).clamp(0,6).toInt();
+      selected=((s['selected'] as num?)?.toInt()??0).clamp(0,1).toInt();
+      totalCoins=((s['totalCoins'] as num?)?.toInt()??0).clamp(0,99999).toInt();
+      completed..clear()..addAll((s['completed'] as List<dynamic>? ?? [])
+        .whereType<num>().map((e)=>e.toInt()).where((i)=>i>=0 && i<7));
+      introPlayed=s['introPlayed']==true || (s['version'] as num? ?? 0)<3;
+      if((s['version'] as num? ?? 0)<3) {
+        for(int i=0;i<stage;i++)completed.add(i);
       }
-      for (final x in (json['crates'] as List<dynamic>? ?? [])) {
-        smashedCrates.add((x as num).toInt());
-      }
-      for (final x in (json['dogs'] as List<dynamic>? ?? [])) {
-        final i = (x as num).toInt();
-        defeatedDogs.add(i);
-        if (i < dogs.length) dogs[i].mood = DogMood.defeated;
-      }
-      lastCheckpointX = (active.x / 400).floor() * 400.0;
-      if (hearts[selected] == 0) hearts[selected] = 2;
-      screen = (json['atBoundary'] == true) ? GameScreen.choose : GameScreen.playing;
-      if (mounted) setState(() {});
-    } catch (error) {
-      debugPrint('Partida guardada dañada: $error');
-      if (mounted) setState(() { savedAvailable = false; });
-    }
+      _layoutStage();
+      // Returning to the map is intentional for free-selection test mode.
+      if (mounted) setState(()=>screen=Screen.map);
+    } catch(e) {debugPrint('Guardado inválido: $e');if(mounted)setState(()=>savedAvailable=false);}
   }
 
-  Future<void> _saveGame({bool atBoundary = false}) async {
-    if (storage == null || saving || !resourcesReady) return;
-    if (screen == GameScreen.title) return;
-    saving = true;
+  Future<void> _save({bool atMap=false}) async {
+    if (storage==null || saving || !resourcesReady || screen==Screen.title) return;
+    saving=true;
     try {
-      final info = <String, dynamic>{
-        'version': 2,
-        'stage': stage,
-        'selected': selected,
-        'x': atBoundary ? 145.0 : active.x,
-        'mirenHearts': hearts[0],
-        'saraHearts': hearts[1],
-        'totalCoins': totalCoins,
-        'coins': atBoundary ? <int>[] : collected.toList()..sort(),
-        'crates': atBoundary ? <int>[] : smashedCrates.toList()..sort(),
-        'dogs': atBoundary ? <int>[] : defeatedDogs.toList()..sort(),
-        'atBoundary': atBoundary,
+      final data=<String,dynamic>{
+        'version':3,'stage':stage,'selected':selected,'totalCoins':totalCoins,
+        'completed':completed.toList()..sort(),'introPlayed':introPlayed,
+        'atMap':atMap,'x':hero.x,'hearts':hearts,
       };
-      await storage!.setString(saveKey, jsonEncode(info));
-      savedAvailable = true;
-    } catch (error) {
-      debugPrint('No se pudo guardar: $error');
-    } finally {
-      saving = false;
+      await storage!.setString(saveKey,jsonEncode(data));savedAvailable=true;
+    } catch(e) {debugPrint('Guardado fallido: $e');} finally {saving=false;}
+  }
+
+  void _selectChapter(int index) {
+    stage=index;
+    selected=level.forcedSara?1:0;
+    _layoutStage();
+    if (level.forcedMiren || level.forcedSara) {
+      _choose(selected);
+    } else {
+      setState(()=>screen=Screen.choose);
     }
   }
 
-  void _nextIntroLine() {
+  void _choose(int choice) {
+    selected=choice;
+    _layoutStage();
+    final intro=stage==0 && !introPlayed;
+    screen=intro?Screen.introduction:Screen.playing;
+    introLine=0;
+    father.x=80;otherSister.x=184;hero.facing=-1;otherSister.facing=-1;father.facing=1;
+    _save();setState((){});
+  }
+
+  void _introNext() {
     introLine++;
-    if (introLine >= 4) {
-      introPlayed = true;
-      screen = GameScreen.playing;
-      _saveGame();
+    if(introLine>=4) {
+      introPlayed=true;exitTime=time;screen=Screen.playing;
+      hero.x=205;otherSister.x=95;father.x=75;
+      _save();
     }
-    setState(() {});
+    setState((){});
   }
 
-  static double _approach(double from, double to, double step) {
-    if ((to - from).abs() <= step) return to;
-    return from + (to - from).sign * step;
+  static double _ease(double from,double to,double maxStep) {
+    if ((to-from).abs()<=maxStep) return to;
+    return from+(to-from).sign*maxStep;
   }
 
   void _tick() {
-    final micros = ticker.lastElapsedDuration?.inMicroseconds.toDouble() ?? 0;
-    final dt = lastMicroseconds == 0
-        ? .016
-        : ((micros - lastMicroseconds) / 1000000).clamp(0.0, .033).toDouble();
-    lastMicroseconds = micros;
-    if (dt <= 0 || !resourcesReady) return;
-    time += dt;
-    if (screen != GameScreen.playing) {
-      if (screen == GameScreen.introduction && mounted) setState(() {});
-      return;
+    final micros=ticker.lastElapsedDuration?.inMicroseconds.toDouble()??0;
+    final dt=lastMicros == 0 ? .016 :((micros-lastMicros)/1000000).clamp(0.0,.033).toDouble();
+    lastMicros=micros;
+    if(dt<=0 || !resourcesReady) return;
+    time+=dt;
+    if(screen!=Screen.playing) {if(screen==Screen.introduction && mounted)setState((){});return;}
+    levelTime+=dt;
+    if(exitTime>=0) {
+      father.x-=65*dt;otherSister.x-=67*dt;
+      father.vx=-65;father.facing=-1;otherSister.vx=-67;otherSister.facing=-1;
+      father.travelled+=65*dt;otherSister.travelled+=67*dt;
+      if(father.x< -110 && otherSister.x< -100) exitTime=-1;
     }
-
-    final input = (rightHeld ? 1 : 0) - (leftHeld ? 1 : 0);
-    final a = active;
-    a.vx = _approach(a.vx, input * 169.0, dt * (input == 0 ? 800 : 1040));
-    if (input != 0) a.facing = input;
-    // La hermana no seleccionada NUNCA recibe directamente las órdenes del jugador.
-    final target = active.x - 66 * active.facing;
-    final gap = target - follower.x;
-    final followSpeed = gap.abs() > 25 ? gap.sign * math.min(126.0, gap.abs() * 2.5) : 0.0;
-    follower.vx = _approach(follower.vx, followSpeed, dt * 620);
-    if (follower.vx.abs() > 9) follower.facing = follower.vx.sign.toInt();
-    if (follower.grounded && follower.vx.abs() > 18) {
-      for (int i = 0; i < obstacles.length; i++) {
-        if (smashedCrates.contains(i)) continue;
-        final block = obstacles[i];
-        final gapAhead = follower.vx > 0 ? block.left - follower.x - actorRadius : follower.x - actorRadius - block.right;
-        if (gapAhead > -6 && gapAhead < 38 && follower.y > block.top + 2) {
-          follower.vy = -409;
-          follower.grounded = false;
-          break;
+    final input=(rightHeld?1:0)-(leftHeld?1:0);
+    hero.vx=_ease(hero.vx,input*169.0,dt*(input==0?800:1040));
+    if(input!=0)hero.facing=input;
+    final prevX=hero.x,prevY=hero.y;
+    hero.x=(hero.x+hero.vx*dt).clamp(actorRadius,stageWidth-actorRadius).toDouble();
+    // Solid platforms and themed obstacles share one tested collision routine.
+    final solids=<Rect>[...platforms,...obstacles.where((o)=>!o.destroyed).map((o)=>o.rect)];
+    for(final box in solids) {
+      if(hero.y>box.top+2 && hero.y-actorHeight<box.bottom-2) {
+        if(hero.vx>0 && prevX+actorRadius<=box.left+2 && hero.x+actorRadius>box.left) {
+          hero.x=box.left-actorRadius;hero.vx=0;
+        } else if(hero.vx<0 && prevX-actorRadius>=box.right-2 && hero.x-actorRadius<box.right) {
+          hero.x=box.right+actorRadius;hero.vx=0;
         }
       }
     }
-
-    for (final hero in sisters) {
-      final previousX = hero.x;
-      final previousY = hero.y;
-      hero.x = (hero.x + hero.vx * dt).clamp(actorRadius, stageWidth - actorRadius).toDouble();
-      for (int i = 0; i < obstacles.length; i++) {
-        if (smashedCrates.contains(i)) continue;
-        final block = obstacles[i];
-        if (hero.y > block.top + 3 && hero.y - actorHeight < block.bottom - 3) {
-          if (hero.vx > 0 && previousX + actorRadius <= block.left + 1 && hero.x + actorRadius > block.left) {
-            hero.x = block.left - actorRadius;
-            hero.vx = 0;
-          } else if (hero.vx < 0 && previousX - actorRadius >= block.right - 1 && hero.x - actorRadius < block.right) {
-            hero.x = block.right + actorRadius;
-            hero.vx = 0;
+    hero.vy=(hero.vy+960*dt).clamp(-550.0,680.0).toDouble();
+    hero.y+=hero.vy*dt;hero.grounded=false;
+    for(final box in solids) {
+      if(hero.x+actorRadius<=box.left || hero.x-actorRadius>=box.right)continue;
+      if(hero.vy>=0 && prevY<=box.top+2 && hero.y>=box.top) {
+        hero.y=box.top;hero.vy=0;hero.grounded=true;
+      } else if(hero.vy<0 && prevY-actorHeight>=box.bottom-2 && hero.y-actorHeight<box.bottom) {
+        hero.y=box.bottom+actorHeight;hero.vy=0;
+      }
+    }
+    if(hero.y>=groundY){hero.y=groundY;hero.vy=0;hero.grounded=true;}
+    hero.travelled+=(hero.x-prevX).abs();
+    for(int i=0;i<coins.length;i++) {
+      if(collected.contains(i))continue;
+      if((coins[i].dx-hero.x).abs()<23 && (coins[i].dy-(hero.y-46)).abs()<41) {
+        collected.add(i);totalCoins++;particlesUntil=time+.2;
+      }
+    }
+    for(final shot in shots) {
+      if(!shot.active)continue;
+      shot.x+=shot.vx*dt;shot.y+=shot.vy*dt;shot.life+=dt;
+      if(shot.fromEnemy) {
+        shot.vy+=210*dt;
+        if((shot.x-hero.x).abs()<24 && (shot.y-(hero.y-46)).abs()<48) {
+          shot.active=false;_receiveDamage(shot.vx.sign.toInt());
+        }
+      } else {
+        shot.vy+=490*dt;
+        for(final o in obstacles) {
+          if(o.destroyed || !o.breakable)continue;
+          if(o.rect.inflate(3).contains(Offset(shot.x,shot.y))) {
+            o.smashedAt=time;shot.active=false;particlesUntil=time+.35;break;
+          }
+        }
+        if(!shot.active) continue;
+        for(final foe in enemies) {
+          if(foe.defeated || foe.stunned>0)continue;
+          final ey=groundY-foe.height;
+          if((shot.x-foe.x).abs()<37 && (shot.y-ey).abs()<(foe.aerial?42:51)) {
+            foe.hits++;foe.stunned=.66;foe.t=0;shot.active=false;
+            particlesUntil=time+.4;
+            if(foe.hits>=foe.hp)foe.deathAt=time;
+            break;
           }
         }
       }
-      hero.vy = (hero.vy + 960 * dt).clamp(-500.0, 650.0).toDouble();
-      hero.y += hero.vy * dt;
-      hero.grounded = false;
-      for (int i = 0; i < obstacles.length; i++) {
-        if (smashedCrates.contains(i)) continue;
-        final block = obstacles[i];
-        if (hero.x + actorRadius <= block.left || hero.x - actorRadius >= block.right) continue;
-        if (hero.vy >= 0 && previousY <= block.top + 2 && hero.y >= block.top) {
-          hero.y = block.top;
-          hero.vy = 0;
-          hero.grounded = true;
-        } else if (hero.vy < 0 && previousY - actorHeight >= block.bottom - 2 && hero.y - actorHeight < block.bottom) {
-          hero.y = block.bottom + actorHeight;
-          hero.vy = 0;
-        }
-      }
-      if (hero.y >= groundY) {
-        hero.y = groundY;
-        hero.vy = 0;
-        hero.grounded = true;
-      }
-      hero.travelled += (hero.x - previousX).abs();
+      if(shot.y>groundY+40 || shot.life>2.5 || shot.x<0 || shot.x>stageWidth)shot.active=false;
     }
-
-    for (int i = 0; i < coins.length; i++) {
-      if (collected.contains(i)) continue;
-      if ((coins[i].dx - a.x).abs() < 24 && (coins[i].dy - (a.y - 43)).abs() < 40) {
-        collected.add(i);
-        totalCoins++;
-        effectUntil = time + .30;
-      }
-    }
-    for (final shot in projectiles) {
-      if (!shot.active) continue;
-      shot.x += shot.vx * dt;
-      shot.vy += 560 * dt;
-      shot.y += shot.vy * dt;
-      shot.life += dt;
-      for (int i = 0; i < obstacles.length; i++) {
-        if (smashedCrates.contains(i)) continue;
-        if (obstacles[i].inflate(4).contains(Offset(shot.x, shot.y))) {
-          smashedCrates.add(i);
-          shot.active = false;
-          effectUntil = time + .33;
-          break;
-        }
-      }
-      if (!shot.active) continue;
-      for (final dog in dogs) {
-        if (dog.mood == DogMood.defeated || dog.mood == DogMood.hit || dog.mood == DogMood.stunned) continue;
-        if ((shot.x - dog.x).abs() < 36 && (shot.y - (groundY - 28)).abs() < 43) {
-          dog.mood = DogMood.hit;
-          dog.modeTime = 0;
-          shot.active = false;
-          defeatedDogs.add(dog.id);
-          effectUntil = time + .6;
-          break;
-        }
-      }
-      if (shot.y > groundY || shot.life > 2.6 || shot.x < 0 || shot.x > stageWidth) shot.active = false;
-    }
-    projectiles.removeWhere((x) => !x.active);
-
-    for (final dog in dogs) {
-      dog.modeTime += dt;
-      dog.cooldown = math.max(0.0, dog.cooldown - dt);
-      if (dog.mood == DogMood.defeated) continue;
-      if (dog.mood == DogMood.hit) {
-        if (dog.modeTime > .32) {
-          dog.mood = DogMood.stunned;
-          dog.modeTime = 0;
-        }
-        continue;
-      }
-      if (dog.mood == DogMood.stunned) {
-        if (dog.modeTime > .6) {
-          dog.mood = DogMood.defeated;
-          dog.modeTime = 0;
-        }
-        continue;
-      }
-      final distance = a.x - dog.x;
-      if (dog.mood == DogMood.bite) {
-        if (!dog.hasBitThisAttack && dog.modeTime > .18 && dog.modeTime < .58 && distance.abs() < 44 && a.y > groundY - 38) {
-          dog.hasBitThisAttack = true;
-          _receiveBite(dog.facing);
-        }
-        if (dog.modeTime >= .68) {
-          dog.mood = DogMood.run;
-          dog.modeTime = 0;
-          dog.cooldown = 1.4;
-        }
-        continue;
-      }
-      if (distance.abs() < 205 && dog.cooldown <= 0) {
-        dog.facing = distance >= 0 ? 1 : -1;
-        if (distance.abs() <= 48) {
-          dog.mood = DogMood.bite;
-          dog.hasBitThisAttack = false;
-          dog.modeTime = 0;
-        } else {
-          dog.mood = DogMood.run;
-          dog.x += dog.facing * 94 * dt;
+    shots.removeWhere((s)=>!s.active);
+    for(final foe in enemies) {
+      foe.t+=dt;foe.attackCooldown=math.max(0,foe.attackCooldown-dt);
+      if(foe.defeated)continue;
+      if(foe.stunned>0){foe.stunned=math.max(0,foe.stunned-dt);continue;}
+      final distance=hero.x-foe.x,absDist=distance.abs();
+      if(foe.ranged) {
+        if(absDist<390 && foe.attackCooldown<=0) {
+          // No machine-gun projectiles: one visible wind-up, one projectile, long recovery.
+          if(!foe.launched){foe.launched=true;foe.t=0;foe.facing=distance>=0?1:-1;}
+          if(foe.t>=.75) {
+            final kind=switch(foe.kind){'referee'=>'red_card','breakdancer'=>'shoe','teacher'=>'eraser',_=>'coin'};
+            // Do not overlap a second projectile of the same kind.
+            if(!shots.any((s)=>s.fromEnemy && s.kind==kind)) {
+              shots.add(Projectile(x:foe.x+foe.facing*27,y:groundY-71,
+                vx:foe.facing*195.0,kind:kind,fromEnemy:true));
+            }
+            foe.launched=false;foe.t=0;foe.attackCooldown=3.6;
+          }
+        } else if(absDist>390)foe.launched=false;
+      } else if(absDist<foe.detection) {
+        foe.facing=distance>=0?1:-1;
+        if(absDist>34)foe.x+=foe.facing*foe.speed*dt;
+        if(absDist<37 && foe.attackCooldown<=0 && (foe.aerial || hero.y>groundY-45)) {
+          _receiveDamage(foe.facing);foe.attackCooldown=1.7;
         }
       } else {
-        dog.mood = dog.cooldown > 0 ? DogMood.alert : DogMood.walk;
-        if (dog.cooldown == 0) {
-          dog.x += dog.facing * 32 * dt;
-          if (dog.x < dog.patrolLeft || dog.x > dog.patrolRight) dog.facing = -dog.facing;
-        }
+        foe.x+=foe.facing*foe.speed*.36*dt;
+        if((foe.x-foe.home).abs()>87)foe.facing=-foe.facing;
       }
-      // Colisión propia del enemigo: no atraviesa las cajas.
-      for (int i = 0; i < obstacles.length; i++) {
-        if (smashedCrates.contains(i)) continue;
-        final block = obstacles[i];
-        if (dog.x + 27 > block.left && dog.x - 27 < block.right) {
-          dog.x = dog.facing > 0 ? block.left - 27 : block.right + 27;
-          dog.facing = -dog.facing;
-          dog.cooldown = math.max(dog.cooldown, .55);
-          dog.mood = DogMood.alert;
-          break;
-        }
-      }
-      dog.x = dog.x.clamp(55.0, stageWidth - 40).toDouble();
+      foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
     }
-
-    cameraX = _approach(cameraX,
-        (active.x - 330).clamp(0.0, stageWidth - viewW).toDouble(), dt * 550);
-    if (active.x > lastCheckpointX + 420) {
-      lastCheckpointX = active.x;
-      _saveGame();
-    }
-    if (time > lastSaveTime + 8) {
-      lastSaveTime = time;
-      _saveGame();
-    }
-    if (active.x >= stageWidth - 55) _endChapter();
-    if (mounted) setState(() {});
+    cameraX=_ease(cameraX,(hero.x-327).clamp(0.0,stageWidth-viewW).toDouble(),dt*600);
+    if(hero.x>checkpointX+2800){checkpointX=hero.x;_save();}
+    if(time>lastSaveTime+12){lastSaveTime=time;_save();}
+    if(hero.x>=stageWidth-90)_finishChapter();
+    if(mounted)setState((){});
   }
 
-  void _receiveBite(int facing) {
-    if (time < active.hurtUntil || hearts[selected] <= 0) return;
-    hearts[selected] = math.max(0, hearts[selected] - 1);
-    active.hurtUntil = time + 1.45;
-    active.vx = facing * 200;
-    active.vy = -270;
-    active.grounded = false;
-    effectUntil = time + .45;
-    if (hearts[selected] == 0) {
-      screen = GameScreen.gameOver;
-      leftHeld = false;
-      rightHeld = false;
-    }
-    _saveGame();
+  void _receiveDamage(int direction) {
+    if(time<hero.hurtUntil || hearts<=0)return;
+    hearts=math.max(0,hearts-1);
+    hero.hurtUntil=time+1.65;
+    hero.vx=direction*145;hero.vy=-235;hero.grounded=false;
+    particlesUntil=time+.3;
+    if(hearts==0){screen=Screen.gameOver;leftHeld=false;rightHeld=false;}
+    _save();
   }
-
   void _jump() {
-    if (screen != GameScreen.playing) return;
-    if (active.grounded) {
-      active.vy = -410;
-      active.grounded = false;
-    }
+    if(screen==Screen.playing && hero.grounded) {hero.vy=-423;hero.grounded=false;}
   }
-
   void _attack() {
-    if (screen != GameScreen.playing || time - lastAttackTime < .5) return;
-    lastAttackTime = time;
-    projectiles.add(FlyingItem(
-      x: active.x + active.facing * 28,
-      y: active.y - 42,
-      vx: active.facing * (selected == 0 ? 320.0 : 360.0),
-      kind: selected,
-    ));
-    effectUntil = time + .24;
+    if(screen!=Screen.playing || time-lastAttackTime<.5)return;
+    lastAttackTime=time;
+    shots.add(Projectile(x:hero.x+hero.facing*30,y:hero.y-48,
+      vx:hero.facing*(selected==0?338.0:360.0),kind:selected==0?'ball':'comb'));
   }
-
-  void _endChapter() {
-    if (screen != GameScreen.playing) return;
-    leftHeld = false;
-    rightHeld = false;
-    finishedStage = stage;
-    if (stage == chapterNames.length - 1) {
-      screen = GameScreen.victory;
-    } else {
-      stage++;
-      _saveGame(atBoundary: true);
-      screen = GameScreen.chapterEnd;
-    }
+  void _finishChapter() {
+    if(screen!=Screen.playing)return;
+    leftHeld=false;rightHeld=false;
+    completed.add(stage);screen=Screen.chapterEnd;_save(atMap:true);
   }
-
-  void _restartCheckpoint() {
-    hearts[selected] = 2;
-    active.x = math.max(140.0, lastCheckpointX);
-    active.y = groundY;
-    active.vx = 0;
-    active.vy = 0;
-    follower.x = math.max(40.0, active.x - 67);
-    for (final dog in dogs) {
-      if ((dog.x - active.x).abs() < 140 && dog.mood != DogMood.defeated) {
-        dog.x = math.min(stageWidth - 70, active.x + 230);
-        dog.cooldown = 2;
-        dog.mood = DogMood.walk;
-      }
-    }
-    screen = GameScreen.playing;
-    _saveGame();
-    setState(() {});
+  void _retry() {
+    final cp=checkpointX;
+    _layoutStage();hero.x=cp;hearts=2;
+    cameraX=(cp-300).clamp(0.0,stageWidth-viewW).toDouble();
+    // Reset only the unfinished part of the chapter after checkpoint.
+    screen=Screen.playing;_save();setState((){});
   }
-
-  void _nextChapter() {
-    _setStageStart();
-    screen = GameScreen.choose;
-    _saveGame(atBoundary: true);
-    setState(() {});
+  void _returnMap() {
+    leftHeld=false;rightHeld=false;
+    screen=Screen.map;_save(atMap:true);setState((){});
   }
-
-  void _returnToTitle() {
-    if (screen != GameScreen.victory) _saveGame();
-    leftHeld = false;
-    rightHeld = false;
-    screen = GameScreen.title;
-    setState(() {});
+  void _returnTitle() {
+    if(screen!=Screen.title)_save(atMap:true);
+    leftHeld=false;rightHeld=false;
+    screen=Screen.title;setState((){});
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed) {
-      leftHeld = false;
-      rightHeld = false;
-      if (screen == GameScreen.playing) {
-        _saveGame();
-        screen = GameScreen.paused;
-        if (mounted) setState(() {});
-      }
+    if(state!=AppLifecycleState.resumed){
+      leftHeld=false;rightHeld=false;
+      if(screen==Screen.playing){screen=Screen.paused;_save();if(mounted)setState((){});}
     }
   }
+  @override
+  void dispose(){WidgetsBinding.instance.removeObserver(this);ticker.dispose();for(final img in images.values){img.dispose();}super.dispose();}
+
+  Widget _pixelButton(String title, VoidCallback onTap,{bool gold=false,double width=250}) => SizedBox(
+    width:width,height:49,child:ElevatedButton(onPressed:onTap,
+      style:ElevatedButton.styleFrom(backgroundColor:gold?const Color(0xffdd970d):const Color(0xff0755a5),
+        foregroundColor:Colors.white,shape:RoundedRectangleBorder(borderRadius:BorderRadius.circular(7),
+          side:const BorderSide(color:Color(0xffffdfa2),width:3))),
+      child:Text(title,textAlign:TextAlign.center,style:const TextStyle(fontWeight:FontWeight.w900,fontSize:16))));
+
+  Widget _control(Widget glyph,VoidCallback onDown,VoidCallback onUp) => Listener(
+    behavior:HitTestBehavior.opaque,
+    onPointerDown:(_){onDown();if(mounted)setState((){});},
+    onPointerUp:(_){onUp();if(mounted)setState((){});},
+    onPointerCancel:(_){onUp();if(mounted)setState((){});},
+    child:Container(width:65,height:61,alignment:Alignment.center,
+      decoration:BoxDecoration(color:const Color(0xcc102d53),borderRadius:BorderRadius.circular(35),
+        border:Border.all(color:Colors.white,width:2)),child:glyph));
 
   @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    ticker.dispose();
-    for (final im in images.values) { im.dispose(); }
-    super.dispose();
-  }
+  Widget build(BuildContext context) => Scaffold(backgroundColor:const Color(0xff0d2943),body:Center(
+    child:FittedBox(fit:BoxFit.contain,child:SizedBox(width:viewW,height:viewH,child:_screen()))));
 
-  Widget _control(IconData icon, VoidCallback down, VoidCallback up, {double width = 63}) {
-    return Listener(
-      behavior: HitTestBehavior.opaque,
-      onPointerDown: (_) { down(); if (mounted) setState(() {}); },
-      onPointerUp: (_) { up(); if (mounted) setState(() {}); },
-      onPointerCancel: (_) { up(); if (mounted) setState(() {}); },
-      child: Container(
-        width: width, height: 61,
-        decoration: BoxDecoration(
-          color: const Color(0xc3123456),
-          borderRadius: BorderRadius.circular(35),
-          border: Border.all(color: Colors.white.withValues(alpha: .82), width: 2),
-          boxShadow: const [BoxShadow(color: Color(0x55091427), blurRadius: 3, offset: Offset(1, 3))],
-        ),
-        child: Icon(icon, color: Colors.white, size: 32),
-      ),
-    );
-  }
-
-  Widget _pixelButton(String text, VoidCallback? onPressed,
-      {bool golden = false, double width = 235}) {
-    return SizedBox(
-      width: width, height: 52,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          backgroundColor: golden ? const Color(0xffe49a0c) : const Color(0xff0755a5),
-          disabledBackgroundColor: const Color(0xff44546a),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(7),
-            side: const BorderSide(color: Color(0xffffe9a4), width: 3),
-          ),
-        ),
-        child: Text(text, textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w900,
-            shadows: [Shadow(color: Color(0xff09152e), offset: Offset(2, 2))])),
-      ),
-    );
-  }
-
-  Widget _dialogPanel(String heading, String body, VoidCallback callback) {
-    return Positioned(
-      left: 165, top: 255, width: 470, height: 130,
-      child: GestureDetector(
-        onTap: callback,
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 9),
-          decoration: BoxDecoration(
-            color: const Color(0xf211294b),
-            borderRadius: BorderRadius.circular(9),
-            border: Border.all(color: const Color(0xffffd56a), width: 3),
-          ),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(heading, style: const TextStyle(color: Color(0xffffde78), fontSize: 17, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text(body, style: const TextStyle(color: Colors.white, fontSize: 18)),
-            const Spacer(),
-            const Align(alignment: Alignment.bottomRight,
-              child: Text('TOCA PARA SEGUIR  ▶', style: TextStyle(color: Color(0xffffd56a), fontSize: 11))),
-          ]),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xff102a41),
-      body: Center(
-        child: FittedBox(
-          fit: BoxFit.contain,
-          child: SizedBox(width: viewW, height: viewH, child: _screenContent()),
-        ),
-      ),
-    );
-  }
-
-  Widget _screenContent() {
-    if (loadError != null) {
-      return ColoredBox(color: const Color(0xff122d46), child: Center(
-        child: Padding(padding: const EdgeInsets.all(20), child: Text(
-          'ERROR AL CARGAR LOS RECURSOS\n$loadError',
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white, fontSize: 16),
-        )),
-      ));
-    }
-    if (!resourcesReady) return const Center(child: CircularProgressIndicator(color: Colors.amber));
-    switch (screen) {
-      case GameScreen.title:
-        return _titleScreen();
-      case GameScreen.choose:
-        return _choiceScreen();
-      case GameScreen.introduction:
-        return _gameScreen(showFather: true);
-      case GameScreen.playing:
-        return _gameScreen(showFather: false);
-      case GameScreen.chapterEnd:
-        return _gameScreen(showFather: false, overlay: _chapterOverlay());
-      case GameScreen.gameOver:
-        return _gameScreen(showFather: false, overlay: _gameOverOverlay());
-      case GameScreen.victory:
-        return _gameScreen(showFather: false, overlay: _victoryOverlay());
-      case GameScreen.paused:
-        return _gameScreen(showFather: false, overlay: _pauseOverlay());
+  Widget _screen() {
+    if(loadError!=null)return Center(child:Text('ERROR AL CARGAR RECURSOS\n$loadError',style:const TextStyle(color:Colors.white)));
+    if(!resourcesReady)return const Center(child:CircularProgressIndicator());
+    switch(screen) {
+      case Screen.title:return _title();
+      case Screen.map:return _map();
+      case Screen.choose:return _chooseScreen();
+      case Screen.introduction:return _play(showFamily:true);
+      case Screen.playing:return _play();
+      case Screen.chapterEnd:return _play(overlay:_overlay('¡CAPÍTULO COMPLETADO!',
+        '¡Has superado ${chapterNames[stage]}!\nMonedas: $totalCoins',
+        [_pixelButton('VOLVER AL MAPA',_returnMap,gold:true),_pixelButton('MENÚ PRINCIPAL',_returnTitle)]));
+      case Screen.gameOver:return _play(overlay:_overlay('¡SIN CORAZONES!',
+        'Puedes volver al último punto de control.',
+        [_pixelButton('REINTENTAR',_retry,gold:true),_pixelButton('VOLVER AL MAPA',_returnMap)]));
+      case Screen.paused:return _play(overlay:_overlay('PAUSA','Se conserva tu progreso.',
+        [_pixelButton('SEGUIR JUGANDO',()=>setState(()=>screen=Screen.playing),gold:true),
+         _pixelButton('VOLVER AL MAPA',_returnMap),_pixelButton('MENÚ PRINCIPAL',_returnTitle)]));
     }
   }
 
-  Widget _titleScreen() {
-    // Obra gráfica APROBADA: imagen sin cambios ni recortes del título.
-    // Los botones son zonas táctiles sobre la propia imagen, no un menú de otro estilo.
-    return Stack(children: [
-      Positioned.fill(child: Image.asset('assets/images/title_approved.png', fit: BoxFit.fill)),
-      Positioned(left: 551, top: 183, width: 208, height: 59,
-        child: Material(color: Colors.transparent, child: InkWell(onTap: _beginFreshGame,
-          borderRadius: BorderRadius.circular(6)))),
-      Positioned(left: 557, top: 249, width: 203, height: 61,
-        child: Material(color: savedAvailable ? Colors.transparent : const Color(0x99404b63),
-          child: InkWell(onTap: savedAvailable ? _continueGame : null,
-            borderRadius: BorderRadius.circular(6)))),
-      if (!savedAvailable) const Positioned(left: 578, top: 299,
-        child: Text('Sin partida guardada', style: TextStyle(color: Colors.white, fontSize: 11,
-            shadows: [Shadow(color: Colors.black, blurRadius: 3)]))),
-      Positioned(left: 303, bottom: 4, width: 194, height: 43,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 2),
-          decoration: BoxDecoration(
-            color: const Color(0xa0092749),
-            borderRadius: BorderRadius.circular(9),
-            border: Border.all(color: const Color(0x99e8c27d), width: 1),
-          ),
-          child: Image.asset('assets/images/brand_logo_twc.png', fit: BoxFit.contain),
-        )),
-    ]);
+  Widget _title() => Stack(children:[
+    Positioned.fill(child:Image.asset('assets/images/title_approved.png',fit:BoxFit.fill)),
+    Positioned(left:551,top:183,width:208,height:59,child:Material(color:Colors.transparent,
+      child:InkWell(onTap:_startNew))),
+    Positioned(left:557,top:249,width:203,height:61,child:Material(
+      color:savedAvailable?Colors.transparent:const Color(0x99505b67),
+      child:InkWell(onTap:savedAvailable?_continue:null))),
+    if(!savedAvailable)const Positioned(left:579,top:299,child:Text('Sin partida guardada',
+      style:TextStyle(color:Colors.white,fontSize:11,shadows:[Shadow(color:Colors.black,blurRadius:3)]))),
+    Positioned(left:303,bottom:4,width:194,height:43,child:Container(padding:const EdgeInsets.all(4),
+      decoration:BoxDecoration(color:const Color(0xa0092749),borderRadius:BorderRadius.circular(9)),
+      child:Image.asset('assets/images/brand_logo_twc.png',fit:BoxFit.contain))),
+  ]);
+
+  // Free chapter selection is intentionally not tied to completed chapters in the test version.
+  // Switch to sequential mode in future without changing level logic.
+  static const List<Offset> mapStops = [
+    Offset(120,275),Offset(349,130),Offset(542,238),Offset(419,312),
+    Offset(683,128),Offset(637,349),Offset(233,361),
+  ];
+  Widget _map() => Stack(children:[
+    Positioned.fill(child:Image.asset('assets/images/map_pamplona.png',fit:BoxFit.cover)),
+    Positioned(left:9,right:9,top:5,child:Container(height:44,alignment:Alignment.center,
+      decoration:BoxDecoration(color:const Color(0xe00b3052),borderRadius:BorderRadius.circular(7)),
+      child:const Text('MAPA DE PAMPLONA · ELIGE UN CAPÍTULO',
+        style:TextStyle(fontSize:20,color:Color(0xffffde88),fontWeight:FontWeight.w900)))),
+    for(int i=0;i<7;i++)Positioned(left:mapStops[i].dx-54,top:mapStops[i].dy-25,
+      child:GestureDetector(onTap:()=>_selectChapter(i),
+        child:Container(width:108,height:56,padding:const EdgeInsets.symmetric(horizontal:3),
+          decoration:BoxDecoration(color:completed.contains(i)?const Color(0xe01c6c47):const Color(0xe00b3766),
+            borderRadius:BorderRadius.circular(8),border:Border.all(color:const Color(0xffffd96c),width:3),
+            boxShadow:const [BoxShadow(color:Colors.black54,blurRadius:3)]),
+          child:Column(mainAxisAlignment:MainAxisAlignment.center,children:[
+            Text('${completed.contains(i)?'✓ ':''}CAP. ${i+1}',
+              style:const TextStyle(color:Color(0xffffda66),fontWeight:FontWeight.w900,fontSize:15)),
+            Text(chapterNames[i],textAlign:TextAlign.center,maxLines:2,overflow:TextOverflow.ellipsis,
+              style:const TextStyle(color:Colors.white,fontWeight:FontWeight.bold,fontSize:10)),
+          ])))),
+    Positioned(bottom:7,left:12,child:_pixelButton('◀ MENÚ',_returnTitle,width:125)),
+    Positioned(right:12,bottom:8,child:Container(padding:const EdgeInsets.all(7),
+      decoration:BoxDecoration(color:const Color(0xd00a2d51),borderRadius:BorderRadius.circular(7)),
+      child:Text('COMPLETADOS: ${completed.length}/7   ·   MONEDAS: $totalCoins',
+        style:const TextStyle(color:Colors.white,fontSize:12,fontWeight:FontWeight.bold)))),
+  ]);
+
+  Widget _chooseScreen()=>Stack(children:[
+    Positioned.fill(child:Image.asset(stage<4?'assets/images/${chapterScenes[stage]}.png':
+      'assets/images/scenes/${chapterScenes[stage]}.png',fit:BoxFit.cover)),
+    Positioned.fill(child:ColoredBox(color:Colors.black.withValues(alpha:.60))),
+    Positioned(left:0,right:0,top:18,child:Text('CAPÍTULO ${stage+1} · ${chapterNames[stage]}',
+      textAlign:TextAlign.center,style:const TextStyle(color:Color(0xffffde88),fontSize:24,fontWeight:FontWeight.w900))),
+    _chooseCard(0,142),_chooseCard(1,415),
+    Positioned(left:12,bottom:8,child:_pixelButton('◀ MAPA',_returnMap,width:129)),
+  ]);
+  Widget _chooseCard(int index,double x) {
+    final role=index==0?'futbolista':'bailarina';
+    return Positioned(left:x,top:74,width:242,height:346,child:GestureDetector(onTap:()=>_choose(index),
+      child:Container(decoration:BoxDecoration(color:const Color(0xee0b305a),borderRadius:BorderRadius.circular(11),
+        border:Border.all(color:index==0?const Color(0xffffc748):const Color(0xffffa6d1),width:4)),
+        child:Column(children:[const SizedBox(height:9),Text(index==0?'MIREN':'SARA',
+          style:const TextStyle(fontSize:24,color:Colors.white,fontWeight:FontWeight.w900)),
+          SizedBox(height:209,child:Image.asset('assets/images/frames/${role}_idle_0.png',fit:BoxFit.contain)),
+          Text(index==0?'BALÓN  ⚽':'PEINE  ✦',style:const TextStyle(color:Color(0xffffd783),fontSize:18,fontWeight:FontWeight.w900)),
+          const Text('♥  ♥',style:TextStyle(color:Colors.redAccent,fontSize:28)),
+          const Text('TOCA PARA ELEGIR',style:TextStyle(color:Colors.white,fontSize:12,fontWeight:FontWeight.bold)),
+        ]))));
   }
 
-  Widget _choiceScreen() {
-    return Stack(children: [
-      Positioned.fill(child: Image.asset('assets/images/${sceneryFiles[stage]}.png', fit: BoxFit.cover)),
-      Positioned.fill(child: Container(color: const Color(0x990c213a))),
-      const Positioned(left: 0, right: 0, top: 15,
-        child: Text('ELIGE TU PROTAGONISTA', textAlign: TextAlign.center,
-          style: TextStyle(color: Color(0xffffe18e), fontSize: 27, fontWeight: FontWeight.w900,
-            shadows: [Shadow(color: Colors.black, blurRadius: 4)]))),
-      Positioned(left: 0, right: 0, top: 54,
-        child: Text('CAPÍTULO ${stage + 1} · ${chapterNames[stage]}', textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold))),
-      _choiceCard(0, 140),
-      _choiceCard(1, 414),
-      Positioned(left: 15, bottom: 10, child: TextButton(
-        onPressed: _returnToTitle, child: const Text('◀ VOLVER', style: TextStyle(color: Colors.white)))),
-    ]);
-  }
+  Widget _play({bool showFamily=false,Widget? overlay}) => Stack(children:[
+    Positioned.fill(child:CustomPaint(painter:StagePainter(
+      images:images,stage:stage,cameraX:cameraX,time:time,hero:hero,
+      otherSister:otherSister,father:father,showFamily:showFamily || exitTime>=0,
+      selected:selected,obstacles:obstacles,platforms:platforms,
+      coins:coins,collected:collected,enemies:enemies,shots:shots,particlesUntil:particlesUntil))),
+    Positioned(left:10,top:9,child:Container(padding:const EdgeInsets.all(8),
+      decoration:BoxDecoration(color:const Color(0xdd0d3050),borderRadius:BorderRadius.circular(7)),
+      child:Row(children:[Text(selected==0?'MIREN':'SARA',style:const TextStyle(color:Colors.white,fontWeight:FontWeight.w900)),
+        const SizedBox(width:12),Text(List<String>.filled(hearts,'♥').join(' '),style:const TextStyle(color:Color(0xffff6373),fontSize:23)),
+        const SizedBox(width:10),Image.asset('assets/images/coin.png',width:25,height:25),
+        Text(' $totalCoins',style:const TextStyle(color:Colors.white,fontSize:17,fontWeight:FontWeight.bold))]))),
+    Positioned(left:0,right:0,top:10,child:IgnorePointer(child:Text('CAP. ${stage+1} · ${chapterNames[stage]}',
+      textAlign:TextAlign.center,style:const TextStyle(color:Colors.white,fontSize:13,shadows:[Shadow(color:Colors.black,blurRadius:5)])))),
+    if(screen==Screen.playing)...[
+      Positioned(left:15,bottom:12,child:Row(children:[
+        _control(const Icon(Icons.arrow_back_rounded,color:Colors.white,size:33),()=>leftHeld=true,()=>leftHeld=false),
+        const SizedBox(width:10),
+        _control(const Icon(Icons.arrow_forward_rounded,color:Colors.white,size:33),()=>rightHeld=true,()=>rightHeld=false)])),
+      Positioned(right:14,bottom:12,child:Row(children:[
+        _control(Image.asset(selected==0?'assets/images/ball.png':'assets/images/comb.png',width:41,height:36),_attack,(){}),
+        const SizedBox(width:12),
+        _control(const Icon(Icons.arrow_upward_rounded,color:Colors.white,size:33),_jump,(){}),
+      ])),
+      Positioned(right:12,top:10,child:IconButton(onPressed:(){leftHeld=false;rightHeld=false;
+        screen=Screen.paused;_save();setState((){});},
+        icon:const Icon(Icons.pause_circle_filled,color:Colors.white,size:29))),
+    ],
+    if(screen==Screen.introduction)Positioned(left:310,right:13,top:245,height:142,
+      child:GestureDetector(onTap:_introNext,child:Container(padding:const EdgeInsets.all(14),
+        decoration:BoxDecoration(color:const Color(0xf00b2948),border:Border.all(color:const Color(0xffffd875),width:3),
+          borderRadius:BorderRadius.circular(9)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
+        Text(['PAPÁ','MIREN','SARA','PAPÁ'][introLine],
+          style:TextStyle(color:[Colors.lightBlueAccent,Colors.yellowAccent,Colors.purpleAccent,Colors.lightBlueAccent][introLine],
+            fontSize:19,fontWeight:FontWeight.w900)),
+        const SizedBox(height:6),Text(['¡Venga, chicas! ¿Estáis listas?','¡Yo sí! ¡Vamos!',
+          '¡Espérame, que voy!','¡Pues en marcha!'][introLine],
+          style:const TextStyle(color:Colors.white,fontSize:17)),
+        const Spacer(),const Align(alignment:Alignment.bottomRight,child:Text('TOCA PARA SEGUIR  ▶',
+          style:TextStyle(color:Color(0xffffdd83),fontSize:11))),
+      ])))),
+    if(overlay!=null)overlay,
+  ]);
 
-  Widget _choiceCard(int index, double x) {
-    final role = index == 0 ? 'futbolista' : 'bailarina';
-    return Positioned(
-      left: x, top: 94, width: 246, height: 332,
-      child: GestureDetector(
-        onTap: () => _choose(index),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(colors: [Color(0xff073c73), Color(0xff05182e)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
-            borderRadius: BorderRadius.circular(13),
-            border: Border.all(color: index == 0 ? const Color(0xffffd45b) : const Color(0xffff9dcd), width: 4),
-            boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 6)],
-          ),
-          child: Column(children: [
-            const SizedBox(height: 6),
-            Text(index == 0 ? 'MIREN' : 'SARA',
-              style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w900)),
-            SizedBox(height: 175, child: Image.asset('assets/images/frames/${role}_idle_0.png', fit: BoxFit.contain)),
-            const SizedBox(height: 3),
-            Text(index == 0 ? '⚽  BALÓN' : '✦  PEINE',
-              style: const TextStyle(color: Color(0xffffd475), fontSize: 18, fontWeight: FontWeight.w900)),
-            const Text('♥   ♥', style: TextStyle(color: Color(0xffff647b), fontSize: 26)),
-            const Spacer(),
-            const Text('TOCA PARA ELEGIR', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 11),
-          ]),
-        ),
-      ),
-    );
-  }
-
-  Widget _gameScreen({required bool showFather, Widget? overlay}) {
-    return Stack(children: [
-      Positioned.fill(child: CustomPaint(painter: StagePainter(
-        images: images, stage: stage, cameraX: cameraX, time: time,
-        sisters: sisters, father: father, showFather: showFather, selected: selected,
-        obstacles: obstacles, smashedCrates: smashedCrates, coins: coins,
-        collected: collected, dogs: dogs, shots: projectiles,
-        effectUntil: effectUntil,
-      ))),
-      Positioned(left: 8, top: 8,
-        child: Container(padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
-          decoration: BoxDecoration(color: const Color(0xb40b2949), borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0x99ffffff))),
-          child: Text('${selected == 0 ? 'MIREN' : 'SARA'}  ${hearts[selected] >= 1 ? '❤️' : '🖤'} ${hearts[selected] >= 2 ? '❤️' : '🖤'}',
-            style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w900)))),
-      Positioned(left: 276, top: 8,
-        child: Container(padding: const EdgeInsets.all(7), color: const Color(0xb40b2949),
-          child: Text('CAP. ${stage + 1} · ${chapterNames[stage]}',
-            style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)))),
-      Positioned(right: 10, top: 8,
-        child: Container(padding: const EdgeInsets.all(7), color: const Color(0xb40b2949),
-          child: Text('🟡 $totalCoins', style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w900)))),
-      if (screen == GameScreen.playing) ...[
-        Positioned(left: 15, bottom: 12, child: Row(children: [
-          _control(Icons.arrow_back_rounded, () => leftHeld = true, () => leftHeld = false),
-          const SizedBox(width: 10),
-          _control(Icons.arrow_forward_rounded, () => rightHeld = true, () => rightHeld = false),
-        ])),
-        Positioned(right: 15, bottom: 12, child: Row(children: [
-          _control(selected == 0 ? Icons.sports_soccer : Icons.brush_rounded, _attack, () {}),
-          const SizedBox(width: 12),
-          _control(Icons.arrow_upward_rounded, _jump, () {}),
-        ])),
-        Positioned(right: 8, top: 45, child: IconButton(
-          onPressed: () { leftHeld = false; rightHeld = false; _saveGame(); setState(() => screen = GameScreen.paused); },
-          icon: const Icon(Icons.pause_circle_filled_rounded, color: Colors.white, size: 27))),
-      ],
-      if (screen == GameScreen.introduction)
-        _dialogPanel(['PAPÁ', 'MIREN', 'SARA', 'PAPÁ'][introLine],
-          ['¡Venga, chicas! ¿Estáis listas?', '¡Yo sí! ¡Vamos!',
-            '¡Espérame, que voy!', '¡Pues en marcha!'][introLine], _nextIntroLine),
-      if (overlay != null) overlay,
-    ]);
-  }
-
-  Widget _overlayFrame(String headline, String detail, List<Widget> buttons) {
-    return Positioned.fill(child: ColoredBox(
-      color: const Color(0x9f061324),
-      child: Center(child: Container(
-        width: 485,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(color: const Color(0xf0113255), borderRadius: BorderRadius.circular(11),
-          border: Border.all(color: const Color(0xffffd86c), width: 4)),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Text(headline, textAlign: TextAlign.center,
-            style: const TextStyle(color: Color(0xffffd86c), fontSize: 27, fontWeight: FontWeight.w900)),
-          const SizedBox(height: 12),
-          Text(detail, textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontSize: 16)),
-          const SizedBox(height: 19),
-          ...buttons.map((b) => Padding(padding: const EdgeInsets.only(bottom: 10), child: b)),
-        ]),
-      )),
-    ));
-  }
-
-  Widget _chapterOverlay() => _overlayFrame(
-    '¡CAPÍTULO ${finishedStage + 1} COMPLETADO!',
-    'Monedas recogidas en total: $totalCoins\nAhora puedes elegir a Miren o Sara para la siguiente fase.',
-    [_pixelButton('SIGUIENTE CAPÍTULO', _nextChapter, golden: true),
-     _pixelButton('MENÚ PRINCIPAL', _returnToTitle)],
-  );
-
-  Widget _gameOverOverlay() => _overlayFrame(
-    '¡SIN CORAZONES!',
-    'El perro os ha alcanzado. Puedes volver a intentarlo desde el último punto de control.',
-    [_pixelButton('REINTENTAR', _restartCheckpoint, golden: true),
-     _pixelButton('MENÚ PRINCIPAL', _returnToTitle)],
-  );
-
-  Widget _victoryOverlay() => _overlayFrame(
-    '¡AVENTURA COMPLETADA!',
-    '¡Miren y Sara han recorrido Pamplona!\nMonedas recogidas: $totalCoins',
-    [_pixelButton('VOLVER AL INICIO', () {
-      storage?.remove(saveKey);
-      savedAvailable = false;
-      screen = GameScreen.title;
-      setState(() {});
-    }, golden: true)],
-  );
-
-  Widget _pauseOverlay() => _overlayFrame(
-    'PAUSA', 'Tu progreso se guarda automáticamente en el móvil.',
-    [_pixelButton('SEGUIR JUGANDO', () => setState(() => screen = GameScreen.playing), golden: true),
-     _pixelButton('MENÚ PRINCIPAL', _returnToTitle)],
-  );
+  Widget _overlay(String title,String detail,List<Widget> buttons)=>Positioned.fill(child:ColoredBox(
+    color:const Color(0xb0001324),child:Center(child:Container(width:495,padding:const EdgeInsets.all(16),
+      decoration:BoxDecoration(color:const Color(0xf0113155),borderRadius:BorderRadius.circular(10),
+        border:Border.all(color:const Color(0xffffd56c),width:4)),
+      child:Column(mainAxisSize:MainAxisSize.min,children:[
+        Text(title,textAlign:TextAlign.center,style:const TextStyle(color:Color(0xffffd46d),fontSize:25,fontWeight:FontWeight.w900)),
+        const SizedBox(height:12),Text(detail,textAlign:TextAlign.center,style:const TextStyle(color:Colors.white,fontSize:16)),
+        const SizedBox(height:17),...buttons.map((x)=>Padding(padding:const EdgeInsets.only(bottom:9),child:x)),
+      ])))));
 }
 
 class StagePainter extends CustomPainter {
-  StagePainter({
-    required this.images, required this.stage, required this.cameraX,
-    required this.time, required this.sisters, required this.father,
-    required this.showFather, required this.selected, required this.obstacles,
-    required this.smashedCrates, required this.coins, required this.collected,
-    required this.dogs, required this.shots, required this.effectUntil,
-  });
-  final Map<String, ui.Image> images;
-  final int stage;
-  final double cameraX;
-  final double time;
-  final List<Character> sisters;
-  final Character father;
-  final bool showFather;
-  final int selected;
-  final List<Rect> obstacles;
-  final Set<int> smashedCrates;
+  StagePainter({required this.images,required this.stage,required this.cameraX,required this.time,
+    required this.hero,required this.otherSister,required this.father,required this.showFamily,
+    required this.selected,required this.obstacles,required this.platforms,
+    required this.coins,required this.collected,required this.enemies,required this.shots,
+    required this.particlesUntil});
+  final Map<String,ui.Image> images;
+  final int stage,selected;
+  final double cameraX,time,particlesUntil;
+  final Character hero,otherSister,father;
+  final bool showFamily;
+  final List<Obstacle> obstacles;
+  final List<Rect> platforms;
   final List<Offset> coins;
   final Set<int> collected;
-  final List<DogEnemy> dogs;
-  final List<FlyingItem> shots;
-  final double effectUntil;
+  final List<Enemy> enemies;
+  final List<Projectile> shots;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    canvas.save();
-    canvas.clipRect(const Rect.fromLTWH(0, 0, viewW, viewH));
-    canvas.drawColor(const Color(0xff5daee0), BlendMode.src);
-    final backdrop = images['scene_$stage'];
-    if (backdrop != null) {
-      final srcW = backdrop.width * (viewW / stageWidth);
-      final srcX = backdrop.width * cameraX / stageWidth;
-      _sprite(canvas, backdrop, const Rect.fromLTWH(0, 0, viewW, viewH),
-        source: Rect.fromLTWH(srcX, 0, srcW, viewH));
+  void paint(Canvas canvas,Size size) {
+    canvas.save();canvas.clipRect(const Rect.fromLTWH(0,0,viewW,viewH));
+    canvas.drawColor(const Color(0xff79a9d5),BlendMode.src);
+    _background(canvas);
+    _ground(canvas);
+    for(final p in platforms) {
+      final x=p.left-cameraX;
+      if(x< -250 || x>850)continue;
+      canvas.drawRect(Rect.fromLTWH(x,p.top,p.width,p.height),Paint()..color=stage==5?const Color(0xff9a633d):const Color(0xff957a5a));
+      canvas.drawRect(Rect.fromLTWH(x,p.top,p.width,5),Paint()..color=stage==5?const Color(0xffe8bd78):const Color(0xffadd373));
+      for(double i=12;i<p.width;i+=28)canvas.drawRect(Rect.fromLTWH(x+i,p.top+8,4,7),Paint()..color=const Color(0xff554a38));
     }
-    for (int i = 0; i < obstacles.length; i++) {
-      if (smashedCrates.contains(i)) continue;
-      final rect = obstacles[i];
-      _sprite(canvas, images['crate'], Rect.fromLTWH(rect.left - cameraX, rect.top, rect.width, rect.height));
+    for(final o in obstacles) {
+      final x=o.x-cameraX;if(x< -90 || x>880)continue;
+      if(o.destroyed) {
+        if(time-o.smashedAt<.48) {
+          final elapsed=time-o.smashedAt;
+          for(int k=0;k<7;k++){
+            final a=(k*2*math.pi/7),r=elapsed*91;
+            canvas.drawRect(Rect.fromCenter(center:Offset(x+o.w/2+r*math.cos(a),o.y+15+r*math.sin(a)+elapsed*35),width:5,height:5),
+              Paint()..color=k.isEven?const Color(0xffd6ac71):const Color(0xff865942));
+          }
+        }
+        continue;
+      }
+      _sprite(canvas,images[o.kind],Rect.fromLTWH(x,o.y,o.w,o.h));
     }
-    for (int i = 0; i < coins.length; i++) {
-      if (collected.contains(i)) continue;
-      final p = coins[i];
-      final x = p.dx - cameraX;
-      if (x < -24 || x > 824) continue;
-      final y = p.dy + 4 * math.sin(time * 5 + i);
-      final w = 20.0 * (.65 + .35 * math.cos(time * 6 + i).abs());
-      _sprite(canvas, images['coin'], Rect.fromCenter(center: Offset(x, y), width: w, height: 24));
+    for(int i=0;i<coins.length;i++) {
+      if(collected.contains(i))continue;
+      final p=coins[i],x=p.dx-cameraX;if(x< -30 || x>830)continue;
+      final w=20.0*(.72+.28*math.cos(time*6+i).abs());
+      _sprite(canvas,images['coin'],Rect.fromCenter(center:Offset(x,p.dy+3*math.sin(time*5+i)),width:w,height:24));
     }
-    for (final dog in dogs) {
-      if (dog.mood == DogMood.defeated && dog.modeTime > .3) continue;
-      final x = dog.x - cameraX;
-      if (x < -100 || x > 900) continue;
-      canvas.drawOval(Rect.fromCenter(center: Offset(x, groundY + 2), width: 48, height: 7),
-        Paint()..color = const Color(0x660b2027));
+    for(final foe in enemies) {
+      final x=foe.x-cameraX;if(x< -110 || x>900)continue;
+      if(foe.defeated && time-foe.deathAt>.85)continue;
+      canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),width:53,height:7),Paint()..color=const Color(0x55091723));
       canvas.save();
-      if (dog.facing == -1) {
-        canvas.translate(x, 0);
-        canvas.scale(-1, 1);
-        canvas.translate(-x, 0);
+      if(foe.defeated) {
+        final alpha=(1-(time-foe.deathAt-.32)/.53).clamp(0.0,1.0).toDouble();
+        canvas.saveLayer(Rect.fromLTWH(x-110,groundY-150,220,170),Paint()..color=Colors.white.withValues(alpha:alpha));
       }
-      final name = switch (dog.mood) {
-        DogMood.idle => 'idle',
-        DogMood.walk => (time * 7).floor().isEven ? 'walk' : 'run',
-        DogMood.alert => 'alert',
-        DogMood.run => (time * 10).floor().isEven ? 'run' : 'walk',
-        DogMood.bite => 'bite',
-        DogMood.hit => 'hit',
-        DogMood.stunned => 'stunned',
-        DogMood.defeated => 'defeated',
-      };
-      _sprite(canvas, images['dog_$name'], Rect.fromLTWH(x - 52, groundY - 80, 104, 79));
+      if(foe.facing==-1){canvas.translate(x,0);canvas.scale(-1,1);canvas.translate(-x,0);}
+      final y=groundY-foe.height;
+      if(foe.dog) {
+        final variant=foe.kind.substring(4);
+        final mode=foe.defeated?'defeated':foe.stunned>0?'hit':foe.t%1>.5?'run':'walk';
+        _sprite(canvas,images['dog_${variant}_$mode'],Rect.fromLTWH(x-48,y-44,96,78));
+      } else if(['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'].contains(foe.kind)) {
+        final frame=foe.defeated?4:foe.stunned>0?4:foe.launched?3:(foe.t*5).floor()%3;
+        final img=images['enemy_${foe.kind}_$frame'];
+        if(img!=null) {
+          final hh=foe.kind=='breakdancer'?91.0:foe.kind=='referee'?100.0:
+            foe.kind=='novice'?85.0:foe.kind=='pigeon'?59.0:
+            foe.kind=='rat'?46.0:foe.kind=='cat'?67.0:
+            foe.kind=='teacher'?100.0:foe.kind=='statue'?102.0:90.0;
+          final ww=hh*img.width/img.height;
+          _sprite(canvas,img,Rect.fromLTWH(x-ww/2,groundY-hh+(foe.aerial?-58:3),ww,hh));
+        }
+      } else {
+        // Lightweight procedural silhouettes until distinct approved enemy frame sheets exist.
+        _fallbackEnemy(canvas,foe,x);
+      }
+      if(foe.defeated)canvas.restore();
       canvas.restore();
-      if (dog.mood == DogMood.alert || dog.mood == DogMood.bite) {
-        _outlinedText(canvas, '!', Offset(x, groundY - 90), const Color(0xffffd958), 24);
-      }
-      if (dog.mood == DogMood.hit || dog.mood == DogMood.stunned || dog.mood == DogMood.defeated) {
-        for (int i = 0; i < 3; i++) {
-          final angle = time * 6 + i * 2 * math.pi / 3;
-          _outlinedText(canvas, '★', Offset(x + 20 * math.cos(angle), groundY - 85 + 8 * math.sin(angle)),
-            const Color(0xffffd24a), 13);
+      if(foe.launched)_outlined(canvas,'!',Offset(x,groundY-126),const Color(0xffffdc58),23);
+      if(foe.stunned>0 || foe.defeated) {
+        for(int j=0;j<3;j++) {
+          final a=time*7+j*math.pi*2/3;
+          _outlined(canvas,'✦',Offset(x+24*math.cos(a),groundY-99+14*math.sin(a)),const Color(0xffffd46b),13);
         }
       }
     }
-    // El padre solo existe en esta escena cuando hay conversación introductoria.
-    if (showFather) _actor(canvas, father, 'padre', 2, false);
-    _actor(canvas, sisters[1 - selected], selected == 0 ? 'bailarina' : 'futbolista', 1 - selected, false);
-    _actor(canvas, sisters[selected], selected == 0 ? 'futbolista' : 'bailarina', selected, true);
-    for (final shot in shots) {
-      if (!shot.active) continue;
-      final w = shot.kind == 0 ? 24.0 : 26.0;
-      final h = shot.kind == 0 ? 24.0 : 16.0;
-      _sprite(canvas, images[shot.kind == 0 ? 'ball' : 'comb'],
-        Rect.fromCenter(center: Offset(shot.x - cameraX, shot.y), width: w, height: h));
+    if(showFamily) {
+      _actor(canvas,father,'padre',2,false);
+      _actor(canvas,otherSister,selected==0?'bailarina':'futbolista',1-selected,false);
     }
-    if (time < effectUntil) {
-      final x = sisters[selected].x - cameraX;
-      for (int i = 0; i < 5; i++) {
-        final a = i * (2 * math.pi / 5) + time * 4;
-        canvas.drawCircle(Offset(x + 28 * math.cos(a), groundY - 75 + 17 * math.sin(a)),
-          2.5, Paint()..color = const Color(0xffffd865));
+    _actor(canvas,hero,selected==0?'futbolista':'bailarina',selected,true);
+    for(final s in shots) {
+      if(!s.active)continue;
+      final img=images[s.kind];final w=s.kind=='ball'?24.0:s.kind=='comb'?27.0:31.0;
+      _sprite(canvas,img,Rect.fromCenter(center:Offset(s.x-cameraX,s.y),width:w,height:s.kind=='comb'?16:25));
+    }
+    if(time<particlesUntil) {
+      final x=hero.x-cameraX;
+      for(int i=0;i<5;i++) {
+        final a=time*5+i*2*math.pi/5;
+        canvas.drawCircle(Offset(x+26*math.cos(a),hero.y-65+19*math.sin(a)),2,
+          Paint()..color=const Color(0xffffdb66));
       }
     }
     canvas.restore();
   }
 
-  void _actor(Canvas canvas, Character hero, String role, int index, bool active) {
-    final pose = !hero.grounded ? 'jump_0' : hero.vx.abs() > 15
-        ? 'walk_${(hero.travelled / 23).floor() % 2}' : 'idle_0';
-    final img = images['${role}_$pose'];
-    if (img == null) return;
-    final double scale = index == 1 ? .49 : .43;
-    final w = img.width * scale;
-    final h = img.height * scale;
-    final x = hero.x - cameraX;
-    if (x < -120 || x > 920) return;
-    final blink = time < hero.hurtUntil && (time * 11).floor().isEven;
-    if (blink) return;
-    canvas.drawOval(Rect.fromCenter(center: Offset(x, groundY + 1), width: w * .68, height: 8),
-      Paint()..color = const Color(0x66061c25));
-    canvas.save();
-    if (hero.facing < 0) {
-      canvas.translate(x, 0);
-      canvas.scale(-1, 1);
-      canvas.translate(-x, 0);
+  void _background(Canvas canvas) {
+    final img=stage==6 && cameraX>26000 ? images['scene_school_computers'] :
+      stage==6 && cameraX>12500 ? images['scene_school_classroom'] : images['scene_$stage'];
+    if(img==null)return;
+    // Three moving visual planes: distant low-parallax upper skyline, near wall/facades,
+    // collision/foreground ground rendered separately. Each source tile is repeated,
+    // not stretched over the 40k-world width.
+    final w=stage<4?1230.0:1150.0;
+    final layerSpeed=.68;
+    final shift=(cameraX*layerSpeed)%w;
+    for(double px=-shift-w;px<viewW+w;px+=w) {
+      _sprite(canvas,img,Rect.fromLTWH(px,0,w,groundY+10));
     }
-    _sprite(canvas, img, Rect.fromLTWH(x - w / 2, hero.y - h + 8 * scale, w, h), pixelated: false);
+    // Foreground fixtures remain visually at world camera speed.
+    // Seam-covering dark strip immediately above the playable floor.
+    canvas.drawRect(const Rect.fromLTWH(0,groundY-1,viewW,3),Paint()..color=stage==5?const Color(0xffd4a265):const Color(0xff8a9a67));
+  }
+  void _ground(Canvas canvas) {
+    final base=stage==4?const Color(0xff4b793f):stage==5?const Color(0xffbd8757):stage==6?const Color(0xffa37b56):const Color(0xff7f7665);
+    canvas.drawRect(const Rect.fromLTWH(0,groundY,viewW,viewH-groundY),Paint()..color=base);
+    canvas.drawRect(const Rect.fromLTWH(0,groundY,viewW,6),Paint()..color=stage==4?const Color(0xff7abd54):const Color(0xffd5ba88));
+    final offset=cameraX%42;
+    for(double x=-offset;x<viewW;x+=42) {
+      canvas.drawLine(Offset(x,groundY+19),Offset(x+1,viewH),Paint()..color=const Color(0x44242b32)..strokeWidth=2);
+      canvas.drawLine(Offset(x,groundY+35),Offset(x+42,groundY+35),Paint()..color=const Color(0x44643b28)..strokeWidth=2);
+    }
+  }
+  void _actor(Canvas canvas,Character c,String role,int index,bool active) {
+    final pose=!c.grounded?'jump_0':c.vx.abs()>15?'walk_${(c.travelled/23).floor()%2}':'idle_0';
+    final costume=(stage==4 && role=='futbolista')||(stage==5 && role=='bailarina');
+    final img=images['${costume?'costume_':''}${role}_$pose'];if(img==null)return;
+    final scale=index == 1 ? .40 : .36;
+    final w=img.width*scale,h=img.height*scale,x=c.x-cameraX;
+    if(x< -120 || x>900)return;
+    if(time<c.hurtUntil && (time*12).floor().isEven)return;
+    canvas.drawOval(Rect.fromCenter(center:Offset(x,c.y+3),width:w*.7,height:8),Paint()..color=const Color(0x660b1c27));
+    canvas.save();if(c.facing<0){canvas.translate(x,0);canvas.scale(-1,1);canvas.translate(-x,0);}
+    _sprite(canvas,img,Rect.fromLTWH(x-w/2,c.y-h+5*scale,w,h),pixelated:false);
     canvas.restore();
-    if (active) {
-      canvas.drawArc(Rect.fromCenter(center: Offset(x, hero.y + 4), width: 40, height: 13),
-        0, math.pi, false,
-        Paint()..color = const Color(0xffffdc65)..strokeWidth = 2..style = PaintingStyle.stroke);
+    if(active)canvas.drawArc(Rect.fromCenter(center:Offset(x,c.y+4),width:38,height:11),0,math.pi,false,
+      Paint()..color=const Color(0xffffdf73)..style=PaintingStyle.stroke..strokeWidth=2);
+  }
+  void _fallbackEnemy(Canvas c,Enemy e,double x) {
+    final y=groundY;
+    final p=Paint();
+    if(e.kind=='pigeon') {
+      p.color=const Color(0xff7a859b);c.drawOval(Rect.fromLTWH(x-20,y-103,42,26),p);
+      p.color=const Color(0xff566075);c.drawOval(Rect.fromLTWH(x-14,y-112-5*math.sin(e.t*8),27,16),p);
+      p.color=Colors.white;c.drawCircle(Offset(x+12,y-93),4,p);
+      p.color=const Color(0xffdd9b45);c.drawRect(Rect.fromLTWH(x+19,y-94,11,4),p);
+    } else if(e.kind=='rat' || e.kind=='cat') {
+      p.color=e.kind=='rat'?const Color(0xff6d6474):const Color(0xffbd8b50);
+      c.drawOval(Rect.fromLTWH(x-25,y-37,45,24),p);
+      c.drawCircle(Offset(x+17,y-28),12,p);
+      c.drawLine(Offset(x-25,y-24),Offset(x-44,y-39),Paint()..color=p.color..strokeWidth=4);
+      if(e.kind=='cat') {
+        c.drawPath(Path()..moveTo(x+8,y-33)..lineTo(x+11,y-51)..lineTo(x+20,y-36)..close(),p);
+      }
+      p.color=Colors.white;c.drawCircle(Offset(x+23,y-30),3,p);
+    } else {
+      final color=e.kind=='bully'?const Color(0xff31558c):e.kind=='teacher'?const Color(0xff64545c):const Color(0xffa77f53);
+      p.color=color;
+      c.drawRect(Rect.fromLTWH(x-23,y-80,46,50),p);
+      c.drawCircle(Offset(x,y-92),19,Paint()..color=const Color(0xffe1ad81));
+      c.drawRect(Rect.fromLTWH(x-19,y-30,14,30),p);c.drawRect(Rect.fromLTWH(x+5,y-30,14,30),p);
+      if(e.kind=='bully'){c.drawRect(Rect.fromLTWH(x+16,y-72,14,38),Paint()..color=const Color(0xffae723d));}
+      if(e.kind=='teacher'){_outlined(c,'3',Offset(x-1,y-72),Colors.red,17);}
     }
   }
-
-  static void _outlinedText(Canvas canvas, String value, Offset offset, Color color, double fontSize) {
-    final painter = TextPainter(
-      text: TextSpan(text: value, style: TextStyle(color: color, fontSize: fontSize,
-        fontWeight: FontWeight.bold, shadows: const [Shadow(color: Colors.black, blurRadius: 3)])),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    painter.paint(canvas, Offset(offset.dx - painter.width / 2, offset.dy));
+  static void _outlined(Canvas c,String s,Offset center,Color color,double font) {
+    final tp=TextPainter(text:TextSpan(text:s,style:TextStyle(color:color,fontSize:font,
+      fontWeight:FontWeight.w900,shadows:const [Shadow(color:Colors.black,blurRadius:3)])),
+      textDirection:TextDirection.ltr)..layout();tp.paint(c,Offset(center.dx-tp.width/2,center.dy));
   }
-
-  static void _sprite(Canvas canvas, ui.Image? image, Rect target,
-      {Rect? source, bool pixelated = true}) {
-    if (image == null) return;
-    canvas.drawImageRect(image,
-      source ?? Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
-      target, Paint()..filterQuality = pixelated ? FilterQuality.none : FilterQuality.low);
+  static void _sprite(Canvas c,ui.Image? img,Rect target,{bool pixelated=true}) {
+    if(img==null)return;
+    c.drawImageRect(img,Rect.fromLTWH(0,0,img.width.toDouble(),img.height.toDouble()),target,
+      Paint()..filterQuality=pixelated?FilterQuality.none:FilterQuality.low);
   }
-
   @override
-  bool shouldRepaint(covariant StagePainter oldDelegate) => true;
+  bool shouldRepaint(covariant StagePainter oldDelegate)=>true;
 }

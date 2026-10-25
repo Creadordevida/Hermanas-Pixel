@@ -1,59 +1,49 @@
-# Las aventuras de Miren y Sara — prueba Android 0.8.0
+# Las aventuras de Miren y Sara — Android 0.9.0 (candidata de pruebas)
 
-**Proyecto Flutter, diseñado para instalarse en Android mediante GitHub Actions.**
+**Proyecto Flutter completo para compilar en GitHub Actions.** El ZIP contiene código fuente y gráficos; **NO** contiene un APK ya compilado. Esta es una candidata para pruebas, **no** una versión final aprobada o certificada.
 
-## Base y fidelidad visual
+## Qué incluye esta candidata
 
-Esta entrega CONSERVA SIN CAMBIOS los doce PNG originales de los personajes y el fondo inicial de la **0.7.1**, la versión que funcionó en el móvil y cuya calidad gráfica fue aprobada. Las poses no se han sustituido por figuras simplificadas. La pantalla de inicio utiliza la composición aprobada con el edificio gris, Miren, Sara y el padre sin coche superpuesto. El título queda completo dentro del área horizontal.
+- Siete destinos en un mapa de Pamplona, accesibles desde el comienzo para probar libremente. Los destinos completados aparecen marcados; el progreso se guarda localmente.
+- Cuatro capítulos urbanos preservados y ampliados, más fútbol de Miren, danza de Sara y el colegio compartido.
+- Selección de Miren o Sara para cinco capítulos; el fútbol exige Miren y la danza exige Sara.
+- Dos corazones para la protagonista. Balón de Miren y peine de Sara con sus iconos respectivos.
+- Obstáculos adaptados: cajas para zonas iniciales, macetas en la plaza, conos en fútbol, bancos de ejercicio en danza y mochilas en el colegio. Mismo sistema de colisiones y roturas.
+- Trece variantes de enemigos: tres perros, paloma, gato, estatua viviente, rata, futbolista, árbitro, bailarina novata, bailarín de break dance, alumno abusón y profesor exigente.
+- Enemigos resistentes con 2 o 3 golpes donde se acordó; ataques de tarjeta, zapatilla y borrador espaciados y con preparación.
+- Animaciones y recursos visuales separados por tipo. Los sprites originales aprobados están conservados intactos.
+- Nuevos ambientes de campo de fútbol, escuela de danza y tres zonas del colegio (pasillo, aula, informática).
+- La hermana no seleccionada deja de seguir a la protagonista en el juego; tras la presentación, padre y otra hermana salen caminando de escena.
+- Tramos de mundo más extensos, monedas, plataformas y guardado local. La extensión está diseñada para aproximarse a cinco minutos de jugabilidad, aún sin medir en móvil.
 
-El distintivo inferior se ha preparado a partir de una referencia TWC de la pantalla de TIKU. Es una extracción rasterizada (no un archivo vectorial corporativo), que convendría sustituir en una versión comercial por el archivo maestro oficial.
+## Regla de preservación
 
-## Cambios incluidos respecto a la 0.7.1
+Los recursos de personajes de la versión **0.7.1** y las pantallas/iconos aprobados en **0.8.0** se incluyen **sin modificar**. Se han creado archivos **derivados independientes** para trajes y enemigos. `qa/approved_hashes.json` contiene las huellas digitales SHA-256 de **31 archivos aprobados**, y `qa/check_090.py` las compara; cualquier modificación los hace fallar. Los archivos fuente del juego previo no se han reemplazado por ilustraciones genéricas.
 
-1. **Pantalla de inicio** con «Nueva partida» y «Continuar». El botón Continuar está deshabilitado cuando todavía no hay partida guardada.
-2. **Guardar partida localmente** con `shared_preferences`, autoguardado durante el recorrido, puntos de control y al cerrar/pausar; reanudar desde el capítulo y el progreso guardados. Nueva partida solicita confirmación si existe guardado.
-3. **Selección de protagonista antes del capítulo**, Miren o Sara, sin cambiar durante el nivel. Dos corazones por hermana.
-4. **Movimiento independiente**: las órdenes de movimiento, salto y ataque son únicamente para la protagonista seleccionada. La otra sigue con retraso y movimiento propio. El padre **solo aparece en la conversación inicial**, no en el gameplay.
-5. **Cuatro tramos jugables con transiciones de capítulo**: salida de casa, Ayuntamiento de Pamplona, Calle Estafeta y quiosco de Plaza del Castillo. No se representan Ayuntamiento y quiosco como edificios contiguos. Más monedas y obstáculos.
-6. **Primer enemigo: perro**: patrulla, detecta, persigue, intenta morder, quita un corazón (con invulnerabilidad temporal), recibe impactos y queda aturdido/derrotado. Pose/animación revisada: reposo, andar, alerta, carrera, mordisco, impacto, aturdimiento y derrota. La derrota es cómica, sin violencia gráfica explícita.
-7. **Miren lanza balón** y **Sara lanza peine**. Ambos son proyectiles diferentes con colisión contra el perro y las cajas.
-8. **Icono Android propio** en resoluciones mipmap y modo adaptativo. El nombre visible pasa a «Miren y Sara» para caber bajo el icono.
-9. **Identidad visual de The Wolf Company** pequeña y centrada en el pie del menú.
+## Cómo obtener el APK
 
-### Controles
+1. Descomprime el ZIP y copia **su contenido** en la raíz del repositorio GitHub: `lib/`, `assets/`, `test/`, `qa/`, `launcher/`, `pubspec.yaml`, `.github/`.
+2. Comprueba que `.github/workflows/build.yml` queda en esa ruta. Puede ser necesario editarlo/crearlo directamente en GitHub si el navegador oculta carpetas con punto inicial.
+3. Haz commit en la rama `main` o ejecuta manualmente el flujo de Actions **Compilar Miren y Sara 0.9.0**.
+4. El flujo comprueba la integridad, ejecuta `flutter analyze`, ejecuta `flutter test` y, **si todo pasa**, compila y publica `app-release.apk` en el artefacto **Las-aventuras-de-Miren-y-Sara-0.9.0**.
+5. Instala el APK en Android horizontal. Verifica menú, mapa, siete capítulos, protagonista obligatoria de fútbol/danza, daños, proyectiles, guardado y salida a mapa.
 
-- Flechas inferiores izquierda/derecha: mover solo a Miren o Sara.
-- Flecha superior (inferior derecha): saltar.
-- Botón de balón o peine: atacar (dependiendo de protagonista).
-- Pausa (parte superior derecha): reanudar o volver al menú, conservando progreso.
-- Al superar cada capítulo aparece la opción de volver a elegir protagonista.
+**Actualizaciones:** el proyecto se genera con `flutter create` en Actions como la versión anterior. El sistema de firma del APK debe mantenerse estable para permitir actualizaciones sin reinstalar. Antes de sustituir un APK existente, realiza copia de seguridad si tienes progresos que quieras conservar. El código intenta leer el guardado antiguo 0.8.0 y trasladar los capítulos completados a la nueva pantalla de mapa cuando el sistema de Android conserva los mismos datos de la aplicación.
 
-### Estructura
+## Verificaciones locales efectuadas
 
-- `lib/main.dart`: código jugable, pantallas, física, guardado, IA del perro y dibujado.
-- `assets/images/frames`: los sprites aprobados de padre, Miren y Sara.
-- `assets/images/dog`: sprites nuevos, ocho estados diferenciados.
-- `assets/images/level_*`: los fondos para cada tramo.
-- `assets/images/title_approved.png`: pantalla de inicio aprobada.
-- `assets/images/brand_logo_twc.png`: insignia TWC basada en TIKU.
-- `launcher/res`: recursos nativos del icono (se copian después de `flutter create`).
-- `.github/workflows/build.yml`: compilación APK release con análisis y tests.
-- `qa/verify_resources.py`: comprobación local de PNGs y recursos.
+- `python3 qa/verify_resources.py` — OK; comprobación estructural PNG y assets base de 0.8.0.
+- `python3 qa/check_090.py` — OK; validación de **31 hashes** aprobados y recursos de la 0.9.0.
+- Vista estática compuesta con los archivos reales: `qa/vista_recursos_090.jpg`. **NO es una captura de una sesión Flutter o de un APK.**
 
-## Subir a GitHub
+## Limitaciones pendientes, importantes para evitar falsas garantías
 
-**Primero sube a la raíz del repositorio todo el contenido del ZIP descomprimido. No subas el ZIP cerrado ni una carpeta contenedora.** Mantén `lib/main.dart`, `pubspec.yaml`, `assets`, `launcher`, `qa` y `test`.
+- El entorno de preparación **no dispone de Flutter/Dart ni emulador Android**. No se ha ejecutado `flutter analyze`, `flutter test` ni una instalación real: esas pruebas se lanzarán en Actions, y es posible que descubran errores.
+- Los decorados del campo, danza y colegio son **placas iniciales de integración**, no artes definitivos certificados. La escuela se ha dibujado como entorno coherente, pero la fidelidad de las escenas debe juzgarse en la pantalla Android y mejorarse si no alcanza la de 0.7.1.
+- Los **trajes** se han creado como transformaciones de sprites aprobados, preservando identidad/cara/cabello; el corte real de la camiseta de fútbol n.º 19 y el maillot de ballet puede requerir ilustración final fotograma a fotograma. No se han proclamado definitivamente aprobados.
+- Las animaciones de las protagonistas y del padre preservan los **dos fotogramas aprobados** de andar, no ciclos nuevos de seis u ocho fotogramas. Los nuevos enemigos usan marcos separados; algunos son derivados de arte provisional o compuestos de forma programática. La animación real debe verificarse en marcha.
+- El scroll aplica repetición de segmentos e integración suelo-mundo con una placa desplazada con parallax y capa jugable. **Todavía no implementa completamente los tres planos independientes y la variación escénica de un juego comercial**, ni se ha verificado la continuidad de todos los módulos.
+- Duración objetivo: el mundo tiene 40 000 unidades a velocidad de 169 unidades por segundo (~3 min 57 s de carrera ininterrumpida, más saltos, obstáculos y ataques). Los **cinco minutos reales no están medidos**; serán un criterio de aceptación en dispositivo.
+- No se han ejecutado tests dinámicos de daño, posicionamiento vertical, derrotas, transición entre capítulos ni latencia de botones. Evita publicar todavía en Google Play sin pasar las pruebas de aceptación.
 
-La carpeta `.github` suele dar problemas al subirla desde el navegador: abre en GitHub `.github/workflows/build.yml`, pulsa el lápiz y pega el contenido del `build.yml` del ZIP. Si todavía no existe, `Add file > Create new file` y escribe el nombre `.github/workflows/build.yml`.
-
-En **Actions > Compilar Miren y Sara 0.8.0** comenzará la compilación después de hacer commit. Si termina en verde, descarga el APK en **Artifacts** bajo el nombre `Las-aventuras-de-Miren-y-Sara-0.8.0`.
-
-Si falla `flutter analyze`, envía el error del primer paso rojo; NO cambies nada al azar. Para versiones futuras, una firma estable de aplicación será necesaria si quieres actualizar un APK sin perder guardados. En este prototipo puede ser necesario desinstalar el APK anterior si las firmas de compilación difieren.
-
-## Revisiones realizadas, y límites
-
-Se ejecutaron scripts locales que verifican la integridad de 30 imágenes, los iconos Android, estructura, pantalla y referencias, así como una auditoría visual de los sprites del perro y escenas. Se compararon los 13 recursos aprobados de 0.7.1 con los originales: son idénticos byte a byte.
-
-**No se dispone de Flutter/Dart ni de un emulador Android en el entorno de preparación.** Por tanto, la compilación real, el analizador Dart y los tests Flutter deben ejecutarse en GitHub Actions. Las vistas previas adjuntas son composiciones con assets reales, no capturas del APK.
-
-La demo es una prueba ampliada, no un juego completo: los fondos nuevos provienen de ilustraciones conceptuales y deben revisarse en el móvil. Los ataques de las hermanas utilizan efectos y las poses aprobadas existentes: todavía no cuentan con secuencias de lanzamiento dibujadas a mano fotograma a fotograma.
+Este README informa del estado real para que no confundamos **preparar el proyecto** con **certificar la calidad final**.
