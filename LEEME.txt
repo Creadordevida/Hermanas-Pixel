@@ -1,0 +1,21 @@
+# Correccion localizada de capturas Flutter — RC6
+
+**No cambia ningun archivo del juego** (no cambia lib/main.dart ni assets). Sustituye los dos tests de captura y limita el tiempo maximo de su paso en GitHub Actions; no cambia el codigo ni los recursos del juego.
+
+## Diagnostico
+
+En la ejecucion #18 de GitHub Actions, ambas pruebas muestran la carga de recursos hasta la marca 120/136 (ese mensaje aparece cada 20 recursos), y a los 10 minutos el primer test expira. El codigo original ejecutaba `RepaintBoundary.toImage()`, `ui.Image.toByteData()` y `File.create()/File.writeAsBytes()` directamente desde `testWidgets` sin `tester.runAsync`. Las operaciones de E/S reales pueden quedar suspendidas dentro del entorno FakeAsync de Flutter Test.
+
+## Correccion
+
+Ahora ambas pruebas realizan todo el proceso asincrono de captura y guardado dentro de `tester.runAsync`, con limites independientes de 10-20 segundos y mensajes `QA_CAPTURA_*` y `QA_VESTUARIO_*` para diagnosticar exactamente el punto de cualquier nuevo fallo. El paso de GitHub Actions debe mantenerse obligatorio; **no** reinstalar `continue-on-error: true`.
+
+## Instalacion GitHub Desktop
+
+Extraer el ZIP y copiar las carpetas `test` y `.github` sobre la raiz del repositorio clonado, aceptando reemplazar los tres archivos. Verificar **3 changed files** en GitHub Desktop; hacer commit `Corregir bloqueo capturas Flutter RC6` y luego Push origin.
+
+## Validacion pendiente
+
+Las modificaciones fueron verificadas por inspeccion y comprobaciones locales de estructura. En este entorno no hay SDK Flutter y no se ha ejecutado `flutter test`; el resultado definitivo se conocera en GitHub Actions. El APK que ya se genero en la ejecucion #18 sigue siendo una candidata de prueba; estas modificaciones no afectan al codigo que genera el APK.
+
+El paso de capturas tiene ahora `timeout-minutes: 7` como limite superior. Esta correccion NO garantiza el exito en Flutter; si persiste el problema, los mensajes QA_CAPTURA_* ayudan a distinguir la carga de recursos de la escritura PNG.

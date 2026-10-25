@@ -25,22 +25,50 @@ Future<void> _awaitGameReady(WidgetTester tester) async {
   fail('La carga inicial de recursos no finalizó en 90 segundos. Revisar los mensajes Recursos incompletos y los tiempos de decodificación.');
 }
 
-Future<void> _capture(GlobalKey boundaryKey, String title) async {
+// Las llamadas al motor grafico y al sistema de archivos son asincronas reales.
+// Dentro de testWidgets se deben ejecutar con tester.runAsync; de lo contrario
+// FakeAsync puede dejar la prueba esperando indefinidamente hasta agotar 10 min.
+Future<void> _capture(WidgetTester tester, GlobalKey boundaryKey, String title) async {
   final render = boundaryKey.currentContext?.findRenderObject();
-  expect(render, isA<RenderRepaintBoundary>(), reason: 'No existe el límite de captura: $title');
+  expect(render, isA<RenderRepaintBoundary>(),
+      reason: 'No existe el limite de captura: $title');
   final boundary = render! as RenderRepaintBoundary;
-  expect(boundary.debugNeedsPaint, isFalse, reason: 'La escena aún no se ha dibujado: $title');
-  final image = await boundary.toImage(pixelRatio: 1.0);
-  try {
-    final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    expect(bytes, isNotNull, reason: 'No se pudo codificar el PNG: $title');
-    final file = File('qa/rendered_from_flutter/$title.png');
-    await file.parent.create(recursive: true);
-    await file.writeAsBytes(bytes!.buffer.asUint8List(), flush: true);
-    expect(await file.length(), greaterThan(5000), reason: 'Captura vacía o demasiado pequeña: $title');
-  } finally {
-    image.dispose();
-  }
+  expect(boundary.debugNeedsPaint, isFalse,
+      reason: 'La escena aun no se ha dibujado: $title');
+
+  // No ejecutar toImage(), toByteData() ni File.writeAsBytes() en FakeAsync.
+  // Un tiempo limite independiente ayuda a localizar el punto de bloqueo.
+  final length = await tester.runAsync<int>(() async {
+    ui.Image? image;
+    try {
+      // ignore: avoid_print
+      print('QA_CAPTURA_INICIO $title');
+      image = await boundary.toImage(pixelRatio: 1.0)
+          .timeout(const Duration(seconds: 20));
+      // ignore: avoid_print
+      print('QA_CAPTURA_RENDERIZADA $title');
+      final bytes = await image.toByteData(format: ui.ImageByteFormat.png)
+          .timeout(const Duration(seconds: 20));
+      if (bytes == null) throw StateError('toByteData devolvio null: $title');
+      final file = File('qa/rendered_from_flutter/$title.png');
+      await file.parent.create(recursive: true)
+          .timeout(const Duration(seconds: 10));
+      await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true)
+          .timeout(const Duration(seconds: 20));
+      final result = await file.length().timeout(const Duration(seconds: 10));
+      // ignore: avoid_print
+      print('QA_CAPTURA_GUARDADA $title ($result bytes)');
+      return result;
+    } catch (error) {
+      // ignore: avoid_print
+      print('QA_CAPTURA_ERROR $title: $error');
+      rethrow;
+    } finally {
+      image?.dispose();
+    }
+  });
+  expect(length, isNotNull, reason: 'runAsync no devolvio resultado: $title');
+  expect(length!, greaterThan(5000), reason: 'Captura vacia: $title');
 }
 
 void main() {
@@ -77,7 +105,7 @@ void main() {
       if (i == 0) await _awaitGameReady(tester);
       await tester.pump(const Duration(milliseconds: 40));
       try {
-        await _capture(boundaryKey, target.title);
+        await _capture(tester, boundaryKey, target.title);
       } catch (error) {
         fail('No se pudo capturar ${target.title}: $error');
       }

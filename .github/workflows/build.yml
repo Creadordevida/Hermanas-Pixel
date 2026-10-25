@@ -61,6 +61,8 @@ jobs:
       # está disponible para que el usuario investigue el fallo en su móvil.
       - name: Capturar mapa y siete capítulos con el render Flutter real
         id: captures
+        # Si una prueba vuelve a bloquearse, no consumir 20 minutos de runner.
+        timeout-minutes: 7
         run: flutter test --reporter expanded test/qa_render_capture_test.dart test/qa_outfits_capture_test.dart
       - name: Publicar capturas reales para revisión visual
         if: always()
