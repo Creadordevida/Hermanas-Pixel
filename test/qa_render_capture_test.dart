@@ -25,6 +25,29 @@ Future<void> _awaitGameReady(WidgetTester tester) async {
   fail('La carga inicial de recursos no finalizó en 90 segundos. Revisar los mensajes Recursos incompletos y los tiempos de decodificación.');
 }
 
+// Las imagenes insertadas con Image.asset usan un ImageProvider aparte
+// de las 136 ui.Image del motor. Que _loadAssets termine no implica que
+// la portada o el mapa hayan terminado de decodificarse y pintarse.
+Future<void> _waitForImageWidgets(WidgetTester tester, String name,
+    {required int loadedImages}) async {
+  for (var attempt = 0; attempt < 100; attempt++) {
+    await tester.pump(const Duration(milliseconds: 50));
+    final count = tester.widgetList<RawImage>(find.byType(RawImage))
+        .where((image) => image.image != null).length;
+    if (count >= loadedImages) {
+      // Una pasada extra permite que el RepaintBoundary pinte la imagen.
+      await tester.pump(const Duration(milliseconds: 50));
+      // ignore: avoid_print
+      print('QA_IMAGENES_LISTAS $name ($count/$loadedImages)');
+      return;
+    }
+    await tester.runAsync(() =>
+        Future<void>.delayed(const Duration(milliseconds: 30)));
+  }
+  fail('El fondo visible de $name no llego a cargarse: '
+      'Image.asset/RawImage sin pixels. No aprobar una pantalla vacia.');
+}
+
 // Las llamadas al motor grafico y al sistema de archivos son asincronas reales.
 // Dentro de testWidgets se deben ejecutar con tester.runAsync; de lo contrario
 // FakeAsync puede dejar la prueba esperando indefinidamente hasta agotar 10 min.
@@ -38,7 +61,7 @@ Future<void> _capture(WidgetTester tester, GlobalKey boundaryKey, String title) 
 
   // No ejecutar toImage(), toByteData() ni File.writeAsBytes() en FakeAsync.
   // Un tiempo limite independiente ayuda a localizar el punto de bloqueo.
-  final length = await tester.runAsync<int>(() async {
+  final result = await tester.runAsync<({int pngBytes, int colors, int width, int height})>(() async {
     ui.Image? image;
     try {
       // ignore: avoid_print
@@ -47,18 +70,41 @@ Future<void> _capture(WidgetTester tester, GlobalKey boundaryKey, String title) 
           .timeout(const Duration(seconds: 20));
       // ignore: avoid_print
       print('QA_CAPTURA_RENDERIZADA $title');
+      final rgba = await image.toByteData(format: ui.ImageByteFormat.rawRgba)
+          .timeout(const Duration(seconds: 20));
+      if (rgba == null) throw StateError('rawRgba devolvio null: $title');
+      // No se valida una captura por sus bytes comprimidos (un PNG correcto
+      // puede pesar menos de 5000 bytes). Se muestrea su contenido de color.
+      // De esa forma una portada vacia, uniforme o sin Image.asset falla.
+      final pixels = rgba.buffer.asUint8List(rgba.offsetInBytes, rgba.lengthInBytes);
+      final colors = <int>{};
+      final stepX = image.width > 32 ? image.width ~/ 32 : 1;
+      final stepY = image.height > 18 ? image.height ~/ 18 : 1;
+      for (var y = 0; y < image.height; y += stepY) {
+        for (var x = 0; x < image.width; x += stepX) {
+          final offset = (y * image.width + x) * 4;
+          final alpha = pixels[offset + 3];
+          if (alpha < 32) continue;
+          final bucket = ((pixels[offset] >> 5) << 6) |
+              ((pixels[offset + 1] >> 5) << 3) |
+              (pixels[offset + 2] >> 5);
+          colors.add(bucket);
+        }
+      }
       final bytes = await image.toByteData(format: ui.ImageByteFormat.png)
           .timeout(const Duration(seconds: 20));
       if (bytes == null) throw StateError('toByteData devolvio null: $title');
       final file = File('qa/rendered_from_flutter/$title.png');
       await file.parent.create(recursive: true)
           .timeout(const Duration(seconds: 10));
-      await file.writeAsBytes(bytes.buffer.asUint8List(), flush: true)
+      await file.writeAsBytes(bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes), flush: true)
           .timeout(const Duration(seconds: 20));
       final result = await file.length().timeout(const Duration(seconds: 10));
       // ignore: avoid_print
-      print('QA_CAPTURA_GUARDADA $title ($result bytes)');
-      return result;
+      print('QA_CAPTURA_GUARDADA $title ($result bytes, ${colors.length} colores, '
+          '${image.width}x${image.height})');
+      return (pngBytes: result, colors: colors.length,
+          width: image.width, height: image.height);
     } catch (error) {
       // ignore: avoid_print
       print('QA_CAPTURA_ERROR $title: $error');
@@ -67,8 +113,15 @@ Future<void> _capture(WidgetTester tester, GlobalKey boundaryKey, String title) 
       image?.dispose();
     }
   });
-  expect(length, isNotNull, reason: 'runAsync no devolvio resultado: $title');
-  expect(length!, greaterThan(5000), reason: 'Captura vacia: $title');
+  expect(result, isNotNull, reason: 'runAsync no devolvio resultado: $title');
+  final screen = result!;
+  expect(screen.width, greaterThanOrEqualTo(700), reason: 'Anchura insuficiente: $title');
+  expect(screen.height, greaterThanOrEqualTo(390), reason: 'Altura insuficiente: $title');
+  expect(screen.pngBytes, greaterThan(1000), reason: 'PNG ilegible o vacio: $title');
+  expect(screen.colors, greaterThanOrEqualTo(14),
+      reason: 'Pantalla practicamente uniforme o no pintada: $title. '
+          'Colores=${screen.colors}; bytes=${screen.pngBytes}. '
+          'Inspeccionar la captura publicada como artifacto.');
 }
 
 void main() {
@@ -103,6 +156,20 @@ void main() {
         ),
       )));
       if (i == 0) await _awaitGameReady(tester);
+      if (target.title == 'titulo_090') {
+        // Portada y logo: dos widgets Image.asset diferentes.
+        await _waitForImageWidgets(tester, target.title, loadedImages: 2);
+      } else if (target.map) {
+        await _waitForImageWidgets(tester, target.title, loadedImages: 1);
+      } else {
+        // La pantalla QA debe ser el capitulo solicitado, no el titulo
+        // heredado del primer pumpWidget ni el capitulo anterior.
+        await tester.pump(const Duration(milliseconds: 70));
+        expect(find.byWidgetPredicate((widget) =>
+            widget is CustomPaint && widget.painter is StagePainter &&
+            (widget.painter! as StagePainter).stage == target.stage),
+            findsOneWidget, reason: 'Escenario QA incorrecto: ${target.title}');
+      }
       await tester.pump(const Duration(milliseconds: 40));
       try {
         await _capture(tester, boundaryKey, target.title);
