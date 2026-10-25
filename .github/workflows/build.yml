@@ -1,25 +1,20 @@
 
-name: Compilar Miren y Sara 0.8.0
-
+name: Compilar Miren y Sara 0.9.0
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Descargar proyecto
         uses: actions/checkout@v4
-
       - name: Preparar Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
-
       - name: Verificar que se ha subido el juego completo
         shell: bash
         run: |
@@ -27,13 +22,12 @@ jobs:
           test -s pubspec.yaml
           test -s lib/main.dart
           grep -q 'class StagePainter' lib/main.dart
-          grep -q 'class DogEnemy' lib/main.dart
+          grep -q 'class Enemy' lib/main.dart
           grep -q 'SharedPreferences' lib/main.dart
           python3 qa/verify_resources.py
-
+          python3 qa/check_090.py
       - name: Crear proyecto Android nativo sin sobrescribir Dart
         run: flutter create --no-overwrite --platforms=android --project-name hermanas_aventura .
-
       - name: Instalar icono oficial en Android
         shell: bash
         run: |
@@ -41,31 +35,24 @@ jobs:
           cp -R launcher/res/. android/app/src/main/res/
           test -s android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
           test -s android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
-
       - name: Nombre visible de la aplicación
         shell: bash
         run: |
           set -euo pipefail
           sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
           grep -q 'android:label="Miren y Sara"' android/app/src/main/AndroidManifest.xml
-
       - name: Descargar dependencias
         run: flutter pub get
-
       - name: Analizar código Dart
         run: flutter analyze --no-pub
-
       - name: Ejecutar pruebas Flutter
         run: flutter test
-
       - name: Compilar APK release
         run: flutter build apk --release
-
       - name: Publicar APK descargable
         uses: actions/upload-artifact@v4
         with:
-          name: Las-aventuras-de-Miren-y-Sara-0.8.0
+          name: Las-aventuras-de-Miren-y-Sara-0.9.0
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
-
 
