@@ -40,8 +40,10 @@ jobs:
           sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
       - name: Descargar dependencias del juego
         run: flutter pub get
-      - name: Analizar Dart
-        run: flutter analyze --no-pub
+      - name: Analizar Dart del juego y sus pruebas
+        run: |
+          flutter analyze --no-pub lib
+          flutter analyze --no-pub test
       - name: Probar mecánicas, interfaz y carga de imágenes
         run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/widget_test.dart
       - name: Capturar mapa y siete capítulos con el render Flutter real
