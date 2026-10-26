@@ -1,7 +1,7 @@
 name: hermanas_aventura
-description: Las aventuras de Miren y Sara - RC6 de pruebas con reparaciones de enemigos y escenarios, preservando uniformes RC5
+description: Las aventuras de Miren y Sara - RC8 candidata de pruebas, barrio, fauna, saltos, fútbol y danza
 publish_to: none
-version: 0.9.0-rc.6+25
+version: 0.9.0-rc.8+27
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:
@@ -30,8 +30,11 @@ flutter:
     - assets/images/dog/doberman/
     - assets/images/scenes/
     - assets/images/enemies/
+    - assets/images/enemies_hifi/
     - assets/images/outfits/
     - assets/images/props/
     - assets/images/mid/
     - assets/images/ground/
+    - assets/images/chapter1/
+    - assets/images/chapter45/
     - assets/images/worldmap/

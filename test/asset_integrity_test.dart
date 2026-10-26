@@ -26,6 +26,10 @@ void main() {
           'assets/images/dog/$variant$pose.png',
       for(final role in ['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'])
         for(var i=0;i<5;i++) 'assets/images/enemies/${role}_$i.png',
+      // El motor usa estas hojas nuevas; los cinco PNG RC6 se conservan
+      // exclusivamente para comparación y para detectar regresiones.
+      for(final creature in ['rat','cat'])
+        'assets/images/enemies_hifi/${creature}_sheet.png',
     ];
     for(final path in required) {
       final blob=await rootBundle.load(path);

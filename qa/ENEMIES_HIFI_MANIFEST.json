@@ -1,0 +1,28 @@
+{
+  "project": "Las aventuras de Miren y Sara",
+  "candidate": "0.9.0 RC7 - rata y gato",
+  "source": "Nuevas hojas pixel art generadas con referencias a los recursos del juego, 26-10-2026",
+  "generation": "image_gen built-in, fondo transparente, cinco poses en una fila",
+  "not_a_game_capture": true,
+  "android_approved": false,
+  "flutter_capture_verified": false,
+  "originals_preserved": "assets/images/enemies/{rat,cat}_{0..4}.png",
+  "assets": {
+    "rat": {
+      "path": "assets/images/enemies_hifi/rat_sheet.png",
+      "sha256": "44279f0e04bea82d985531a7773c91f2fa203a21393e78354c168ae0a2d26d20",
+      "dimensions": [2172, 724],
+      "mode": "RGBA",
+      "idle_height_world": 36,
+      "frames": ["idle", "walk_contact", "walk_pass", "hurt", "defeated"]
+    },
+    "cat": {
+      "path": "assets/images/enemies_hifi/cat_sheet.png",
+      "sha256": "e67b03a3a473e9db34a97d5de9eb5cf9a49043cad3e162798407411e22a2a377",
+      "dimensions": [2079, 756],
+      "mode": "RGBA",
+      "idle_height_world": 76,
+      "frames": ["idle", "walk_contact", "walk_pass", "hurt", "defeated"]
+    }
+  }
+}

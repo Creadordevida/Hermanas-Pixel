@@ -126,7 +126,7 @@ Future<void> _capture(WidgetTester tester, GlobalKey boundaryKey, String title) 
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('Render Flutter REAL: mapa, título y 28 puntos de los siete capítulos',
+  testWidgets('Render Flutter REAL: mapa, siete capítulos y cuatro zonas del barrio',
       (tester) async {
     SharedPreferences.setMockInitialValues({});
     await tester.binding.setSurfaceSize(_view);
@@ -143,6 +143,36 @@ void main() {
         (title: 'capitulo_${i + 1}_mitad', stage: i, map: false, worldX: 18300),
       for (var i = 0; i < 7; i++)
         (title: 'capitulo_${i + 1}_final', stage: i, map: false, worldX: 35650),
+      // El capítulo 1 contiene edificios únicos y tres uniones verificables:
+      // se capturan a ambos lados de cada una, no solo el primer fotograma.
+      (title: 'barrio_residencial',stage:0,map:false,worldX:4200),
+      (title: 'barrio_paseo',stage:0,map:false,worldX:12500),
+      (title: 'barrio_cubierta',stage:0,map:false,worldX:21400),
+      (title: 'barrio_cohete',stage:0,map:false,worldX:30100),
+      (title: 'barrio_union_1_antes',stage:0,map:false,worldX:8260),
+      (title: 'barrio_union_1_despues',stage:0,map:false,worldX:8380),
+      (title: 'barrio_union_2_antes',stage:0,map:false,worldX:17260),
+      (title: 'barrio_union_2_despues',stage:0,map:false,worldX:17380),
+      (title: 'barrio_union_3_antes',stage:0,map:false,worldX:26360),
+      (title: 'barrio_union_3_despues',stage:0,map:false,worldX:26480),
+      // Two further SNES-visual benchmarks, each with THREE REAL unique
+      // environments and both sides of their two camera transitions.
+      for (final chapter in [4,5]) ...[
+        (title: '${chapter==4?'futbol':'danza'}_zona_entrada',
+          stage:chapter,map:false,worldX:4500),
+        (title: '${chapter==4?'futbol':'danza'}_zona_central',
+          stage:chapter,map:false,worldX:18100),
+        (title: '${chapter==4?'futbol':'danza'}_zona_final',
+          stage:chapter,map:false,worldX:30700),
+        (title: '${chapter==4?'futbol':'danza'}_union_1_antes',
+          stage:chapter,map:false,worldX:10410),
+        (title: '${chapter==4?'futbol':'danza'}_union_1_despues',
+          stage:chapter,map:false,worldX:10510),
+        (title: '${chapter==4?'futbol':'danza'}_union_2_antes',
+          stage:chapter,map:false,worldX:25410),
+        (title: '${chapter==4?'futbol':'danza'}_union_2_despues',
+          stage:chapter,map:false,worldX:25510),
+      ],
     ];
     for (var i = 0; i < targets.length; i++) {
       final target = targets[i];

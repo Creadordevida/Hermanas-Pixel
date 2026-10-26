@@ -7,6 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'sprite_bounds.g.dart';
 import 'hero_hearts.dart';
+import 'chapter_one_layout.dart';
+import 'creature_sheet_bounds.dart';
+import 'animal_sprite_bounds.dart';
+import 'jump_visuals.dart';
+import 'activity_chapters.dart';
 
 const double viewW = 800;
 const double viewH = 450;
@@ -40,6 +45,7 @@ class Character {
   Character(this.x, {this.y = groundY});
   double x, y;
   double vx = 0, vy = 0, travelled = 0, hurtUntil = 0;
+  double jumpedAt = -100, landedAt = -100, landingStrength = 0;
   int facing = 1;
   bool grounded = true;
 }
@@ -55,13 +61,18 @@ class Obstacle {
 }
 
 class Enemy {
-  Enemy(this.id, this.kind, this.x) : home = x;
+  Enemy(this.id, this.kind, this.x) : home = x,
+    animalMode = kind == 'pigeon' ? 'perch' : 'idle';
   final int id;
   final String kind;
   final double home;
   double x;
   int facing = -1, hits = 0;
   double t = 0, attackCooldown = 1, stunned = 0, deathAt = -1;
+  // Explicit animation/behaviour state: the art must reflect actual movement.
+  String animalMode;
+  double animalTime = 0, flightAltitude = 0, flightDuration = 0;
+  bool biteApplied = false;
   bool launched = false;
   bool get defeated => deathAt >= 0;
   bool get ranged => ['referee','breakdancer','teacher','statue'].contains(kind);
@@ -76,6 +87,136 @@ class Enemy {
   };
   double get detection => kind == 'dog_dalmatian' ? 145 : kind == 'dog_doberman' ? 290 : 220;
   double get height => aerial ? 99 + 30 * math.sin(t * 4) : kind == 'rat' ? 21 : 64;
+
+  void _animalState(String next) {
+    if (animalMode == next) return;
+    animalMode = next;
+    animalTime = 0;
+    if (next == 'bite') biteApplied = false;
+  }
+
+  void animalHit() => _animalState(defeated ? 'defeated' : 'hit');
+
+  /// Pure world-space simulation, independently testable without Flutter UI.
+  /// Returns true only on the single contact frame of a real attack.
+  bool advanceAnimal(double dt, double heroX, double heroY) {
+    assert(dog || aerial);
+    animalTime += dt;
+    final distance = heroX - x;
+    final absDist = distance.abs();
+    if (dog) {
+      if (animalMode == 'hit' || animalMode == 'stunned') {
+        _animalState('alert');
+      }
+      if (animalMode == 'bite') {
+        // Bite must be shown BEFORE damage; no invisible instant contact.
+        if (!biteApplied && animalTime >= .24) {
+          biteApplied = true;
+          if (absDist < 61 && heroY > groundY - 48) return true;
+        }
+        if (animalTime >= .62) _animalState('alert');
+        return false;
+      }
+      if (absDist < detection) {
+        facing = distance >= 0 ? 1 : -1;
+        if (animalMode != 'alert' && animalMode != 'run') {
+          _animalState('alert');
+        }
+        if (animalMode == 'alert' && animalTime < .38) return false;
+        if (absDist > 49) {
+          _animalState('run');
+          x += facing * speed * dt;
+        } else if (attackCooldown <= 0 && heroY > groundY - 48) {
+          _animalState('bite');
+          attackCooldown = 1.75;
+        } else {
+          _animalState('alert');
+        }
+      } else {
+        // Small pauses between patrol cycles prevent clockwork pacing.
+        if ((t + id * .43) % 3.7 < 1.25) {
+          _animalState('idle');
+        } else {
+          _animalState('walk');
+          x += facing * speed * .30 * dt;
+          if ((x - home).abs() > 88) facing = -facing;
+        }
+      }
+      return false;
+    }
+
+    // Pigeons start ON the pavement, take off, flap/glide, dive and land.
+    // Never animate a standing bird 58px above the floor.
+    if (animalMode == 'hit') _animalState('flap');
+    if (animalMode == 'perch' || animalMode == 'walk') {
+      flightAltitude = 0;
+      flightDuration = 0;
+      if (absDist < 188) {
+        facing = distance >= 0 ? -1 : 1;
+        _animalState('takeoff');
+      } else if ((t + id * .57) % 4.3 < 2.9) {
+        _animalState('perch');
+      } else {
+        _animalState('walk');
+        x += facing * speed * .12 * dt;
+        if ((x - home).abs() > 44) facing = -facing;
+      }
+      return false;
+    }
+    if (animalMode == 'takeoff') {
+      flightDuration += dt;
+      flightAltitude = math.min(82, flightAltitude + 158 * dt);
+      x += facing * speed * .64 * dt;
+      if (flightAltitude >= 82) _animalState('flap');
+      return false;
+    }
+    if (animalMode == 'landing') {
+      flightDuration += dt;
+      if (absDist < 188) {
+        _animalState('takeoff');
+      } else {
+        flightAltitude = math.max(0.0, flightAltitude - 82 * dt);
+        final towardHome = (home - x).clamp(-speed * dt, speed * dt).toDouble();
+        x += towardHome;
+        if (flightAltitude <= 0) _animalState('perch');
+      }
+      return false;
+    }
+    if (animalMode == 'dive') {
+      flightDuration += dt;
+      facing = distance >= 0 ? 1 : -1;
+      flightAltitude = math.max(34, flightAltitude - 105 * dt);
+      x += facing * speed * 1.35 * dt;
+      if (absDist < 48 && flightAltitude <= 50 && heroY > groundY - 50) {
+        attackCooldown = 2.7;
+        _animalState('flap');
+        return true;
+      }
+      if (animalTime > 1.18) {
+        attackCooldown = 2.3;
+        _animalState('flap');
+      }
+      return false;
+    }
+    // Smooth, bounded flight around the nesting point, alternating wing beats
+    // and short glides. Altitude is independent of wing-frame dimensions.
+    flightDuration += dt;
+    flightAltitude += (83 - flightAltitude).clamp(-80 * dt, 80 * dt).toDouble();
+    final targetX = home + 83 * math.sin(t * .61 + id * .31);
+    final vx = (targetX - x).clamp(-speed * dt, speed * dt).toDouble();
+    if (vx.abs() > .01) facing = vx > 0 ? 1 : -1;
+    x += vx;
+    if (absDist < 224 && attackCooldown <= 0 && flightAltitude > 60) {
+      _animalState('dive');
+    } else if (absDist > 320 && flightDuration > 1.5) {
+      _animalState('landing');
+    } else if (animalMode == 'flap' && animalTime > 1.12) {
+      _animalState('glide');
+    } else if (animalMode == 'glide' && animalTime > .55) {
+      _animalState('flap');
+    }
+    return false;
+  }
 }
 
 class Projectile {
@@ -210,6 +351,21 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         paths['mid_$i'] = 'assets/images/mid/stage_$i.png';
         if (i == 4) paths['mid_4_plain'] = 'assets/images/mid/stage_4_plain.png';
       }
+      // El nuevo capítulo 1 carga recursos que el juego realmente dibuja.
+      // No son renders ilustrativos ni sustituyen a los originales protegidos.
+      for (final zone in neighborhoodZones) {
+        paths['neighborhood_${zone.asset}'] =
+          'assets/images/chapter1/${zone.asset}.png';
+      }
+      paths['neighborhood_props'] = 'assets/images/chapter1/park_props_atlas.png';
+      // The training field and dance academy have three real distinct views
+      // each; none replaces approved character art or original protected PNGs.
+      for (final zone in [...footballActivityZones, ...danceActivityZones]) {
+        paths['activity_${zone.asset}'] = 'assets/images/chapter45/${zone.asset}.png';
+      }
+      for (final kind in ['football','dance']) {
+        paths['activity_${kind}_props'] = 'assets/images/chapter45/${kind}_props_atlas.png';
+      }
       for(final kind in ['classroom','computers']) {
         paths['scene_school_$kind'] = 'assets/images/scenes/school_$kind.png';
         paths['mid_school_$kind'] = 'assets/images/mid/school_$kind.png';
@@ -234,8 +390,17 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         }
       }
       for (final v in ['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue']) {
-        for (int j=0;j<5;j++) paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
+        if (v=='cat' || v=='rat') {
+          // Se carga la hoja nueva única, con cinco poses coherentes y
+          // recortes medidos; no se usan los cinco dibujos planos originales.
+          paths['enemy_${v}_sheet'] = 'assets/images/enemies_hifi/${v}_sheet.png';
+        } else {
+          for (int j=0;j<5;j++) paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
+        }
       }
+      // Eight true flight silhouettes (upstroke, downstroke, glide, hit, fall).
+      // The old pigeon frames remain for genuine ground walking/pecking.
+      paths['pigeon_flight_sheet'] = 'assets/images/enemies_hifi/pigeon_flight_sheet.png';
       for (final item in paths.entries) {
         final blob = await rootBundle.load(item.value);
         final codec = await ui.instantiateImageCodec(blob.buffer.asUint8List());
@@ -265,6 +430,13 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _layoutStage() {
     obstacles.clear(); platforms.clear(); coins.clear(); enemies.clear();
     collected.clear(); shots.clear();
+    if (stage == 0) {
+      _layoutNeighborhood();
+      hero=Character(145);otherSister=Character(230);father=Character(67);
+      cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
+      levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
+      return;
+    }
     final rng = math.Random(1001 + stage * 117);
     // The authored world's length gives roughly 4 minutes of traversing at 169px/s,
     // plus platforming, combat and exploration. Actual ~5min must be device-playtested.
@@ -295,6 +467,44 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     hero=Character(145);otherSister=Character(230);father=Character(67);
     cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
     levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
+  }
+
+  /// Obstáculos y adversarios escritos por zonas. Se evita colocar enemigos
+  /// justo en la llegada a un nuevo espacio o bloquear una transición.
+  /// La semilla por zona hace reproducible cada partida y los tests.
+  void _layoutNeighborhood() {
+    for (int zoneIndex=0; zoneIndex<neighborhoodZones.length; zoneIndex++) {
+      final zone=neighborhoodZones[zoneIndex];
+      final rng=math.Random(42021+zoneIndex*223);
+      final length=zone.length;
+      for (double local=680; local<length-450; local+=730+rng.nextInt(220)) {
+        final x=zone.start+local;
+        final kind=zoneIndex==0 && rng.nextBool() ? 'crate' : 'planter';
+        final h=kind=='planter'?46.0:43.0;
+        obstacles.add(Obstacle(x,groundY-h,kind=='planter'?56:44,h,kind));
+      }
+      // Una plataforma sobre bancos/cajas con suelo físico definido.
+      for (double local=1440; local<length-900; local+=2300+rng.nextInt(370)) {
+        final x=zone.start+local;
+        final top=groundY-61.0;
+        platforms.add(Rect.fromLTWH(x,top,132,15));
+        for(int i=0;i<3;i++) coins.add(Offset(x+21+i*47,top-35));
+      }
+      for (double local=320;local<length-240;local+=185+rng.nextInt(80)) {
+        coins.add(Offset(zone.start+local,
+          rng.nextDouble()<.45?groundY-104:groundY-58));
+      }
+      final types=switch(zoneIndex) {
+        0 => ['dog_brown','pigeon','dog_dalmatian','rat'],
+        1 => ['pigeon','dog_dalmatian','rat','cat'],
+        2 => ['cat','pigeon','dog_brown','rat'],
+        _ => ['dog_dalmatian','pigeon','cat','dog_doberman'],
+      };
+      for(double local=1100;local<length-400;local+=1170+rng.nextInt(390)) {
+        final kind=types[rng.nextInt(types.length)];
+        enemies.add(Enemy(enemies.length,kind,zone.start+local));
+      }
+    }
   }
 
   Future<void> _startNew() async {
@@ -400,6 +610,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     hero.vx=_ease(hero.vx,input*169.0,dt*(input==0?800:1040));
     if(input!=0)hero.facing=input;
     final prevX=hero.x,prevY=hero.y;
+    final wasGrounded=hero.grounded;
     hero.x=(hero.x+hero.vx*dt).clamp(actorRadius,stageWidth-actorRadius).toDouble();
     // Solid platforms and themed obstacles share one tested collision routine.
     final solids=<Rect>[...platforms,...obstacles.where((o)=>!o.destroyed).map((o)=>o.rect)];
@@ -413,6 +624,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       }
     }
     hero.vy=(hero.vy+960*dt).clamp(-550.0,680.0).toDouble();
+    final speedBeforeLanding=hero.vy;
     hero.y+=hero.vy*dt;hero.grounded=false;
     for(final box in solids) {
       if(hero.x+actorRadius<=box.left || hero.x-actorRadius>=box.right)continue;
@@ -423,6 +635,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       }
     }
     if(hero.y>=groundY){hero.y=groundY;hero.vy=0;hero.grounded=true;}
+    if(!wasGrounded && hero.grounded && speedBeforeLanding > 65) {
+      hero.landedAt=time;
+      hero.landingStrength=(speedBeforeLanding/440).clamp(.45,1.0).toDouble();
+    }
     hero.travelled+=(hero.x-prevX).abs();
     for(int i=0;i<coins.length;i++) {
       if(collected.contains(i))continue;
@@ -449,11 +665,12 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         if(!shot.active) continue;
         for(final foe in enemies) {
           if(foe.defeated || foe.stunned>0)continue;
-          final ey=groundY-(foe.aerial?94:foe.kind=='rat'?24:64);
+          final ey=groundY-(foe.aerial?foe.flightAltitude+24:foe.kind=='rat'?24:64);
           if((shot.x-foe.x).abs()<37 && (shot.y-ey).abs()<(foe.aerial?42:51)) {
             foe.hits++;foe.stunned=.66;foe.t=0;shot.active=false;
             particlesUntil=time+.4;
             if(foe.hits>=foe.hp)foe.deathAt=time;
+            if(foe.dog || foe.aerial) foe.animalHit();
             break;
           }
         }
@@ -463,8 +680,17 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     shots.removeWhere((s)=>!s.active);
     for(final foe in enemies) {
       foe.t+=dt;foe.attackCooldown=math.max(0,foe.attackCooldown-dt);
-      if(foe.defeated)continue;
+      if(foe.defeated) {
+        // Gravity brings a defeated flying bird down BEFORE it fades away.
+        if(foe.aerial) foe.flightAltitude=math.max(0.0,foe.flightAltitude-145*dt);
+        continue;
+      }
       if(foe.stunned>0){foe.stunned=math.max(0,foe.stunned-dt);continue;}
+      if(foe.dog || foe.aerial) {
+        if(foe.advanceAnimal(dt,hero.x,hero.y))_receiveDamage(foe.facing);
+        foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
+        continue;
+      }
       final distance=hero.x-foe.x,absDist=distance.abs();
       if(foe.ranged) {
         if(absDist<390 && foe.attackCooldown<=0) {
@@ -509,7 +735,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     _save();
   }
   void _jump() {
-    if(screen==Screen.playing && hero.grounded) {hero.vy=-423;hero.grounded=false;}
+    if(screen==Screen.playing && hero.grounded) {
+      hero.vy=-423;hero.grounded=false;
+      hero.jumpedAt=time;
+      hero.landedAt=-100;
+    }
   }
   void _attack() {
     if(screen!=Screen.playing || time-lastAttackTime<.5)return;
@@ -811,18 +1041,62 @@ class StagePainter extends CustomPainter {
     for(final foe in enemies) {
       final x=foe.x-cameraX;if(x< -110 || x>900)continue;
       if(foe.defeated && time-foe.deathAt>.85)continue;
-      canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),width:53,height:7),Paint()..color=const Color(0x55091723));
+      final shadowAlpha=foe.aerial ? (0x55*(1-foe.flightAltitude/190)).round().clamp(12,85).toInt() : 0x55;
+      canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),
+        width:foe.aerial?39+foe.flightAltitude*.13:53,height:7),
+        Paint()..color=Color.fromARGB(shadowAlpha,9,23,35));
       canvas.save();
       if(foe.defeated) {
         final alpha=(1-(time-foe.deathAt-.32)/.53).clamp(0.0,1.0).toDouble();
         canvas.saveLayer(Rect.fromLTWH(x-110,groundY-150,220,170),Paint()..color=Colors.white.withValues(alpha:alpha));
       }
       if(foe.facing==-1){canvas.translate(x,0);canvas.scale(-1,1);canvas.translate(-x,0);}
-      final y=groundY-foe.height;
       if(foe.dog) {
         final variant=foe.kind.substring(4);
-        final mode=foe.defeated?'defeated':foe.stunned>0?'hit':foe.t%1>.5?'run':'walk';
-        _sprite(canvas,images['dog_${variant}_$mode'],Rect.fromLTWH(x-48,y-44,96,78));
+        final state=foe.defeated?'defeated':foe.stunned>0
+          ? (foe.stunned>.43?'hit':'stunned'):foe.animalMode;
+        // Leg key poses only advance WHILE travelling; no moonwalking in idle,
+        // alert or bite states. Ground pivot and pixel scale remain unchanged.
+        final running=['run','alert','run','walk'];
+        final walking=['walk','alert'];
+        final mode=state=='run'?running[(foe.animalTime*9).floor()%running.length]
+          :state=='walk'?walking[(foe.animalTime*4).floor()%walking.length]
+          :state=='stunned'?'idle':state;
+        final source=dogVisibleBounds[mode];
+        final idle=dogVisibleBounds['idle'];
+        final img=images['dog_${variant}_$mode'];
+        if(source!=null && idle!=null && img!=null) {
+          final pixelScale=(variant=='doberman'?76.0:69.0)/idle.height;
+          final w=source.width*pixelScale, h=source.height*pixelScale;
+          canvas.save();
+          if(foe.defeated) {
+            // A short sideways collapse around the paws instead of running in
+            // place while the alpha fade is playing.
+            canvas.translate(x,groundY);
+            canvas.rotate(-.58);
+            canvas.translate(-x,-groundY);
+          } else if(state=='hit' || state=='stunned') {
+            canvas.translate(x,groundY);
+            canvas.rotate(state=='hit' ? .17 : .055*math.sin(foe.t*17));
+            canvas.translate(-x,-groundY);
+          }
+          _sprite(canvas,img,Rect.fromLTWH(x-w/2,groundY-h,w,h),source:source);
+          canvas.restore();
+        }
+      } else if(foe.aerial && foe.flightAltitude>1) {
+        final phase=(foe.t*10).floor()%4;
+        final frame=foe.defeated?7:foe.stunned>0?6
+          :foe.animalMode=='glide'?4:foe.animalMode=='dive'?5:phase;
+        final bob=foe.defeated?0.0:3.0*math.sin(foe.t*5.3);
+        // Large wings, but the body remains comparable in size to the original
+        // 64px grounded pigeon. Pivot is measured from each pose's actual feet.
+        // Both flight pixels/world scale and torso position stay consistent.
+        const flightScale=pigeonAtlasWorldCell/pigeonAtlasCell;
+        _sprite(canvas,images['pigeon_flight_sheet'],
+          Rect.fromLTWH(x-pigeonFlightFootX[frame]*flightScale,
+            groundY-foe.flightAltitude-pigeonFlightFootY[frame]*flightScale+bob,
+            pigeonAtlasWorldCell,pigeonAtlasWorldCell),
+          source:pigeonFlightSource(frame));
       } else if(['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'].contains(foe.kind)) {
         // Distinct combat states: a teacher must not run while throwing an exam,
         // and a referee must actually show his raised red card in wind-up.
@@ -837,7 +1111,8 @@ class StagePainter extends CustomPainter {
         } else {
           frame=foe.ranged ? ((foe.t*2).floor()%2) : ((foe.t*6).floor()%3);
         }
-        final img=images['enemy_${foe.kind}_$frame'];
+        final hiFiCreature=foe.kind=='rat' || foe.kind=='cat';
+        final img=images[hiFiCreature ? 'enemy_${foe.kind}_sheet' : 'enemy_${foe.kind}_$frame'];
         if(img!=null) {
           // Una misma escala de píxel para TODOS los fotogramas del enemigo:
           // jamás normalizar cada frame a una altura arbitraria (causa del gigantismo).
@@ -845,10 +1120,13 @@ class StagePainter extends CustomPainter {
             'rival' => 124.0, 'novice' => 117.0, 'bully' => 137.0,
             'referee' => 143.0, 'teacher' => 145.0, 'breakdancer' => 126.0,
             'statue' => 139.0, 'pigeon' => 64.0,
-            'rat' => 41.0, 'cat' => 72.0, _ => 105.0,
+            'rat' => creatureIdleHeights['rat']!,
+            'cat' => creatureIdleHeights['cat']!, _ => 105.0,
           };
-          final visible=enemyVisibleBounds['${foe.kind}_$frame'];
-          final canonical=enemyVisibleBounds['${foe.kind}_0'];
+          final visible=hiFiCreature ? creatureFrameBounds['${foe.kind}_$frame']
+            : enemyVisibleBounds['${foe.kind}_$frame'];
+          final canonical=hiFiCreature ? creatureFrameBounds['${foe.kind}_0']
+            : enemyVisibleBounds['${foe.kind}_0'];
           if(visible != null && canonical != null){
             // The visible body is anchored at the SAME floor and native pixel
             // scale across idle / run / hit / defeat. Transparent padding in a
@@ -856,7 +1134,7 @@ class StagePainter extends CustomPainter {
             final pixelScale=targetHeight/canonical.height;
             final ww=visible.width*pixelScale;
             final actualHeight=visible.height*pixelScale;
-            final airborne=foe.aerial ? -58.0 : 0.0;
+            final airborne=0.0; // Ground pigeon art is used ONLY when grounded.
             // The pivot is the feet, so a wind-up never slides the enemy off the floor.
             // Small movement for large characters whose source sheets have
             // nearly identical waiting/walking poses (not a sprite-scale hack).
@@ -948,11 +1226,146 @@ class StagePainter extends CustomPainter {
     }
   }
 
+  // Cuatro vistas exclusivas inspiradas en las fotografías del barrio.
+  // Cada panorama se recorre UNA vez; no hay módulo de 640px, bucle,
+  // inversión horizontal ni una imagen estirada hasta 36.500 unidades.
+  // Los motivos cercanos del atlas se mueven en coordenadas de mundo (1:1).
+  void _neighborhoodBackdrop(Canvas canvas,int zoneIndex,double alpha) {
+    if (alpha<=0)return;
+    final zone=neighborhoodZones[zoneIndex];
+    final art=images['neighborhood_${zone.asset}'];
+    if (art==null)return;
+    // Mantenemos la proporción exacta (1495/710 ~= 800/380).
+    // El recorte omite solo el pavimento del propio cuadro: el pavimento
+    // físico original de la RC6 se pinta una sola vez encima, con groundY.
+    const sourceTop=80.0, sourceHeight=710.0;
+    final sourceWidth=viewW*sourceHeight/380.0;
+    final maxX=math.max(0.0,art.width-sourceWidth);
+    final local=(cameraX-zone.start).clamp(0.0,zone.length-viewW).toDouble();
+    final fraction=local/math.max(1.0,zone.length-viewW);
+    final sourceX=maxX*fraction;
+    canvas.drawImageRect(art,
+      Rect.fromLTWH(sourceX,sourceTop,sourceWidth,sourceHeight),
+      const Rect.fromLTWH(0,0,viewW,380),
+      Paint()..filterQuality=FilterQuality.low
+             ..color=Colors.white.withValues(alpha:alpha));
+  }
+
+  void _neighborhoodProps(Canvas canvas) {
+    final atlas=images['neighborhood_props'];
+    if(atlas==null)return;
+    final cellW=atlas.width/neighborhoodAtlasColumns;
+    final cellH=atlas.height/neighborhoodAtlasRows;
+    final first=(cameraX/275).floor()-2;
+    // Solo se dibujan props visibles; la semilla de cada posición es estable.
+    for(int n=first;n<=first+7;n++) {
+      if(n<0)continue;
+      final seed=((n+7)*73856093 ^ (n+19)*19349663)&0x7fffffff;
+      final worldX=125+n*275.0+(seed%103)-51;
+      if(worldX<320 || worldX>stageWidth-180)continue;
+      final x=worldX-cameraX;
+      if(x< -180 || x>viewW+180)continue;
+      // No repetición periódica simple: distintas clases, alturas y ritmos.
+      final kind=(seed%17==0)?11:(seed%13==0)?9:(seed%11==0)?8:
+        (seed%7==0)?7:(seed%5==0)?6:
+        (seed%3==0)?5:(seed%4==0)?4:seed%4;
+      final width=kind<4?132.0+(seed%39):kind==4?70.0:
+        kind==8?105.0:kind==9?68.0:kind==10?100.0:90.0;
+      final height=kind<4?165.0+(seed%44):kind==4?184.0:
+        kind==8?105.0:kind==9?150.0:kind==10?91.0:94.0;
+      final source=Rect.fromLTWH((kind%4)*cellW,(kind~/4)*cellH,cellW,cellH);
+      // Los pies/troncos se anclan al plano físico, nunca a la pantalla.
+      _sprite(canvas,atlas,Rect.fromLTWH(x-width/2,groundY-height,width,height),
+        source:source);
+    }
+  }
+
+  void _neighborhoodBackground(Canvas canvas) {
+    final center=cameraX+viewW/2;
+    final index=neighborhoodZoneIndex(center);
+    final zone=neighborhoodZones[index];
+    const transitionWidth=850.0;
+    final fade=index==neighborhoodZones.length-1 ? 0.0 :
+      ((center-(zone.end-transitionWidth))/transitionWidth).clamp(0.0,1.0).toDouble();
+    _neighborhoodBackdrop(canvas,index,1);
+    // Disolvencia progresiva sin cambio de escala ni salto de arquitectura.
+    if(fade>0)_neighborhoodBackdrop(canvas,index+1,fade);
+    _neighborhoodProps(canvas);
+  }
+
+  // The outdoors and indoors require DIFFERENT camera crops and occlusion:
+  // grass begins at Y=386, polished dance parquet at Y=286. Preserve each
+  // underlying approved physical floor tile; no generated image replaces it.
+  void _activityBackdrop(Canvas canvas,ActivityZone zone,double alpha) {
+    if(alpha<=0)return;
+    final art=images['activity_${zone.asset}'];
+    if(art==null)return;
+    final destinationBottom=stage==4?386.0:286.0;
+    final sourceHeight=stage==4?690.0:545.0;
+    const sourceTop=55.0;
+    final sourceWidth=viewW*sourceHeight/destinationBottom;
+    final panLimit=math.max(0.0,art.width-sourceWidth);
+    final local=(cameraX-zone.start).clamp(0.0,zone.length-viewW).toDouble();
+    final fraction=local/math.max(1.0,zone.length-viewW);
+    final srcX=panLimit*fraction;
+    // Identical X/Y source scale: NEVER stretch a 16:9 painting to an
+    // unrelated theatre-wall or outdoor-field aspect ratio.
+    canvas.drawImageRect(art,
+      Rect.fromLTWH(srcX,sourceTop,sourceWidth,sourceHeight),
+      Rect.fromLTWH(0,0,viewW,destinationBottom),
+      Paint()..filterQuality=FilterQuality.low
+             ..color=Colors.white.withValues(alpha:alpha));
+  }
+
+  void _activityBackground(Canvas canvas) {
+    final zones=activityZones(stage);
+    final center=cameraX+viewW/2;
+    final index=activityZoneIndex(zones,center);
+    final zone=zones[index];
+    const transitionWidth=900.0;
+    final fade=index==zones.length-1?0.0:
+      ((center-(zone.end-transitionWidth))/transitionWidth)
+        .clamp(0.0,1.0).toDouble();
+    _activityBackdrop(canvas,zone,1);
+    if(fade>0) _activityBackdrop(canvas,zones[index+1],fade);
+  }
+
+  void _activityProps(Canvas canvas) {
+    final football=stage==4;
+    final atlas=images[football?'activity_football_props':'activity_dance_props'];
+    if(atlas==null)return;
+    final sources=football?footballActivityProps:danceActivityProps;
+    final heights=football?footballActivityPropHeights:danceActivityPropHeights;
+    const footballMotifs=<List<int>>[[0,1,2,4],[0,1,3,4],[1,3,4,5]];
+    const danceMotifs=<List<int>>[[0,1,2],[2,3,4],[1,4,5]];
+    final first=(cameraX/389).floor()-2;
+    for(int n=first;n<first+7;n++) {
+      if(n<0)continue;
+      final seed=((n+17)*73856093 ^ (n+43)*19349663)&0x7fffffff;
+      final worldX=250+n*389.0+(seed%131)-65;
+      if(worldX<330 || worldX>stageWidth-240)continue;
+      final x=worldX-cameraX;
+      if(x< -190 || x>viewW+190)continue;
+      final zoneIndex=activityZoneIndex(activityZones(stage),worldX);
+      final kinds=(football?footballMotifs:danceMotifs)[zoneIndex];
+      final kind=kinds[(seed~/11)%kinds.length];
+      final src=sources[kind];
+      final h=heights[kind],w=src.width*h/src.height;
+      // Only truly movable small objects repeat, unevenly. Goal, terraces,
+      // mirrored studio and rehearsal stage belong ONLY to their panoramas.
+      _sprite(canvas,atlas,Rect.fromLTWH(x-w/2,groundY-h,w,h),source:src);
+    }
+  }
+
   void _background(Canvas canvas) {
     // The approved detailed backdrop is a DISTANT vista. Its limited camera
     // pan cannot wrap the same clock, cathedral, car or kiosk indefinitely.
     // Foreground structures scroll at full world speed, just like sprites.
-    if(stage != 6) {
+    if(stage == 0) {
+      _neighborhoodBackground(canvas);
+    } else if(stage == 4 || stage == 5) {
+      _activityBackground(canvas);
+    } else if(stage != 6) {
       _backLayer(canvas,images['scene_$stage'],1,0.014);
       _midLayer(canvas,images['mid_$stage'],1);
     } else {
@@ -985,13 +1398,22 @@ class StagePainter extends CustomPainter {
         _sprite(canvas,tile,Rect.fromLTWH(x,_floorArtTop[stage],tileW,tile.height.toDouble()));
       }
     }
+    if(stage == 4 || stage == 5) _activityProps(canvas);
   }
   void _actor(Canvas canvas,Character c,String role,int index,bool active) {
     final costume=(stage==4 && role=='futbolista')||(stage==5 && role=='bailarina');
     // El ataque utiliza la pose auténtica de la hoja aprobada. Solo se activa
     // en protagonistas con atuendo temático; padre/hermana no se ven afectados.
     final isCostumeAttack=active && costume && time-lastAttackTime>=0 && time-lastAttackTime<.23;
-    final pose=isCostumeAttack?'attack_0':!c.grounded?'jump_0':
+    final phase=jumpVisualPhase(grounded:c.grounded,vy:c.vy,time:time,
+      jumpedAt:c.jumpedAt,landedAt:c.landedAt);
+    // Approved character art stays intact. Rise and apex use their genuine
+    // leap, falling extends the feet, and landing compresses the idle stance.
+    final pose=isCostumeAttack?'attack_0':
+      phase==JumpVisualPhase.takeoff || phase==JumpVisualPhase.rising ||
+      phase==JumpVisualPhase.apex ? 'jump_0' :
+      phase==JumpVisualPhase.falling || phase==JumpVisualPhase.impact ||
+      phase==JumpVisualPhase.recovery ? 'idle_0' :
       c.vx.abs()>15?'walk_${(c.travelled/23).floor()%2}':'idle_0';
     final img=images['${costume?'costume_':''}${role}_$pose'];if(img==null)return;
     final base=images['${costume?'costume_':''}${role}_idle_0'];
@@ -999,13 +1421,65 @@ class StagePainter extends CustomPainter {
     final scale=standardHeight/(base?.height ?? img.height);
     final w=img.width*scale,h=img.height*scale,x=c.x-cameraX;
     if(x< -120 || x>900)return;
-    if(time<c.hurtUntil && (time*12).floor().isEven)return;
-    canvas.drawOval(Rect.fromCenter(center:Offset(x,c.y+3),width:w*.7,height:8),Paint()..color=const Color(0x660b1c27));
-    canvas.save();if(c.facing<0){canvas.translate(x,0);canvas.scale(-1,1);canvas.translate(-x,0);}
-    _sprite(canvas,img,Rect.fromLTWH(x-w/2,c.y-h+5*scale,w,h),pixelated:false);
-    canvas.restore();
-    if(active)canvas.drawArc(Rect.fromCenter(center:Offset(x,c.y+4),width:38,height:11),0,math.pi,false,
+    final floorAtX=shadowSurfaceY(footX:c.x,footY:c.y,floorY:groundY,
+      surfaces:platforms.followedBy(obstacles.where((o)=>!o.destroyed).map((o)=>o.rect)));
+    final altitude=math.max(0.0,floorAtX-c.y);
+    final shadowFactor=jumpShadowScale(altitude);
+    // Physical contact projection: X follows the heroine but shadow Y sticks
+    // to floor/platform. Both the dark oval and gold selection ring share it.
+    canvas.drawOval(Rect.fromCenter(center:Offset(x,floorAtX+3),
+      width:w*.7*shadowFactor,height:8*shadowFactor),
+      Paint()..color=Color.fromARGB(jumpShadowAlpha(altitude),11,28,39));
+    if(active)canvas.drawArc(Rect.fromCenter(center:Offset(x,floorAtX+4),
+      width:38*shadowFactor,height:11*shadowFactor),0,math.pi,false,
       Paint()..color=const Color(0xffffdf73)..style=PaintingStyle.stroke..strokeWidth=2);
+    if(time<c.hurtUntil && (time*12).floor().isEven)return;
+    var stretchX=1.0,stretchY=1.0,tilt=0.0;
+    switch(phase) {
+      case JumpVisualPhase.takeoff:
+        stretchX=.955;stretchY=1.065;tilt=-.045;
+        break;
+      case JumpVisualPhase.rising:
+        stretchY=1.025;tilt=-.035;
+        break;
+      case JumpVisualPhase.apex:
+        stretchX=1.025;stretchY=.975;
+        break;
+      case JumpVisualPhase.falling:
+        stretchY=1.015;tilt=.045;
+        break;
+      case JumpVisualPhase.impact:
+        stretchX=1+.09*c.landingStrength;
+        stretchY=1-.17*c.landingStrength;
+        break;
+      case JumpVisualPhase.recovery:
+        final progress=((time-c.landedAt-.10)/.14).clamp(0.0,1.0).toDouble();
+        stretchX=1.035-.035*progress;
+        stretchY=.95+.05*progress;
+        break;
+      case JumpVisualPhase.grounded:
+        break;
+    }
+    canvas.save();
+    if(c.facing<0){canvas.translate(x,0);canvas.scale(-1,1);canvas.translate(-x,0);}
+    if(tilt!=0) {
+      canvas.translate(x,c.y);canvas.rotate(tilt);canvas.translate(-x,-c.y);
+    }
+    _sprite(canvas,img,Rect.fromLTWH(x-w*stretchX/2,
+      c.y-h*stretchY+5*scale,w*stretchX,h*stretchY),pixelated:false);
+    canvas.restore();
+    if(active && (phase==JumpVisualPhase.impact || phase==JumpVisualPhase.recovery)) {
+      final duration=time-c.landedAt;
+      final fade=(1-duration/.24).clamp(0.0,1.0).toDouble();
+      final dust=Paint()..color=Color.fromARGB((fade*148).round(),191,178,149);
+      // Small 16-bit-style impact puffs anchored to the contact plane.
+      for(final sign in [-1,1]) {
+        canvas.drawRect(Rect.fromCenter(center:Offset(x+sign*(17+duration*32),floorAtX-4-duration*14),
+          width:5,height:4),dust);
+        canvas.drawRect(Rect.fromCenter(center:Offset(x+sign*(26+duration*21),floorAtX-1-duration*9),
+          width:3,height:3),dust);
+      }
+    }
   }
   static void _outlined(Canvas c,String s,Offset center,Color color,double font) {
     final tp=TextPainter(text:TextSpan(text:s,style:TextStyle(color:color,fontSize:font,

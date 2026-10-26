@@ -18,8 +18,10 @@ class SpritePoseAnchorTests(unittest.TestCase):
     self.assertEqual(hashlib.sha256(f.read_bytes()).hexdigest(),record['sha256'])
     self.assertIn("'"+key+"': Rect.fromLTWH(",GENERATED)
  def test_render_uses_visible_canonical_alpha_for_baseline(self):
-  self.assertIn('final visible=enemyVisibleBounds',SOURCE)
-  self.assertIn('final canonical=enemyVisibleBounds',SOURCE)
+  self.assertIn("final visible=hiFiCreature ? creatureFrameBounds",SOURCE)
+  self.assertIn(": enemyVisibleBounds['${foe.kind}_$frame'];",SOURCE)
+  self.assertIn("final canonical=hiFiCreature ? creatureFrameBounds",SOURCE)
+  self.assertIn(": enemyVisibleBounds['${foe.kind}_0'];",SOURCE)
   self.assertIn('pixelScale=targetHeight/canonical.height',SOURCE)
   self.assertIn('source:visible',SOURCE)
  def test_detects_known_cropped_canvas_risk_not_art_signoff(self):

@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-26",
+  "status": "implemented_source_only_pending_flutter_android_visual_approval",
+  "improvements": [9, 11],
+  "protected_original_dog_variants": ["brown", "dalmatian", "doberman"],
+  "dog_pose_count_each": 8,
+  "dog_alpha_bounds_file": "lib/animal_sprite_bounds.dart",
+  "pigeon_ground_frames_preserved": 5,
+  "pigeon_flight_atlas": "assets/images/enemies_hifi/pigeon_flight_sheet.png",
+  "pigeon_flight_atlas_sha256": "3b44f0f517dba8a432428aa5420910ab60dbc43123c88dfb17ace0ccb7fccbd1",
+  "pigeon_frame_grid": [4, 2],
+  "pigeon_frame_count": 8,
+  "pigeon_anchor_method": "foot_positions_measured_from_pink_leg_pixels",
+  "python_tests_passed_local": 87,
+  "flutter_capture_tests_planned": 33,
+  "flutter_analyze_executed": false,
+  "flutter_capture_executed": false,
+  "android_physical_device_executed": false,
+  "artist_approval": false,
+  "final_zip_authorized": false
+}

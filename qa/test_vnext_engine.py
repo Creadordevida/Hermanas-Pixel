@@ -27,7 +27,8 @@ class RenderContract(unittest.TestCase):
   for x,y,w,h in coords:
    self.assertLess(x+w,1673);self.assertLess(y+h,942)
  def test_enemy_scale_based_on_idle_sprite_not_current_pose(self):
-  self.assertIn("final canonical=enemyVisibleBounds['${foe.kind}_0'];",MAIN)
+  self.assertIn("final canonical=hiFiCreature ? creatureFrameBounds",MAIN)
+  self.assertIn(": enemyVisibleBounds['${foe.kind}_0'];",MAIN)
   self.assertIn('final pixelScale=targetHeight/canonical.height;',MAIN)
   self.assertNotIn('final scale=math.min(hh/img.height',MAIN)
  def test_protagonist_scale_based_on_identity(self):

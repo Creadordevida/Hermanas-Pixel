@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-26",
+  "status": "integrated_in_source_pending_flutter_and_android_visual_approval",
+  "chapters": {
+    "4": {"name": "Campo de entrenamiento", "playable_character": "Miren", "zone_assets": ["football_arrival", "football_drills", "football_stands"], "floor_y": 386, "foreground_atlas": "football_props_atlas"},
+    "5": {"name": "Escuela de danza", "playable_character": "Sara", "zone_assets": ["dance_foyer", "dance_studio", "dance_stage"], "floor_y": 286, "foreground_atlas": "dance_props_atlas"}
+  },
+  "zone_ranges": [[0,10500],[10500,25500],[25500,36500]],
+  "source_backdrop_dimensions": [1672,941],
+  "atlases_dimensions": [1536,1024],
+  "source_asset_sha256": {
+    "football_arrival.png": "cf581eb61a84882ae3957e1ebcdc8a9b9f33cfe910db06acddc540f4d54b078f",
+    "football_drills.png": "b01a9fc76802f9a7d6c9ae84d96b4ac8da87b3912a70dbf3da5464fd113d558b",
+    "football_stands.png": "92ef77a5d83d7b6ee10d5c0ed1704a0b1b385932ddcb7e157180bb693a851a03",
+    "dance_foyer.png": "ef674f8d0f809f4713262de5850764ab144413b0e4d4a0e8d398cb1538fccf6f",
+    "dance_studio.png": "83ca272fc72cb342d4e40a3c0e4aabfd422cafb62c71dea573dd1f3665ea1ae1",
+    "dance_stage.png": "5d6870fa25b01d81080fac30e524256ef630d0df1799821d11b4129faa5dabe2",
+    "football_props_atlas.png": "e4f36750c1774dbb43c3e5e89ddc625c7c7e18817d13f243cad8163f9b64616c",
+    "dance_props_atlas.png": "b196f46a1b0646f9a6ff964d09d5cce34c394eff6195f49da15f1a03f483a10f"
+  },
+  "preserved_legacy_assets_sha256": {
+    "scenes/football.png": "23e1cebaa01767aa6ac26d241d2a57348b0aa07cf6658005bf21089f4e81a99d",
+    "scenes/ballet_refined.png": "c4b33f54ba823a17bfc2de2f35d265d419859d09532c59da0d59cabe7656956e",
+    "mid/stage_4.png": "76fe2d8fd509bdd0a4daffef998e200b50acd4f5c9f943e3ef44db3b42b3923a",
+    "mid/stage_4_plain.png": "9f266b403acf2dd249dab5b749de66c72cf6b27f51e9e23d60aba4bca221129d",
+    "mid/stage_5.png": "fecdea89f27f3bcfe97e0bdada3d0edc431ee56d6676e2d371b4533ae0ec1a32",
+    "ground/stage_4.png": "bfd53c8971964db894e231d883773e83df3a854e8f1c86eea80ea7dd85c2ff5f",
+    "ground/stage_5.png": "6c5f07759497971829bed0004e011387ce2aede141cc811bad239f84f8eb0621"
+  },
+  "original_hero_art_preserved": true,
+  "real_flutter_screenshots_required": 14,
+  "flutter_analyze_executed": false,
+  "flutter_capture_executed": false,
+  "android_physical_device_executed": false,
+  "artist_approval": false,
+  "final_zip_authorized": false
+}
