@@ -42,11 +42,12 @@ previsibles cada vez que el usuario sube un ZIP a GitHub:
    secuencial (`flutter test --concurrency=1`) cuando varias pruebas carguen
    hojas de sprites y escenarios simultáneamente. Fijar un límite de tiempo
    global por paso, dejando visibles los errores concretos.
-4. **Diagnóstico no engañoso:** generar el APK para pruebas después de aprobar
-   el análisis de `lib`, antes de las pruebas de capturas. Si cualquier
-   comprobación posterior falla, la ejecución permanece roja, aunque el APK
-   sirva para reproducir el error en móvil. Un APK existente no implica QA
-   completada ni calidad artística aprobada.
+4. **Diagnóstico no engañoso y fallo rápido:** analizar primero `lib` y `test`
+   y pasar las pruebas rápidas de mecánicas **antes** de invertir minutos en
+   `flutter build apk`. Después generar el APK y, solo en un trabajo separado,
+   las capturas visuales. Si falla la auditoría gráfica, la ejecución global
+   permanece roja, aunque el APK sirva para reproducir el error en móvil.
+   Un APK existente no implica QA completada ni calidad artística aprobada.
 5. **Agrupar incidencias:** dejar que termine el trabajo completo de GitHub,
    recoger todos los fallos (incluidos los posteriores al primero) y preparar
    **un solo ZIP de correcciones**. No crear una nueva candidata por cada línea

@@ -30,15 +30,19 @@ class FlutterCaptureGuardrails(unittest.TestCase):
         self.assertIn('boundary.toImage', source)
         self.assertIn('Duration(seconds: 20)', source)
 
-    def test_apk_is_available_before_visual_checks(self):
+    def test_fast_flutter_checks_precede_costly_apk_and_visual_checks(self):
         workflow = (ROOT / '.github/workflows/build.yml').read_text()
+        game_analysis = workflow.index('flutter analyze --no-pub lib')
+        test_analysis = workflow.index('flutter analyze --no-pub test')
+        unit_tests = workflow.index('flutter test test/asset_integrity_test.dart')
         apk_build = workflow.index('flutter build apk --release')
         upload = workflow.index('name: Miren-y-Sara-')
-        test_analysis = workflow.index('flutter analyze --no-pub test')
         render_capture = workflow.index('test/qa_outfits_capture_test.dart')
+        self.assertLess(game_analysis, test_analysis)
+        self.assertLess(test_analysis, unit_tests)
+        self.assertLess(unit_tests, apk_build)
         self.assertLess(apk_build, upload)
-        self.assertLess(upload, test_analysis)
-        self.assertLess(test_analysis, render_capture)
+        self.assertLess(upload, render_capture)
 
     def test_heavy_render_tests_do_not_compete_for_resources(self):
         workflow = (ROOT / '.github/workflows/build.yml').read_text()
@@ -58,8 +62,26 @@ class FlutterCaptureGuardrails(unittest.TestCase):
                 source = (ROOT / relative).read_text()
                 self.assertIn('tester.runAsync<int>', source)
                 self.assertIn('await file.writeAsBytes(', source)
-                self.assertIn('return file.length().timeout(', source)
+                self.assertIn('return await file.length().timeout(', source)
                 self.assertIn('Duration(seconds:20)', source.replace(' ', ''))
+
+    def test_no_unawaited_file_length_return_inside_capture_try_blocks(self):
+        # Flutter's analyzer raises unawaited_return_in_try_block if a Future
+        # escapes a try/finally without `await`. This blocked RC8 REV2 after
+        # the APK had already been built.
+        for relative in (
+            'test/qa_wildlife_render_test.dart',
+            'test/qa_jump_render_test.dart',
+            'test/qa_outfits_capture_test.dart',
+        ):
+            with self.subTest(test=relative):
+                source = (ROOT / relative).read_text()
+                self.assertNotIn('return file.length().timeout(', source)
+                self.assertNotIn('return out.length().timeout(', source)
+                self.assertTrue(
+                    'return await file.length().timeout(' in source or
+                    'return await out.length().timeout(' in source
+                )
 
 
 if __name__ == '__main__':

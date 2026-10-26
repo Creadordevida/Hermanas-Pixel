@@ -49,7 +49,7 @@ Future<void> _writeScreenshot(
           .timeout(const Duration(seconds: 10));
       await out.writeAsBytes(encoded.buffer.asUint8List(), flush: true)
           .timeout(const Duration(seconds: 20));
-      return out.length().timeout(const Duration(seconds: 10));
+      return await out.length().timeout(const Duration(seconds: 10));
     } finally {
       snapshot.dispose();
     }

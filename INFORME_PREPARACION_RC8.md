@@ -1,7 +1,7 @@
-# Las aventuras de Miren y Sara — informe de preparación RC8 REV2
+# Las aventuras de Miren y Sara — informe de preparación RC8 REV3
 
 **Fecha:** 26 de octubre de 2026  
-**Versión corregida:** `0.9.0-rc.8+29`  
+**Versión corregida:** `0.9.0-rc.8+30`  
 **Destino:** proyecto Flutter completo para GitHub y compilación de APK Android de **pruebas**.
 
 ## Mejoras incluidas para comprobar
@@ -18,7 +18,7 @@
 
 | Control | Resultado |
 | --- | --- |
-| 101 tests Python de QA | **101/101 correctos** |
+| 102 tests Python de QA | **102/102 correctos** |
 | Conservación de base 0.8.0 | **Correcto** |
 | Integridad de gráficos originales | **30 elementos y 5 iconos Android correctos** |
 | Escenas por capas | **Comprobación mecánica correcta** |
@@ -59,6 +59,20 @@ tiene su estado propio y el segundo tiene un plazo máximo explícito. Si el
 trabajo visual falla, el APK sigue disponible y la ejecución global no recibe
 una aprobación engañosa.
 
+### Error adicional detectado en RC8 REV2 (+29)
+
+La compilación del APK terminó bien y su archivo se publicó. Sin embargo,
+`flutter analyze --no-pub test` detectó tres avisos
+`unawaited_return_in_try_block` en las pruebas de saltos, uniformes y fauna.
+Los tres procedían de `return file.length().timeout(...)` dentro de un
+`try/finally`. Se corrigieron añadiendo `await` a esas devoluciones y se añadió
+una prueba de regresión específica para los tres ficheros.
+
+En **REV3**, tanto el análisis de `lib` como el de `test` y las pruebas de
+mecánicas se ejecutan **antes** de iniciar `flutter build apk --release`.
+Así una advertencia de nueve segundos no vuelve a desperdiciar seis minutos de
+compilación. La QA gráfica sigue en su trabajo independiente.
+
 ## Qué sigue pendiente
 
 Este equipo no dispone de Flutter, Dart ni emulador Android; por tanto, **no
@@ -70,9 +84,10 @@ Esas verificaciones no deben confundirse con las pruebas automáticas ya
 superadas: la RC8 se entrega para inspección y pruebas manuales, no como
 aprobación artística final ni como publicación en Google Play.
 
-El flujo compila y sube el APK antes del análisis de los tests. Las capturas
-se realizan en un trabajo independiente que depende de la compilación. Si
-falla, quedará visible y el APK seguirá disponible para investigar.
+El flujo analiza primero todo Dart, prueba las mecánicas y, solo después,
+compila y sube el APK. Las capturas se realizan en un trabajo independiente
+que depende de la compilación. Si este segundo trabajo falla, quedará visible
+y el APK seguirá disponible para investigar.
 
 ## Instalación y retroalimentación
 

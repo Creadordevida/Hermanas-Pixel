@@ -1,4 +1,4 @@
-name: Miren y Sara 0.9.0 RC8 REV2 - APK Y CONTROL VISUAL
+name: Miren y Sara 0.9.0 RC8 REV3 - APK Y CONTROL VISUAL
 on:
   push:
     branches: [main]
@@ -44,21 +44,21 @@ jobs:
         run: flutter pub get
       - name: Analizar Dart del juego
         run: flutter analyze --no-pub lib
-      # Generamos primero el APK. Un fallo posterior de código de pruebas
-      # (o de la revisión visual) seguirá marcando el flujo como FALLIDO,
-      # pero no impedirá usar el APK para investigar en un móvil.
+      # Dart y los tests rápidos se comprueban ANTES de la costosa compilación
+      # Android. RC8 REV2 gastó seis minutos compilando para después fallar
+      # por tres avisos de `unawaited_return_in_try_block` detectables en 9 s.
+      - name: Analizar Dart de las pruebas
+        run: flutter analyze --no-pub test
+      - name: Probar mecánicas, interfaz, saltos, sombras y carga de imágenes
+        run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/wildlife_mechanics_test.dart test/jump_visuals_test.dart test/hero_hearts_test.dart test/widget_test.dart
       - name: Construir APK Android de PRUEBA (sin aprobación artística)
         run: flutter build apk --release
       - name: Publicar APK de prueba en cuanto esté construido
         uses: actions/upload-artifact@v4
         with:
-          name: Miren-y-Sara-0.9.0-RC8-REV2-APK-PRUEBAS
+          name: Miren-y-Sara-0.9.0-RC8-REV3-APK-PRUEBAS
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
-      - name: Analizar Dart de las pruebas
-        run: flutter analyze --no-pub test
-      - name: Probar mecánicas, interfaz, saltos, sombras y carga de imágenes
-        run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/wildlife_mechanics_test.dart test/jump_visuals_test.dart test/hero_hearts_test.dart test/widget_test.dart
 
   # La compilación de Android tiene su propio resultado: puede terminar VERDE
   # aunque una prueba visual posterior esté en ROJO. No se ocultan los errores.
@@ -93,7 +93,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Capturas-REALES-Flutter-0.9.0-RC8-REV2
+          name: Capturas-REALES-Flutter-0.9.0-RC8-REV3
           path: qa/rendered_from_flutter/*.png
           if-no-files-found: warn
       - name: Informe de calidad exigente (no bloquea prueba manual)
@@ -106,7 +106,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Informe-QA-0.9.0-RC8-REV2
+          name: Informe-QA-0.9.0-RC8-REV3
           path: |
             qa/RESULTADO_PUERTAS.txt
             qa/CANDIDATE_ASSET_INVENTORY.json

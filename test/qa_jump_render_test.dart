@@ -68,7 +68,7 @@ void main() {
               .timeout(const Duration(seconds:10));
           await file.writeAsBytes(png.buffer.asUint8List(),flush:true)
               .timeout(const Duration(seconds:20));
-          return file.length().timeout(const Duration(seconds:10));
+          return await file.length().timeout(const Duration(seconds:10));
         } finally { image.dispose(); }
       });
       expect(bytes,isNotNull);

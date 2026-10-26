@@ -76,7 +76,7 @@ void main() {
               .timeout(const Duration(seconds: 10));
           await file.writeAsBytes(data.buffer.asUint8List(), flush: true)
               .timeout(const Duration(seconds: 20));
-          return file.length().timeout(const Duration(seconds: 10));
+          return await file.length().timeout(const Duration(seconds: 10));
         } finally {
           rendered.dispose();
         }

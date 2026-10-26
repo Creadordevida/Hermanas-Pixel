@@ -1,7 +1,7 @@
 name: hermanas_aventura
 description: Las aventuras de Miren y Sara - RC8 candidata de pruebas, barrio, fauna, saltos, fútbol y danza
 publish_to: none
-version: 0.9.0-rc.8+29
+version: 0.9.0-rc.8+30
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:

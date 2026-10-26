@@ -1,8 +1,8 @@
-# Guía para probar Las aventuras de Miren y Sara — 0.9.0 RC8 REV2
+# Guía para probar Las aventuras de Miren y Sara — 0.9.0 RC8 REV3
 
 ## Lo que estás descargando
 
-`Las_aventuras_de_Miren_y_Sara_0.9.0_RC8_REV2_GITHUB_COMPLETO.zip` contiene **código
+`Las_aventuras_de_Miren_y_Sara_0.9.0_RC8_REV3_GITHUB_COMPLETO.zip` contiene **código
 completo y gráficos** para GitHub. **No es el APK**. GitHub Actions lo construye
 automáticamente al subir estos archivos al repositorio.
 
@@ -19,23 +19,23 @@ automáticamente al subir estos archivos al repositorio.
    otros archivos del repositorio que no estén incluidos en esta versión.
 6. En la pestaña **Changes** comprueba que aparecen los nuevos recursos
    `chapter1`, `chapter45`, `enemies_hifi`, el código `lib` y `.github`.
-7. Escribe `Miren y Sara 0.9.0 RC8 REV2 - capturas y CI` como mensaje,
+7. Escribe `Miren y Sara 0.9.0 RC8 REV3 - Dart y capturas` como mensaje,
    pulsa **Commit to main** y después **Push origin**.
 
 ## Descargar el APK
 
 1. En GitHub web, entra en **Actions**.
-2. Abre **Miren y Sara 0.9.0 RC8 REV2 - APK Y CONTROL VISUAL**.
+2. Abre **Miren y Sara 0.9.0 RC8 REV3 - APK Y CONTROL VISUAL**.
 3. Selecciona la ejecución más reciente. Ahora aparecen **dos trabajos**:
    `android-apk-candidato` (APK y mecánicas) y `qa-graficos-flutter`
    (capturas y revisión de escenas). Se muestran sus resultados por separado.
-4. En **Artifacts**, descarga **`Miren-y-Sara-0.9.0-RC8-REV2-APK-PRUEBAS`**.
+4. En **Artifacts**, descarga **`Miren-y-Sara-0.9.0-RC8-REV3-APK-PRUEBAS`**.
 5. Descomprime ese archivo: dentro encontrarás **`app-release.apk`** para
    transferir al teléfono e instalar como APK de prueba.
 6. Si alguna captura falla, GitHub puede mostrar la ejecución global en
    **rojo**, aunque el trabajo Android esté verde y el APK esté disponible.
    Eso significa *candidato para investigar*, no versión aprobada.
-7. Si aparece, descarga también **`Capturas-REALES-Flutter-0.9.0-RC8-REV2`**.
+7. Si aparece, descarga también **`Capturas-REALES-Flutter-0.9.0-RC8-REV3`**.
    Esas sí son pantallas del motor que podemos analizar juntos.
 
 ## Qué revisar en el teléfono
