@@ -56,19 +56,24 @@ void main() {
       await tester.pump(const Duration(milliseconds:35));
       final boundary=key.currentContext!.findRenderObject() as RenderRepaintBoundary;
       expect(boundary.debugNeedsPaint,false);
-      final bytes=await tester.runAsync<List<int>>(() async {
-        final image=await boundary.toImage(pixelRatio:1.0);
+      final bytes=await tester.runAsync<int>(() async {
+        final image=await boundary.toImage(pixelRatio:1.0)
+            .timeout(const Duration(seconds:20));
         try {
-          final png=await image.toByteData(format:ui.ImageByteFormat.png);
+          final png=await image.toByteData(format:ui.ImageByteFormat.png)
+              .timeout(const Duration(seconds:20));
           if(png==null)throw StateError('Captura vacía: $name');
-          return png.buffer.asUint8List();
+          final file=File('qa/rendered_from_flutter/salto_$name.png');
+          await file.parent.create(recursive:true)
+              .timeout(const Duration(seconds:10));
+          await file.writeAsBytes(png.buffer.asUint8List(),flush:true)
+              .timeout(const Duration(seconds:20));
+          return file.length().timeout(const Duration(seconds:10));
         } finally { image.dispose(); }
       });
       expect(bytes,isNotNull);
-      expect(bytes!.length,greaterThan(2500),reason:'Sprite vacío: $name');
-      final file=File('qa/rendered_from_flutter/salto_$name.png');
-      await file.parent.create(recursive:true);
-      await file.writeAsBytes(bytes,flush:true);
+      expect(bytes!,greaterThan(2500),reason:'Sprite vacío: $name');
+      debugPrint('QA_SALTO_CAPTURA_OK $name ($bytes bytes)');
     }
 
     try {

@@ -65,10 +65,13 @@ void main() {
           expect(boundary.debugNeedsPaint, false);
 
           final result = await tester.runAsync<int>(() async {
-            final image = await boundary.toImage(pixelRatio: 1.0);
+            final image = await boundary.toImage(pixelRatio: 1.0)
+                .timeout(const Duration(seconds: 20));
             try {
-              final rgba = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
-              final png = await image.toByteData(format: ui.ImageByteFormat.png);
+              final rgba = await image.toByteData(format: ui.ImageByteFormat.rawRgba)
+                  .timeout(const Duration(seconds: 20));
+              final png = await image.toByteData(format: ui.ImageByteFormat.png)
+                  .timeout(const Duration(seconds: 20));
               if (rgba == null || png == null) throw StateError('No se renderizo $creature/$pose');
               final pixels = rgba.buffer.asUint8List();
               final colors = <int>{};
@@ -82,8 +85,10 @@ void main() {
                 }
               }
               final file = File('qa/rendered_from_flutter/criatura_${creature}_$pose.png');
-              await file.parent.create(recursive: true);
-              await file.writeAsBytes(png.buffer.asUint8List(), flush: true);
+              await file.parent.create(recursive: true)
+                  .timeout(const Duration(seconds: 10));
+              await file.writeAsBytes(png.buffer.asUint8List(), flush: true)
+                  .timeout(const Duration(seconds: 20));
               return colors.length;
             } finally {
               image.dispose();

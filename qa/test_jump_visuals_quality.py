@@ -45,7 +45,9 @@ class JumpQuality(unittest.TestCase):
         self.assertIn('JumpVisualPhase.recovery', CODE)
 
     def test_real_engine_captures_are_mandatory_in_ci(self):
-        self.assertIn('flutter test test/qa_render_capture_test.dart', PIPE)
+        # Flutter accepts runner flags (e.g. --concurrency=1) between the
+        # command and the tests; they must not invalidate our quality gate.
+        self.assertRegex(PIPE, r'flutter test[^\n]*test/qa_render_capture_test\.dart')
         self.assertIn('test/qa_jump_render_test.dart', PIPE)
         self.assertIn('test/jump_visuals_test.dart', PIPE)
         self.assertIn('await boundary.toImage(pixelRatio:1.0)', CAP)

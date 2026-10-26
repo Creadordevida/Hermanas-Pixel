@@ -64,21 +64,26 @@ void main() {
       await tester.pump(const Duration(milliseconds: 40));
       final boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary;
       expect(boundary.debugNeedsPaint, false);
-      final bytes = await tester.runAsync<List<int>>(() async {
-        final rendered = await boundary.toImage(pixelRatio: 1);
+      final bytes = await tester.runAsync<int>(() async {
+        final rendered = await boundary.toImage(pixelRatio: 1)
+            .timeout(const Duration(seconds: 20));
         try {
-          final data = await rendered.toByteData(format: ui.ImageByteFormat.png);
+          final data = await rendered.toByteData(format: ui.ImageByteFormat.png)
+              .timeout(const Duration(seconds: 20));
           if (data == null) throw StateError('Captura vacía $label');
-          return data.buffer.asUint8List();
+          final file = File('qa/rendered_from_flutter/animal_$label.png');
+          await file.parent.create(recursive: true)
+              .timeout(const Duration(seconds: 10));
+          await file.writeAsBytes(data.buffer.asUint8List(), flush: true)
+              .timeout(const Duration(seconds: 20));
+          return file.length().timeout(const Duration(seconds: 10));
         } finally {
           rendered.dispose();
         }
       });
       if (bytes == null) throw StateError('Captura vacía $label');
-      expect(bytes.length, greaterThan(2500), reason: 'Imagen sin detalles: $label');
-      final file = File('qa/rendered_from_flutter/animal_$label.png');
-      await file.parent.create(recursive: true);
-      await file.writeAsBytes(bytes, flush: true);
+      expect(bytes, greaterThan(2500), reason: 'Imagen sin detalles: $label');
+      debugPrint('QA_FAUNA_CAPTURA_OK $label ($bytes bytes)');
     }
 
     try {

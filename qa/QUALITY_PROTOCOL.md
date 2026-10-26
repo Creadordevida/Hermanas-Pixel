@@ -19,3 +19,38 @@
 ## Política de entregas
 
 `qa/release_gate.py --strict` debe aprobar los elementos de `acceptance_090.json`, las pruebas y evidencias de ejecución. La falta de Flutter/Android no es una exención. **No distribuir como 0.9.0 validada hasta superar el control**. El fallo de una sola puerta paraliza la entrega.
+
+## Disciplina de compilaciones y capturas (incidentes RC8, 26/10/2026)
+
+El objetivo no es solo comprobar recursos, sino evitar rondas de errores
+previsibles cada vez que el usuario sube un ZIP a GitHub:
+
+1. **Preflight antes del ZIP:** ejecutar todas las pruebas Python, integridad
+   de assets, verificación de archivos y sintaxis YAML. Si se dispone de SDK
+   Flutter, ejecutar **también** `flutter analyze --no-pub lib`, `flutter analyze
+   --no-pub test`, `flutter test` y `flutter build apk --release`. Si Flutter no
+   está disponible, identificar explícitamente la compilación como **pendiente
+   de CI**. Los tests Python nunca sustituyen la compilación Flutter.
+2. **Capturas fiables:** las pruebas visuales de `HermanasGame` cargan más de
+   130 imágenes. Deben tener una ventana de carga realista (90 segundos),
+   reutilizar la misma instancia cuando capturan varios capítulos y usar
+   `tester.runAsync` para `toImage`, PNG **y escritura de ficheros** (nunca
+   `File.writeAsBytes` fuera del `runAsync` de las capturas), con tiempos
+   límite diagnosticables. Este fallo hizo agotar diez minutos en el test de
+   perros/palomas y ponía en riesgo también el test de saltos.
+3. **No saturar el runner:** ejecutar las pruebas de capturas pesadas de forma
+   secuencial (`flutter test --concurrency=1`) cuando varias pruebas carguen
+   hojas de sprites y escenarios simultáneamente. Fijar un límite de tiempo
+   global por paso, dejando visibles los errores concretos.
+4. **Diagnóstico no engañoso:** generar el APK para pruebas después de aprobar
+   el análisis de `lib`, antes de las pruebas de capturas. Si cualquier
+   comprobación posterior falla, la ejecución permanece roja, aunque el APK
+   sirva para reproducir el error en móvil. Un APK existente no implica QA
+   completada ni calidad artística aprobada.
+5. **Agrupar incidencias:** dejar que termine el trabajo completo de GitHub,
+   recoger todos los fallos (incluidos los posteriores al primero) y preparar
+   **un solo ZIP de correcciones**. No crear una nueva candidata por cada línea
+   roja individual. Conservar el informe exacto de qué se arregló y de lo que
+   todavía no está verificado.
+6. **Regresión permanente:** ejecutar `qa/test_flutter_ci_capture_guardrails.py`
+   como parte de la batería Python, además de los tests artísticos y físicos.

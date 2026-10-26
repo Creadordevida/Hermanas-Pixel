@@ -1,7 +1,7 @@
-# Las aventuras de Miren y Sara — informe de preparación RC8
+# Las aventuras de Miren y Sara — informe de preparación RC8 REV2
 
 **Fecha:** 26 de octubre de 2026  
-**Versión corregida:** `0.9.0-rc.8+28`  
+**Versión corregida:** `0.9.0-rc.8+29`  
 **Destino:** proyecto Flutter completo para GitHub y compilación de APK Android de **pruebas**.
 
 ## Mejoras incluidas para comprobar
@@ -18,7 +18,7 @@
 
 | Control | Resultado |
 | --- | --- |
-| 96 tests Python de QA | **96/96 correctos** |
+| 101 tests Python de QA | **101/101 correctos** |
 | Conservación de base 0.8.0 | **Correcto** |
 | Integridad de gráficos originales | **30 elementos y 5 iconos Android correctos** |
 | Escenas por capas | **Comprobación mecánica correcta** |
@@ -37,9 +37,27 @@ pero falló al analizar dos archivos de capturas de prueba:
 - `test/qa_wildlife_render_test.dart`: se eliminó la segunda aserción `!`
   redundante, señalada por el analizador.
 
-En la versión corregida el APK se construye **después de analizar `lib` y antes
-de analizar los tests**. Si una prueba falla, GitHub seguirá mostrando el error
-pero conservará el APK, siempre que la compilación del juego haya funcionado.
+La siguiente ejecución, RC8 corregida (+28), **sí compiló el APK** y superó
+`flutter analyze` y las pruebas de mecánicas, pero tardó 30 minutos y terminó
+con cuatro pruebas visuales fallidas (dos uniformes, fauna y saltos):
+
+- Los dos tests de uniformes daban una ventana de carga de sprites de solo
+  20 segundos, frente a los 90 segundos que necesitaba la prueba general.
+  Ahora cargan el conjunto de imágenes una sola vez, comparten la instancia
+  de `HermanasGame` entre los dos escenarios y esperan hasta 90 segundos.
+- La prueba de fauna agotó el timeout predeterminado de diez minutos; la de
+  saltos tenía la misma operación de escritura de PNG fuera de
+  `tester.runAsync`. Ahora **todo el render, la conversión y la escritura** se
+  ejecuta dentro de `runAsync`, con tiempos límite individuales.
+- Rata y gato recibieron también límites explícitos de operaciones asíncronas.
+- Las cinco pruebas gráficas pesadas se ejecutan con concurrencia 1 para evitar
+  competencia por memoria y CPU de decodificación.
+
+**El flujo REV2 separa dos trabajos:** `android-apk-candidato` para construir y
+probar lo instalable, y `qa-graficos-flutter` para las capturas. Cada trabajo
+tiene su estado propio y el segundo tiene un plazo máximo explícito. Si el
+trabajo visual falla, el APK sigue disponible y la ejecución global no recibe
+una aprobación engañosa.
 
 ## Qué sigue pendiente
 
@@ -52,9 +70,9 @@ Esas verificaciones no deben confundirse con las pruebas automáticas ya
 superadas: la RC8 se entrega para inspección y pruebas manuales, no como
 aprobación artística final ni como publicación en Google Play.
 
-El flujo compila y sube el APK de prueba antes del análisis de tests y de las
-capturas; si posteriormente falla cualquiera de ellos, la ejecución quedará
-marcada como fallida, pero el APK estará disponible para investigar.
+El flujo compila y sube el APK antes del análisis de los tests. Las capturas
+se realizan en un trabajo independiente que depende de la compilación. Si
+falla, quedará visible y el APK seguirá disponible para investigar.
 
 ## Instalación y retroalimentación
 
