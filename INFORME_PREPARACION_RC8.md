@@ -1,7 +1,7 @@
 # Las aventuras de Miren y Sara — informe de preparación RC8
 
 **Fecha:** 26 de octubre de 2026  
-**Versión:** `0.9.0-rc.8+27`  
+**Versión corregida:** `0.9.0-rc.8+28`  
 **Destino:** proyecto Flutter completo para GitHub y compilación de APK Android de **pruebas**.
 
 ## Mejoras incluidas para comprobar
@@ -26,6 +26,21 @@
 | Métricas técnicas de decorados | **Correctas**, no equivalen a aprobación artística |
 | Sintaxis YAML del flujo GitHub Actions | **Válida** |
 
+## Corrección de la primera compilación de GitHub
+
+La primera ejecución de la RC8 superó el análisis del código de `lib`,
+pero falló al analizar dos archivos de capturas de prueba:
+
+- `test/qa_creature_render_test.dart`: el objeto devuelto por
+  `findRenderObject()` no tenía el tipo estático adecuado para usar `toImage`.
+  Se convierte expresamente a `RenderRepaintBoundary` antes de capturar.
+- `test/qa_wildlife_render_test.dart`: se eliminó la segunda aserción `!`
+  redundante, señalada por el analizador.
+
+En la versión corregida el APK se construye **después de analizar `lib` y antes
+de analizar los tests**. Si una prueba falla, GitHub seguirá mostrando el error
+pero conservará el APK, siempre que la compilación del juego haya funcionado.
+
 ## Qué sigue pendiente
 
 Este equipo no dispone de Flutter, Dart ni emulador Android; por tanto, **no
@@ -37,8 +52,8 @@ Esas verificaciones no deben confundirse con las pruebas automáticas ya
 superadas: la RC8 se entrega para inspección y pruebas manuales, no como
 aprobación artística final ni como publicación en Google Play.
 
-El flujo compila y sube el APK de prueba antes de la comprobación exhaustiva
-de capturas; si posteriormente falla la revisión visual, la ejecución quedará
+El flujo compila y sube el APK de prueba antes del análisis de tests y de las
+capturas; si posteriormente falla cualquiera de ellos, la ejecución quedará
 marcada como fallida, pero el APK estará disponible para investigar.
 
 ## Instalación y retroalimentación

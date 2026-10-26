@@ -74,11 +74,11 @@ void main() {
           rendered.dispose();
         }
       });
-      expect(bytes, isNotNull);
-      expect(bytes!.length, greaterThan(2500), reason: 'Imagen sin detalles: $label');
+      if (bytes == null) throw StateError('Captura vacía $label');
+      expect(bytes.length, greaterThan(2500), reason: 'Imagen sin detalles: $label');
       final file = File('qa/rendered_from_flutter/animal_$label.png');
       await file.parent.create(recursive: true);
-      await file.writeAsBytes(bytes!, flush: true);
+      await file.writeAsBytes(bytes, flush: true);
     }
 
     try {

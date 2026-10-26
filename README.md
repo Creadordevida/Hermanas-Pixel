@@ -1,4 +1,4 @@
-# Las aventuras de Miren y Sara — 0.9.0 RC8 (pruebas Android)
+# Las aventuras de Miren y Sara — 0.9.0 RC8 corregida (pruebas Android)
 
 **Candidata de pruebas, no versión artística ni comercial aprobada.**
 El ZIP contiene el proyecto Flutter **completo**, no un APK precompilado.
@@ -22,8 +22,8 @@ del motor para inspección.
 ## Cómo probar en Android
 
 Lee **`INSTRUCCIONES_RC8_PRUEBAS.md`** antes de copiar los archivos a GitHub.
-El flujo **Compilar Miren y Sara 0.9.0 RC8** publica el artefacto
-`Miren-y-Sara-0.9.0-RC8-APK-PRUEBAS` cuando la compilación termina bien.
+El flujo **Compilar Miren y Sara 0.9.0 RC8 CORREGIDA** publica el artefacto
+`Miren-y-Sara-0.9.0-RC8-CORREGIDA-APK-PRUEBAS` cuando la compilación termina bien.
 
 Aunque las capturas posteriores fallen, el APK ya construido se conserva para
 diagnóstico; el flujo debe permanecer ROJO y no existe aprobación artística.

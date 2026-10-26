@@ -1,4 +1,4 @@
-name: Compilar Miren y Sara 0.9.0 RC8 - PRUEBAS DE TODAS LAS MEJORAS
+name: Compilar Miren y Sara 0.9.0 RC8 CORREGIDA - PRUEBAS
 on:
   push:
     branches: [main]
@@ -42,23 +42,23 @@ jobs:
           sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
       - name: Descargar dependencias del juego
         run: flutter pub get
-      - name: Analizar Dart
-        run: |
-          flutter analyze --no-pub lib
-          flutter analyze --no-pub test
-      - name: Probar mecánicas, interfaz, saltos, sombras y carga de imágenes
-        run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/wildlife_mechanics_test.dart test/jump_visuals_test.dart test/hero_hearts_test.dart test/widget_test.dart
-      # El APK se compila ANTES de las capturas extensas. Si la revisión
-      # visual falla, el flujo queda ROJO (sin un aprobado engañoso), pero
-      # Henry conserva el APK para diagnosticar y probar en el móvil.
+      - name: Analizar Dart del juego
+        run: flutter analyze --no-pub lib
+      # Generamos primero el APK. Un fallo posterior de código de pruebas
+      # (o de la revisión visual) seguirá marcando el flujo como FALLIDO,
+      # pero no impedirá usar el APK para investigar en un móvil.
       - name: Construir APK Android de PRUEBA (sin aprobación artística)
         run: flutter build apk --release
       - name: Publicar APK de prueba en cuanto esté construido
         uses: actions/upload-artifact@v4
         with:
-          name: Miren-y-Sara-0.9.0-RC8-APK-PRUEBAS
+          name: Miren-y-Sara-0.9.0-RC8-CORREGIDA-APK-PRUEBAS
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
+      - name: Analizar Dart de las pruebas
+        run: flutter analyze --no-pub test
+      - name: Probar mecánicas, interfaz, saltos, sombras y carga de imágenes
+        run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/wildlife_mechanics_test.dart test/jump_visuals_test.dart test/hero_hearts_test.dart test/widget_test.dart
       - name: Capturar mapa, capítulos, criaturas, saltos y sombras en Flutter
         id: captures
         run: flutter test test/qa_render_capture_test.dart test/qa_outfits_capture_test.dart test/qa_creature_render_test.dart test/qa_wildlife_render_test.dart test/qa_jump_render_test.dart
@@ -68,7 +68,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Capturas-REALES-Flutter-0.9.0-RC8
+          name: Capturas-REALES-Flutter-0.9.0-RC8-CORREGIDA
           path: qa/rendered_from_flutter/*.png
           if-no-files-found: warn
       - name: Informe de calidad exigente (no bloquea prueba manual)
@@ -81,7 +81,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Informe-QA-0.9.0-RC8
+          name: Informe-QA-0.9.0-RC8-CORREGIDA
           path: |
             qa/RESULTADO_PUERTAS.txt
             qa/CANDIDATE_ASSET_INVENTORY.json

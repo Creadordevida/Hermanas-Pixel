@@ -60,9 +60,9 @@ void main() {
             ),
           ));
           await tester.pump(const Duration(milliseconds: 50));
-          final boundary = boundaryKey.currentContext?.findRenderObject();
-          expect(boundary, isA<RenderRepaintBoundary>());
-          expect((boundary! as RenderRepaintBoundary).debugNeedsPaint, false);
+          final boundary = boundaryKey.currentContext!.findRenderObject()
+              as RenderRepaintBoundary;
+          expect(boundary.debugNeedsPaint, false);
 
           final result = await tester.runAsync<int>(() async {
             final image = await boundary.toImage(pixelRatio: 1.0);
