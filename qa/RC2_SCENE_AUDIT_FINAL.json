@@ -1,0 +1,68 @@
+{
+  "type": "PIL simulation of image joins, NOT real Flutter frame",
+  "authored_regions": 7,
+  "unique_region_artworks": 7,
+  "connector_repetitions": {
+    "connector_residential_greenway_v091": 1,
+    "connector_neutral_park_v091": 1,
+    "connector_pergola_v091": 1
+  },
+  "original_sha256": {
+    "residential_curve": "8486df5a23d069e659014d8cfc35aef70a6b39eb20e67d56e1183ca2c0b61699",
+    "green_promenade": "56dc3f61a5f948685d863cf9e1484f70ba552b0f9750f127bc07e93d017d043f",
+    "white_canopy": "7bef4349c693fda57ee571b2ff5aef6bbfbe510e668bf84a217bcb00901c0494",
+    "rocket_park": "a4d0cdfe9d72d3bf5be76b9cc5eb139ef6a6ffe3ba048bec9688bb93aaff788e"
+  },
+  "seam_width_world_pixels": 96,
+  "seams": [
+    {
+      "world_x": 7200,
+      "from": "residential_curve",
+      "to": "connector_residential_greenway_v091",
+      "simulated_render": "qa/rc2_simulated_seams/union_01.png",
+      "peak_horizontal_pixel_delta": 45.7,
+      "mean_horizontal_pixel_delta": 13.3
+    },
+    {
+      "world_x": 9200,
+      "from": "connector_residential_greenway_v091",
+      "to": "green_promenade",
+      "simulated_render": "qa/rc2_simulated_seams/union_02.png",
+      "peak_horizontal_pixel_delta": 33.0,
+      "mean_horizontal_pixel_delta": 13.0
+    },
+    {
+      "world_x": 16200,
+      "from": "green_promenade",
+      "to": "connector_neutral_park_v091",
+      "simulated_render": "qa/rc2_simulated_seams/union_03.png",
+      "peak_horizontal_pixel_delta": 27.5,
+      "mean_horizontal_pixel_delta": 13.5
+    },
+    {
+      "world_x": 18400,
+      "from": "connector_neutral_park_v091",
+      "to": "white_canopy",
+      "simulated_render": "qa/rc2_simulated_seams/union_04.png",
+      "peak_horizontal_pixel_delta": 33.9,
+      "mean_horizontal_pixel_delta": 11.8
+    },
+    {
+      "world_x": 25400,
+      "from": "white_canopy",
+      "to": "connector_pergola_v091",
+      "simulated_render": "qa/rc2_simulated_seams/union_05.png",
+      "peak_horizontal_pixel_delta": 29.4,
+      "mean_horizontal_pixel_delta": 11.4
+    },
+    {
+      "world_x": 27600,
+      "from": "connector_pergola_v091",
+      "to": "rocket_park",
+      "simulated_render": "qa/rc2_simulated_seams/union_06.png",
+      "peak_horizontal_pixel_delta": 39.0,
+      "mean_horizontal_pixel_delta": 12.8
+    }
+  ],
+  "quality_status": "PENDING Flutter captures, motion inspection, Android device QA"
+}

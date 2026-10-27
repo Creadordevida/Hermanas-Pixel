@@ -1,9 +1,9 @@
 {
   "project": "Las aventuras de Miren y Sara / Hermanas Pixel",
   "studio": "The Wolf Company",
-  "version": "0.9.1-rc.1+31",
+  "version": "0.9.1-rc.2+32",
   "date": "2026-10-27",
-  "status": "candidate_for_github_flutter_build_and_android_visual_tests",
+  "status": "RC2_GITHUB_CANDIDATE_ART_QA_PENDING",
   "parent": "0.9.0-rc.8+30 (RC8 REV3)",
   "approved_unchanged_assets": [
     "assets/images/chapter1/residential_curve.png",
@@ -15,9 +15,14 @@
   "scene_engine": {
     "world_units": 36500,
     "coordinates": "world positions, foreground world-lock 1.0, distant trees 0.78",
-    "art": "original landmark panels, unique illustrated pergola connector, neutral landscape panels, four transparent tree sprites with measured visible bounds",
-    "known_limitation": "neutral linking panels can still look repetitive or have conspicuous joins; artistic evaluation required",
-    "verification_required": ["real Flutter renders", "continuous Android playthrough", "no full-image ghosting or cut sprites", "acceptable scenery variety"]
+    "art": "Seven unique region panoramas; 4 original photos protected; 3 unique linking vistas; no repeated connectors",
+    "known_limitation": "Spatial seams may still ghost in complex buildings: requires Android gameplay review",
+    "verification_required": [
+      "real Flutter renders",
+      "continuous Android playthrough",
+      "no full-image ghosting or cut sprites",
+      "acceptable scenery variety"
+    ]
   },
   "ui": {
     "title": "cars patched locally, protagonists and typography intact",
@@ -25,13 +30,22 @@
     "mobile": "panoramic gutters illustrated, playable internal canvas remains 800x450"
   },
   "quality": {
-    "python_local_tests_passed": 114,
-    "flutter_analyze": "not_executed_locally",
-    "flutter_tests": "not_executed_locally",
-    "android_apk": "not_built_locally",
+    "python_local_tests_passed": 119,
+    "flutter_analyze": "not_run",
+    "flutter_tests": "not_run",
+    "android_apk": "not_built",
     "artistic_signoff": "pending"
   },
-  "ci": {"flutter_version": "3.47.8", "ubuntu": "24.04", "package_shared_preferences": "2.3.2", "jobs": ["android-apk-candidato", "qa-graficos-flutter"], "lockfile": "will_be_generated_as_github_artifact"},
+  "ci": {
+    "flutter_version": "3.47.8",
+    "ubuntu": "24.04",
+    "package_shared_preferences": "2.3.2",
+    "jobs": [
+      "android-apk-candidato",
+      "qa-graficos-flutter"
+    ],
+    "lockfile": "will_be_generated_as_github_artifact"
+  },
   "future_gpt_learning": [
     "Require asset source bounds before atlas slicing",
     "Verify consistent sprite/world scale independently of number of frames",

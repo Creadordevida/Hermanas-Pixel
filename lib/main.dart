@@ -815,7 +815,13 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         // Crucially the playable 800×450 image remains at its CORRECT aspect
         // ratio: no stretching of characters or hidden touch buttons.
         if (screen == Screen.title)
-          Image.asset('assets/images/title_cars_fixed_091.png',fit:BoxFit.cover)
+          // The external bleed is BLURRED. Never display an extra readable
+          // copy of the title, protagonists or parked cars at the side edges.
+          ImageFiltered(
+            imageFilter: ui.ImageFilter.blur(sigmaX: 32, sigmaY: 32),
+            child: Image.asset('assets/images/title_cars_fixed_091.png',
+                fit: BoxFit.cover),
+          )
         else
           DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
             begin: Alignment.topCenter, end: Alignment.bottomCenter,
@@ -1202,7 +1208,7 @@ class StagePainter extends CustomPainter {
       final img=images[s.kind];final w=s.kind=='ball'?24.0:s.kind=='comb'?27.0:31.0;
       _sprite(canvas,img,Rect.fromCenter(center:Offset(s.x-cameraX,s.y),width:w,height:s.kind=='comb'?16:25));
     }
-    if(stage==0) _neighborhoodTrees(canvas,foreground:true);
+    // No near-camera atlas trees on chapter 1: preserve characters and landmarks.
     if(time<particlesUntil) {
       final x=hero.x-cameraX;
       for(int i=0;i<5;i++) {
@@ -1257,29 +1263,47 @@ class StagePainter extends CustomPainter {
     }
   }
 
-  // World-locked scene panels: each pixel from the image is attached to a
-  // definite x interval. NO screen-sized static backdrops and NO image fades.
-  void _neighborhoodBackdropPanel(Canvas canvas, NeighborhoodBackdropPanel panel) {
+  // The scenery is distant, but anchored to a unique geographical region.
+  // Each approved master is displayed ONCE. The 7,000+ world units of the
+  // region pan a NON-REPEATING slice of its artwork; nearby physical props,
+  // platforms, coins and floor travel at full world speed.
+  void _neighborhoodVista(Canvas canvas, NeighborhoodBackdropPanel panel) {
     final art = images['neighborhood_${panel.asset}'];
     if (art == null) return;
-    final screenLeft = panel.start - cameraX;
-    final screenRight = panel.end - cameraX;
-    if (screenRight <= 0 || screenLeft >= viewW) return;
-    // Aspect-correct crop: horizontal/vertical scales are IDENTICAL.
-    // Never squash a curved building, tree or playground rocket.
-    final sourceHeight = math.min(art.height.toDouble(),
-        art.width.toDouble() * 380 / panel.width);
-    final sourceWidth = sourceHeight * panel.width / 380;
-    final cropBottom = math.max(0.0, art.height - sourceHeight);
-    final sourceTop = panel.landmark
-        ? math.min(85.0, cropBottom)
-        : math.max(0.0, cropBottom - 15);
+    final sh = neighborhoodSourceHeight(panel.asset);
+    final sw = neighborhoodViewSourceWidth(panel.asset);
+    if (!neighborhoodCropFits(panel.asset, art.width.toDouble(), viewW)) {
+      throw StateError('Scene source too narrow for viewport: ${panel.asset}');
+    }
+    final maxPan = math.max(0.0, art.width.toDouble() - sw);
+    final sx = maxPan * neighborhoodPanFraction(panel, cameraX);
+    _sprite(canvas, art, const Rect.fromLTWH(0, 0, viewW, 380),
+      pixelated:false, source:Rect.fromLTWH(sx, 0, sw, sh));
+  }
+
+  // This join is bounded to 96 WORLD pixels across a border, rather than
+  // dissolving a whole image for several seconds while Miren walks. Painting
+  // is limited to the strip and follows camera coordinates; no one-off
+  // landmark can appear in two separate world regions.
+  void _neighborhoodJoin(Canvas canvas,
+      NeighborhoodBackdropPanel left, NeighborhoodBackdropPanel right) {
+    final seamX = left.end - cameraX;
+    const half = neighborhoodSeamHalfWidth;
+    if (seamX + half <= 0 || seamX - half >= viewW) return;
+    final area = Rect.fromLTWH(seamX-half, 0, half*2, 380);
     canvas.save();
-    canvas.clipRect(const Rect.fromLTWH(0, 0, viewW, 380));
-    _sprite(canvas, art,
-        Rect.fromLTWH(screenLeft, 0, panel.width, 380),
-        pixelated: false,
-        source: Rect.fromLTWH(0, sourceTop, sourceWidth, sourceHeight));
+    canvas.clipRect(area);
+    _neighborhoodVista(canvas, left);
+    // A short horizontal alpha MASK on the incoming SCENE; it does not fade
+    // either landscape as a function of time or alter the original images.
+    canvas.saveLayer(area, Paint());
+    _neighborhoodVista(canvas, right);
+    canvas.drawRect(area, Paint()
+      ..blendMode = BlendMode.dstIn
+      ..shader = ui.Gradient.linear(
+        Offset(seamX-half, 0), Offset(seamX+half, 0),
+        [Colors.transparent, Colors.white]));
+    canvas.restore();
     canvas.restore();
   }
 
@@ -1292,54 +1316,53 @@ class StagePainter extends CustomPainter {
     Rect.fromLTRB(741, 544, 1428, 1067),
   ];
 
+  // Illustration masters already include detailed autumn trees. Extra atlas
+  // vegetation is only warranted in a connector and NEVER in front of a
+  // protected curved facade, canopy or rocket. This avoids foliage doubling.
   void _neighborhoodTrees(Canvas canvas,{bool foreground=false}) {
-    final atlas=images['neighborhood_trees_v091'];
-    if(atlas==null)return;
-    // Objects with physical roots have camera factor 1.0. Small distant
-    // vegetation, with no collision, may use mild parallax.
-    final factor=foreground ? 1.0 : .78;
-    final offset=cameraX*factor;
-    final spacing=foreground ? 1370.0 : 460.0;
-    final first=(offset/spacing).floor()-2;
-    for(int n=first;n<first+8;n++) {
-      if(n<0)continue;
-      if(foreground && n%3==1)continue;
-      final seed=((n+11)*73856093 ^ (n+53)*19349663)&0x7fffffff;
-      final worldX=265+n*spacing+(seed%89)-44;
-      final x=worldX-offset;
-      if(x< -240 || x>viewW+240)continue;
-      final source = _treeSourceBounds[(seed~/23)%4];
-      final height=foreground ? 190.0+(seed%23) : 90.0+(seed%31);
-      final width=source.width*height/source.height;
-      final floor=foreground ? groundY+2 : groundY-11;
-      _sprite(canvas,atlas,Rect.fromLTWH(x-width/2,floor-height,width,height),source:source);
+    if (foreground) return; // In RC1 these occluded the playable route.
+    if (neighborhoodLandmarkInCamera(cameraX, viewW)) return;
+    final atlas = images['neighborhood_trees_v091'];
+    if (atlas == null) return;
+    const spacing = 2350.0;
+    final first = (cameraX / spacing).floor() - 1;
+    for (int n = first; n < first + 4; n++) {
+      if (n < 0) continue;
+      final worldX = 1200.0 + n * spacing;
+      if (!neighborhoodTreeAllowedAt(worldX)) continue;
+      final x = worldX - cameraX;
+      if (x < -130 || x > viewW + 130) continue;
+      final source = _treeSourceBounds[n % _treeSourceBounds.length];
+      const height = 78.0;
+      final width = source.width * height / source.height;
+      // Small decoration embedded in the mid-depth; never overlaps Sara.
+      _sprite(canvas, atlas,
+        Rect.fromLTWH(x - width/2, 375 - height, width, height),
+        source: source);
     }
   }
 
   void _neighborhoodBackground(Canvas canvas) {
+    // Solid sky behind the scene for safe viewport edges even during joins.
+    canvas.drawRect(const Rect.fromLTWH(0, 0, viewW, 380),
+      Paint()..color=const Color(0xff4da9ed));
     for (final panel in neighborhoodBackdropPanels) {
-      if (panel.overlaps(cameraX, cameraX + viewW)) {
-        _neighborhoodBackdropPanel(canvas, panel);
-      }
+      final worldLeft=panel.start-cameraX;
+      final worldRight=panel.end-cameraX;
+      if (worldRight<=0 || worldLeft>=viewW) continue;
+      canvas.save();
+      canvas.clipRect(Rect.fromLTRB(
+        math.max(0.0, worldLeft), 0,
+        math.min(viewW, worldRight), 380));
+      _neighborhoodVista(canvas, panel);
+      canvas.restore();
     }
-    _neighborhoodTrees(canvas);
-    // A planted screen of foliage hides the small discontinuities where an
-    // illustrated landscape meets a connector. This is PHYSICAL world-space
-    // foliage, not a fade turning one building into another.
-    final atlas = images['neighborhood_trees_v091'];
-    if (atlas != null) {
-      for (final panel in neighborhoodBackdropPanels.skip(1)) {
-        final x = panel.start - cameraX;
-        if (x < -200 || x > viewW + 200) continue;
-        final seed = panel.start.toInt() ~/ 900;
-        final src = _treeSourceBounds[seed % _treeSourceBounds.length];
-        final height = 185.0 + (seed % 4) * 16;
-        final width = src.width * height / src.height;
-        _sprite(canvas, atlas,
-            Rect.fromLTWH(x - width / 2, groundY - height, width, height),
-            source: src);
-      }
+    // Only six unique spatial joins, never dozens of random hard cuts.
+    for (var i=0;i<neighborhoodBackdropPanels.length-1;i++) {
+      _neighborhoodJoin(canvas,neighborhoodBackdropPanels[i],
+          neighborhoodBackdropPanels[i+1]);
     }
+    _neighborhoodTrees(canvas); // connector-only, never hide landmarks
   }
 
   // The outdoors and indoors require DIFFERENT camera crops and occlusion:

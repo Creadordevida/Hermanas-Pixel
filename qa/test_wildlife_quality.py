@@ -78,8 +78,8 @@ class WildlifeQuality(unittest.TestCase):
             self.assertGreater(len(xs), 8, frame)
             self.assertLess(abs(int(np.median(xs)) - expected_x[frame]), 14, frame)
             self.assertLess(abs(int(np.median(ys)) - expected_y[frame]), 14, frame)
-        self.assertIn('pigeonAtlasWorldCell = 136;', BOUNDS)
-        self.assertLess(136, 170, 'Las palomas no pueden ser gigantes')
+        self.assertIn('pigeonAtlasWorldCell = 108;', BOUNDS)
+        self.assertLess(108, 120, 'Las palomas no pueden ser gigantes')
         self.assertIn('pigeonFlightFootX[frame]*flightScale', CODE)
         self.assertIn('pigeonFlightFootY[frame]*flightScale', CODE)
 

@@ -38,7 +38,7 @@ const neighborhoodSceneRegions = <NeighborhoodSceneRegion>[
   NeighborhoodSceneRegion(
     id: 'parque_cubierto', asset: 'white_canopy', start: 18400, end: 25400),
   NeighborhoodSceneRegion(
-    id: 'enlace_cubierta_cohete', asset: 'connector_neutral_park_v091',
+    id: 'enlace_cubierta_cohete', asset: 'connector_pergola_v091',
     start: 25400, end: 27600, connector: true),
   NeighborhoodSceneRegion(
     id: 'parque_cohete', asset: 'rocket_park', start: 27600, end: 36500),
@@ -76,9 +76,11 @@ bool neighborhoodRegionsAreContinuous(double stageWidth) {
   return true;
 }
 
-/// A backdrop panel belongs to one physical interval of the level.
-/// Its screen x-position follows the camera at factor 1.0, unlike the RC8
-/// panoramas which barely moved while the player walked thousands of units.
+/// A scene panorama covers its entire authored REGION, not 920 units followed
+/// by dozens of repetitions of the same two gardens. It is a DISTANT layer:
+/// its source image pans slowly while ground/obstacles move at world speed.
+/// No artwork is stretched, mirrored or wrapped. The four landmarks have one
+/// region each and consequently remain clearly visible during traversal.
 class NeighborhoodBackdropPanel {
   const NeighborhoodBackdropPanel(this.asset, this.start, this.end,
       {this.landmark = false});
@@ -89,62 +91,102 @@ class NeighborhoodBackdropPanel {
   bool overlaps(double left, double right) => end > left && start < right;
 }
 
-/// Unique original illustrated landmarks each appear ONCE in the physical
-/// world. Only generic landscaping is used to build the long links. Panel
-/// order is deterministic and must not move when a test/frame changes.
-List<NeighborhoodBackdropPanel> buildNeighborhoodBackdropPanels() {
-  const unique = <NeighborhoodBackdropPanel>[
-    NeighborhoodBackdropPanel('residential_curve', 0, 980, landmark: true),
-    NeighborhoodBackdropPanel('connector_pergola_v091', 5150, 6650),
-    NeighborhoodBackdropPanel('green_promenade', 9500, 10480, landmark: true),
-    NeighborhoodBackdropPanel('white_canopy', 18800, 19780, landmark: true),
-    NeighborhoodBackdropPanel('rocket_park', 28700, 29680, landmark: true),
-  ];
-  final result = <NeighborhoodBackdropPanel>[];
-  var cursor = 0.0;
-  var variant = 0;
-  for (final landmark in unique) {
-    while (cursor < landmark.start) {
-      final next = (cursor + 1450.0).clamp(cursor, landmark.start).toDouble();
-      result.add(NeighborhoodBackdropPanel(
-          variant.isEven ? 'connector_residential_greenway_v091'
-                         : 'connector_neutral_park_v091', cursor, next));
-      cursor = next;
-      variant++;
-    }
-    result.add(landmark);
-    cursor = landmark.end;
-  }
-  while (cursor < 36500) {
-    final next = (cursor + 1450.0).clamp(cursor, 36500.0).toDouble();
-    result.add(NeighborhoodBackdropPanel(
-        variant.isEven ? 'connector_neutral_park_v091'
-                       : 'connector_residential_greenway_v091', cursor, next));
-    cursor = next;
-    variant++;
-  }
-  return List.unmodifiable(result);
-}
+/// One *different* scene per region, including three DIFFERENT connectors.
+/// Pergola art, formerly wasted on one tiny panel, becomes the third corridor.
+List<NeighborhoodBackdropPanel> buildNeighborhoodBackdropPanels() =>
+  List<NeighborhoodBackdropPanel>.unmodifiable([
+    for (final region in neighborhoodSceneRegions)
+      NeighborhoodBackdropPanel(region.asset, region.start, region.end,
+        landmark: !region.connector),
+  ]);
 
 final List<NeighborhoodBackdropPanel> neighborhoodBackdropPanels =
     buildNeighborhoodBackdropPanels();
 
 bool neighborhoodBackdropPanelsValid() {
-  if (neighborhoodBackdropPanels.isEmpty ||
+  if (neighborhoodBackdropPanels.length != 7 ||
       neighborhoodBackdropPanels.first.start != 0 ||
       neighborhoodBackdropPanels.last.end != 36500) return false;
-  for (var n = 0; n < neighborhoodBackdropPanels.length; n++) {
-    final p = neighborhoodBackdropPanels[n];
-    if (p.width <= 0) return false;
-    if (n > 0 && neighborhoodBackdropPanels[n - 1].end != p.start) {
+  for (var i = 0; i < neighborhoodBackdropPanels.length; i++) {
+    final p = neighborhoodBackdropPanels[i];
+    if (p.width <= 0 ||
+        (i > 0 && neighborhoodBackdropPanels[i-1].end != p.start)) {
       return false;
     }
+    if (neighborhoodBackdropPanels.where((q) => q.asset == p.asset).length != 1) {
+      return false; // no repeated photo, no repeating neutral garden
+    }
   }
-  for (final asset in [
-    'residential_curve', 'green_promenade', 'white_canopy', 'rocket_park'
-  ]) {
-    if (neighborhoodBackdropPanels.where(
-        (p) => p.asset == asset && p.landmark).length != 1) return false;
+  return neighborhoodBackdropPanels.where((p) => p.landmark).length == 4;
+}
+
+/// The soft seam is a narrow SPATIAL join around a physical boundary, NOT a
+/// time-based screen-wide dissolution. Never use a tree to conceal the seam.
+const double neighborhoodSeamHalfWidth = 48.0;
+
+/// A panoramic backdrop has different source and destination widths, but its
+/// X and Y scales are IDENTICAL. Use the viewport width for a source window;
+/// NEVER squeeze a 7,000-unit authored region into an 800px drawing.
+double neighborhoodViewSourceWidth(String asset,
+    {double visibleWidth = 800.0, double displayHeight = 380.0}) =>
+  visibleWidth * neighborhoodSourceHeight(asset) / displayHeight;
+
+double neighborhoodPanFraction(NeighborhoodBackdropPanel panel, double cameraX,
+    {double visibleWidth = 800.0}) {
+  final usable = (panel.width - visibleWidth);
+  if (usable <= 0) return 0;
+  return ((cameraX - panel.start) / usable).clamp(0.0, 1.0).toDouble();
+}
+
+/// The approved landmarks must be recognisable. Additional tree art cannot
+/// cover them, including the moments when a landmark enters/leaves the view.
+/// Trees drawn into the ORIGINAL illustrations are not altered by this rule.
+const double neighborhoodLandmarkGuard = 330.0;
+
+bool neighborhoodTreeAllowedAt(double worldX) {
+  for (final panel in neighborhoodBackdropPanels) {
+    if (!panel.landmark) continue;
+    if (worldX >= panel.start - neighborhoodLandmarkGuard &&
+        worldX <= panel.end + neighborhoodLandmarkGuard) return false;
   }
   return true;
+}
+
+/// Stronger guarantee: no overlay from a separate tree atlas is placed over a
+/// landmark in the viewport even during the arrival/exit frames.
+bool neighborhoodLandmarkInCamera(double cameraX, double visibleWidth) {
+  final right = cameraX + visibleWidth;
+  return neighborhoodBackdropPanels.any((panel) => panel.landmark &&
+    panel.end + neighborhoodLandmarkGuard > cameraX &&
+    panel.start - neighborhoodLandmarkGuard < right);
+}
+
+/// Artwork already contains its own pavement and retaining wall. The renderer
+/// may ONLY sample the scenic area above the first painted sidewalk. Those
+/// original pixels stay in the protected artwork file, but may not be shown
+/// simultaneously with the actual physical ground tile.
+/// Source scanline that is demonstrably ABOVE each illustration's painted
+/// pavement. Every panel (including a short panel at a seam) samples at this
+/// same vertical scale and horizontally crops, NEVER stretches its artwork.
+const neighborhoodSafeSceneHeight = <String, double>{
+  'residential_curve': 690.0,
+  'green_promenade': 690.0,
+  'white_canopy': 690.0,
+  'rocket_park': 690.0,
+  'connector_residential_greenway_v091': 530.0,
+  'connector_neutral_park_v091': 530.0,
+  'connector_pergola_v091': 490.0,
+};
+
+double neighborhoodSourceHeight(String asset) {
+  final value = neighborhoodSafeSceneHeight[asset];
+  if (value == null) throw StateError('Unknown neighborhood scene: $asset');
+  return value;
+}
+
+bool neighborhoodCropFits(String asset, double sourceWidth,
+    double visibleWidth, {double displayHeight = 380.0}) {
+  final cropWidth = neighborhoodViewSourceWidth(asset,
+      visibleWidth: visibleWidth, displayHeight: displayHeight);
+  return cropWidth > 0 && cropWidth <= sourceWidth + 0.1;
 }

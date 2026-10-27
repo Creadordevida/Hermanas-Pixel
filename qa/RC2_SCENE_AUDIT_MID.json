@@ -1,0 +1,231 @@
+{
+  "method": "static edge comparison, not actual Flutter screen capture",
+  "landmark_original_hashes": {
+    "residential_curve": "8486df5a23d069e659014d8cfc35aef70a6b39eb20e67d56e1183ca2c0b61699",
+    "green_promenade": "56dc3f61a5f948685d863cf9e1484f70ba552b0f9750f127bc07e93d017d043f",
+    "white_canopy": "7bef4349c693fda57ee571b2ff5aef6bbfbe510e668bf84a217bcb00901c0494",
+    "rocket_park": "a4d0cdfe9d72d3bf5be76b9cc5eb139ef6a6ffe3ba048bec9688bb93aaff788e"
+  },
+  "panel_count": 28,
+  "unique_artwork_count": 7,
+  "filler_asset_usage": {
+    "connector_residential_greenway_v091": 11,
+    "connector_neutral_park_v091": 12,
+    "connector_pergola_v091": 1
+  },
+  "seams": [
+    {
+      "world_x": 920,
+      "from": "residential_curve",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 97.0
+    },
+    {
+      "world_x": 2370,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 93.9
+    },
+    {
+      "world_x": 3820,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 107.9
+    },
+    {
+      "world_x": 5150,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_pergola_v091",
+      "rgb_mean_absolute_error": 74.5
+    },
+    {
+      "world_x": 6810,
+      "from": "connector_pergola_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 90.6
+    },
+    {
+      "world_x": 8260,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 102.7
+    },
+    {
+      "world_x": 9500,
+      "from": "connector_residential_greenway_v091",
+      "to": "green_promenade",
+      "rgb_mean_absolute_error": 70.5
+    },
+    {
+      "world_x": 10420,
+      "from": "green_promenade",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 50.1
+    },
+    {
+      "world_x": 11870,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 13320,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 93.9
+    },
+    {
+      "world_x": 14770,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 16220,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 93.9
+    },
+    {
+      "world_x": 17670,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 95.8
+    },
+    {
+      "world_x": 18800,
+      "from": "connector_residential_greenway_v091",
+      "to": "white_canopy",
+      "rgb_mean_absolute_error": 64.7
+    },
+    {
+      "world_x": 19720,
+      "from": "white_canopy",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 56.5
+    },
+    {
+      "world_x": 21170,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 22620,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 93.9
+    },
+    {
+      "world_x": 24070,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 25520,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 93.9
+    },
+    {
+      "world_x": 26970,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 28420,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 105.1
+    },
+    {
+      "world_x": 28700,
+      "from": "connector_neutral_park_v091",
+      "to": "rocket_park",
+      "rgb_mean_absolute_error": 44.6
+    },
+    {
+      "world_x": 29620,
+      "from": "rocket_park",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 89.8
+    },
+    {
+      "world_x": 31070,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 32520,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 93.9
+    },
+    {
+      "world_x": 33970,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 35420,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 99.5
+    }
+  ],
+  "worst_edges": [
+    {
+      "world_x": 3820,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 107.9
+    },
+    {
+      "world_x": 28420,
+      "from": "connector_residential_greenway_v091",
+      "to": "connector_neutral_park_v091",
+      "rgb_mean_absolute_error": 105.1
+    },
+    {
+      "world_x": 11870,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 14770,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 21170,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 24070,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 26970,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    },
+    {
+      "world_x": 31070,
+      "from": "connector_neutral_park_v091",
+      "to": "connector_residential_greenway_v091",
+      "rgb_mean_absolute_error": 103.2
+    }
+  ],
+  "acceptance": "NOT APPROVED: major panel seams and repeated fillers require phase 2 art/layout work"
+}

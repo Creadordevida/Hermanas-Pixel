@@ -1,0 +1,34 @@
+{
+  "project": "Las aventuras de Miren y Sara / Hermanas Pixel",
+  "next_version": "0.9.1 RC2",
+  "status": "COMPLETE_AS_GITHUB_TEST_CANDIDATE",
+  "base": "0.9.1 RC1",
+  "validated": {
+    "python_tests": 119,
+    "resource_refs_valid": 137,
+    "resource_refs_total": 137,
+    "flutter": "NOT_EXECUTED",
+    "android": "NOT_BUILT",
+    "artistic_joins": "PENDING"
+  },
+  "done": [
+    "world anchored four original scenes protected",
+    "no additional foreground trees over landmarks",
+    "source crop avoids duplicated painted pavement",
+    "non-distorting crop of short panels",
+    "seam and repetition audit",
+    "initial automatic regression tests"
+  ],
+  "outstanding": [
+    "Compile/analyze/run Flutter via GitHub Actions",
+    "Review 6 transition clips in actual gameplay",
+    "Inspect movement/scale on Android",
+    "Approve art or produce followup if seams still look artificial"
+  ],
+  "originals_unchanged": [
+    "residential_curve.png",
+    "green_promenade.png",
+    "white_canopy.png",
+    "rocket_park.png"
+  ]
+}

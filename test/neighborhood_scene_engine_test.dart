@@ -12,18 +12,19 @@ void main() {
 
   test('all backdrop panels are world-locked and unique landmarks do not repeat', () {
     expect(neighborhoodBackdropPanelsValid(), isTrue);
-    expect(neighborhoodBackdropPanels.length, greaterThan(16));
+    expect(neighborhoodBackdropPanels.length, 7);
     for (final landmark in <String>[
       'residential_curve', 'green_promenade', 'white_canopy', 'rocket_park',
     ]) {
       expect(neighborhoodBackdropPanels.where(
           (p) => p.asset == landmark && p.landmark).length, 1);
     }
-    final first = neighborhoodBackdropPanels.first;
-    expect(first.start - 450, (first.start - 300) - 150);
-    // A one-pixel camera movement moves a near-world panel by one pixel.
-    final panel = neighborhoodBackdropPanels[2];
-    expect((panel.start - 127) - (panel.start - 126), -1);
+    final allAssets=neighborhoodBackdropPanels.map((p) => p.asset).toSet();
+    expect(allAssets.length, 7);
+    expect(neighborhoodPanFraction(neighborhoodBackdropPanels[0], 0), 0);
+    expect(neighborhoodPanFraction(neighborhoodBackdropPanels[0], 7000), 1);
+    expect(neighborhoodPanFraction(neighborhoodBackdropPanels[0], 3500),
+        inInclusiveRange(0.4,0.6));
   });
 
   test('seams reveal two different sections of the world, never a fade', () {

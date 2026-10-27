@@ -71,12 +71,12 @@ class NeighborhoodChapterOneQA(unittest.TestCase):
             self.assertIsNotNone(alpha.getbbox())
             self.assertLessEqual(alpha.getpixel((image.width // 2, image.height // 4)), 4)
 
-    def test_scenic_images_reveal_at_world_boundaries_without_crossfade(self):
-        area = MAIN.split('void _neighborhoodBackdropPanel(', 1)[1].split('void _activityBackdrop(', 1)[0]
-        self.assertIn('panel.start - cameraX', area)
-        self.assertIn('panel.end - cameraX', area)
-        self.assertIn('panel.overlaps(cameraX, cameraX + viewW)', area)
-        self.assertIn('canvas.clipRect(', area)
+    def test_vistas_do_not_repeat_or_fullscreen_dissolve(self):
+        area = MAIN.split('void _neighborhoodVista(', 1)[1].split(
+            'void _activityBackdrop(', 1)[0]
+        self.assertIn('neighborhoodPanFraction(panel, cameraX)', area)
+        self.assertIn('neighborhoodViewSourceWidth(panel.asset)', area)
+        self.assertIn('canvas.clipRect(area)', area)
         self.assertNotIn('sourceX=maxX*progress', area)
         self.assertNotIn('withValues(alpha:fade)', area)
         self.assertNotIn('canvas.scale(-1,1)', area)
@@ -84,8 +84,10 @@ class NeighborhoodChapterOneQA(unittest.TestCase):
 
     def test_props_and_physics_use_world_coordinates(self):
         self.assertIn('worldX-cameraX', MAIN)
-        self.assertIn('final floor=foreground ? groundY+2 : groundY-11', MAIN)
-        self.assertIn('floor-height', MAIN)
+        self.assertIn('if (foreground) return', MAIN)
+        self.assertIn('neighborhoodTreeAllowedAt(worldX)', MAIN)
+        self.assertIn('neighborhoodLandmarkInCamera(cameraX, viewW)', MAIN)
+        self.assertIn('375 - height', MAIN)
         self.assertIn('_layoutNeighborhood()', MAIN)
         self.assertIn('Obstacle(x,groundY-h', MAIN)
         self.assertIn('Rect.fromLTWH(x,top,132,15)', MAIN)
@@ -97,7 +99,7 @@ class NeighborhoodChapterOneQA(unittest.TestCase):
         for name in ('barrio_residencial', 'barrio_paseo',
                      'barrio_cubierta', 'barrio_cohete'):
             self.assertIn(name, code)
-        for seam in (1, 2, 3):
+        for seam in (1, 2, 3, 4, 5, 6):
             for side in ('antes', 'despues'):
                 self.assertIn(f'barrio_union_{seam}_{side}', code)
         workflow = (ROOT / '.github/workflows/build.yml').read_text()

@@ -19,7 +19,7 @@ const Map<String, Rect> dogVisibleBounds = {
 const double pigeonAtlasCell = 443.5;
 const int pigeonAtlasColumns = 4;
 const int pigeonAtlasFrames = 8;
-const double pigeonAtlasWorldCell = 136;
+const double pigeonAtlasWorldCell = 108;
 // Measured pink-foot pivots inside each atlas cell (in source pixels).
 // Without these per-pose anchors the bird teleports when its wings change.
 const List<double> pigeonFlightFootX = [209, 277, 270, 237, 239, 250, 276, 266];

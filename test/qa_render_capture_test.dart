@@ -145,14 +145,20 @@ void main() {
       (title: 'barrio_paseo_avance',stage:0,map:false,worldX:10350),
       (title: 'barrio_cubierta',stage:0,map:false,worldX:19200),
       (title: 'barrio_cohete',stage:0,map:false,worldX:29150),
-      (title: 'barrio_union_1_antes',stage:0,map:false,worldX:910),
-      (title: 'barrio_union_1_despues',stage:0,map:false,worldX:1050),
-      (title: 'barrio_union_2_antes',stage:0,map:false,worldX:9460),
-      (title: 'barrio_union_2_despues',stage:0,map:false,worldX:9540),
-      (title: 'barrio_union_3_antes',stage:0,map:false,worldX:18760),
-      (title: 'barrio_union_3_despues',stage:0,map:false,worldX:18840),
-      (title: 'barrio_union_4_antes',stage:0,map:false,worldX:28660),
-      (title: 'barrio_union_4_despues',stage:0,map:false,worldX:28740),
+      // All six REAL borders, plus viewpoints on each side. Keep explicit
+      // literal names so the QA manifest and visual review are auditable.
+      (title:'barrio_union_1_antes',stage:0,map:false,worldX:7040),
+      (title:'barrio_union_1_despues',stage:0,map:false,worldX:7360),
+      (title:'barrio_union_2_antes',stage:0,map:false,worldX:9040),
+      (title:'barrio_union_2_despues',stage:0,map:false,worldX:9360),
+      (title:'barrio_union_3_antes',stage:0,map:false,worldX:16040),
+      (title:'barrio_union_3_despues',stage:0,map:false,worldX:16360),
+      (title:'barrio_union_4_antes',stage:0,map:false,worldX:18240),
+      (title:'barrio_union_4_despues',stage:0,map:false,worldX:18560),
+      (title:'barrio_union_5_antes',stage:0,map:false,worldX:25240),
+      (title:'barrio_union_5_despues',stage:0,map:false,worldX:25560),
+      (title:'barrio_union_6_antes',stage:0,map:false,worldX:27440),
+      (title:'barrio_union_6_despues',stage:0,map:false,worldX:27760),
       // Two further SNES-visual benchmarks, each with THREE REAL unique
       // environments and both sides of their two camera transitions.
       for (final chapter in [4,5]) ...[

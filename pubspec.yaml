@@ -1,7 +1,7 @@
 name: hermanas_aventura
 description: Las aventuras de Miren y Sara - 0.9.1 candidata de pruebas, barrio, fauna, saltos, fútbol y danza
 publish_to: none
-version: 0.9.1-rc.1+31
+version: 0.9.1-rc.2+32
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:

@@ -62,10 +62,12 @@ class Rc091Regression(unittest.TestCase):
     def test_world_panels_move_with_camera_and_tree_crops_keep_roots(self):
         code=(ROOT/'lib/main.dart').read_text()
         engine=(ROOT/'lib/neighborhood_scene_engine.dart').read_text()
-        self.assertIn('panel.start - cameraX',code)
-        self.assertIn('panel.end - cameraX',code)
-        self.assertIn('sourceHeight * panel.width / 380',code)
-        self.assertIn('source: src',code)
+        self.assertIn('panel.start-cameraX',code)
+        self.assertIn('panel.end-cameraX',code)
+        self.assertIn('neighborhoodViewSourceWidth(panel.asset)',code)
+        self.assertIn('Rect.fromLTWH(sx, 0, sw, sh)',code)
+        self.assertIn('neighborhoodCropFits(',code)
+        self.assertIn('source: source',code)
         self.assertIn('neighborhoodBackdropPanelsValid()',engine)
         self.assertNotIn('sourceX=maxX*progress',code)
 
@@ -78,7 +80,7 @@ class Rc091Regression(unittest.TestCase):
         self.assertIn('timeout-minutes: 18',doc)
         self.assertNotIn('continue-on-error: true',doc)
         pubspec=(ROOT/'pubspec.yaml').read_text()
-        self.assertIn('version: 0.9.1-rc.1+31',pubspec)
+        self.assertIn('version: 0.9.1-rc.2+32',pubspec)
         self.assertIn('shared_preferences: 2.3.2',pubspec)
 
 if __name__ == '__main__':unittest.main()

@@ -103,16 +103,15 @@ class NeighborhoodEngineQA(unittest.TestCase):
             if asset in LANDMARKS:
                 self.assertNotIn(digest, content_hashes.values())
             content_hashes[asset] = digest
-        self.assertEqual(6, len(content_hashes))
+        self.assertEqual(7, len(content_hashes))
 
-    def test_world_boundary_reveal_has_no_whole_image_crossfade(self):
-        segment = MAIN.split("void _neighborhoodBackdropPanel(", 1)[1]
-        segment = segment.split("void _activityBackdrop(", 1)[0]
-        self.assertIn('panel.start - cameraX', segment)
-        self.assertIn('panel.end - cameraX', segment)
-        self.assertIn('panel.overlaps(cameraX, cameraX + viewW)', segment)
-        self.assertIn('panel.width, 380', segment)
-        self.assertNotIn('sceneAlpha', segment)
+    def test_world_boundary_is_localised_without_opaque_jump(self):
+        segment = MAIN.split("void _neighborhoodJoin(", 1)[1].split(
+            'void _neighborhoodBackground(', 1)[0]
+        self.assertIn('BlendMode.dstIn', segment)
+        self.assertIn('neighborhoodSeamHalfWidth', segment)
+        self.assertIn('canvas.clipRect(area)', segment)
+        self.assertIn('ui.Gradient.linear',segment)
         self.assertNotIn('withValues(alpha:fade)', segment)
         self.assertNotIn('canvas.scale(-1,1)', segment)
 
