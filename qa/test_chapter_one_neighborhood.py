@@ -60,30 +60,32 @@ class NeighborhoodChapterOneQA(unittest.TestCase):
             hashes.append(hashlib.sha256(path.read_bytes()).hexdigest())
         self.assertEqual(4, len(set(hashes)))
 
-    def test_transparent_pixel_prop_atlas_is_not_a_fake_backdrop(self):
-        with Image.open(SCENES / 'park_props_atlas.png') as image:
+    def test_separated_tree_atlas_is_not_a_fake_backdrop(self):
+        # El atlas antiguo se conserva como referencia histórica, pero NO se
+        # debe seguir usando: sus objetos invadían las celdas adyacentes.
+        with Image.open(SCENES / 'trees_separated_v091.png') as image:
             self.assertEqual(image.mode, 'RGBA')
-            self.assertEqual(image.width % 4, 0)
-            self.assertEqual(image.height % 3, 0)
+            self.assertEqual(image.width % 2, 0)
+            self.assertEqual(image.height % 2, 0)
             alpha = image.getchannel('A')
             self.assertIsNotNone(alpha.getbbox())
-            self.assertEqual(alpha.getpixel((image.width // 2, image.height // 3)), 0)
+            self.assertLessEqual(alpha.getpixel((image.width // 2, image.height // 4)), 4)
 
-    def test_scenic_images_only_scroll_locally_without_repeat_or_mirror(self):
-        area = MAIN.split('void _neighborhoodBackdrop(', 1)[1].split('void _background(', 1)[0]
-        self.assertIn('cameraX-zone.start', area)
-        self.assertIn('zone.length-viewW', area)
-        self.assertIn('sourceX=maxX*fraction', area)
-        self.assertIn('neighborhoodZoneIndex(center)', area)
-        self.assertIn('transitionWidth=850.0', area)
+    def test_scenic_images_reveal_at_world_boundaries_without_crossfade(self):
+        area = MAIN.split('void _neighborhoodBackdropPanel(', 1)[1].split('void _activityBackdrop(', 1)[0]
+        self.assertIn('panel.start - cameraX', area)
+        self.assertIn('panel.end - cameraX', area)
+        self.assertIn('panel.overlaps(cameraX, cameraX + viewW)', area)
+        self.assertIn('canvas.clipRect(', area)
+        self.assertNotIn('sourceX=maxX*progress', area)
+        self.assertNotIn('withValues(alpha:fade)', area)
         self.assertNotIn('canvas.scale(-1,1)', area)
-        self.assertNotIn('n*tileW', area)
-        self.assertNotIn('while(true)', area)
-        self.assertIn("if(stage == 0) {\n      _neighborhoodBackground(canvas);", MAIN)
+        self.assertIn('if(stage == 0) {\n      _neighborhoodBackground(canvas);', MAIN)
 
     def test_props_and_physics_use_world_coordinates(self):
         self.assertIn('worldX-cameraX', MAIN)
-        self.assertIn('groundY-height', MAIN)
+        self.assertIn('final floor=foreground ? groundY+2 : groundY-11', MAIN)
+        self.assertIn('floor-height', MAIN)
         self.assertIn('_layoutNeighborhood()', MAIN)
         self.assertIn('Obstacle(x,groundY-h', MAIN)
         self.assertIn('Rect.fromLTWH(x,top,132,15)', MAIN)

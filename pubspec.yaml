@@ -1,13 +1,13 @@
 name: hermanas_aventura
-description: Las aventuras de Miren y Sara - RC8 candidata de pruebas, barrio, fauna, saltos, fútbol y danza
+description: Las aventuras de Miren y Sara - 0.9.1 candidata de pruebas, barrio, fauna, saltos, fútbol y danza
 publish_to: none
-version: 0.9.0-rc.8+30
+version: 0.9.1-rc.1+31
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.3.2
+  shared_preferences: 2.3.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -15,6 +15,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/title_approved.png
+    - assets/images/title_cars_fixed_091.png
+    - assets/images/twc_corporate_verified_091.png
     - assets/images/brand_logo_twc.png
     - assets/images/level_pixel.png
     - assets/images/level_ayuntamiento.png

@@ -137,24 +137,22 @@ void main() {
       (title: 'mapa_090', stage: null, map: true, worldX: null),
       for (var i = 0; i < 7; i++)
         (title: 'capitulo_${i + 1}_inicio', stage: i, map: false, worldX: 200),
-      for (var i = 0; i < 7; i++)
-        (title: 'capitulo_${i + 1}_union', stage: i, map: false, worldX: 1380),
-      for (var i = 0; i < 7; i++)
-        (title: 'capitulo_${i + 1}_mitad', stage: i, map: false, worldX: 18300),
-      for (var i = 0; i < 7; i++)
-        (title: 'capitulo_${i + 1}_final', stage: i, map: false, worldX: 35650),
-      // El capítulo 1 contiene edificios únicos y tres uniones verificables:
-      // se capturan a ambos lados de cada una, no solo el primer fotograma.
-      (title: 'barrio_residencial',stage:0,map:false,worldX:4200),
-      (title: 'barrio_paseo',stage:0,map:false,worldX:12500),
-      (title: 'barrio_cubierta',stage:0,map:false,worldX:21400),
-      (title: 'barrio_cohete',stage:0,map:false,worldX:30100),
-      (title: 'barrio_union_1_antes',stage:0,map:false,worldX:8260),
-      (title: 'barrio_union_1_despues',stage:0,map:false,worldX:8380),
-      (title: 'barrio_union_2_antes',stage:0,map:false,worldX:17260),
-      (title: 'barrio_union_2_despues',stage:0,map:false,worldX:17380),
-      (title: 'barrio_union_3_antes',stage:0,map:false,worldX:26360),
-      (title: 'barrio_union_3_despues',stage:0,map:false,worldX:26480),
+      // El capítulo 1 ahora contiene regiones explícitas: se capturan ambos
+      // lados de las uniones de obra y los comienzos de las conexiones.
+      (title: 'barrio_residencial',stage:0,map:false,worldX:250),
+      (title: 'barrio_residencial_avance',stage:0,map:false,worldX:600),
+      (title: 'barrio_paseo',stage:0,map:false,worldX:9970),
+      (title: 'barrio_paseo_avance',stage:0,map:false,worldX:10350),
+      (title: 'barrio_cubierta',stage:0,map:false,worldX:19200),
+      (title: 'barrio_cohete',stage:0,map:false,worldX:29150),
+      (title: 'barrio_union_1_antes',stage:0,map:false,worldX:910),
+      (title: 'barrio_union_1_despues',stage:0,map:false,worldX:1050),
+      (title: 'barrio_union_2_antes',stage:0,map:false,worldX:9460),
+      (title: 'barrio_union_2_despues',stage:0,map:false,worldX:9540),
+      (title: 'barrio_union_3_antes',stage:0,map:false,worldX:18760),
+      (title: 'barrio_union_3_despues',stage:0,map:false,worldX:18840),
+      (title: 'barrio_union_4_antes',stage:0,map:false,worldX:28660),
+      (title: 'barrio_union_4_despues',stage:0,map:false,worldX:28740),
       // Two further SNES-visual benchmarks, each with THREE REAL unique
       // environments and both sides of their two camera transitions.
       for (final chapter in [4,5]) ...[

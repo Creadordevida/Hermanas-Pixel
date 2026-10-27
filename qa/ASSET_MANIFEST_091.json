@@ -1,0 +1,850 @@
+{
+  "version": "0.9.1-rc.1+31",
+  "assets": [
+    {
+      "path": "assets/images/ball.png",
+      "sha256": "fbd0c72d6b0467d1dbca66c2e115446c9c5e69d8ddcda3c36eae2a91e4256120",
+      "bytes": 1630
+    },
+    {
+      "path": "assets/images/brand_logo_twc.png",
+      "sha256": "544ec8891581c8c41f6d47b847621236095d09a07b697750aebdbee98c164d61",
+      "bytes": 104706
+    },
+    {
+      "path": "assets/images/chapter1/connector_neutral_park_v091.png",
+      "sha256": "12b2f69c9f18efd57fc380aaa467a7f6ca39e2837ef39fc45ce4bc38a85ba2fd",
+      "bytes": 3327660
+    },
+    {
+      "path": "assets/images/chapter1/connector_pergola_v091.png",
+      "sha256": "da1e90d962930099258a9cb430c8a6fa49ac1add9ee1a7034bedd1da79059078",
+      "bytes": 3248249
+    },
+    {
+      "path": "assets/images/chapter1/connector_residential_greenway_v091.png",
+      "sha256": "0c52680525f7e124655d58a1e369cc6445e7cc26974eb7cc5021ff379c5613f9",
+      "bytes": 3310579
+    },
+    {
+      "path": "assets/images/chapter1/green_promenade.png",
+      "sha256": "56dc3f61a5f948685d863cf9e1484f70ba552b0f9750f127bc07e93d017d043f",
+      "bytes": 3250543
+    },
+    {
+      "path": "assets/images/chapter1/park_props_atlas.png",
+      "sha256": "0b12437762ce3fde44b092c90409a86ab3e64d811fdea6f41cb0c2f70b0be365",
+      "bytes": 1835093
+    },
+    {
+      "path": "assets/images/chapter1/residential_curve.png",
+      "sha256": "8486df5a23d069e659014d8cfc35aef70a6b39eb20e67d56e1183ca2c0b61699",
+      "bytes": 2990659
+    },
+    {
+      "path": "assets/images/chapter1/rocket_park.png",
+      "sha256": "a4d0cdfe9d72d3bf5be76b9cc5eb139ef6a6ffe3ba048bec9688bb93aaff788e",
+      "bytes": 3164113
+    },
+    {
+      "path": "assets/images/chapter1/trees_separated_v091.png",
+      "sha256": "1eb7588d6f2e95e0516b04d62f4498ed69689c54ef981e91512b05daa3c867f1",
+      "bytes": 1475886
+    },
+    {
+      "path": "assets/images/chapter1/white_canopy.png",
+      "sha256": "7bef4349c693fda57ee571b2ff5aef6bbfbe510e668bf84a217bcb00901c0494",
+      "bytes": 2749543
+    },
+    {
+      "path": "assets/images/chapter45/dance_foyer.png",
+      "sha256": "ef674f8d0f809f4713262de5850764ab144413b0e4d4a0e8d398cb1538fccf6f",
+      "bytes": 2009490
+    },
+    {
+      "path": "assets/images/chapter45/dance_props_atlas.png",
+      "sha256": "b196f46a1b0646f9a6ff964d09d5cce34c394eff6195f49da15f1a03f483a10f",
+      "bytes": 1690783
+    },
+    {
+      "path": "assets/images/chapter45/dance_stage.png",
+      "sha256": "5d6870fa25b01d81080fac30e524256ef630d0df1799821d11b4129faa5dabe2",
+      "bytes": 1931272
+    },
+    {
+      "path": "assets/images/chapter45/dance_studio.png",
+      "sha256": "83ca272fc72cb342d4e40a3c0e4aabfd422cafb62c71dea573dd1f3665ea1ae1",
+      "bytes": 2007573
+    },
+    {
+      "path": "assets/images/chapter45/football_arrival.png",
+      "sha256": "cf581eb61a84882ae3957e1ebcdc8a9b9f33cfe910db06acddc540f4d54b078f",
+      "bytes": 2748852
+    },
+    {
+      "path": "assets/images/chapter45/football_drills.png",
+      "sha256": "b01a9fc76802f9a7d6c9ae84d96b4ac8da87b3912a70dbf3da5464fd113d558b",
+      "bytes": 2823535
+    },
+    {
+      "path": "assets/images/chapter45/football_props_atlas.png",
+      "sha256": "e4f36750c1774dbb43c3e5e89ddc625c7c7e18817d13f243cad8163f9b64616c",
+      "bytes": 1603582
+    },
+    {
+      "path": "assets/images/chapter45/football_stands.png",
+      "sha256": "92ef77a5d83d7b6ee10d5c0ed1704a0b1b385932ddcb7e157180bb693a851a03",
+      "bytes": 2754616
+    },
+    {
+      "path": "assets/images/coin.png",
+      "sha256": "873751dd3dcb7365b9b2389dc7410733d105131a6150681b92c70b2f5592bfb2",
+      "bytes": 363
+    },
+    {
+      "path": "assets/images/comb.png",
+      "sha256": "280b33883d609fd1ee48687f7dd5b370ae95f4e3f7ab73c2ade0f1876f74c638",
+      "bytes": 380
+    },
+    {
+      "path": "assets/images/crate.png",
+      "sha256": "65f03b05b605927bb479d3bd7609bc6099a4173269e85d1f90a8341a488b20fe",
+      "bytes": 816
+    },
+    {
+      "path": "assets/images/dog/alert.png",
+      "sha256": "0060f8faf7a162a4d2f3166d7d1a03ec8ba33b9ddd768ca32b8334291b2f2a61",
+      "bytes": 8967
+    },
+    {
+      "path": "assets/images/dog/bite.png",
+      "sha256": "ed408afb9a0ccb6d430f34ffb86957efff3ff66eb42a4f3ef0b131b95120d73e",
+      "bytes": 9123
+    },
+    {
+      "path": "assets/images/dog/dalmatian/alert.png",
+      "sha256": "347ac75761a34522d1bc3a053dfc6e08f38fc67b308d416d842d3686b3a8f5d4",
+      "bytes": 8161
+    },
+    {
+      "path": "assets/images/dog/dalmatian/bite.png",
+      "sha256": "12b8dec03cbad11d27575ddff31a6abf88dc17ee15edee60c84f41cf4688bb96",
+      "bytes": 8280
+    },
+    {
+      "path": "assets/images/dog/dalmatian/defeated.png",
+      "sha256": "482b13aab9c2aad6e49ace0fe088c63c7f8757773f869e65798b375a59306424",
+      "bytes": 7085
+    },
+    {
+      "path": "assets/images/dog/dalmatian/hit.png",
+      "sha256": "72ac37ed5f0ed2b0a82f2e1b12b49f78274dc36af1437b1b551627eeefd9e0f2",
+      "bytes": 6989
+    },
+    {
+      "path": "assets/images/dog/dalmatian/idle.png",
+      "sha256": "ec56f87e0d8af9ef0fc1ddd59d2b2892922658a2b177ea3075a3be72d4f5834d",
+      "bytes": 5878
+    },
+    {
+      "path": "assets/images/dog/dalmatian/run.png",
+      "sha256": "bdc84662a2fe01cbd30f8c4f753f591bf7898bd1adbf1053e86ea879b124f7cb",
+      "bytes": 8066
+    },
+    {
+      "path": "assets/images/dog/dalmatian/stunned.png",
+      "sha256": "72ac37ed5f0ed2b0a82f2e1b12b49f78274dc36af1437b1b551627eeefd9e0f2",
+      "bytes": 6989
+    },
+    {
+      "path": "assets/images/dog/dalmatian/walk.png",
+      "sha256": "46ac5691ed11d4f1b7104e6114fc410ed2cc4487c3a74b12d6f646747b8087ec",
+      "bytes": 7980
+    },
+    {
+      "path": "assets/images/dog/defeated.png",
+      "sha256": "a20f7246f547ca529fa710e2e55c85147fa2c998bb81480b98c8e9bbaefd4f45",
+      "bytes": 7682
+    },
+    {
+      "path": "assets/images/dog/doberman/alert.png",
+      "sha256": "092b60f4edd23e08177ebb9f61ab003ee3e330c89218e9c720d933731b7fe9f9",
+      "bytes": 8242
+    },
+    {
+      "path": "assets/images/dog/doberman/bite.png",
+      "sha256": "e19b5c7cfc062e6a3cbf251de744a1806475c70344f0322fc3d0505164263f7c",
+      "bytes": 8419
+    },
+    {
+      "path": "assets/images/dog/doberman/defeated.png",
+      "sha256": "c966c9f3a56743b164cae0f1c504e34be1757b05ad84987aaf811e6f9868e4f3",
+      "bytes": 7151
+    },
+    {
+      "path": "assets/images/dog/doberman/hit.png",
+      "sha256": "8ed1299aec5a0d98a35209b76bca58a28ef467cdc98c3d7e69620ee90e238193",
+      "bytes": 7056
+    },
+    {
+      "path": "assets/images/dog/doberman/idle.png",
+      "sha256": "6fef9b5e05c2eef37210ea1b3f2b0834fdceb664cb638eabc56242ad1ed15268",
+      "bytes": 5867
+    },
+    {
+      "path": "assets/images/dog/doberman/run.png",
+      "sha256": "a3868e4eeb7ec54389dd6599890d2152e613ed2b827c35ff5e059595ab5b5520",
+      "bytes": 8186
+    },
+    {
+      "path": "assets/images/dog/doberman/stunned.png",
+      "sha256": "8ed1299aec5a0d98a35209b76bca58a28ef467cdc98c3d7e69620ee90e238193",
+      "bytes": 7056
+    },
+    {
+      "path": "assets/images/dog/doberman/walk.png",
+      "sha256": "8dc46906ac555d4c8cc559ffccb36ca820390dd289ee0084de85bc34e1fb2ddb",
+      "bytes": 8065
+    },
+    {
+      "path": "assets/images/dog/hit.png",
+      "sha256": "72d7ab2c6b3398a81418b5deafa94c94e16136bad19e002b523ce7d744f6c49c",
+      "bytes": 7576
+    },
+    {
+      "path": "assets/images/dog/idle.png",
+      "sha256": "85e620d9d7d9aeac374b164f3358ac7e656c4d659f4bb0b6c3f81fe3bc7fdfe9",
+      "bytes": 6310
+    },
+    {
+      "path": "assets/images/dog/run.png",
+      "sha256": "d5d9e0fa0d016ab2afcfe5cdd95c3498ae9edba6855420bacb31d88c0f28a386",
+      "bytes": 8906
+    },
+    {
+      "path": "assets/images/dog/stunned.png",
+      "sha256": "72d7ab2c6b3398a81418b5deafa94c94e16136bad19e002b523ce7d744f6c49c",
+      "bytes": 7576
+    },
+    {
+      "path": "assets/images/dog/walk.png",
+      "sha256": "c5db1912fec58419e86ebd4be3153417def14a6982b41d34538f723981f305fc",
+      "bytes": 8797
+    },
+    {
+      "path": "assets/images/enemies/breakdancer_0.png",
+      "sha256": "e44ff4f91cc750570ca907ce2b3e0f634467c9668018e7f3c029686f7d492721",
+      "bytes": 14558
+    },
+    {
+      "path": "assets/images/enemies/breakdancer_1.png",
+      "sha256": "ec9bcff13464366a3085acd58f6f84e35610a96b1972b83a651deed0920ca3d7",
+      "bytes": 14351
+    },
+    {
+      "path": "assets/images/enemies/breakdancer_2.png",
+      "sha256": "6bb2d7e82509a70766d02a7c8606515496c73a21b5547b05c45905c6f4a38502",
+      "bytes": 15184
+    },
+    {
+      "path": "assets/images/enemies/breakdancer_3.png",
+      "sha256": "3be9f6a413b7b9d02ee3f4a9d6a1845e98778b7150f886b331c79514ab30e8f0",
+      "bytes": 14364
+    },
+    {
+      "path": "assets/images/enemies/breakdancer_4.png",
+      "sha256": "9dec031b3d973225ef0d4b8830cde53b8f8bfe1fea1e3ec3fe331cc9f3558ffb",
+      "bytes": 10420
+    },
+    {
+      "path": "assets/images/enemies/breakdancer_5.png",
+      "sha256": "217ef728be4434d7cd415df57c312ff88b95feb8eb97a8605f9e8d91ad7a1769",
+      "bytes": 19558
+    },
+    {
+      "path": "assets/images/enemies/breakdancer_6.png",
+      "sha256": "fc3473f316b185414143f82115c7ba7cdcb79b661f4cd237dbc921742c2916bf",
+      "bytes": 23349
+    },
+    {
+      "path": "assets/images/enemies/breakdancer_7.png",
+      "sha256": "0bafd65e9de16b222d19ce2f93f1ad55ffab18461716543116e6a022af70b30d",
+      "bytes": 13639
+    },
+    {
+      "path": "assets/images/enemies/bully_0.png",
+      "sha256": "5965e756036418497960f8d3bba80eb0132a4ac1544a9970fcae3f16a974a15c",
+      "bytes": 32685
+    },
+    {
+      "path": "assets/images/enemies/bully_1.png",
+      "sha256": "ecc6039ef6c69f9f7e93a6783adced7de03ac607eac4f17a9ff7bf824bed2bd1",
+      "bytes": 34042
+    },
+    {
+      "path": "assets/images/enemies/bully_2.png",
+      "sha256": "2a80a742420edd7639bd55e94565d7a3b5038a28146db7f550d2ec0b10169361",
+      "bytes": 34012
+    },
+    {
+      "path": "assets/images/enemies/bully_3.png",
+      "sha256": "3de86e1d0113e1dcdff73027e08810aaea85ca55767b4c81cb06a6d4d252bfb2",
+      "bytes": 34230
+    },
+    {
+      "path": "assets/images/enemies/bully_4.png",
+      "sha256": "c7e16a62bcbad664e6233ff0879d8863926b76951360e068027004153909a21e",
+      "bytes": 35866
+    },
+    {
+      "path": "assets/images/enemies/cat_0.png",
+      "sha256": "2cdd42c0ae8347bf13486e93978b2d8614fb9b371a345133daac1edadda4fb94",
+      "bytes": 1977
+    },
+    {
+      "path": "assets/images/enemies/cat_1.png",
+      "sha256": "9b9064736785340317367fc186144f17ba5a296e0efecf98f3fdf0367d24e638",
+      "bytes": 1977
+    },
+    {
+      "path": "assets/images/enemies/cat_2.png",
+      "sha256": "a0eda60288534f0d332d4a8727c38c8a7a5c6b231379ac77ce35e1ce7954c48a",
+      "bytes": 1977
+    },
+    {
+      "path": "assets/images/enemies/cat_3.png",
+      "sha256": "b75e33486d1c3420591df7fff53f77a61534bf1adeedf23300317258fe6d2d63",
+      "bytes": 2078
+    },
+    {
+      "path": "assets/images/enemies/cat_4.png",
+      "sha256": "b611998199f9f3bc85f9fe1c87e59c77071fdf807e2fdcfd06924a26c4b71ffa",
+      "bytes": 2948
+    },
+    {
+      "path": "assets/images/enemies/novice_0.png",
+      "sha256": "fc4c348587c2093a92d547929bcbf0aa4963d972169544b2913d264f57da0efc",
+      "bytes": 17533
+    },
+    {
+      "path": "assets/images/enemies/novice_1.png",
+      "sha256": "cd4b0cc79bc6c1091e57505f2554bfd243151b394cdcb3145d81daf1feb28359",
+      "bytes": 17697
+    },
+    {
+      "path": "assets/images/enemies/novice_2.png",
+      "sha256": "472c3bd1c78d2ac714e817207ee4bdace1f8882fa967e5392f89a4013b0d965a",
+      "bytes": 19118
+    },
+    {
+      "path": "assets/images/enemies/novice_3.png",
+      "sha256": "ba35a1f703682bb76b5ffc3b92f7f6655498207efb5a3fd4321706a4d509e8e8",
+      "bytes": 21837
+    },
+    {
+      "path": "assets/images/enemies/novice_4.png",
+      "sha256": "353946895aa70ae5461b8b417feedc7bceb6faa7fafe294983a5ce1f823c5b5e",
+      "bytes": 13178
+    },
+    {
+      "path": "assets/images/enemies/novice_5.png",
+      "sha256": "76af3cb02f54dbe46f49a558900ee9511ad556c264fcc3c217fc89da56d8f11c",
+      "bytes": 47395
+    },
+    {
+      "path": "assets/images/enemies/pigeon_0.png",
+      "sha256": "7766728cfec2646933deef3258d56f15cbdb87a3d6388ad82ab30ab69a06bf5d",
+      "bytes": 9726
+    },
+    {
+      "path": "assets/images/enemies/pigeon_1.png",
+      "sha256": "152471fc8873c7435c063fdb0a46a7e2df35e506a93a951ea328d020b9918444",
+      "bytes": 8984
+    },
+    {
+      "path": "assets/images/enemies/pigeon_2.png",
+      "sha256": "a6fc63003ae8e4bb842365787d8d40eaf819b5e32923fb1b33928e0a76de4552",
+      "bytes": 8201
+    },
+    {
+      "path": "assets/images/enemies/pigeon_3.png",
+      "sha256": "1ed0f8591cd720d83f2f10c607c3bc8e2a9810ec0e3fec1f3fba1eea98431aa8",
+      "bytes": 8186
+    },
+    {
+      "path": "assets/images/enemies/pigeon_4.png",
+      "sha256": "08de02c2de164cdec7865c9a1ca94b30daf8f46fe946470f9b463ae2fc4bf965",
+      "bytes": 8786
+    },
+    {
+      "path": "assets/images/enemies/rat_0.png",
+      "sha256": "32b99a59ea96fd3af95c28e1e6fd2b62f12f2576ede3aad27efc28235b88e616",
+      "bytes": 1601
+    },
+    {
+      "path": "assets/images/enemies/rat_1.png",
+      "sha256": "f2c2d80a6d258f1ac5db6f3f5c23dc92422ac3405fa0959cf8707712783dc3f0",
+      "bytes": 1601
+    },
+    {
+      "path": "assets/images/enemies/rat_2.png",
+      "sha256": "fc599bac2b54dacb25686a44230a64dc586d9c5a79268648637a2ddefbdc0cb8",
+      "bytes": 1601
+    },
+    {
+      "path": "assets/images/enemies/rat_3.png",
+      "sha256": "0b1a9f4d7c7b8d5d2a8ffe59eb36a69499618770da07f2be7e6e865a2d8d4cff",
+      "bytes": 1730
+    },
+    {
+      "path": "assets/images/enemies/rat_4.png",
+      "sha256": "c59fdcadfb49353b7faf23d0ec6aadc5b22a208e7e1c5a9fb7baf5268bcd2238",
+      "bytes": 2311
+    },
+    {
+      "path": "assets/images/enemies/referee_0.png",
+      "sha256": "497c67fca89c3bc750d4914bd197bbd1340f6c533484980d5151098107df0bd5",
+      "bytes": 5526
+    },
+    {
+      "path": "assets/images/enemies/referee_1.png",
+      "sha256": "3db93c646292a285be50774bdcf5a797fe862e779a8fa57bdba0df98f709db18",
+      "bytes": 5663
+    },
+    {
+      "path": "assets/images/enemies/referee_2.png",
+      "sha256": "74d6bffd0a3af04e6c5fb551ffa977a8e9812aad255f11a4debfeff40799f38b",
+      "bytes": 7201
+    },
+    {
+      "path": "assets/images/enemies/referee_3.png",
+      "sha256": "b8bb61dca5a9080fa44f53eccad0c5de7cacfa00b1d22b0c34f5038a8f528c1e",
+      "bytes": 7229
+    },
+    {
+      "path": "assets/images/enemies/referee_4.png",
+      "sha256": "b42ae52e371d9a2b6433d0a147f4189f5ece16dc319455aaf1cb728a2c10b515",
+      "bytes": 8539
+    },
+    {
+      "path": "assets/images/enemies/referee_5.png",
+      "sha256": "5f8fbb05cf7588bc7a10d547e13b898dd00b316e814fd70c08ebb9787b610acd",
+      "bytes": 8314
+    },
+    {
+      "path": "assets/images/enemies/referee_6.png",
+      "sha256": "0e1893d096bf04409d967c874d7963973dbe3146808da0fe25b7a755cb31ea4e",
+      "bytes": 14015
+    },
+    {
+      "path": "assets/images/enemies/referee_7.png",
+      "sha256": "96e189d2b7853f53fcb6056a0e659db0c03e3683a9819c7bd815745c8dc0c3e1",
+      "bytes": 9748
+    },
+    {
+      "path": "assets/images/enemies/rival_0.png",
+      "sha256": "65bdd03175869718cc209e133037adf2b887e2bc824b6777e64994b8a2776e80",
+      "bytes": 12943
+    },
+    {
+      "path": "assets/images/enemies/rival_1.png",
+      "sha256": "0ce9cdbe523b5aa925dc8f196b7f3b9df00aee8aaf2c1ff7dbb016105f35c0dc",
+      "bytes": 9942
+    },
+    {
+      "path": "assets/images/enemies/rival_2.png",
+      "sha256": "cc361db5ea1306ac7be502092b0baccce07ab74c6e55ea0851202fe1e9104813",
+      "bytes": 11458
+    },
+    {
+      "path": "assets/images/enemies/rival_3.png",
+      "sha256": "52bd5f5b1593e4902b37c017da7e7f6e8da82e5aff9f08905370eaeb169953c9",
+      "bytes": 13333
+    },
+    {
+      "path": "assets/images/enemies/rival_4.png",
+      "sha256": "0b637d26a8073e260794ae208c2f142c31e75199287d72055bcdd3d04f84c825",
+      "bytes": 15602
+    },
+    {
+      "path": "assets/images/enemies/rival_5.png",
+      "sha256": "1541c82a4c9608e2928f76d7d0db7d64c788b5cbeb3a04d2cb7e4c9d48f8da31",
+      "bytes": 18757
+    },
+    {
+      "path": "assets/images/enemies/statue_0.png",
+      "sha256": "5807ee72333ce19482f67fcdcbe7f573e1ede7f1e539c449860886a4bd9fba2b",
+      "bytes": 42002
+    },
+    {
+      "path": "assets/images/enemies/statue_1.png",
+      "sha256": "44bedbca50c7819dc85f9e98e9131aacd79ad953d35c377b6a182e4eac9b6d9a",
+      "bytes": 49363
+    },
+    {
+      "path": "assets/images/enemies/statue_2.png",
+      "sha256": "0caaeb9111423a56c1c1e808e96879d0f72d15f01e6fcb658ac2b22a167e05ab",
+      "bytes": 51428
+    },
+    {
+      "path": "assets/images/enemies/statue_3.png",
+      "sha256": "44bedbca50c7819dc85f9e98e9131aacd79ad953d35c377b6a182e4eac9b6d9a",
+      "bytes": 49363
+    },
+    {
+      "path": "assets/images/enemies/statue_4.png",
+      "sha256": "36a678bd4f44967ca1771af9e154e64147573c3ae5c2390ce33b72d50251d6ac",
+      "bytes": 46318
+    },
+    {
+      "path": "assets/images/enemies/teacher_0.png",
+      "sha256": "c3f91c572d30741f623e6cc1a5f1dd7626a93a515feeea670e46720aa64ec35d",
+      "bytes": 46991
+    },
+    {
+      "path": "assets/images/enemies/teacher_1.png",
+      "sha256": "1560b9038969edc7794f2aceb9009b5f72cb51e25f72181f04b9f9e978852b7c",
+      "bytes": 48249
+    },
+    {
+      "path": "assets/images/enemies/teacher_2.png",
+      "sha256": "66e8d014ccf5ae87ff1aa717871f4982066ace8ede8ae9837b0c26184e226632",
+      "bytes": 48560
+    },
+    {
+      "path": "assets/images/enemies/teacher_3.png",
+      "sha256": "ff69f9fdb4c5dd112056efddaa31978a90e51b4eba6dceeb504dd535944209f6",
+      "bytes": 48032
+    },
+    {
+      "path": "assets/images/enemies/teacher_4.png",
+      "sha256": "ea15056dfb9bd89da7347d3810b0bbad6ff58c8286523bd10ded758571f50eff",
+      "bytes": 52183
+    },
+    {
+      "path": "assets/images/enemies_hifi/cat_sheet.png",
+      "sha256": "e67b03a3a473e9db34a97d5de9eb5cf9a49043cad3e162798407411e22a2a377",
+      "bytes": 671964
+    },
+    {
+      "path": "assets/images/enemies_hifi/pigeon_flight_sheet.png",
+      "sha256": "3b44f0f517dba8a432428aa5420910ab60dbc43123c88dfb17ace0ccb7fccbd1",
+      "bytes": 752225
+    },
+    {
+      "path": "assets/images/enemies_hifi/rat_sheet.png",
+      "sha256": "44279f0e04bea82d985531a7773c91f2fa203a21393e78354c168ae0a2d26d20",
+      "bytes": 422002
+    },
+    {
+      "path": "assets/images/frames/bailarina_idle_0.png",
+      "sha256": "4fcc868b9d517e2d4ab43058504537b01ad49308d6d43d19cd62c74b7df64555",
+      "bytes": 51559
+    },
+    {
+      "path": "assets/images/frames/bailarina_jump_0.png",
+      "sha256": "8eb03ec9177703804bd636d3e23f27f7c75521b653c563bb006bc6418e9bc0a0",
+      "bytes": 60460
+    },
+    {
+      "path": "assets/images/frames/bailarina_walk_0.png",
+      "sha256": "068dd7da88d543600fe4aa9426b54abc425e14fffdcf3aab43dc9866c2a423a3",
+      "bytes": 58914
+    },
+    {
+      "path": "assets/images/frames/bailarina_walk_1.png",
+      "sha256": "326b7a10ec04d94c68cbcda874eb4d8596e003602b5e303a2b1d346cb8fc03b8",
+      "bytes": 59648
+    },
+    {
+      "path": "assets/images/frames/futbolista_idle_0.png",
+      "sha256": "1609ada04ad1efb29cd9d5f451f6a17a06595a51f0d2ecd749aad6cb994f619c",
+      "bytes": 74763
+    },
+    {
+      "path": "assets/images/frames/futbolista_jump_0.png",
+      "sha256": "db08890f45b5008fa35997fbbe861821d20c0cb486239d722afc84b2f903f3f3",
+      "bytes": 84723
+    },
+    {
+      "path": "assets/images/frames/futbolista_walk_0.png",
+      "sha256": "9a32941d1ec0724cfede65ddd59eedf73ec1039de498363ef7fd4d97de4e52c5",
+      "bytes": 82409
+    },
+    {
+      "path": "assets/images/frames/futbolista_walk_1.png",
+      "sha256": "6af41b640e7adfd21a9abd8a8101f84b6a204e63cbb07d2e43f33ee6cb0a8eff",
+      "bytes": 83416
+    },
+    {
+      "path": "assets/images/frames/padre_idle_0.png",
+      "sha256": "3e7fa69040e8590e84b5009dc197eb97d9a7d5c2f17fe10b0c03760b69764b77",
+      "bytes": 61345
+    },
+    {
+      "path": "assets/images/frames/padre_jump_0.png",
+      "sha256": "3a732f9ec476a814cd6f503c3bacf5c065e344a076a7121c06f5ad508137ec9b",
+      "bytes": 66329
+    },
+    {
+      "path": "assets/images/frames/padre_walk_0.png",
+      "sha256": "0d5bf48f98a425575ad0d42e0dcf0c0c6149193a36f2df17b9577808952613b2",
+      "bytes": 70771
+    },
+    {
+      "path": "assets/images/frames/padre_walk_1.png",
+      "sha256": "43dd7402a7f1079191127a98f5d5142e6e5ba5633e754337518b3d4f6de84f9d",
+      "bytes": 73306
+    },
+    {
+      "path": "assets/images/ground/stage_0.png",
+      "sha256": "5e06698650a6cbaf016795587e8a753894954b2adfd6024790a026ac0d6e3c2f",
+      "bytes": 98948
+    },
+    {
+      "path": "assets/images/ground/stage_1.png",
+      "sha256": "1cd92cf7884b9168ee99f9d266f030808c3348ff1d8ff250d0bba58b3d270dab",
+      "bytes": 86939
+    },
+    {
+      "path": "assets/images/ground/stage_2.png",
+      "sha256": "7ca6ad61532deea08b7cbf090b23dcd7706b728e6112d6f8217254f9b82ef4f9",
+      "bytes": 86537
+    },
+    {
+      "path": "assets/images/ground/stage_3.png",
+      "sha256": "8126cfd32c4042d1582e6dd2973fc576878a72c90920d83c6f92c1c213dca15b",
+      "bytes": 88174
+    },
+    {
+      "path": "assets/images/ground/stage_4.png",
+      "sha256": "bfd53c8971964db894e231d883773e83df3a854e8f1c86eea80ea7dd85c2ff5f",
+      "bytes": 79498
+    },
+    {
+      "path": "assets/images/ground/stage_5.png",
+      "sha256": "6c5f07759497971829bed0004e011387ce2aede141cc811bad239f84f8eb0621",
+      "bytes": 16121
+    },
+    {
+      "path": "assets/images/ground/stage_6.png",
+      "sha256": "9fdb02d847ce194e734b480e4f687254af316e56502cee7cc50e7462f406de9a",
+      "bytes": 84571
+    },
+    {
+      "path": "assets/images/icon_source.png",
+      "sha256": "c22f2016d3aebf9afdf4c25ef0946fc338e9a548a6baa41b3654bc581b7c2cce",
+      "bytes": 1513148
+    },
+    {
+      "path": "assets/images/level_ayuntamiento.png",
+      "sha256": "fbdbd59be85d03df1f12819c90b09175208f7195bbbb0b7a5f28cb0e79800793",
+      "bytes": 1064090
+    },
+    {
+      "path": "assets/images/level_estafeta.png",
+      "sha256": "602df56fedf9030ba0ad86be7d0d77149a9bb315ea29c12897df87d214b619d0",
+      "bytes": 889395
+    },
+    {
+      "path": "assets/images/level_pixel.png",
+      "sha256": "e2e74fd6b7d17daeae7173a021bb60bf0c05f7772cedf6665f6b70441fa56402",
+      "bytes": 1318149
+    },
+    {
+      "path": "assets/images/level_plaza_castillo.png",
+      "sha256": "ee10463e1fdf38bc245c12a068fdb1401d7bea9183b5fd51d9b0242123827a98",
+      "bytes": 971065
+    },
+    {
+      "path": "assets/images/mid/school_classroom.png",
+      "sha256": "88db37c4022a3c9d0968334929c2f59ceca944c8de3a3f8b3e96e6c670de4699",
+      "bytes": 25234
+    },
+    {
+      "path": "assets/images/mid/school_computers.png",
+      "sha256": "6844535d1e6b2d420b9da25fa21efc7679b785a34269bd7fb322f7692f77bbb6",
+      "bytes": 25255
+    },
+    {
+      "path": "assets/images/mid/stage_0.png",
+      "sha256": "c5680f8b9c8e201a03ef7e7ea43c2f11b322d0183393761081f550c3483259b8",
+      "bytes": 78236
+    },
+    {
+      "path": "assets/images/mid/stage_1.png",
+      "sha256": "9ca28a6fd86a8ee19ebb46b2dd4b0cad2a56289e07eece804d9252e1cb7f126c",
+      "bytes": 53819
+    },
+    {
+      "path": "assets/images/mid/stage_2.png",
+      "sha256": "cb1811389b2b05649cb26ad6d7dabc7edfc54a1fb82d66ddcff3e2b3e83e22f3",
+      "bytes": 57237
+    },
+    {
+      "path": "assets/images/mid/stage_3.png",
+      "sha256": "eddac35128195d91bd974d6f55cfcc60f0328ca3af6f4fcbc0dcef034523dc6b",
+      "bytes": 69451
+    },
+    {
+      "path": "assets/images/mid/stage_4.png",
+      "sha256": "76fe2d8fd509bdd0a4daffef998e200b50acd4f5c9f943e3ef44db3b42b3923a",
+      "bytes": 246497
+    },
+    {
+      "path": "assets/images/mid/stage_4_plain.png",
+      "sha256": "9f266b403acf2dd249dab5b749de66c72cf6b27f51e9e23d60aba4bca221129d",
+      "bytes": 120013
+    },
+    {
+      "path": "assets/images/mid/stage_5.png",
+      "sha256": "fecdea89f27f3bcfe97e0bdada3d0edc431ee56d6676e2d371b4533ae0ec1a32",
+      "bytes": 110488
+    },
+    {
+      "path": "assets/images/mid/stage_6.png",
+      "sha256": "2fccebaf4585ad443baa1aa3efc0b76a715276988ad99a38b5099552f5474579",
+      "bytes": 51143
+    },
+    {
+      "path": "assets/images/outfits/bailarina_attack_0.png",
+      "sha256": "84751782cc4fdf0c1e0926eb12143821edd87456f12ab26ba8af8f2868dbe644",
+      "bytes": 97830
+    },
+    {
+      "path": "assets/images/outfits/bailarina_idle_0.png",
+      "sha256": "6e181909e69ca4d4e8ad448041efc2594c4bc0540506ec18b67da03971f64618",
+      "bytes": 90838
+    },
+    {
+      "path": "assets/images/outfits/bailarina_jump_0.png",
+      "sha256": "155c77d2a1be21a181f2aa475efcf1ee860b011f9886f710d839ea95bc465f8e",
+      "bytes": 89782
+    },
+    {
+      "path": "assets/images/outfits/bailarina_walk_0.png",
+      "sha256": "d153e1bf7dc99b1a15a4e966a68d9d5f12de7430b6ef5673f952c0265bc2e4f2",
+      "bytes": 99768
+    },
+    {
+      "path": "assets/images/outfits/bailarina_walk_1.png",
+      "sha256": "2fdc3094d6616b0d65606250b448c230f8ed77fd318d6f959e79eb532760edfd",
+      "bytes": 88688
+    },
+    {
+      "path": "assets/images/outfits/futbolista_attack_0.png",
+      "sha256": "acc38dafaa3f3433f3f2344f36badd90501b1ae74bda94ab37add61a6e1ec2de",
+      "bytes": 203171
+    },
+    {
+      "path": "assets/images/outfits/futbolista_idle_0.png",
+      "sha256": "44e0e09af92902ce252c941f1884ae53931bc59393164406e16d7fd6d776c662",
+      "bytes": 167633
+    },
+    {
+      "path": "assets/images/outfits/futbolista_jump_0.png",
+      "sha256": "a76e861a60af1a5e0d3a97f4f967be36533584a06cfce0ff2050941acb61ce46",
+      "bytes": 193990
+    },
+    {
+      "path": "assets/images/outfits/futbolista_walk_0.png",
+      "sha256": "49f88f49507fc0afcac90b299e04fa39342d7c4f73f084ec1f1b06288705f40f",
+      "bytes": 182072
+    },
+    {
+      "path": "assets/images/outfits/futbolista_walk_1.png",
+      "sha256": "538a2df9c79f2ff6d03800f9ecb14967b34904d8f0b67340d49ffb547c8e228a",
+      "bytes": 172745
+    },
+    {
+      "path": "assets/images/props/backpack.png",
+      "sha256": "5f35e5b5b8499303a6045f45bab8ca6d175566a9ac43378829715bf555af66b7",
+      "bytes": 1055
+    },
+    {
+      "path": "assets/images/props/cone.png",
+      "sha256": "b328e3059bde3a9e899fc02529e7bd9fedc267ef6992ffca73b0a665ce4274cf",
+      "bytes": 798
+    },
+    {
+      "path": "assets/images/props/eraser.png",
+      "sha256": "096dc51ed29350b1ebc31e4ee1db7de9ec97c045f17aece8b0b36b8b6d67c9a0",
+      "bytes": 574
+    },
+    {
+      "path": "assets/images/props/gym_bench.png",
+      "sha256": "9c22f0d1579be196e6a8ee297a82f529f52fee340c9a941e96ecdf6411581fe7",
+      "bytes": 672
+    },
+    {
+      "path": "assets/images/props/planter.png",
+      "sha256": "db42c0ba19e586eb192ad992a65d530d1c1ec559d841e56d656400b0b57019fe",
+      "bytes": 2121
+    },
+    {
+      "path": "assets/images/props/red_card.png",
+      "sha256": "2e7655eb1983fddbb1873da9760b164019b6efab8fd3fed813bfa86133fec2df",
+      "bytes": 319
+    },
+    {
+      "path": "assets/images/props/shoe.png",
+      "sha256": "8a7c6fb09b17bb463117906267ef24a10b6c545789dc005a4a2e2ab443621dbe",
+      "bytes": 707
+    },
+    {
+      "path": "assets/images/scenes/ballet.png",
+      "sha256": "f8bff5107fca96db1f399c87515ff4e9f2166f6f9897aba242dd3d529dabe6b2",
+      "bytes": 505598
+    },
+    {
+      "path": "assets/images/scenes/ballet_refined.png",
+      "sha256": "c4b33f54ba823a17bfc2de2f35d265d419859d09532c59da0d59cabe7656956e",
+      "bytes": 504083
+    },
+    {
+      "path": "assets/images/scenes/football.png",
+      "sha256": "23e1cebaa01767aa6ac26d241d2a57348b0aa07cf6658005bf21089f4e81a99d",
+      "bytes": 1066593
+    },
+    {
+      "path": "assets/images/scenes/school.png",
+      "sha256": "141ec8eb8138974222a4123bce085dfb817bb6a8c9d69a8e89dfc25d3728ec8c",
+      "bytes": 473163
+    },
+    {
+      "path": "assets/images/scenes/school_classroom.png",
+      "sha256": "fd4ef4cdd6f92c0bd0df6c271f6ed334d03046b792244070e1da11b41b3211d7",
+      "bytes": 378266
+    },
+    {
+      "path": "assets/images/scenes/school_computers.png",
+      "sha256": "ffa4d7e8b422be9c886ea1a2d32e7181f7bb6ccf19e3be1b3cf8eb4dfb90cfde",
+      "bytes": 372810
+    },
+    {
+      "path": "assets/images/title_approved.png",
+      "sha256": "36c0bc2e18547b47f96a85b8c707663f875cd99d107a6368f3b7bc512d3df6fa",
+      "bytes": 1247056
+    },
+    {
+      "path": "assets/images/title_cars_fixed_091.png",
+      "sha256": "2ea8c9ed9f86ec9e26391e8ff586fb70c0679bb12bce7f36e757462292620622",
+      "bytes": 1242063
+    },
+    {
+      "path": "assets/images/twc_corporate_verified_091.png",
+      "sha256": "818b33c860582e79336b8d1595003057eef6869bdc9eefa4c9b437d048ee29f3",
+      "bytes": 135624
+    },
+    {
+      "path": "assets/images/worldmap/pamplona.png",
+      "sha256": "bc88ed4203ace17a55aed78673e93d04884e7486463d958132c1b4817670a1cf",
+      "bytes": 1063179
+    },
+    {
+      "path": "assets/images/worldmap/pamplona_aprobado.png",
+      "sha256": "0bb7bf217d14fdd98ecc436e873748c892afc644f66b103132d36498dc99b030",
+      "bytes": 3486734
+    }
+  ]
+}

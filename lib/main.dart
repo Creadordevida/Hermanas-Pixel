@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'sprite_bounds.g.dart';
 import 'hero_hearts.dart';
 import 'chapter_one_layout.dart';
+import 'neighborhood_scene_engine.dart';
 import 'creature_sheet_bounds.dart';
 import 'animal_sprite_bounds.dart';
 import 'jump_visuals.dart';
@@ -336,8 +337,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       storage = await SharedPreferences.getInstance();
       savedAvailable = storage?.getString(saveKey) != null || storage?.getString(oldSaveKey) != null;
       final paths = <String,String>{
-        'title':'assets/images/title_approved.png',
-        'logo':'assets/images/brand_logo_twc.png',
+        'title':'assets/images/title_cars_fixed_091.png',
+        'logo':'assets/images/twc_corporate_verified_091.png',
         'map':'assets/images/worldmap/pamplona_aprobado.png',
         'crate':'assets/images/crate.png',
         'coin':'assets/images/coin.png',
@@ -357,7 +358,16 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         paths['neighborhood_${zone.asset}'] =
           'assets/images/chapter1/${zone.asset}.png';
       }
-      paths['neighborhood_props'] = 'assets/images/chapter1/park_props_atlas.png';
+      // Pergola is a unique neutral connecting vista, never repeated.
+      paths['neighborhood_connector_pergola_v091'] =
+        'assets/images/chapter1/connector_pergola_v091.png';
+      // Replacement for the broken irregular props grid: four isolated trees.
+      paths['neighborhood_trees_v091'] =
+        'assets/images/chapter1/trees_separated_v091.png';
+      for (final region in neighborhoodSceneRegions.where((r) => r.connector)) {
+        paths['neighborhood_${region.asset}'] =
+          'assets/images/chapter1/${region.asset}.png';
+      }
       // The training field and dance academy have three real distinct views
       // each; none replaces approved character art or original protected PNGs.
       for (final zone in [...footballActivityZones, ...danceActivityZones]) {
@@ -796,8 +806,28 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         border:Border.all(color:Colors.white,width:2)),child:glyph));
 
   @override
-  Widget build(BuildContext context) => Scaffold(backgroundColor:const Color(0xff0d2943),body:Center(
-    child:FittedBox(fit:BoxFit.contain,child:SizedBox(width:viewW,height:viewH,child:_screen()))));
+  Widget build(BuildContext context) => Scaffold(
+    backgroundColor: const Color(0xff0d2943),
+    body: LayoutBuilder(builder: (context, constraints) => Stack(
+      fit: StackFit.expand,
+      children: [
+        // Extra-wide Android displays get illustrated, not black, gutters.
+        // Crucially the playable 800×450 image remains at its CORRECT aspect
+        // ratio: no stretching of characters or hidden touch buttons.
+        if (screen == Screen.title)
+          Image.asset('assets/images/title_cars_fixed_091.png',fit:BoxFit.cover)
+        else
+          DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
+            begin: Alignment.topCenter, end: Alignment.bottomCenter,
+            colors: stage == 5
+                ? const [Color(0xffcaac8d), Color(0xffba8c67), Color(0xff68462c)]
+                : const [Color(0xff53a9ed), Color(0xffa7d3ee), Color(0xff557c48)],
+          ))),
+        Center(child: FittedBox(fit: BoxFit.contain,
+          child: SizedBox(width:viewW,height:viewH,child:_screen()))),
+      ],
+    )),
+  );
 
   Widget _screen() {
     if(loadError!=null)return Center(child:Text('ERROR AL CARGAR RECURSOS\n$loadError',style:const TextStyle(color:Colors.white)));
@@ -821,7 +851,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   }
 
   Widget _title() => Stack(children:[
-    Positioned.fill(child:Image.asset('assets/images/title_approved.png',fit:BoxFit.fill)),
+    Positioned.fill(child:Image.asset('assets/images/title_cars_fixed_091.png',fit:BoxFit.fill)),
     Positioned(left:551,top:183,width:208,height:59,child:Material(color:Colors.transparent,
       child:InkWell(onTap:_startNew))),
     Positioned(left:557,top:249,width:203,height:61,child:Material(
@@ -831,7 +861,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       style:TextStyle(color:Colors.white,fontSize:11,shadows:[Shadow(color:Colors.black,blurRadius:3)]))),
     Positioned(left:303,bottom:4,width:194,height:43,child:Container(padding:const EdgeInsets.all(4),
       decoration:BoxDecoration(color:const Color(0xa0092749),borderRadius:BorderRadius.circular(9)),
-      child:Image.asset('assets/images/brand_logo_twc.png',fit:BoxFit.contain))),
+      child:Image.asset('assets/images/twc_corporate_verified_091.png',fit:BoxFit.contain))),
   ]);
 
   // Las coordenadas de esta imagen proceden de la ilustración EXACTA aprobada
@@ -1172,6 +1202,7 @@ class StagePainter extends CustomPainter {
       final img=images[s.kind];final w=s.kind=='ball'?24.0:s.kind=='comb'?27.0:31.0;
       _sprite(canvas,img,Rect.fromCenter(center:Offset(s.x-cameraX,s.y),width:w,height:s.kind=='comb'?16:25));
     }
+    if(stage==0) _neighborhoodTrees(canvas,foreground:true);
     if(time<particlesUntil) {
       final x=hero.x-cameraX;
       for(int i=0;i<5;i++) {
@@ -1226,71 +1257,89 @@ class StagePainter extends CustomPainter {
     }
   }
 
-  // Cuatro vistas exclusivas inspiradas en las fotografías del barrio.
-  // Cada panorama se recorre UNA vez; no hay módulo de 640px, bucle,
-  // inversión horizontal ni una imagen estirada hasta 36.500 unidades.
-  // Los motivos cercanos del atlas se mueven en coordenadas de mundo (1:1).
-  void _neighborhoodBackdrop(Canvas canvas,int zoneIndex,double alpha) {
-    if (alpha<=0)return;
-    final zone=neighborhoodZones[zoneIndex];
-    final art=images['neighborhood_${zone.asset}'];
-    if (art==null)return;
-    // Mantenemos la proporción exacta (1495/710 ~= 800/380).
-    // El recorte omite solo el pavimento del propio cuadro: el pavimento
-    // físico original de la RC6 se pinta una sola vez encima, con groundY.
-    const sourceTop=80.0, sourceHeight=710.0;
-    final sourceWidth=viewW*sourceHeight/380.0;
-    final maxX=math.max(0.0,art.width-sourceWidth);
-    final local=(cameraX-zone.start).clamp(0.0,zone.length-viewW).toDouble();
-    final fraction=local/math.max(1.0,zone.length-viewW);
-    final sourceX=maxX*fraction;
-    canvas.drawImageRect(art,
-      Rect.fromLTWH(sourceX,sourceTop,sourceWidth,sourceHeight),
-      const Rect.fromLTWH(0,0,viewW,380),
-      Paint()..filterQuality=FilterQuality.low
-             ..color=Colors.white.withValues(alpha:alpha));
+  // World-locked scene panels: each pixel from the image is attached to a
+  // definite x interval. NO screen-sized static backdrops and NO image fades.
+  void _neighborhoodBackdropPanel(Canvas canvas, NeighborhoodBackdropPanel panel) {
+    final art = images['neighborhood_${panel.asset}'];
+    if (art == null) return;
+    final screenLeft = panel.start - cameraX;
+    final screenRight = panel.end - cameraX;
+    if (screenRight <= 0 || screenLeft >= viewW) return;
+    // Aspect-correct crop: horizontal/vertical scales are IDENTICAL.
+    // Never squash a curved building, tree or playground rocket.
+    final sourceHeight = math.min(art.height.toDouble(),
+        art.width.toDouble() * 380 / panel.width);
+    final sourceWidth = sourceHeight * panel.width / 380;
+    final cropBottom = math.max(0.0, art.height - sourceHeight);
+    final sourceTop = panel.landmark
+        ? math.min(85.0, cropBottom)
+        : math.max(0.0, cropBottom - 15);
+    canvas.save();
+    canvas.clipRect(const Rect.fromLTWH(0, 0, viewW, 380));
+    _sprite(canvas, art,
+        Rect.fromLTWH(screenLeft, 0, panel.width, 380),
+        pixelated: false,
+        source: Rect.fromLTWH(0, sourceTop, sourceWidth, sourceHeight));
+    canvas.restore();
   }
 
-  void _neighborhoodProps(Canvas canvas) {
-    final atlas=images['neighborhood_props'];
+  // Transparent margins are EXCLUDED from the atlas source region. Without
+  // this, roots float above the pavement and crowns change scale on camera.
+  static const List<Rect> _treeSourceBounds = [
+    Rect.fromLTRB(33, 13, 724, 543),
+    Rect.fromLTRB(725, 16, 1434, 539),
+    Rect.fromLTRB(0, 545, 724, 1068),
+    Rect.fromLTRB(741, 544, 1428, 1067),
+  ];
+
+  void _neighborhoodTrees(Canvas canvas,{bool foreground=false}) {
+    final atlas=images['neighborhood_trees_v091'];
     if(atlas==null)return;
-    final cellW=atlas.width/neighborhoodAtlasColumns;
-    final cellH=atlas.height/neighborhoodAtlasRows;
-    final first=(cameraX/275).floor()-2;
-    // Solo se dibujan props visibles; la semilla de cada posición es estable.
-    for(int n=first;n<=first+7;n++) {
+    // Objects with physical roots have camera factor 1.0. Small distant
+    // vegetation, with no collision, may use mild parallax.
+    final factor=foreground ? 1.0 : .78;
+    final offset=cameraX*factor;
+    final spacing=foreground ? 1370.0 : 460.0;
+    final first=(offset/spacing).floor()-2;
+    for(int n=first;n<first+8;n++) {
       if(n<0)continue;
-      final seed=((n+7)*73856093 ^ (n+19)*19349663)&0x7fffffff;
-      final worldX=125+n*275.0+(seed%103)-51;
-      if(worldX<320 || worldX>stageWidth-180)continue;
-      final x=worldX-cameraX;
-      if(x< -180 || x>viewW+180)continue;
-      // No repetición periódica simple: distintas clases, alturas y ritmos.
-      final kind=(seed%17==0)?11:(seed%13==0)?9:(seed%11==0)?8:
-        (seed%7==0)?7:(seed%5==0)?6:
-        (seed%3==0)?5:(seed%4==0)?4:seed%4;
-      final width=kind<4?132.0+(seed%39):kind==4?70.0:
-        kind==8?105.0:kind==9?68.0:kind==10?100.0:90.0;
-      final height=kind<4?165.0+(seed%44):kind==4?184.0:
-        kind==8?105.0:kind==9?150.0:kind==10?91.0:94.0;
-      final source=Rect.fromLTWH((kind%4)*cellW,(kind~/4)*cellH,cellW,cellH);
-      // Los pies/troncos se anclan al plano físico, nunca a la pantalla.
-      _sprite(canvas,atlas,Rect.fromLTWH(x-width/2,groundY-height,width,height),
-        source:source);
+      if(foreground && n%3==1)continue;
+      final seed=((n+11)*73856093 ^ (n+53)*19349663)&0x7fffffff;
+      final worldX=265+n*spacing+(seed%89)-44;
+      final x=worldX-offset;
+      if(x< -240 || x>viewW+240)continue;
+      final source = _treeSourceBounds[(seed~/23)%4];
+      final height=foreground ? 190.0+(seed%23) : 90.0+(seed%31);
+      final width=source.width*height/source.height;
+      final floor=foreground ? groundY+2 : groundY-11;
+      _sprite(canvas,atlas,Rect.fromLTWH(x-width/2,floor-height,width,height),source:source);
     }
   }
 
   void _neighborhoodBackground(Canvas canvas) {
-    final center=cameraX+viewW/2;
-    final index=neighborhoodZoneIndex(center);
-    final zone=neighborhoodZones[index];
-    const transitionWidth=850.0;
-    final fade=index==neighborhoodZones.length-1 ? 0.0 :
-      ((center-(zone.end-transitionWidth))/transitionWidth).clamp(0.0,1.0).toDouble();
-    _neighborhoodBackdrop(canvas,index,1);
-    // Disolvencia progresiva sin cambio de escala ni salto de arquitectura.
-    if(fade>0)_neighborhoodBackdrop(canvas,index+1,fade);
-    _neighborhoodProps(canvas);
+    for (final panel in neighborhoodBackdropPanels) {
+      if (panel.overlaps(cameraX, cameraX + viewW)) {
+        _neighborhoodBackdropPanel(canvas, panel);
+      }
+    }
+    _neighborhoodTrees(canvas);
+    // A planted screen of foliage hides the small discontinuities where an
+    // illustrated landscape meets a connector. This is PHYSICAL world-space
+    // foliage, not a fade turning one building into another.
+    final atlas = images['neighborhood_trees_v091'];
+    if (atlas != null) {
+      for (final panel in neighborhoodBackdropPanels.skip(1)) {
+        final x = panel.start - cameraX;
+        if (x < -200 || x > viewW + 200) continue;
+        final seed = panel.start.toInt() ~/ 900;
+        final src = _treeSourceBounds[seed % _treeSourceBounds.length];
+        final height = 185.0 + (seed % 4) * 16;
+        final width = src.width * height / src.height;
+        _sprite(canvas, atlas,
+            Rect.fromLTWH(x - width / 2, groundY - height, width, height),
+            source: src);
+      }
+    }
   }
 
   // The outdoors and indoors require DIFFERENT camera crops and occlusion:
@@ -1412,8 +1461,8 @@ class StagePainter extends CustomPainter {
     final pose=isCostumeAttack?'attack_0':
       phase==JumpVisualPhase.takeoff || phase==JumpVisualPhase.rising ||
       phase==JumpVisualPhase.apex ? 'jump_0' :
-      phase==JumpVisualPhase.falling || phase==JumpVisualPhase.impact ||
-      phase==JumpVisualPhase.recovery ? 'idle_0' :
+      phase==JumpVisualPhase.falling ? 'jump_0' :
+      phase==JumpVisualPhase.impact || phase==JumpVisualPhase.recovery ? 'idle_0' :
       c.vx.abs()>15?'walk_${(c.travelled/23).floor()%2}':'idle_0';
     final img=images['${costume?'costume_':''}${role}_$pose'];if(img==null)return;
     final base=images['${costume?'costume_':''}${role}_idle_0'];

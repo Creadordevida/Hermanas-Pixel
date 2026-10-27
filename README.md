@@ -1,3 +1,9 @@
+# VERSIÓN ACTUAL: 0.9.1 RC1 — CANDIDATA PARA ANDROID
+
+Lee **README_091_PRUEBAS.md** antes de subir a GitHub. El contenido histórico de RC8 se conserva debajo como referencia, pero está superado.
+
+---
+
 # Las aventuras de Miren y Sara — 0.9.0 RC8 REV3 (pruebas Android)
 
 **Candidata de pruebas, no versión artística ni comercial aprobada.**

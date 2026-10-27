@@ -47,7 +47,8 @@ class FlutterCaptureGuardrails(unittest.TestCase):
     def test_heavy_render_tests_do_not_compete_for_resources(self):
         workflow = (ROOT / '.github/workflows/build.yml').read_text()
         self.assertIn('flutter test --concurrency=1 ', workflow)
-        self.assertIn('timeout-minutes: 30', workflow)
+        self.assertIn('timeout-minutes: 18', workflow)
+        self.assertNotIn('timeout-minutes: 30', workflow)
         self.assertIn('qa-graficos-flutter:', workflow)
         self.assertIn('needs: android-apk-candidato', workflow)
 
