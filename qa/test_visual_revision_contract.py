@@ -33,6 +33,14 @@ class VisualRevisionContract(unittest.TestCase):
         self.assertIn("walkingNow ? (1+(foe.t*7).floor()%2) : 0",MAIN)
         self.assertNotIn("foe.kind=='bully' && !foe.defeated ? .028*math.sin",MAIN)
 
+    def test_breakdancer_has_intermediate_floor_transition(self):
+        self.assertIn("foe.kind=='breakdancer'",MAIN)
+        self.assertIn("foe.t < .24 ? 1",MAIN)
+        self.assertIn("foe.t < .39 ? 2",MAIN)
+        self.assertIn("foe.t < .53 ? 3",MAIN)
+        self.assertIn("foe.t < .65 ? 2 : 1",MAIN)
+        self.assertNotIn("foe.kind=='breakdancer' ? 3",MAIN)
+
     def test_football_transition_not_straight_line(self):
         self.assertIn("contour=(13 + 7*np.sin",FOOTBALL)
         self.assertNotIn("for y in range(22):band[y,:,3]",FOOTBALL)
