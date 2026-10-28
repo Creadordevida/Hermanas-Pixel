@@ -17,7 +17,7 @@ Future<ui.Image> loadPng(String path) async {
 
 void main() {
  TestWidgetsFlutterBinding.ensureInitialized();
- testWidgets('Cuatro enemigos nuevos: imagen REAL del motor en su escenario',
+ testWidgets('Seis enemigos nuevos: imagen REAL del motor en su escenario',
      (tester) async {
    await tester.binding.setSurfaceSize(const Size(800,450));
    final kinds=<String,(String,int)>{
@@ -25,12 +25,16 @@ void main() {
      'rival_supporter':('supporter',4),
      'tipsy_tourist':('tourist',2),
      'navarre_king':('navarre_king',3),
+     'estafeta_bull':('estafeta_bull',2),
+     'sanfermin_runner':('sanfermin_runner',2),
    };
    final images=<String,ui.Image>{};
    try {
      for(final pair in kinds.entries) {
        final short=pair.value.$1;
-       final key=short=='navarre_king'?'enemy_navarre_king_atlas':'enemy_new_$short';
+       final key=short=='navarre_king'?'enemy_navarre_king_atlas':
+         (short=='estafeta_bull' || short=='sanfermin_runner')?
+         'enemy_$short':'enemy_new_$short';
        images[key]=await tester.runAsync(() => loadPng(
          'assets/images/enemies_new/${short}_atlas.png'))
          ?? (throw StateError('No se pudo cargar el atlas REAL $short'));
@@ -43,6 +47,7 @@ void main() {
          if(pose==2)foe.stunned=.6;
          if(pose==3)foe.deathAt=0;
          if(kind=='navarre_king' && pose==1)foe.kingAwakeAt=0;
+         if(kind=='estafeta_bull' && pose==1)foe.launched=true;
          final key=GlobalKey();
          final painter=StagePainter(
            images:images,stage:stage,cameraX:0,time:.6,
