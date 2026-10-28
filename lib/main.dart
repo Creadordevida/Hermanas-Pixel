@@ -9,6 +9,9 @@ import 'sprite_bounds.g.dart';
 import 'hero_hearts.dart';
 import 'chapter_one_layout.dart';
 import 'neighborhood_scene_engine.dart';
+import 'chapter_one_world_v4.dart';
+import 'chapter_one_world_tiles.dart';
+import 'chapter_one_camera_v3.dart';
 import 'creature_sheet_bounds.dart';
 import 'animal_sprite_bounds.dart';
 import 'jump_visuals.dart';
@@ -36,7 +39,7 @@ const List<String> chapterProps = [
 ];
 const List<String> enemyKinds = [
   'dog_dalmatian', 'dog_brown', 'dog_doberman', 'pigeon', 'cat', 'statue',
-  'rat', 'rival', 'referee', 'novice', 'breakdancer', 'bully', 'teacher',
+  'rat', 'rival', 'goalkeeper', 'referee', 'novice', 'breakdancer', 'bully', 'teacher',
 ];
 const List<String> poses = ['idle', 'walk', 'attack', 'hit', 'defeated'];
 
@@ -83,10 +86,10 @@ class Enemy {
   double get speed => switch(kind) {
     'dog_dalmatian' => 56, 'dog_doberman' => 112,
     'rat' => 118, 'cat' => 92, 'pigeon' => 84,
-    'rival' => 90, 'novice' => 94, 'bully' => 90,
+    'rival' => 90, 'goalkeeper' => 80, 'novice' => 94, 'bully' => 90,
     _ => 72,
   };
-  double get detection => kind == 'dog_dalmatian' ? 145 : kind == 'dog_doberman' ? 290 : 220;
+  double get detection => kind == 'goalkeeper' ? 230 : kind == 'dog_dalmatian' ? 145 : kind == 'dog_doberman' ? 290 : 220;
   double get height => aerial ? 99 + 30 * math.sin(t * 4) : kind == 'rat' ? 21 : 64;
 
   void _animalState(String next) {
@@ -243,7 +246,7 @@ class StageData {
     1 => ['dog_brown','pigeon','statue','dog_dalmatian'],
     2 => ['dog_brown','cat','rat','dog_doberman'],
     3 => ['pigeon','cat','statue','dog_doberman','rat'],
-    4 => ['rival','referee'],
+    4 => ['rival','goalkeeper','referee'],
     5 => ['novice','breakdancer'],
     _ => ['bully','teacher'],
   };
@@ -358,10 +361,18 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         paths['neighborhood_${zone.asset}'] =
           'assets/images/chapter1/${zone.asset}.png';
       }
+      // 72 teselas de mundo FISICO, generadas una sola vez fuera del juego.
+      for (int i=0; i<ch1PhysicalTileCount; i++) {
+        paths['ch1_world_tile_$i'] = ch1PhysicalTileAsset(i);
+      }
       // Pergola is a unique neutral connecting vista, never repeated.
       paths['neighborhood_connector_pergola_v091'] =
         'assets/images/chapter1/connector_pergola_v091.png';
       // Replacement for the broken irregular props grid: four isolated trees.
+      paths['neighborhood_clouds_v4'] =
+        'assets/images/chapter1/clouds_v4_experimental.png';
+      paths['neighborhood_park_props_atlas'] =
+        'assets/images/chapter1/park_props_atlas.png';
       paths['neighborhood_trees_v091'] =
         'assets/images/chapter1/trees_separated_v091.png';
       for (final region in neighborhoodSceneRegions.where((r) => r.connector)) {
@@ -399,7 +410,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           paths['dog_${v}_$pose'] = 'assets/images/dog/$v/$pose.png';
         }
       }
-      for (final v in ['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue']) {
+      for (final v in ['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue']) {
         if (v=='cat' || v=='rat') {
           // Se carga la hoja nueva única, con cinco poses coherentes y
           // recortes medidos; no se usan los cinco dibujos planos originales.
@@ -467,7 +478,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     for (double x=820; x<stageWidth-300; x+=930+rng.nextInt(300)) {
       final prog=x/stageWidth;
       String type=kinds[rng.nextInt(kinds.length)];
-      if (prog<.3 && ['referee','breakdancer','teacher','statue','dog_doberman'].contains(type)) {
+      if (prog<.3 && ['goalkeeper','referee','breakdancer','teacher','statue','dog_doberman'].contains(type)) {
         type=kinds.first;
       }
       enemies.add(Enemy(enemies.length,type,x));
@@ -702,7 +713,29 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         continue;
       }
       final distance=hero.x-foe.x,absDist=distance.abs();
-      if(foe.ranged) {
+      if(foe.kind=='goalkeeper') {
+        // Intermediate threat: restricted patrol, readable wind-up then ONE dive.
+        // The keeper never teleports, throws projectiles or attacks immediately.
+        if(foe.launched) {
+          if(foe.t >= .34 && foe.t < .52 && !foe.biteApplied) {
+            foe.biteApplied=true;
+            if(absDist<52 && hero.y>groundY-60) _receiveDamage(foe.facing);
+          }
+          if(foe.t>=.75) {
+            foe.launched=false;foe.biteApplied=false;
+            foe.attackCooldown=2.7;foe.t=0;
+          }
+        } else if(absDist < 95 && foe.attackCooldown<=0) {
+          foe.launched=true;foe.biteApplied=false;foe.t=0;
+          foe.facing=distance>=0?1:-1;
+        } else if(absDist<foe.detection) {
+          foe.facing=distance>=0?1:-1;
+          if(absDist>85)foe.x+=foe.facing*foe.speed*dt;
+        } else {
+          foe.x+=foe.facing*foe.speed*.18*dt;
+          if((foe.x-foe.home).abs()>95)foe.facing=-foe.facing;
+        }
+      } else if(foe.ranged) {
         if(absDist<390 && foe.attackCooldown<=0) {
           // No machine-gun projectiles: one visible wind-up, one projectile, long recovery.
           if(!foe.launched){foe.launched=true;foe.t=0;foe.facing=distance>=0?1:-1;}
@@ -1133,7 +1166,7 @@ class StagePainter extends CustomPainter {
             groundY-foe.flightAltitude-pigeonFlightFootY[frame]*flightScale+bob,
             pigeonAtlasWorldCell,pigeonAtlasWorldCell),
           source:pigeonFlightSource(frame));
-      } else if(['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'].contains(foe.kind)) {
+      } else if(['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'].contains(foe.kind)) {
         // Distinct combat states: a teacher must not run while throwing an exam,
         // and a referee must actually show his raised red card in wind-up.
         final int frame;
@@ -1142,7 +1175,7 @@ class StagePainter extends CustomPainter {
         } else if (foe.stunned>0) {
           frame=foe.ranged ? 1 : 3;
         } else if (foe.launched) {
-          frame=foe.kind=='referee' ? 2 : foe.kind=='breakdancer' ? 3
+          frame=foe.kind=='goalkeeper' ? (foe.t < .15 ? 0 : foe.t < .27 ? 2 : foe.t < .34 ? 3 : foe.t < .56 ? 4 : 1) : foe.kind=='referee' ? 2 : foe.kind=='breakdancer' ? 3
               : foe.kind=='teacher' ? 2 : 3;
         } else {
           frame=foe.ranged ? ((foe.t*2).floor()%2) : ((foe.t*6).floor()%3);
@@ -1153,7 +1186,7 @@ class StagePainter extends CustomPainter {
           // Una misma escala de píxel para TODOS los fotogramas del enemigo:
           // jamás normalizar cada frame a una altura arbitraria (causa del gigantismo).
           final targetHeight = switch(foe.kind) {
-            'rival' => 124.0, 'novice' => 117.0, 'bully' => 137.0,
+            'rival' => 124.0, 'goalkeeper' => 121.0, 'novice' => 117.0, 'bully' => 137.0,
             'referee' => 143.0, 'teacher' => 145.0, 'breakdancer' => 126.0,
             'statue' => 139.0, 'pigeon' => 64.0,
             'rat' => creatureIdleHeights['rat']!,
@@ -1174,7 +1207,7 @@ class StagePainter extends CustomPainter {
             // The pivot is the feet, so a wind-up never slides the enemy off the floor.
             // Small movement for large characters whose source sheets have
             // nearly identical waiting/walking poses (not a sprite-scale hack).
-            final lean=foe.launched ? -0.085 :
+            final lean=foe.launched && foe.kind!='goalkeeper' ? -0.085 :
               (foe.kind=='bully' && !foe.defeated ? .028*math.sin(foe.t*8) : 0.0);
             canvas.save();
             if(lean != 0){
@@ -1342,7 +1375,181 @@ class StagePainter extends CustomPainter {
     }
   }
 
+  // LABORATORIO RC3: activación explícita solo para QA. El nuevo modelo
+  // ancla el hito al mundo y RECHAZA material visual no construido. No
+  // sustituye el capítulo en las compilaciones normales hasta aprobar arte.
+  static const bool chapterOneWorldV3Lab =
+      bool.fromEnvironment('CHAPTER_ONE_WORLD_V3_LAB', defaultValue:false);
+
+  void _neighborhoodWorldV3Lab(Canvas canvas) {
+    const sceneH = 380.0;
+    canvas.drawRect(const Rect.fromLTWH(0, 0, viewW, sceneH),
+        Paint()..color=const Color(0xff4da9ed));
+    final piece = curvedBuildingPilot;
+    final img = images['neighborhood_${piece.asset}'];
+    if (img != null && piece.intersects(cameraX, viewW)) {
+      final dest = Rect.fromLTWH(
+          piece.worldX-cameraX, piece.worldY, piece.width, piece.height);
+      // Fuente y destino escalan por el MISMO factor; el edificio conserva su
+      // arquitectura, aparece UNA vez y no queda pegado a la pantalla.
+      canvas.drawImageRect(img,
+          Rect.fromLTWH(0, 0, img.width.toDouble(), 690), dest,
+          Paint()..filterQuality=FilterQuality.none);
+    }
+    // La zona magenta es una alarma de ARTE AUSENTE, no un paisaje nuevo.
+    // Se muestra solo con --dart-define=CHAPTER_ONE_WORLD_V3_LAB=true.
+    final missing = missingWorldArtInCamera(cameraX, viewW, [piece]);
+    if (missing > 0.5) {
+      final left = math.max(0.0, piece.right-cameraX);
+      canvas.drawRect(Rect.fromLTWH(left, 0, viewW-left, sceneH),
+          Paint()..color=const Color(0xff532a6c));
+      _outlined(canvas, 'ARTE PENDIENTE · NO APROBADO',
+          Offset((left+viewW)/2, 90), Colors.white, 17);
+    }
+  }
+
+  // Laboratorio RC3 V4: mundo completo con cámara, capas, objetos,
+  // culling y suelo independientes. No es el render de producción porque
+  // los bordes fotográficos requieren una salida artística aprobada.
+  static const bool chapterOneWorldV4Lab =
+      bool.fromEnvironment('CHAPTER_ONE_WORLD_V4_LAB', defaultValue:false);
+
+  void _neighborhoodWorldV4Lab(Canvas canvas) {
+    const scenicBottom = 380.0;
+    final sky = Rect.fromLTWH(0, 0, viewW, scenicBottom);
+    canvas.drawRect(sky, Paint()..shader=ui.Gradient.linear(
+       const Offset(0,0), const Offset(0,380),
+       [const Color(0xff309af3),const Color(0xffa4dbff)]));
+    // Montañas lejanas: capa world-space y parallax deliberado. Las lomas
+    // se muestrean en coordenadas globales, sin pantalla-origen repetida.
+    for (int layer=0;layer<2;layer++) {
+      final speed=layer==0?0.18:0.38;
+      final baseline=layer==0?297.0:348.0;
+      final path=Path()..moveTo(0,scenicBottom)
+        ..lineTo(0,baseline);
+      for (double sx=0;sx<=viewW+8;sx+=8) {
+        final wx=sx+cameraX*speed;
+        final y=baseline-21*math.sin(wx/(layer==0?251.0:137.0))
+          -11*math.sin(wx/(layer==0?103.0:75.0));
+        path.lineTo(sx,y.roundToDouble());
+      }
+      path..lineTo(viewW,scenicBottom)..close();
+      canvas.drawPath(path, Paint()..color=layer==0?
+        const Color(0xff699ab5):const Color(0xff478b78));
+    }
+    // Nubes independientes en paralaje lento, elaboradas desde arte NUEVO.
+    // No se reutilizan ni se estiran las cuatro ilustraciones originales.
+    final clouds=images['neighborhood_clouds_v4'];
+    if(clouds!=null) {
+      for(int i=0;i<100;i++) {
+        final wx=110.0+i*500.0+(i%3)*48;
+        final dx=wx-cameraX*0.18;
+        if(dx < -290 || dx>viewW+290)continue;
+        final box=ch1CloudRectsV4[i%2];
+        final dest=Rect.fromLTWH(dx,35+(i%4)*19,264,94);
+        canvas.drawImageRect(clouds,
+           Rect.fromLTWH(box[0],box[1],box[2],box[3]),dest,
+           Paint()..filterQuality=FilterQuality.none);
+      }
+    }
+    // Dos profundidades: arbolado más alejado, detrás de vallados/mobiliario.
+    final distantAtlas=images['neighborhood_park_props_atlas'];
+    if(distantAtlas!=null) {
+      for(final prop in ch1MidTreesV4()) {
+        final r=ch1PropRectsV4[prop.atlasIndex];
+        final ww=prop.height*r[2]/r[3];
+        final dx=prop.worldX-cameraX;
+        if(dx+ww<0||dx>viewW)continue;
+        canvas.drawImageRect(distantAtlas,
+          Rect.fromLTWH(r[0],r[1],r[2],r[3]),
+          Rect.fromLTWH(dx,prop.baseY-prop.height,ww,prop.height),
+          Paint()..filterQuality=FilterQuality.none
+                 ..color=Colors.white.withValues(alpha:.87));
+      }
+    }
+    // Los hitos originales no se repiten; transforman mundo -> pantalla.
+    for (final landmark in ch1LandmarksV4) {
+      if (!landmark.visible(cameraX,viewW)) continue;
+      final img=images['neighborhood_${landmark.asset}'];
+      if (img==null) continue;
+      final destination=Rect.fromLTWH(
+        landmark.screenX(cameraX),0,landmark.width,landmark.displayH);
+      canvas.drawImageRect(img,
+        Rect.fromLTWH(0,0,img.width.toDouble(),landmark.sourceH),
+        destination,Paint()..filterQuality=FilterQuality.none);
+    }
+    // Fábrica de muros repetibles: a diferencia de las panorámicas únicas,
+    // son piezas de mosaico. Ninguna afecta a la geometría de colisiones.
+    final atlasForWalls=images['neighborhood_park_props_atlas'];
+    if(atlasForWalls!=null) {
+      final b=ch1PropRectsV4[10];
+      const wallH=57.0;
+      final wallW=wallH*b[2]/b[3];
+      final first=(cameraX/wallW).floor()-1;
+      final last=((cameraX+viewW)/wallW).ceil()+1;
+      for(int n=first; n<last; n++) {
+        if(n<0) continue;
+        final x=n*wallW;
+        // Nunca pegar un muro nuevo por encima del vallado fotográfico.
+        if(ch1LandmarksV4.any((p) =>
+            x+wallW>=p.x-16 && x<=p.right+16)) continue;
+        canvas.drawImageRect(atlasForWalls,
+            Rect.fromLTWH(b[0],b[1],b[2],b[3]),
+            Rect.fromLTWH(x-cameraX,325,wallW,wallH),
+            Paint()..filterQuality=FilterQuality.none);
+      }
+    }
+    // Atlas de objetos completos anclados al mundo. Renderizamos únicamente
+    // los objetos del viewport. No cubrir las escenas originales ni a Sara.
+    final atlas=images['neighborhood_park_props_atlas'];
+    if(atlas!=null) {
+      for(final prop in ch1PropsV4()) {
+        final bounds=ch1PropRectsV4[prop.atlasIndex];
+        final width=prop.height*bounds[2]/bounds[3];
+        final dx=ch1OnScreenV4(prop.worldX,cameraX);
+        if(dx+width<0 || dx>viewW) continue;
+        canvas.drawImageRect(atlas,
+          Rect.fromLTWH(bounds[0],bounds[1],bounds[2],bounds[3]),
+          Rect.fromLTWH(dx,prop.baseY-prop.height,width,prop.height),
+          Paint()..filterQuality=FilterQuality.none);
+      }
+    }
+  }
+
+  // CAPITULO 1 RC3: paisaje fisico continuo por tiles. El x de cada imagen
+  // corresponde a un unico x de mundo. No hay fundidos temporales, auto-pan,
+  // fotografias estiradas, ni duplicacion de escenas por region.
+  void _neighborhoodPhysicalWorld(Canvas canvas) {
+    for (final index in ch1PhysicalVisibleTiles(cameraX,viewportWidth:viewW)) {
+      final img = images['ch1_world_tile_$index'];
+      if (img == null) continue;
+      final x = ch1PhysicalTileX(index)-cameraX;
+      final width = ch1PhysicalTileActualWidth(index);
+      // Pixel exacto, incluida la ultima pieza de 148px.
+      canvas.drawImageRect(img,
+        Rect.fromLTWH(0, 0, width, ch1PhysicalHeight),
+        Rect.fromLTWH(x, 0, width, ch1PhysicalHeight),
+        Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
+  // Solo para contrastar el render antiguo durante una inspeccion de QA.
+  static const bool chapterOneLegacyBackdrop =
+      bool.fromEnvironment('CH1_LEGACY_BACKGROUND',defaultValue:false);
+
   void _neighborhoodBackground(Canvas canvas) {
+    if (!chapterOneLegacyBackdrop && !chapterOneWorldV3Lab && !chapterOneWorldV4Lab) {
+      _neighborhoodPhysicalWorld(canvas);
+      return;
+    }
+    if (chapterOneWorldV4Lab) {
+      _neighborhoodWorldV4Lab(canvas);
+      return;
+    }
+    if (chapterOneWorldV3Lab) {
+      _neighborhoodWorldV3Lab(canvas);
+      return;
+    }
     // Solid sky behind the scene for safe viewport edges even during joins.
     canvas.drawRect(const Rect.fromLTWH(0, 0, viewW, 380),
       Paint()..color=const Color(0xff4da9ed));

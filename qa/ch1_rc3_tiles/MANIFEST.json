@@ -1,0 +1,84 @@
+{
+  "stage_width": 36500,
+  "world_height": 380,
+  "tile_width": 512,
+  "tiles": 72,
+  "landmarks": [
+    {
+      "asset": "residential_curve",
+      "x": 480,
+      "width": 804,
+      "right": 1284,
+      "edge_blend": 160,
+      "source_height": 790
+    },
+    {
+      "asset": "connector_residential_greenway_v091",
+      "x": 7580,
+      "width": 1297,
+      "right": 8877,
+      "edge_blend": 160,
+      "source_height": 620
+    },
+    {
+      "asset": "green_promenade",
+      "x": 10180,
+      "width": 804,
+      "right": 10984,
+      "edge_blend": 160,
+      "source_height": 790
+    },
+    {
+      "asset": "connector_neutral_park_v091",
+      "x": 16520,
+      "width": 1248,
+      "right": 17768,
+      "edge_blend": 160,
+      "source_height": 635
+    },
+    {
+      "asset": "white_canopy",
+      "x": 19200,
+      "width": 804,
+      "right": 20004,
+      "edge_blend": 160,
+      "source_height": 790
+    },
+    {
+      "asset": "connector_pergola_v091",
+      "x": 25600,
+      "width": 1376,
+      "right": 26976,
+      "edge_blend": 160,
+      "source_height": 600
+    },
+    {
+      "asset": "rocket_park",
+      "x": 29120,
+      "width": 804,
+      "right": 29924,
+      "edge_blend": 160,
+      "source_height": 790
+    }
+  ],
+  "original_master_files_edited": false,
+  "build": "deterministic physical world texture (not runtime panorama panning)",
+  "preview_cameras": [
+    0,
+    460,
+    740,
+    1140,
+    2000,
+    5600,
+    7440,
+    8150,
+    9850,
+    10450,
+    16500,
+    19250,
+    25500,
+    29100,
+    32000,
+    35600
+  ]
+}

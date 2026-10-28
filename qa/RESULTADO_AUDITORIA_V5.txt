@@ -1,0 +1,14 @@
+{
+  "camera_samples": 111,
+  "seam_rejections": [
+    "residential_curve",
+    "connector_residential_greenway_v091",
+    "green_promenade",
+    "connector_neutral_park_v091",
+    "white_canopy",
+    "connector_pergola_v091",
+    "rocket_park"
+  ],
+  "fluttter_tested": false,
+  "pass": false
+}

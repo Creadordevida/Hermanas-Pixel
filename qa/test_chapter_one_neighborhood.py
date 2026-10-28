@@ -13,14 +13,28 @@ ROOT = Path(__file__).resolve().parents[1]
 SCENES = ROOT / 'assets/images/chapter1'
 LAYOUT = (ROOT / 'lib/chapter_one_layout.dart').read_text()
 MAIN = (ROOT / 'lib/main.dart').read_text()
+ENGINE = (ROOT / 'lib/neighborhood_scene_engine.dart').read_text()
 
 
-def zone_rows(source=LAYOUT):
-    return [
-        (name, asset, int(start), int(end))
-        for name, asset, start, end in re.findall(
-            r"NeighborhoodZone\('([^']+)', '([^']+)', (\d+), (\d+)\)", source
+def zone_rows(source=ENGINE):
+    """Lee la ÚNICA geografía: el renderer. Spawn zones are derived in Dart.
+
+    Conservamos el contrato de cuatro hitos, pero no exigimos duplicar
+    los números en otra tabla (que fue precisamente el error anterior).
+    """
+    regions = source.split('const neighborhoodSceneRegions =',1)[1].split('];',1)[0]
+    rows = [
+        (name, asset, int(start), int(end), 'connector: true' in rest)
+        for name, asset, start, end, rest in re.findall(
+            r"id:\s*'([^']+)',\s*asset:\s*'([^']+)',\s*"
+            r"start:\s*(\d+),\s*end:\s*(\d+)([^)]*)\)",
+            regions,
         )
+    ]
+    landmarks = [row for row in rows if not row[4]]
+    return [
+        (row[0],row[1],row[2],landmarks[i+1][2] if i+1<len(landmarks) else rows[-1][3])
+        for i,row in enumerate(landmarks)
     ]
 
 

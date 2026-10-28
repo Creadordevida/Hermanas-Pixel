@@ -1,3 +1,5 @@
+import 'neighborhood_scene_engine.dart' show neighborhoodSceneRegions;
+
 /// Capítulo 1: geografía real reinterpretada en pixel art. Las cuatro vistas
 /// se muestran una sola vez por recorrido; el mundo no repite panorámicas.
 /// Las coordenadas están en píxeles lógicos de MUNDO, no de pantalla.
@@ -10,12 +12,23 @@ class NeighborhoodZone {
   double get length => end - start;
 }
 
-const neighborhoodZones = <NeighborhoodZone>[
-  NeighborhoodZone('residencial', 'residential_curve', 0, 8300),
-  NeighborhoodZone('paseo_verde', 'green_promenade', 8300, 17300),
-  NeighborhoodZone('parque_cubierto', 'white_canopy', 17300, 26400),
-  NeighborhoodZone('parque_cohete', 'rocket_park', 26400, 36500),
-];
+// Fuente única de límites: los encuentros usan los mismos inicios de hito
+// que el render de fondos. Los enlaces entre hitos pertenecen a la zona
+// anterior. Nunca duplicar aquí números de coordenadas independientes.
+final List<NeighborhoodZone> neighborhoodZones =
+    List<NeighborhoodZone>.unmodifiable(() {
+  final landmarks = neighborhoodSceneRegions.where((r) => !r.connector).toList();
+  return <NeighborhoodZone>[
+    for (int i = 0; i < landmarks.length; i++)
+      NeighborhoodZone(
+        landmarks[i].id,
+        landmarks[i].asset,
+        landmarks[i].start,
+        i + 1 < landmarks.length ? landmarks[i + 1].start :
+            neighborhoodSceneRegions.last.end,
+      ),
+  ];
+}());
 
 /// El mismo atlas da árboles, plantas y mobiliario independientes del fondo.
 /// Ninguno de sus sprites es un monumento repetido.

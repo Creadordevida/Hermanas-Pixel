@@ -1,0 +1,114 @@
+{
+  "name": "Hermanas Pixel Capitulo 1 V5",
+  "status": "BLOCKED",
+  "checks": [
+    {
+      "check": "Cuatro ilustraciones aprobadas intactas (SHA256)",
+      "passed": true,
+      "type": "hard"
+    },
+    {
+      "check": "Siete pinturas fisicas con escala uniforme",
+      "passed": true,
+      "type": "hard"
+    },
+    {
+      "check": "Arboles y objetos no invaden las ilustraciones",
+      "passed": true,
+      "type": "hard"
+    },
+    {
+      "check": "Siete salidas de ilustraciones sin corte artificial",
+      "passed": false,
+      "type": "visual",
+      "failed_count": 7,
+      "seams": [
+        {
+          "name": "residential_curve",
+          "world_edge": 804.25,
+          "camera": 524.25,
+          "edge_px": 280,
+          "jump_mean_rgb": 101.26,
+          "six_pixel_band_mean": 99.95,
+          "visible": true
+        },
+        {
+          "name": "connector_residential_greenway_v091",
+          "world_edge": 8496.9,
+          "camera": 8216.9,
+          "edge_px": 280,
+          "jump_mean_rgb": 137.0,
+          "six_pixel_band_mean": 135.62,
+          "visible": true
+        },
+        {
+          "name": "green_promenade",
+          "world_edge": 10004.25,
+          "camera": 9724.25,
+          "edge_px": 280,
+          "jump_mean_rgb": 96.65,
+          "six_pixel_band_mean": 101.44,
+          "visible": true
+        },
+        {
+          "name": "connector_neutral_park_v091",
+          "world_edge": 17448.31,
+          "camera": 17168.31,
+          "edge_px": 280,
+          "jump_mean_rgb": 109.23,
+          "six_pixel_band_mean": 105.73,
+          "visible": true
+        },
+        {
+          "name": "white_canopy",
+          "world_edge": 19204.25,
+          "camera": 18924.25,
+          "edge_px": 280,
+          "jump_mean_rgb": 89.8,
+          "six_pixel_band_mean": 87.06,
+          "visible": true
+        },
+        {
+          "name": "connector_pergola_v091",
+          "world_edge": 26775.6,
+          "camera": 26495.6,
+          "edge_px": 280,
+          "jump_mean_rgb": 120.69,
+          "six_pixel_band_mean": 117.09,
+          "visible": true
+        },
+        {
+          "name": "rocket_park",
+          "world_edge": 28404.25,
+          "camera": 28124.25,
+          "edge_px": 280,
+          "jump_mean_rgb": 118.54,
+          "six_pixel_band_mean": 116.84,
+          "visible": true
+        }
+      ],
+      "threshold_rgb_jump": 35,
+      "warning": "Los saltos RGB son indicio, no sustituyen evaluacion artistica"
+    },
+    {
+      "check": "Recorrido completo aprobado por revision artistica",
+      "passed": false,
+      "type": "visual",
+      "reason": "Montaje de 111 camaras muestra tramos vacios y composicion generica"
+    },
+    {
+      "check": "Flutter real ejecutado y pruebas Dart superadas",
+      "passed": false,
+      "type": "runtime",
+      "reason": "Flutter SDK no disponible en este entorno; CI solo preparado"
+    },
+    {
+      "check": "Gameplay Android final comprobado",
+      "passed": false,
+      "type": "runtime",
+      "reason": "No hay ejecucion Android del motor experimental"
+    }
+  ],
+  "zip_permitted": false,
+  "integration_enabled_by_default": false
+}

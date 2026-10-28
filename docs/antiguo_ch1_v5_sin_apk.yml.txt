@@ -1,0 +1,52 @@
+name: Capitulo 1 V5 - auditoria experimental sin APK
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python e imagenes del mundo
+        run: |
+          python3 -m pip install --user pillow numpy imageio imageio-ffmpeg
+          python3 -m unittest discover -s qa -p 'test_*.py' -q
+      - name: Cubrir uniones y recorrido sin alterar arte original
+        run: |
+          python3 qa/ch1_world_v4_reference.py > /tmp/mundo.json
+          python3 qa/visual_audit_v5.py > /tmp/auditoria.json
+      - name: Prueba de aceptacion (se espera ROJO si hay costuras)
+        id: art_gate
+        continue-on-error: true
+        run: python3 qa/acceptance_ch1_v4.py
+      - name: Publicar evidencias, nunca APK
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Capitulo-1-V5-capturas-y-puerta-de-arte
+          path: |
+            qa/ch1_v5_audit/
+            qa/ch1_world_v4_previews/PUERTA_ENTREGA.json
+      - name: Bloquear aprobacion cuando el arte no ha pasado
+        if: steps.art_gate.outcome != 'success'
+        run: |
+          echo 'BLOQUEADO: transiciones aun no aprobadas' >&2
+          exit 2
+  flutter-only:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configurar Flutter version del proyecto
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.47.8'
+      - name: Dependencias de Flutter
+        run: flutter pub get
+      - name: Analizar source y pruebas
+        run: |
+          flutter analyze --no-pub lib
+          flutter analyze --no-pub test
+      - name: Validar coordenadas, culling y guardias de objetos
+        run: flutter test test/chapter_one_world_v4_test.dart

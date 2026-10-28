@@ -1,0 +1,18 @@
+{
+  "base": "Miren_y_Sara_0.9.1_RC2_GITHUB_COMPLETO.zip",
+  "files": {
+    "lib/chapter_one_layout.dart": "e03d6b7cc7224b043a910f928d5ebaaa943b6fd9273d28f26e393401abc80720",
+    "lib/chapter_one_camera_v3.dart": "b240edb1c759aaed03c0a50c684ef3080870f90d152e52c05406401569ba97b3",
+    "lib/main.dart": "95a2fb52194d8d4559f787b36618d3e946b454f6334ca67f5241024ca43d941c",
+    "test/chapter_one_camera_v3_test.dart": "2a886bd3a99eb47c97f6a271ed2e74b91ba25495bf857e5e81e40f2c2e974214",
+    "qa/test_single_world_v3.py": "9ff4506bfb5b0e8d7443fdd061174faa689612d0d2f3d19ccc31c0139affee31",
+    "qa/test_preview_ch1_v3.py": "72bb3e37972bdfa09ca52edb35cf790beacbc2b501a9b44261061f6be7a9a919",
+    "qa/preview_ch1_v3.py": "6c3940c5f93773188e7f97852c0242c5e0d6e7ff42b03b1cb2a77490472b3836",
+    "qa/test_chapter_one_neighborhood.py": "efc094f69e58739fa6310fa81135cc4c3be35d128ca30d6feb019d8e2f1b3059",
+    "qa/RESULTADO_REGRESION.txt": "99aa3017f6b54d0af57ed74cd6e5de78f2571e194fe7b96287b6d5a3d88567f3",
+    "qa/ch1_legacy_art_sha256.json": "37179815faa966225527ddaf8274a20061c16c4c1c6547d9550428c965054312"
+  },
+  "flutter": "NOT_RUN",
+  "apk": "NOT_BUILT",
+  "art_connections": "REJECTED_MISSING"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Hermanas Pixel Cap1 RC3 V4",
+  "status": "BLOCKED",
+  "checks": [
+    {
+      "check": "Original del edificio protegido",
+      "passed": true,
+      "type": "hard"
+    },
+    {
+      "check": "Sin fachada cortada",
+      "passed": false,
+      "metric_mean_rgb_jump": 97.12,
+      "threshold": 35,
+      "type": "visual"
+    },
+    {
+      "check": "Suficiente detalle de paisaje entre hitos",
+      "passed": true,
+      "unique_top_colors": 3249,
+      "threshold": 450,
+      "type": "visual"
+    },
+    {
+      "check": "Transiciones revisadas en vídeo de motor Flutter",
+      "passed": false,
+      "reason": "Flutter SDK no disponible; referencia Python solamente",
+      "type": "integration"
+    },
+    {
+      "check": "Mundo completo revisado artísticamente",
+      "passed": false,
+      "reason": "Se necesita producir arte modular variado para los tramos largos",
+      "type": "visual"
+    }
+  ],
+  "zip_permitted": false
+}

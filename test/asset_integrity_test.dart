@@ -24,6 +24,8 @@ void main() {
       for(final variant in ['', 'dalmatian/', 'doberman/'])
         for(final pose in ['idle','walk','alert','run','bite','hit','stunned','defeated'])
           'assets/images/dog/$variant$pose.png',
+      for(var i=0; i<72; i++)
+        'assets/images/chapter1/ch1_world_tiles/world_${i.toString().padLeft(3, '0')}.png',
       for(final role in ['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'])
         for(var i=0;i<5;i++) 'assets/images/enemies/${role}_$i.png',
       // El motor usa estas hojas nuevas; los cinco PNG RC6 se conservan

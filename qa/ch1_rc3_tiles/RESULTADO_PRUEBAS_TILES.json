@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "tiles": 72,
+  "stage_width": 36500,
+  "landmarks": 7,
+  "protected_masters": 4,
+  "max_boundary_color_jump": 129,
+  "unusual_pixel_jumps": [
+    [
+      1,
+      240,
+      120
+    ],
+    [
+      4,
+      368,
+      117
+    ],
+    [
+      23,
+      240,
+      108
+    ],
+    [
+      32,
+      240,
+      113
+    ],
+    [
+      40,
+      240,
+      129
+    ],
+    [
+      51,
+      160,
+      120
+    ],
+    [
+      63,
+      368,
+      103
+    ]
+  ],
+  "flutter_executed": false,
+  "android_executed": false,
+  "visual_artist_approval": "manual pending"
+}

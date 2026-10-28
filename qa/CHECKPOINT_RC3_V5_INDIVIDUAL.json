@@ -1,0 +1,15 @@
+{
+  "status": "BLOCKED",
+  "no_zip_created": true,
+  "protected_images_unchanged": true,
+  "files_sha256": {
+    "lib/chapter_one_world_v4.dart": "494bf63943ef12e07dde56fb5446fc51a23842c48fccdcb83a0e03b351739729",
+    "qa/ch1_world_v4_reference.py": "cd0fb175d5614e46086e097a357aa38df011c8c1751f29c64c809d991bfd00b3",
+    "qa/visual_audit_v5.py": "5f94dc3f7b8f8794797c335103747907e99466790b9ca2519f6b4e14ec91edd9",
+    "qa/acceptance_ch1_v4.py": "d7b1d79f95289680cfd210e9e5da22d5cd748d47c88c13659602f36fd8ee4286",
+    "qa/test_ch1_world_v5.py": "6cde5b52b07c5abe1e472c7699751ae2db6645ade58cdb9e472a9da0087c5a69",
+    "test/chapter_one_world_v4_test.dart": "71a0146b1b92f07f290d7fda7c665b52cf11ddf395db92b2b136d0002ef1cc16",
+    ".github/workflows/ch1-v5-sin-apk.yml": "f824e95878b8b3369136ab67b04df36b949decfaf25dd33bc95e48b672d67ad5",
+    "INFORME_RC3_V5_REVISION_REAL.md": "8eaa25c72615322f03decd9053364728b953ff5f1e6f61549c6f4501a8321034"
+  }
+}

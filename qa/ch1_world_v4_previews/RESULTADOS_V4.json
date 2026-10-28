@@ -1,0 +1,76 @@
+{
+  "cameras": [
+    0,
+    100,
+    250,
+    400,
+    600,
+    750,
+    900,
+    1000,
+    1200,
+    1450,
+    2000,
+    5300,
+    7000,
+    7500,
+    9000,
+    9200,
+    10100,
+    12000,
+    16400,
+    18600,
+    25700,
+    27800,
+    35000
+  ],
+  "landmarks": [
+    {
+      "asset": "residential_curve",
+      "start": 0,
+      "end": 804.25,
+      "natural_width": 804.25
+    },
+    {
+      "asset": "connector_residential_greenway_v091",
+      "start": 7200,
+      "end": 8496.9,
+      "natural_width": 1296.9
+    },
+    {
+      "asset": "green_promenade",
+      "start": 9200,
+      "end": 10004.25,
+      "natural_width": 804.25
+    },
+    {
+      "asset": "connector_neutral_park_v091",
+      "start": 16200,
+      "end": 17448.31,
+      "natural_width": 1248.31
+    },
+    {
+      "asset": "white_canopy",
+      "start": 18400,
+      "end": 19204.25,
+      "natural_width": 804.25
+    },
+    {
+      "asset": "connector_pergola_v091",
+      "start": 25400,
+      "end": 26775.6,
+      "natural_width": 1375.6
+    },
+    {
+      "asset": "rocket_park",
+      "start": 27600,
+      "end": 28404.25,
+      "natural_width": 804.25
+    }
+  ],
+  "props_count": 117,
+  "floor_in_world": true,
+  "camera_world_shift_for_300_units": 300,
+  "artistic_seam_gate": "REJECTED_UNTIL_NATIVE_ARTISTIC_CONNECTORS",
+  "flutter_gate": "NOT_RUN_SDK_UNAVAILABLE"
+}

@@ -1,0 +1,15 @@
+{
+  "lib/main.dart": "565d1bbc8b2d081ba86340e2ccd0885bcbad3b66bc9e9df7f16d9b8f13c638bb",
+  "lib/chapter_one_world_v4.dart": "89f97cda2d2459d4810af4b77bd4ee547056d2dfb102c7bed60c906e186cc47c",
+  "lib/chapter_one_layout.dart": "e03d6b7cc7224b043a910f928d5ebaaa943b6fd9273d28f26e393401abc80720",
+  "lib/neighborhood_scene_engine.dart": "b7d6a3923fa2fbcffa12f63a95b691145daf2835cf6dc9f36037a0c029961fe7",
+  "test/chapter_one_world_v4_test.dart": "a0b441ec591315d6a0bd995c1128f4bc8d54453b63474c01fe173970e5126adb",
+  "qa/ch1_world_v4_reference.py": "ff8038113d09bbcd273b39d1126508c0b476fc7d88d44cb735968e6b0e7c7174",
+  "qa/test_ch1_world_v4.py": "25c64838d93f25a56f0fe900dc8d5f6eb02e6ed9cf103e9669fac0796b0509d9",
+  "qa/acceptance_ch1_v4.py": "47b21158c283c04540df025d459ab0bdddde5a209f06d322f4acdbf35a0022e6",
+  "qa/extract_clouds_v4.py": "6733fd6cb3d316456a2f1e2229426fc4e241d382124b83c448ad6c5056637802",
+  "assets/images/chapter1/clouds_v4_experimental.png": "c40a41be4cb869a63f10e03460a59fdf10a80aac8a87afedb9abbf7c13594988",
+  "INFORME_CONTINUACION_V4_2026_10_28.md": "436798563492ac748c0382d068723d663ea6552f71da9bd0e981df9a48f4ce57",
+  "qa/ch1_connector_art_trial.py": "1a8bdcc0dce6bd959484aea1bdb25d16bcc226baa4994d14048d71e8432e020b",
+  "assets/images/chapter1/connector_candidate_draft_v4_NOT_APPROVED.png": "bcbfb4145dcf7f210fc144b28ecb07b62227c961d28853cec46035e9a78770bb"
+}

@@ -1,0 +1,41 @@
+name: Capitulo 1 RC3 - continuidad fisica y pruebas sin APK
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'lib/**'
+      - 'assets/images/chapter1/**'
+      - 'qa/**'
+      - 'tools/**'
+      - 'test/**'
+      - '.github/workflows/ch1-rc3-integridad.yml'
+jobs:
+  art-and-coordinates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Python y Pillow
+        run: python3 -m pip install --user pillow numpy
+      - name: Integridad de recursos y mundo dibujado
+        run: |
+          python3 qa/verify_resources.py
+          python3 qa/check_ch1_physical_tiles.py
+          python3 -m unittest discover -s qa -p 'test_*.py' -q
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CH1-RC3-vistas-y-manifiesto
+          path: |
+            qa/ch1_rc3_tiles/CONTACTO_16_CAMARAS.jpg
+            qa/ch1_rc3_tiles/MANIFEST.json
+            qa/ch1_rc3_tiles/RESULTADO_PRUEBAS_TILES.json
+  flutter-tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.47.8'
+      - run: flutter pub get
+      - run: flutter analyze lib test
+      - run: flutter test test/chapter_one_world_tiles_test.dart test/asset_integrity_test.dart test/widget_test.dart

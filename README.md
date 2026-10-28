@@ -1,3 +1,7 @@
+# RC3 capítulo 1 — LEER PRIMERO
+
+**[Instrucciones del paquete para GitHub](README_GITHUB_RC3_CAPITULO1.md)**
+
 # Las aventuras de Miren y Sara — 0.9.1 RC2
 
 **CANDIDATA DE PRUEBAS. No hay confirmación visual Android ni compilación local Flutter.**
