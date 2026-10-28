@@ -49,6 +49,9 @@ class VisualRevisionContract(unittest.TestCase):
         self.assertIn("foe.kingAwakeAt", MAIN)
         self.assertIn("foe.kingImpactDelivered", MAIN)
         self.assertIn("foe.kingAttackAt=time", MAIN)
+        self.assertIn("if (stage == 3)", MAIN)
+        self.assertIn("enemies.add(Enemy(enemies.length,'navarre_king',stageWidth*.54))", MAIN)
+        self.assertIn("final radius=(e-.35)*210;", MAIN)
         self.assertNotIn("'statue' => 139.0", MAIN)
 
     def test_football_transition_not_straight_line(self):
