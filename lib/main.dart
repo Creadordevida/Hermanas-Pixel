@@ -1286,7 +1286,12 @@ class StagePainter extends CustomPainter {
           frame=nearHero && foe.attackCooldown>1.35
               ? 3 : walkingNow ? (1+(foe.t*7).floor()%2) : 0;
         } else if (foe.launched) {
-          frame=foe.kind=='goalkeeper' ? (foe.t < .15 ? 0 : foe.t < .27 ? 2 : foe.t < .34 ? 3 : foe.t < .56 ? 4 : 1) : foe.kind=='referee' ? 2 : foe.kind=='breakdancer' ? 3
+          frame=foe.kind=='goalkeeper' ? (foe.t < .15 ? 0 : foe.t < .27 ? 2 : foe.t < .34 ? 3 : foe.t < .56 ? 4 : 1) : foe.kind=='referee' ? 2 : foe.kind=='breakdancer'
+              // Secuencia física: erguido > flexión > apoyo de manos > suelo
+              // > apoyo de manos > flexión. Antes saltaba directamente a 3.
+              ? (foe.t < .12 ? 0 : foe.t < .24 ? 1
+                  : foe.t < .39 ? 2 : foe.t < .53 ? 3
+                  : foe.t < .65 ? 2 : 1)
               : foe.kind=='teacher' ? 2 : 3;
         } else {
           frame=foe.ranged ? ((foe.t*2).floor()%2) : ((foe.t*6).floor()%3);
