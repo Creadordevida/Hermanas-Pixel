@@ -41,3 +41,8 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Se suprimió el `Container` con fondo azul oscuro alrededor del logo The Wolf Company y se amplió moderadamente su área de presentación, sin modificar el PNG original.
 - **Importante:** en pantallas panorámicas aún puede haber márgenes planos, aunque ya no bandas borrosas. La transparencia del PNG del logo y su contraste quedan por validar en Android. No declarar solucionada la portada hasta ver una captura real.
 - Estado de trabajo global: cambios de `main.dart` y generadores únicamente en la rama; PNG originales aún no regenerados; NO hay APK de esta revisión y NO se han ejecutado pruebas Flutter.
+
+## 2026-10-28 — Integración de regeneración de assets en compilación (commit d7652375)
+- Workflow `.github/workflows/build.yml` ahora escucha commits de rama `work/revision-visual-20261028-continuidad` además de main.
+- Antes de compilar, ejecuta generadores de colegio/danza y fútbol; publica recursos de revisión y contacto de 12 cámaras de fútbol como artefacto independiente. Regenera las imágenes también para las capturas Flutter; APK de la rama se diferencia claramente como `Miren-y-Sara-revision-visual-PR5-APK-PRUEBAS`.
+- **La compilación NO queda aprobada por este commit:** hay que comprobar resultados CI, integridad de generación, imágenes efectivamente regeneradas, pruebas Flutter y Android. Si falla, leer logs antes de aplicar correcciones.
