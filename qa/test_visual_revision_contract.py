@@ -27,6 +27,12 @@ class VisualRevisionContract(unittest.TestCase):
     def test_dance_use_wider_source(self):
         self.assertIn("start=(0,385,770)[variant]",INTERIORS)
 
+    def test_school_bully_has_real_idle_walk_and_attack_states(self):
+        self.assertIn("final walkingNow=(foe.x-foe.lastRenderedX).abs() > .12;",MAIN)
+        self.assertIn("else if (foe.kind=='bully')",MAIN)
+        self.assertIn("walkingNow ? (1+(foe.t*7).floor()%2) : 0",MAIN)
+        self.assertNotIn("foe.kind=='bully' && !foe.defeated ? .028*math.sin",MAIN)
+
     def test_football_transition_not_straight_line(self):
         self.assertIn("contour=(13 + 7*np.sin",FOOTBALL)
         self.assertNotIn("for y in range(22):band[y,:,3]",FOOTBALL)
