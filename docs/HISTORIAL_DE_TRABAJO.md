@@ -120,3 +120,9 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Petición del usuario: **rehacer** robot, aficionado, turista y rey de Navarra para próxima versión; revisar **captura REAL del motor del juego** (no PNG aislado ni montaje).
 - **No se dispone todavía de sprites rediseñados y verificados en captura real.** Por seguridad artística, commit `ec23966e`: constantes `newEnemyArtApproved=false` y `kingVisualApproved=false` impiden su aparición en partidas de la candidata, mientras se conservan IA/atlas para desarrollo. No afirmar que los cuatro estén solucionados: falta rediseñarlos, integrarlos y revisar juego renderizado.
 - `a35d8c18`: test contractual refleja bloqueo de la estatua y otros tres hasta aprobación. Para desbloquear hay que reemplazar sprites procedimentales por arte de calidad, comprobar cada animación in-game y pasar QA; jamás levantar flags antes de ello.
+
+## 2026-10-28 — Iteración gráfica de enemigos, SIN aprobación todavía
+- `724fcb72`: añadidos contornos de un píxel nativo y detalles de iluminación, ropa, ojos, cuerpo y metal en `tools/generate_new_enemy_sprites.py` para robot, aficionado y turista.
+- `e6d36501`: añadido contorno tallado uniforme al generador de la estatua del rey de Navarra.
+- **Advertencia obligatoria**: son mejoras incrementales a dibujos procedimentales que fueron rechazados. No se puede afirmar que ya hayan alcanzado calidad SNES, ni que se haya revisado una captura REAL del juego, ni que estén aprobados. Las cuatro apariciones permanecen bloqueadas por `newEnemyArtApproved=false` y `kingVisualApproved=false`. No activar hasta redibujar sprites de calidad suficiente y revisar capturas reales del motor y sus animaciones.
+- Existen ejecuciones recientes de GitHub fallidas; se requiere consultar los logs y corregirlas antes de entregar APK. Este progreso no equivale a terminar el encargo del usuario.
