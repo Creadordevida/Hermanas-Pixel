@@ -524,7 +524,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       enemies.add(Enemy(enemies.length,type,x));
     }
     // Tres nuevos enemigos aprobados: colocación por capítulo, separados.
-    const newKinds = <int, String>{0:'tipsy_tourist', 4:'rival_supporter', 6:'cleaning_robot'};
+    const newKinds = <int, String>{0:'tipsy_tourist', 1:'tipsy_tourist', 2:'tipsy_tourist', 3:'tipsy_tourist', 4:'rival_supporter', 6:'cleaning_robot'};
     final newKind = newKinds[stage];
     if (newKind != null) {
       final typ = switch (stage) {
@@ -769,6 +769,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         };
         final motion=foe.newMotion ??= NewEnemyMotion(kind:typ,home:foe.home,x:foe.x);
         motion.x=foe.x;
+        if(motion.pose == NewEnemyPose.hit) motion.pose=NewEnemyPose.alert;
         if(motion.update(dt,hero.x) && hero.y>groundY-48) {
           _receiveDamage(motion.direction);
         }
