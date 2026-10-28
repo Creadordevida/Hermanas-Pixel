@@ -9,3 +9,14 @@
 - **Colegio:** reconstruir con piezas arquitectónicas realmente conectadas; no basta con variar colores de paneles de pasillo.
 - **Pantalla inicial:** mantener personajes, título y botones que están bien; eliminar bandas laterales y caja del logo y hacer sello legible.
 - **Entrega:** prueba Python no sustituye `flutter analyze`, `flutter test`, compilación, inspección de movimiento y revisión por el usuario en móvil.
+
+
+## Norma obligatoria de aceptación de CADA enemigo nuevo — aprobada por el usuario (28/10/2026)
+
+**No se admite ningún enemigo nuevo en una versión jugable solo porque compile, se genere su PNG o supere pruebas de lógica.**
+1. **Revisión visual del archivo real:** obtener el atlas PNG efectivamente generado/compilado, abrirlo y examinar todas las poses y fotogramas; no sustituir por imágenes inventadas, bocetos ideales, referencias ni descripciones de lo que debería ser.
+2. **Comparación con los gráficos originales:** verificar detalle pixel art SNES, anatomía o silueta, volumen, paleta y sombreado, escala frente a Miren y Sara, uniformidad de calidad y ausencia de figuras geométricas provisionales. Si no está a la altura, **RECHAZADO**.
+3. **Movimiento real y coherencia:** verificar transiciones entre espera, marcha, alerta, ataque, impacto y derrota; pivote de suelo estable, tamaño constante, ausencia de saltos y deformaciones; comprobar secuencia en contexto de escenario.
+4. **Pruebas técnicas por enemigo:** atlas y transparencia correctos, carga de recursos, hitboxes y daños, ataques con anticipación, esquiva, recuperación, interacción Miren/Sara, aparición solo donde corresponde, tests y análisis Flutter. Resultado probado, no solo código escrito.
+5. **Puerta de publicación:** documentar por separado `calidad_visual`, `animacion`, `jugabilidad`, `pruebas` y `aprobacion`. La ausencia de revisión real o cualquier fallo bloquea la inclusión del enemigo en un APK de entrega. No etiquetar «terminado», «aprobado» o «validado» sin evidencia.
+6. **Estado presente:** robot, aficionado rival, turista y rey de Navarra: **RECHAZADOS ARTÍSTICAMENTE** los atlas procedimentales actuales. Sus reglas/mecánicas pueden conservarse aisladas, pero se tienen que rehacer los sprites antes de activarlos para publicación. No presentar la mera creación de un archivo como cumplimiento de este requisito.
