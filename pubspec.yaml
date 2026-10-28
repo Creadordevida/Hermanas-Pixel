@@ -33,6 +33,7 @@ flutter:
     - assets/images/scenes/
     - assets/images/enemies/
     - assets/images/enemies_hifi/
+    - assets/images/enemies_new/
     - assets/images/outfits/
     - assets/images/props/
     - assets/images/mid/
