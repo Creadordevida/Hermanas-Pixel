@@ -126,3 +126,11 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - `e6d36501`: añadido contorno tallado uniforme al generador de la estatua del rey de Navarra.
 - **Advertencia obligatoria**: son mejoras incrementales a dibujos procedimentales que fueron rechazados. No se puede afirmar que ya hayan alcanzado calidad SNES, ni que se haya revisado una captura REAL del juego, ni que estén aprobados. Las cuatro apariciones permanecen bloqueadas por `newEnemyArtApproved=false` y `kingVisualApproved=false`. No activar hasta redibujar sprites de calidad suficiente y revisar capturas reales del motor y sus animaciones.
 - Existen ejecuciones recientes de GitHub fallidas; se requiere consultar los logs y corregirlas antes de entregar APK. Este progreso no equivale a terminar el encargo del usuario.
+
+## Continuación trabajo de los 4 enemigos — revisión de animación y captura Flutter real
+- `cd473a3b`: se distinguen los fotogramas de robot, aficionado y turista; el atlas deja de depender solo de copia del mismo fotograma.
+- `61317187`: grietas progresivas al despertar y detalles diferenciados en movimiento/golpe/impacto/derrota para el rey.
+- `af052514`: prueba geométrica sobre los 4 atlas generados: celdas no vacías, poses diferenciadas y variación entre fotogramas. **No equivale a juicio estético.**
+- `ca6d7322`: nueva prueba Flutter que usa el `StagePainter` real del juego y captura 16 imágenes de los 4 enemigos, en las etapas correspondientes, al directorio `qa/rendered_from_flutter`. No confundir con capturas desde móvil/APK; es el render Flutter auténtico.
+- `d520d52e`: se añade la captura al workflow Android y los PNG al artefacto de revisión. Pendiente ejecutar, descargar y **abrir cada captura real** para inspección artística. Los cuatro enemigos siguen bloqueados para partidas mediante la puerta de calidad hasta conseguir y aprobar el resultado.
+- Pendiente prioritario: redibujo artístico profundo; los nuevos detalles no bastan para afirmar calidad SNES. Repetir diseño y captura hasta calidad suficiente. No publicar como terminado.
