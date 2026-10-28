@@ -825,9 +825,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
             }
           } else if(near<250 && foe.attackCooldown<=0) {
             foe.facing=dx>=0?1:-1;
-            // Primeros fotogramas de aviso; embestida tras breve anticipacion.
+            // Aviso visual antes de embestir. El cronómetro se conserva
+            // durante la aproximación; tras embestir empieza el enfriamiento.
             if(foe.t>.55) {foe.launched=true;foe.t=0;}
-          } else {
+          } else if(foe.attackCooldown<=0) {
             foe.t=0;
           }
         } else {
