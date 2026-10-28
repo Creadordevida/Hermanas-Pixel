@@ -29,3 +29,9 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Modificación anterior `cbbe363`: paisajes visibles por ventanas de danza/colegio ahora derivados de los fondos detallados aprobados RC3 FIX2; **no se han regenerado los PNG**.
 - **Estado real:** se han subido CAMBIOS DE GENERADORES a rama de revisión, NO imágenes resultantes, NO APK, NO pruebas Flutter/Android. Ningún capítulo resuelto ni aprobado; comprobar que generadores producen assets correctos, que cambios no empeoran uniones y que no hay imágenes fantasma.
 - Siguiente: regenerar imágenes desde recursos originales, comparar capturas en múltiples cámaras y vídeos de Flutter, completar variación arquitectónica del colegio y portada; revisar calidad del fútbol y danza con usuario antes de fusionar.
+
+## 2026-10-28 — Corrección de composición del colegio (implementación fuente)
+- Commit `f91de794`: `tools/build_interiors_parallax_twc.py`, en `make_wall('school',zone,variant)`, ahora obtiene los paneles de la fuente real de cada sala (`SRCS['school'][zone]`) y no de los mismos dos trozos del pasillo repetidos en aulas e informática. Se retiró la junta falsa central y se dejó un montante de borde por módulo.
+- Commit `ec86860b`: se actualizó `qa/test_interiors_twc.py` para exigir el nuevo contrato; el test viejo comprobaba exactamente el defecto (uso del pasillo para todas las salas).
+- **Pendiente:** regenerar los PNG de colegio y danza; el código de Flutter sigue cargando los anteriores mientras no se publiquen assets. No se ha realizado CI de esta rama ni un APK de esta revisión. Los elementos singulares y suelo físico permanecen separados.
+- **Riesgo a validar visualmente:** los paneles se recortan de ilustraciones enteras y pueden repetir pizarras/objetos emblemáticos que después se dibujan como hitos únicos; en ese caso hay que enmascararlos de los paneles repetibles antes de aprobar el colegio.
