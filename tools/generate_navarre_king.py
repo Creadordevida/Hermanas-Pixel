@@ -57,6 +57,27 @@ def draw(pose,frame):
  if pose=='defeated':
   d.line((9,32,46,62),fill=dark,width=3)
   d.line((42,35,14,59),fill=dark,width=2)
+ # Fotogramas únicos según fase: grietas progresivas, paso y golpe al suelo.
+ if pose=='awaken':
+  cracks=((23,17,25,25),(22,16,26,27),(21,15,28,31),(18,14,30,36))
+  xx,yy,x2,y2=cracks[frame]
+  d.line((xx,yy,x2,y2),fill='#d5c6a2',width=1)
+  d.point((28,19),fill='#f7d17d')
+ elif pose=='walk':
+  # Piedras de las grebas oscilan sin modificar el pivote del suelo.
+  foot=frame%4
+  d.line((13+foot,57,19+foot,61),fill=light,width=2)
+  d.line((35-foot,57,42-foot,61),fill=dark,width=2)
+  d.line((9,37,13+foot,43),fill=gold,width=1)
+ elif pose=='slam':
+  d.line((39,47-frame,51,53+frame%2),fill=light,width=3)
+  d.arc((6,56,49,69),0,180,fill='#d5c6a2',width=1+frame//2)
+ elif pose=='hit':
+  d.line((11+frame,23,17+frame,28),fill=light,width=2)
+  d.line((41-frame,40,45-frame,44),fill=gold,width=1)
+ elif pose=='defeated':
+  d.line((16,41+frame,42,58),fill=dark,width=2)
+  d.line((22,14,31,18+frame),fill=light,width=1)
  # Acabado pixel: borde tallado oscuro; jamás reaprovechar el padre.
  alpha=im.getchannel('A')
  outer=alpha.filter(ImageFilter.MaxFilter(3))
