@@ -58,3 +58,9 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Commit `4ba1bc9b`: `test/new_enemy_behaviors_test.dart` con casos de patrulla a distancia, cooldown y derrota. **Pruebas escritas, no ejecutadas aún**; no presentar como superadas.
 - Trabajos necesarios antes de activar enemigos: atlas pixel art coherente (espera, marcha, alerta, interacción, impacto, salida), revisión de escalas y pivote de suelo, integración de carga, ubicación por capítulo, golpes y ventanas, compatibilidad de balón/pirueta, pruebas Flutter y capturas. No reutilizar imágenes antiguas como si fueran los personajes nuevos.
 - El usuario pide continuar además con mejoras visuales pendientes; compilación e instalación Android al final.
+
+## 2026-10-28 — Mecánicas de los tres nuevos enemigos, segunda iteración
+- Commit `e664c6b`: reemplazado ataque instantáneo por **anticipación visible**, ventana de impacto única al concluirla, posibilidad de esquivar antes del contacto, patrulla limitada y cancelación al recibir un golpe. Aún aislado del juego.
+- Commit `cd48dfb`: pruebas revisadas para cubrir patrulla, evasión, un solo impacto y derrota. **No ejecutadas todavía**.
+- Commit `1b960192`: contrato de diseño completo en `docs/NUEVOS_ENEMIGOS_CONTRATO_VISUAL_Y_MECANICO.md`. Mantiene requisitos de camiseta y bufanda rival, gorra/cámara/botella turista y robot colegio.
+- **Pendiente:** imágenes pixel art auténticas y atlas, integración de `main.dart`, colisiones e interacción con Miren/Sara, QA visual de todos los capítulos. Sin APK nuevo, según petición del usuario.
