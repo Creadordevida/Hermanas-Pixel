@@ -1264,7 +1264,6 @@ class StagePainter extends CustomPainter {
                 width:radius*2+28,height:8+radius*.07),p);
             }
           }
-          canvas.restore();
         }
         continue;
       }
