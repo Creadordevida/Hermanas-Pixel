@@ -91,7 +91,8 @@ class InteriorTWCQA(unittest.TestCase):
  def test_09_themed_school_props_unique_not_in_repeating_wall(self):
   generator=(R/'tools/build_interiors_parallax_twc.py').read_text()
   self.assertIn('def extract_school_features():',generator)
-  self.assertIn("neutral=Image.open(ASSETS/'scenes/school.png')",generator)
+  self.assertIn("master = Image.open(ASSETS/SRCS['school'][zone]).convert('RGB')",generator)
+  self.assertNotIn("neutral=Image.open(ASSETS/'scenes/school.png')",generator)
   self.assertIn("('pizarra_matematicas',15320,52)",MAIN)
   self.assertIn("('pizarra_informatica',29820,51)",MAIN)
   self.assertIn("('estanteria_biblioteca',1720,0)",MAIN)
