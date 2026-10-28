@@ -30,58 +30,41 @@ def pixel_rgb(row, n):
 
 
 def panorama(theme: str, H: int):
-    """Exterior únicamente visible a través de cristales transparentes.
+    """Paisajes de CALIDAD del método aprobado RC3 FIX2, solo tras ventanas.
 
-    Funciones periódicas aseguran que la última columna continúa con la primera;
-    sin imagen duplicada/difuminada ni corte al completarse el ciclo.
+    No dibujar rectángulos, elipses o edificios geométricos provisionales:
+    esos fondos de baja resolución visual son el fallo observado en Android.
+    Reutilizamos las texturas maestras detalladas del capítulo 1, sin alterarlas.
+    El desplazamiento sigue a 0.30 / 0.56 y los ciclos siguen cerrados.
     """
-    palette = {'dance': [(119,177,220),(201,221,224),(100,143,160)],
-               'school': [(94,158,212),(186,216,231),(78,121,147)]}[theme]
-    far = Image.new('RGB',(FAR_W,H)); arr=np.empty((H,FAR_W,3),np.uint8)
-    for y in range(H):
-        t=y/max(1,H-1)
-        for k in range(3): arr[y,:,k] = int(palette[0][k]*(1-t)+palette[1][k]*t)
-    far=Image.fromarray(arr,'RGB'); d=ImageDraw.Draw(far)
-    # Formas de montaña/colinas periódicas. Frecuencia entera, bordes conectados.
-    terrain=[]
-    for x in range(FAR_W+1):
-        v=H*.60+12*math.sin(2*math.pi*x/FAR_W*3+0.4)+7*math.sin(2*math.pi*x/FAR_W*7+0.2)
-        terrain.append((x,round(v)))
-    d.polygon(terrain+[(FAR_W,H),(0,H)],fill=palette[2])
-    r=random.Random(740 if theme=='dance' else 741)
-    for x in range(85,FAR_W-80,125):
-        y=int(H*.64+r.randrange(5,29));w=r.randrange(33,79);h=r.randrange(24,57)
-        fill=(145,162,166) if theme=='dance' else (119,144,168)
-        d.rectangle([x,y-h,x+w,H],fill=fill)
-        d.polygon([(x-6,y-h),(x+w//2,y-h-12),(x+w+6,y-h)],fill=(85,110,143))
-        for yy in range(y-h+10,y,16):
-            for xx in range(x+9,x+w-4,16):
-                d.rectangle((xx,yy,xx+4,yy+6),fill=(212,223,222))
-    # Same base RGB on last/first pixel (additional blend small enough for glass).
-    a=np.array(far,dtype=np.float32)
-    wrap=24
-    for i in range(wrap):
-        t=i/(wrap-1);s=t*t*(3-2*t)
-        a[:,i,:] = a[:,FAR_W-wrap+i,:]*(1-s)+a[:,i,:]*s
-    far=Image.fromarray(np.clip(a,0,255).astype('uint8'),'RGB')
-    # Rear silhouettes with alpha are a second cyclic layer; avoid hard edges.
-    mid=Image.new('RGBA',(MID_W,H),(0,0,0,0)); md=ImageDraw.Draw(mid,'RGBA')
-    rng=random.Random(27419 if theme=='dance' else 27421)
-    trees=[]
-    for x in range(120,MID_W-80,130):
-        ht=rng.randint(40,76); wd=rng.randint(40,70)
-        trees.append((x,ht,wd))
-    for x,h,w in trees:
-        y=int(H*.77)
-        for offset in (-MID_W,0,MID_W):
-            xx=x+offset
-            md.ellipse((xx-w//2,y-h,xx+w//2,y),fill=(33,83,87,125))
-            md.rectangle((xx-3,y-10,xx+3,H),fill=(53,75,78,125))
-    # Exact transparent matching edges of the periodic alpha panorama.
-    for i in range(35):
-        # No tree lies in the wrap area; this is a guaranteed zero alpha seam.
-        pass
-    return far,mid
+    src = ASSETS / 'chapter1/ch1_parallax'
+    far_source = src / 'montanas_ciudad_ciclo.png'
+    mid_source = src / 'arbolado_medio_ciclo.png'
+    if not far_source.is_file() or not mid_source.is_file():
+        raise FileNotFoundError('Faltan los paisajes aprobados RC3 FIX2; no generar sustitutos simples')
+    with Image.open(far_source) as master:
+        far = master.convert('RGB').resize((FAR_W, H), Image.Resampling.LANCZOS)
+    with Image.open(mid_source) as master:
+        mid = master.convert('RGBA').resize((MID_W, H), Image.Resampling.LANCZOS)
+    # El colegio y la academia deben mostrar distintas ventanas del paisaje,
+    # sin espejar ni duplicar incorrectamente piezas de arquitectura cercana.
+    shift_far = 0 if theme == 'school' else 731
+    shift_mid = 0 if theme == 'school' else 407
+    far = Image.fromarray(np.roll(np.asarray(far), shift_far, axis=1), 'RGB')
+    mid = Image.fromarray(np.roll(np.asarray(mid), shift_mid, axis=1), 'RGBA')
+    # Empalme cíclico de las texturas maestras: igualar una franja corta de
+    # extremos en lugar de fundir panorámicas enteras en tiempo de juego.
+    def close_cycle(image, band=32):
+        a = np.asarray(image).copy()
+        for j in range(band):
+            k = (band - j) / band
+            target = ((a[:, j, :].astype(np.float32) +
+                       a[:, -1-j, :].astype(np.float32)) / 2)
+            a[:, j, :] = np.uint8(np.clip(a[:, j, :] * (1-k) + target*k, 0, 255))
+            a[:, -1-j, :] = np.uint8(np.clip(a[:, -1-j, :] * (1-k) + target*k, 0, 255))
+        a[:, -1, :] = a[:, 0, :]
+        return Image.fromarray(a, image.mode)
+    return close_cycle(far), close_cycle(mid)
 
 
 def make_wall(theme:str,zone:int,variant:int):
