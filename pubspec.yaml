@@ -1,7 +1,7 @@
 name: hermanas_aventura
-description: Las aventuras de Miren y Sara - 0.9.1 RC3 candidata de pruebas, barrio, fauna, saltos, fútbol y danza
+description: Las aventuras de Miren y Sara - 0.9.1 RC3 FIX2 paralaje paisajes, barrio, fauna, saltos, fútbol y danza
 publish_to: none
-version: 0.9.1-rc.3+33
+version: 0.9.1-rc.3+34
 environment:
   sdk: '>=3.3.0 <4.0.0'
 dependencies:
@@ -39,5 +39,6 @@ flutter:
     - assets/images/ground/
     - assets/images/chapter1/
     - assets/images/chapter1/ch1_world_tiles/
+    - assets/images/chapter1/ch1_parallax/
     - assets/images/chapter45/
     - assets/images/worldmap/

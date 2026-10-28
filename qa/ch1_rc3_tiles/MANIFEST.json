@@ -9,7 +9,7 @@
       "x": 480,
       "width": 804,
       "right": 1284,
-      "edge_blend": 160,
+      "edge_blend": 235,
       "source_height": 790
     },
     {
@@ -17,7 +17,7 @@
       "x": 7580,
       "width": 1297,
       "right": 8877,
-      "edge_blend": 160,
+      "edge_blend": 235,
       "source_height": 620
     },
     {
@@ -25,7 +25,7 @@
       "x": 10180,
       "width": 804,
       "right": 10984,
-      "edge_blend": 160,
+      "edge_blend": 235,
       "source_height": 790
     },
     {
@@ -33,7 +33,7 @@
       "x": 16520,
       "width": 1248,
       "right": 17768,
-      "edge_blend": 160,
+      "edge_blend": 235,
       "source_height": 635
     },
     {
@@ -41,7 +41,7 @@
       "x": 19200,
       "width": 804,
       "right": 20004,
-      "edge_blend": 160,
+      "edge_blend": 235,
       "source_height": 790
     },
     {
@@ -49,7 +49,7 @@
       "x": 25600,
       "width": 1376,
       "right": 26976,
-      "edge_blend": 160,
+      "edge_blend": 235,
       "source_height": 600
     },
     {
@@ -57,7 +57,7 @@
       "x": 29120,
       "width": 804,
       "right": 29924,
-      "edge_blend": 160,
+      "edge_blend": 235,
       "source_height": 790
     }
   ],
@@ -80,5 +80,6 @@
     29100,
     32000,
     35600
-  ]
+  ],
+  "background_type": "RGBA transparency over multidepth parallax"
 }

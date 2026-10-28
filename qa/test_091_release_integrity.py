@@ -80,7 +80,7 @@ class Rc091Regression(unittest.TestCase):
         self.assertIn('timeout-minutes: 18',doc)
         self.assertNotIn('continue-on-error: true',doc)
         pubspec=(ROOT/'pubspec.yaml').read_text()
-        self.assertIn('version: 0.9.1-rc.3+33',pubspec)
+        self.assertIn('version: 0.9.1-rc.3+34',pubspec)
         self.assertIn('shared_preferences: 2.3.2',pubspec)
 
 if __name__ == '__main__':unittest.main()

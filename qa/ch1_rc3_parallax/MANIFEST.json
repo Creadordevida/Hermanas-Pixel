@@ -1,0 +1,93 @@
+{
+  "version": "RC3 FIX2",
+  "stage_width": 36500,
+  "world_height": 380,
+  "tile_width": 512,
+  "tiles": 72,
+  "landmarks": [
+    {
+      "asset": "residential_curve",
+      "x": 480,
+      "width": 804,
+      "right": 1284,
+      "edge_blend": 235,
+      "source_height": 790
+    },
+    {
+      "asset": "connector_residential_greenway_v091",
+      "x": 7580,
+      "width": 1297,
+      "right": 8877,
+      "edge_blend": 235,
+      "source_height": 620
+    },
+    {
+      "asset": "green_promenade",
+      "x": 10180,
+      "width": 804,
+      "right": 10984,
+      "edge_blend": 235,
+      "source_height": 790
+    },
+    {
+      "asset": "connector_neutral_park_v091",
+      "x": 16520,
+      "width": 1248,
+      "right": 17768,
+      "edge_blend": 235,
+      "source_height": 635
+    },
+    {
+      "asset": "white_canopy",
+      "x": 19200,
+      "width": 804,
+      "right": 20004,
+      "edge_blend": 235,
+      "source_height": 790
+    },
+    {
+      "asset": "connector_pergola_v091",
+      "x": 25600,
+      "width": 1376,
+      "right": 26976,
+      "edge_blend": 235,
+      "source_height": 600
+    },
+    {
+      "asset": "rocket_park",
+      "x": 29120,
+      "width": 804,
+      "right": 29924,
+      "edge_blend": 235,
+      "source_height": 790
+    }
+  ],
+  "original_master_files_edited": false,
+  "far_parallax_speed": 0.3,
+  "mid_parallax_speed": 0.56,
+  "far_texture_width": 2200,
+  "mid_texture_width": 2020,
+  "far_world_repeat_interval": 7333.333333333334,
+  "parallax_assets": [
+    "assets/images/chapter1/ch1_parallax/montanas_ciudad_ciclo.png",
+    "assets/images/chapter1/ch1_parallax/arbolado_medio_ciclo.png"
+  ],
+  "preview_cameras": [
+    0,
+    740,
+    1140,
+    2000,
+    5600,
+    7440,
+    8150,
+    9850,
+    10450,
+    16500,
+    19250,
+    25500,
+    29100,
+    32000,
+    35600
+  ],
+  "architecture": "far terrain+city cyclic parallax, middle trees cyclic parallax, near world RGBA 1:1"
+}

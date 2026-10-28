@@ -35,3 +35,17 @@ Iterable<int> ch1PhysicalVisibleTiles(double cameraX,
 double ch1CameraForHero(double heroX, {double viewportWidth = 800,
     double followOffset = 327}) =>
   (heroX - followOffset).clamp(0.0,ch1PhysicalWidth-viewportWidth).toDouble();
+
+/// Paisaje distante y ciudad: textura circular de 2200 px que reaparece
+/// aproximadamente cada quinta parte del recorrido, sin desplazarse 1:1.
+const double ch1FarSpeed = 0.30;
+const double ch1MidSpeed = 0.56;
+const int ch1FarCycleWidth = 2200;
+const int ch1MidCycleWidth = 2020;
+
+double ch1LoopOffset(double cameraX,double speed,int width) {
+  if (speed <= 0 || width <= 0) throw ArgumentError('Invalid parallax');
+  return (cameraX*speed)%width;
+}
+
+double ch1LoopWorldInterval(double speed,int width) => width/speed;

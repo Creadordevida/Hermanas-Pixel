@@ -361,6 +361,12 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         paths['neighborhood_${zone.asset}'] =
           'assets/images/chapter1/${zone.asset}.png';
       }
+      // RC3 FIX2: horizonte rico en edificios/montañas y arbolado intermedio.
+      // Son decorativos, solo capítulo 1; suelo y gameplay siguen intactos.
+      paths['ch1_far_city_loop'] =
+        'assets/images/chapter1/ch1_parallax/montanas_ciudad_ciclo.png';
+      paths['ch1_mid_woodland_loop'] =
+        'assets/images/chapter1/ch1_parallax/arbolado_medio_ciclo.png';
       // 72 teselas de mundo FISICO, generadas una sola vez fuera del juego.
       for (int i=0; i<ch1PhysicalTileCount; i++) {
         paths['ch1_world_tile_$i'] = ch1PhysicalTileAsset(i);
@@ -1519,7 +1525,26 @@ class StagePainter extends CustomPainter {
   // CAPITULO 1 RC3: paisaje fisico continuo por tiles. El x de cada imagen
   // corresponde a un unico x de mundo. No hay fundidos temporales, auto-pan,
   // fotografias estiradas, ni duplicacion de escenas por region.
+  // Paralaje de profundidad RC3 FIX2: fondo elaborado inspirado en el
+  // detalle de las ilustraciones deportivas; se repite cada ~7.400 unidades
+  // sin congelarse. El mapa cercano mantiene EXACTAMENTE su cámara 1:1.
+  void _drawCh1Loop(Canvas canvas, ui.Image? image, double speed) {
+    if (image == null) return;
+    final width=image.width.toDouble();
+    final shift=(cameraX*speed)%width;
+    for (double x=-shift; x<viewW; x+=width) {
+      canvas.drawImageRect(image,
+        Rect.fromLTWH(0,0,width,image.height.toDouble()),
+        Rect.fromLTWH(x,0,width,380),
+        Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
   void _neighborhoodPhysicalWorld(Canvas canvas) {
+    canvas.drawRect(const Rect.fromLTWH(0,0,viewW,380),
+      Paint()..color=const Color(0xff4b9fe8));
+    _drawCh1Loop(canvas,images['ch1_far_city_loop'],ch1FarSpeed);
+    _drawCh1Loop(canvas,images['ch1_mid_woodland_loop'],ch1MidSpeed);
     for (final index in ch1PhysicalVisibleTiles(cameraX,viewportWidth:viewW)) {
       final img = images['ch1_world_tile_$index'];
       if (img == null) continue;

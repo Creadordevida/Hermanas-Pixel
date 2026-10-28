@@ -31,4 +31,13 @@ void main(){
       expect(end,greaterThanOrEqualTo(cam+800));
     }
   });
+  test('Paralaje lejano en ciclo ~1/5 capitulo y plano cercano fisico',(){
+    expect(ch1FarCycleWidth,2200);
+    expect(ch1LoopWorldInterval(ch1FarSpeed,ch1FarCycleWidth),closeTo(7333,3));
+    expect(ch1LoopOffset(0,ch1FarSpeed,ch1FarCycleWidth),0);
+    expect(ch1LoopOffset(600,ch1FarSpeed,ch1FarCycleWidth),closeTo(180,0.01));
+    expect(ch1LoopOffset(600,ch1MidSpeed,ch1MidCycleWidth),closeTo(336,0.01));
+    expect(ch1CameraForHero(927)-ch1CameraForHero(327),600);
+  });
+
 }
