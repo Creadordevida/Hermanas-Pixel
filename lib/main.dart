@@ -1302,9 +1302,16 @@ class StagePainter extends CustomPainter {
         final art=images['enemy_${foe.kind}'];
         if(art!=null) {
           final bull=foe.kind=='estafeta_bull';
+          // Cada acción dibuja su propia pose. La embestida inicia con
+          // carrera y pasa al golpe; durante el cooldown se ve recuperación.
+          final near=(hero.x-foe.x).abs();
           final pose=foe.defeated?5:foe.stunned>0?4:
-            bull?(foe.launched?3:foe.attackCooldown<=0?1:0):
-            ((hero.x-foe.x).abs()<235?2:0);
+            bull ? (foe.launched
+              ? (foe.t<.28?2:3)
+              : near<250 && foe.attackCooldown<=0 ? 1
+              : foe.attackCooldown>0 && foe.t>.01 ? 4 : 0)
+            : (near<110 && foe.attackCooldown>0 ? 4
+              : near<240 ? (foe.t%1.5<.4?1:2) : 0);
           final col=(foe.t*8).floor()%4;
           final cw=bull?270.0:156.0, ch=bull?192.0:210.0;
           final w=bull?168.0:94.0, h=bull?116.0:128.0;
