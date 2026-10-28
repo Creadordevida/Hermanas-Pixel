@@ -27,3 +27,9 @@
 
 ## Estado real a la fecha
 La IA y aparición condicionada se han añadido a `lib/main.dart`, pero **no hay atlas definitivos aprobados, ni render propio, ni captura real**. Sus apariciones están desactivadas por la puerta de calidad. No se debe presentar esto como creación finalizada.
+
+
+## Nueva referencia visual del usuario, 28/10/2026
+El usuario ha aprobado **como dirección artística conceptual**, no como captura del juego, la ilustración de toro robusto oscuro con cuernos marfil y corredor de encierro con barba, vestimenta blanca, pañuelo y faja roja. Debe trasladarse a los sprites verdaderos del juego, con calidad próxima a esa ilustración, y validarse con capturas auténticas de Flutter. **Queda expresamente prohibido etiquetar la ilustración generada como una captura real o considerar sus figuras recortadas de fondo como sprites finales**.
+
+Intento de extracción de referencia desde la ilustración: la segmentación experimental rompe partes oscuras del toro y deja rastros de texto en el corredor; **NO SUPERÓ la inspección artística**, por tanto no se ha incorporado a los recursos jugables. Hace falta redibujar sprites maestros limpios y legibles, atlas animados completos, integrar en StagePainter y volver a capturar el resultado real. Ninguno de estos enemigos debe estar marcado aprobado hasta cumplir todas las puertas.
