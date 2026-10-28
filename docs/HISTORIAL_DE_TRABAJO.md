@@ -102,3 +102,10 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Commit `3e7db825`: secuencia temporal 0→1→2→3→2→1 durante la preparación del ataque. Se conservan pies anclados al suelo y el lanzamiento posterior. Al terminar `foe.launched`, retoma animación de espera. La secuencia usa los dibujos existentes, **no añade dibujos nuevos**.
 - Commit `d23afbb0`: nueva prueba de regresión del contrato en `qa/test_visual_revision_contract.py`.
 - **Sin validación visual en vídeo o dispositivo aún**. Revisar coherencia de dibujos intermedios y la transición de recuperación en la siguiente ronda visual. No considerar resolución artística definitiva hasta visualizarla.
+
+## 2026-10-28 — Sustitución del enemigo estatua por antiguo rey de Navarra
+- Decisión explícita: conservar una **estatua viviente de antiguo rey de Navarra**, pero descartar el enemigo anterior (parecido al padre, verdoso, que arrojaba monedas). No representar necesariamente a un monarca histórico identificable sin referencias aprobadas.
+- `7441228b`: nuevo generador `tools/generate_navarre_king.py` crea un atlas propio de 6 estados x 4 fotogramas: piedra, despertar, caminar, golpear suelo, impacto, derrotado. Contiene corona, manto, relieves de piedra, musgo y grietas. **El arte está marcado candidato, pendiente de inspección estética**.
+- `9971e7ab`: `main.dart` cambia el enemigo antiguo por `navarre_king` en capítulos urbanos, carga nuevo atlas, lo representa a escala 84x116, se activa por cercanía, camina lentamente y golpea el suelo a corta distancia con aviso (~0,42 s); no dispara monedas. Código original del padre no se reutiliza.
+- `d4b1a5c6`, `c63d67c5`: generación de atlas incluida en procesos visual y APK final. `2d330f2b`: test del contrato evita reintroducir la estatua anterior.
+- Pendiente: confirmar CI con generación de imagen, analizar Flutter, revisar sprites reales, la transición pedestal/suelo, físicas de proximidad, animación de onda (actualmente el daño se calcula pero **no existe VFX de onda dibujado**), integración del golpe de Sara, versión móvil. **No declarar completamente terminado** ni aprobado hasta esas comprobaciones.
