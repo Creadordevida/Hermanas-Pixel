@@ -114,9 +114,18 @@ class InteriorTWCQA(unittest.TestCase):
   self.assertIn('paths[\'interior_${theme}_mid\']',MAIN)
   self.assertIn('interiorPanelAssetTWC(theme,room,variant)',MAIN)
 
- def test_12_qa_video_and_camera_contact_generated(self):
-  out=R/'qa/interiors_twc_lab'
-  for p in ('CONTACTO_SCHOOL_16_CAMARAS.jpg','CONTACTO_DANCE_16_CAMARAS.jpg','school_10475.png','school_10530.png','dance_10475.png','dance_10530.png'):
-   self.assertTrue((out/p).exists(),p)
+ def test_12_preview_renders_actual_room_transitions(self):
+  # Las capturas de QA se generan bajo demanda: no son assets de produccion
+  # ni deben comprometerse en Git. Verificamos el renderizador real local.
+  import runpy
+  preview = runpy.run_path(str(R/'tools/preview_interiors_twc.py'))
+  render = preview['render']
+  for theme in ('school','dance'):
+   before = render(theme,10475)
+   after = render(theme,10530)
+   self.assertEqual(before.size,(800,450),theme)
+   self.assertEqual(after.size,(800,450),theme)
+   self.assertNotEqual(hashlib.sha256(before.tobytes()).digest(),
+                       hashlib.sha256(after.tobytes()).digest(),theme)
 
 if __name__=='__main__':unittest.main()
