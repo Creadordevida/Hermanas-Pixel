@@ -1,0 +1,43 @@
+name: Revision visual - recursos y controles (SIN APK)
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - 'tools/build_interiors_parallax_twc.py'
+      - 'tools/build_football_parallax_twc.py'
+      - 'lib/new_enemy_behaviors.dart'
+      - 'lib/main.dart'
+      - 'qa/test_visual_revision_contract.py'
+      - 'qa/test_interiors_twc.py'
+      - 'test/new_enemy_behaviors_test.dart'
+      - '.github/workflows/revision_visual.yml'
+  workflow_dispatch:
+jobs:
+  graphics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar Pillow, NumPy y PyYAML
+        run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Regenerar paisajes de colegio y danza
+        run: python3 tools/build_interiors_parallax_twc.py
+      - name: Regenerar unión de capas de fútbol y vistas multicámara
+        run: python3 tools/build_football_parallax_twc.py
+      - name: Probar contratos y recursos de interiores
+        run: |
+          python3 -m unittest qa/test_visual_revision_contract.py
+          python3 -m unittest qa/test_interiors_twc.py
+      - name: Guardar todos los recursos y vistas para inspección
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Revision-Visual-PR5-Recursos-Y-Capturas
+          path: |
+            assets/images/interiors_parallax/
+            assets/images/chapter45/football_parallax/
+            qa/interiors_twc_lab/
+            qa/football_twc_lab/CONTACTO_12_CAMARAS.jpg
+            qa/football_twc_lab/camera_*.jpg
+          if-no-files-found: warn
