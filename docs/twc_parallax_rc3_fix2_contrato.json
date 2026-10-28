@@ -1,0 +1,17 @@
+{
+  "id": "TWC_PARALLAX_2D_RC3_FIX2_V1",
+  "baseline_date": "2026-10-28",
+  "baseline_commit": "0b4971b014128188228b2a8edf6f25a28fe8950b",
+  "scope": "metodo de movimiento y fondo modular aprobado, no transiciones ni portada",
+  "camera": {"viewport_width": 800, "viewport_height": 450, "follow_offset": 327, "world_to_screen": "worldX - cameraX"},
+  "world": {"length": 36500, "backdrop_height": 380, "near_tile_count": 72, "near_tile_width": 512, "last_tile_width": 148, "near_speed": 1.0},
+  "far": {"asset": "assets/images/chapter1/ch1_parallax/montanas_ciudad_ciclo.png", "width": 2200, "height": 380, "speed": 0.30, "format": "RGB", "world_repeat_distance": 7333.333333333334},
+  "mid": {"asset": "assets/images/chapter1/ch1_parallax/arbolado_medio_ciclo.png", "width": 2020, "height": 380, "speed": 0.56, "format": "RGBA", "world_repeat_distance": 3607.142857142857},
+  "source_of_truth": ["lib/main.dart", "lib/chapter_one_world_tiles.dart", "tools/build_ch1_parallax.py"],
+  "reference_camera_advance": 600,
+  "expected_layer_displacement": {"far": 180, "mid": 336, "near": 600},
+  "layer_order": ["sky", "far", "mid", "near", "ground_and_gameplay"],
+  "approved": ["multilayer scrolling", "detailed far scenery", "physical near tiles", "looped backgrounds"],
+  "explicitly_not_approved": ["large landmark panoramas with alpha fades", "ghost buildings", "blurred title gutters", "tiny TWC logo"],
+  "reference": "docs/TWC_PARALLAX_2D_METODO_APROBADO_RC3_FIX2.md"
+}
