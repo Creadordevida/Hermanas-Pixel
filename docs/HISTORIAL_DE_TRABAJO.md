@@ -89,3 +89,9 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Commit `0f25c1be`: se amplió la puerta visual sin APK para ejecutar Flutter 3.47.8, `flutter analyze --no-pub lib` y `flutter test test/new_enemy_behaviors_test.dart` tras generar todos los assets. Esto detecta errores de compilación Dart y mecánicas antes del último APK.
 - Hasta la comprobación: QA visual anterior `40740951313` finalizó success, pero **no incluía necesariamente Flutter/análisis en ese momento**. Revisar nueva ejecución y si falla obtener el paso y arreglarlo.
 - Arte de enemigos aún candidato; no hay conformidad artística ni pruebas físicas Android. No declarar completa la revisión.
+
+## 2026-10-28 — Corregida la animación de bully del colegio (pendiente de vídeo real)
+- Usuario informa que bully se animaba de forma incorrecta en el último vídeo del colegio. **El vídeo no está adjunto a este turno y no se ha podido inspeccionar visualmente**.
+- Inspección del código encontró dos posibles causas concretas: el bully alternaba fotogramas de pasos con `foe.t` aun quieto; además se rotaba periódicamente con `sin(foe.t*8)`, provocando balanceo perpetuo.
+- Commit `d25291e4`: `Enemy.lastRenderedX` detecta desplazamiento real, y bully utiliza `frame=0` en reposo, `1/2` al andar, `3` como anticipación de contacto y `4` al ser derrotado. Se eliminó la oscilación angular continua.
+- Commit `ca319b7c`: prueba de regresión estática para garantizar reposo/marcha diferenciados y eliminación del balanceo. **Falta verificar CI y el vídeo o una nueva captura para confirmar la solución visual**. No afirmar resuelto en móvil.
