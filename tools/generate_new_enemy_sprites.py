@@ -3,7 +3,7 @@
 Arte de prototipo: REQUIERE aprobación visual antes de publicar el juego.
 """
 from pathlib import Path
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 import hashlib, json, math
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'assets/images/enemies_new';OUT.mkdir(parents=True,exist_ok=True)
@@ -14,6 +14,17 @@ COLORS={'robot':('#304f65','#55b5bb','#e4be52'),
         'tourist':('#639b6c','#f0c5a2','#c4a85a')}
 def box(d,xy,c):d.rectangle(tuple(int(z) for z in xy),fill=c)
 def ellipse(d,xy,c):d.ellipse(tuple(int(z) for z in xy),fill=c)
+def finish_pixel_art(im):
+ # Contorno exterior a un píxel lógico, preservando el alfa real, sin
+ # añadir rectángulos de fondo ni suavizados que rompan el pixel art.
+ mask=im.getchannel('A')
+ grown=mask.filter(ImageFilter.MaxFilter(3))
+ outline=Image.new('RGBA',im.size,(28,35,48,0))
+ outline.putalpha(Image.frombytes('L',im.size,
+    bytes(max(0,g-o) for g,o in zip(grown.tobytes(),mask.tobytes()))))
+ outline.alpha_composite(im)
+ return outline
+
 def frame(kind,pose,n):
  im=Image.new('RGBA',(W,H));d=ImageDraw.Draw(im)
  body,skin,accent=COLORS[kind]
@@ -50,13 +61,34 @@ def frame(kind,pose,n):
   box(d,(5+tilt,26,13+tilt,43),skin);box(d,(38+tilt,26,44+tilt,40),skin)
   box(d,(40+tilt,35,45+tilt,49),'#597848');box(d,(41+tilt,32,44+tilt,36),'#b6cab3')
   if pose=='attack':box(d,(36+tilt,20,42+tilt,38),'#597848')
+ # Detalles locales, modulados por cada estado, en la imagen real del atlas.
+ if kind=='supporter':
+  d.line((13,27+y,16,42+y),fill='#52283d',width=2)
+  d.line((35,27+y,38,42+y),fill='#f1a2ac',width=2)
+  d.rectangle((20,29+y,23,31+y),fill='#f5d589')
+  d.rectangle((29,35+y,32,37+y),fill='#60283c')
+  d.point((22,19+y),fill='#493a35')
+  d.point((29,19+y),fill='#493a35')
+  if pose=='patrol':
+   d.line((15,49,17+n%2,56),fill='#93a1bc',width=2)
+ elif kind=='tourist':
+  d.line((17+tilt,27,18+tilt,42),fill='#9ec4a0',width=2)
+  d.line((33+tilt,27,34+tilt,42),fill='#315f4f',width=2)
+  d.point((23+tilt,19),fill='#4b3e38')
+  d.point((30+tilt,19),fill='#4b3e38')
+  d.line((20+tilt,24,31+tilt,24),fill='#8c6856',width=1)
+ elif kind=='robot':
+  d.line((12,39+y,37,39+y),fill='#99e2df',width=1)
+  d.rectangle((15,45+y,18,47+y),fill='#d9f5ef')
+  d.rectangle((35,45+y,37,47+y),fill='#163849')
+  d.arc((11,32+y,40,53+y),0,165,fill='#234452',width=1)
  if pose=='hit':box(d,(6,13,10,17),'#ffffcd')
  if pose=='defeated':
   # crouch/drop sprite while keeping the same cell and floor.
   im=im.crop((0,10,W,H)).resize((W,44),Image.Resampling.NEAREST)
   down=Image.new('RGBA',(W,H));down.alpha_composite(im,(0,15));im=down
  if pose=='alert':box(ImageDraw.Draw(im),(1,4,4,10),'#f4cc4e')
- return im.resize((W*S,H*S),Image.Resampling.NEAREST)
+ return finish_pixel_art(im).resize((W*S,H*S),Image.Resampling.NEAREST)
 manifest={'cell':[W*S,H*S],'poses':list(POSES),'frames_per_pose':4,'pose_rows':6,'frame_columns':4,'art_status':'candidate_requires_user_review','enemies':{}}
 for kind in COLORS:
  sheet=Image.new('RGBA',(W*S*4,H*S*6))
