@@ -882,13 +882,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         // Crucially the playable 800×450 image remains at its CORRECT aspect
         // ratio: no stretching of characters or hidden touch buttons.
         if (screen == Screen.title)
-          // The external bleed is BLURRED. Never display an extra readable
-          // copy of the title, protagonists or parked cars at the side edges.
-          ImageFiltered(
-            imageFilter: ui.ImageFilter.blur(sigmaX: 32, sigmaY: 32),
-            child: Image.asset('assets/images/title_cars_fixed_091.png',
-                fit: BoxFit.cover),
-          )
+          // La portada aprobada se conserva sin estirar: bandas de
+          // seguridad neutras, NO otra copia borrosa del mismo dibujo.
+          // El arte completo permanece 800x450 mediante BoxFit.contain.
+          const ColoredBox(color: Color(0xff12334d))
         else
           DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
             begin: Alignment.topCenter, end: Alignment.bottomCenter,
@@ -932,9 +929,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       child:InkWell(onTap:savedAvailable?_continue:null))),
     if(!savedAvailable)const Positioned(left:579,top:299,child:Text('Sin partida guardada',
       style:TextStyle(color:Colors.white,fontSize:11,shadows:[Shadow(color:Colors.black,blurRadius:3)]))),
-    Positioned(left:303,bottom:4,width:194,height:43,child:Container(padding:const EdgeInsets.all(4),
-      decoration:BoxDecoration(color:const Color(0xa0092749),borderRadius:BorderRadius.circular(9)),
-      child:Image.asset('assets/images/twc_corporate_verified_091.png',fit:BoxFit.contain))),
+    // El sello deja de estar dentro de una caja azul oscura.
+    // La transparencia/contorno dependen ahora del PNG original.
+    Positioned(left:284,bottom:2,width:232,height:51,
+      child:Image.asset('assets/images/twc_corporate_verified_091.png',
+        fit:BoxFit.contain)),
   ]);
 
   // Las coordenadas de esta imagen proceden de la ilustración EXACTA aprobada
