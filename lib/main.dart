@@ -28,6 +28,8 @@ const Map<String,bool> enemyArtValidated = {
   'rival_supporter': false,
   'tipsy_tourist': false,
   'navarre_king': false,
+  'estafeta_bull': false,
+  'sanfermin_runner': false,
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 
@@ -97,6 +99,7 @@ class Enemy {
   double kingAwakeAt = -1;
   double kingAttackAt = -1;
   bool kingImpactDelivered = false;
+  bool get estafetaNew => kind == 'estafeta_bull' || kind == 'sanfermin_runner';
   bool get newArchetype => ['cleaning_robot','rival_supporter','tipsy_tourist'].contains(kind);
   bool get defeated => deathAt >= 0;
   bool get ranged => ['referee','breakdancer','teacher'].contains(kind);
@@ -106,6 +109,7 @@ class Enemy {
   double get speed => switch(kind) {
     'dog_dalmatian' => 56, 'dog_doberman' => 112,
     'rat' => 118, 'cat' => 92, 'pigeon' => 84,
+    'estafeta_bull' => 185, 'sanfermin_runner' => 110,
     'rival' => 90, 'goalkeeper' => 80, 'novice' => 94, 'bully' => 90,
     _ => 72,
   };
@@ -562,6 +566,20 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       }
     }
     // The chapter's strong thematic opponent always appears near its last segment.
+    // Encierro Estafeta: dos tipos nuevos, pendientes de arte real aprobado.
+    // No apareceran hasta superar inspeccion de capturas del StagePainter.
+    if (stage == 2) {
+      if (hasApprovedEnemyArtwork('sanfermin_runner')) {
+        for (final x in [stageWidth*.32,stageWidth*.68]) {
+          enemies.add(Enemy(enemies.length,'sanfermin_runner',x));
+        }
+      }
+      if (hasApprovedEnemyArtwork('estafeta_bull')) {
+        for (final x in [stageWidth*.42,stageWidth*.79]) {
+          enemies.add(Enemy(enemies.length,'estafeta_bull',x));
+        }
+      }
+    }
     if (stage>=4) enemies.add(Enemy(enemies.length,level.enemies.last,stageWidth-980));
     hero=Character(145);otherSister=Character(230);father=Character(67);
     cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
@@ -786,6 +804,47 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         continue;
       }
       if(foe.stunned>0){foe.stunned=math.max(0,foe.stunned-dt);continue;}
+      if (foe.estafetaNew) {
+        // Encierro: el toro anuncia el arranque antes de embestir.
+        // El corredor se aparta de la protagonista, sin armas ni proyectiles.
+        final dx=hero.x-foe.x,near=dx.abs();
+        if(foe.kind=='estafeta_bull') {
+          if(foe.launched) {
+            foe.x+=foe.facing*185*dt;
+            if(foe.t>=.18 && near<52 && hero.y>groundY-68
+                && !foe.biteApplied) {
+              foe.biteApplied=true;
+              _receiveDamage(foe.facing);
+            }
+            if(foe.t>.9 || (foe.x-foe.home).abs()>310) {
+              foe.launched=false;foe.biteApplied=false;foe.t=0;
+              foe.attackCooldown=2.2;
+            }
+          } else if(near<250 && foe.attackCooldown<=0) {
+            foe.facing=dx>=0?1:-1;
+            // Primeros fotogramas de aviso; embestida tras breve anticipacion.
+            if(foe.t>.55) {foe.launched=true;foe.t=0;}
+          } else {
+            foe.t=0;
+          }
+        } else {
+          // Corredor de encierro: se desplaza alejándose y puede tropezar.
+          foe.facing=dx>=0?-1:1;
+          if(near<240) {
+            foe.x+=foe.facing*110*dt;
+            if(near<32 && foe.attackCooldown<=0
+                && hero.y>groundY-43) {
+              _receiveDamage(-foe.facing);
+              foe.attackCooldown=2.2;
+            }
+          } else if((foe.x-foe.home).abs()>145) {
+            foe.facing=foe.x>foe.home?-1:1;
+            foe.x+=foe.facing*40*dt;
+          }
+        }
+        foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
+        continue;
+      }
       if(foe.kind=='navarre_king') {
         // Una estatua histórica: quieta hasta acercarse, se despierta y
         // camina despacio; ataca con onda cercana, NUNCA lanza monedas.
