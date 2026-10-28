@@ -14,6 +14,8 @@ required={
  "supporter":(144,192),
  "tourist":(144,192),
  "navarre_king":(168,216),
+ "estafeta_bull":(270,192),
+ "sanfermin_runner":(156,210),
 }
 problems=[]
 for kind,(w,h) in required.items():
