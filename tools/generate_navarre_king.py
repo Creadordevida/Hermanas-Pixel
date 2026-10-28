@@ -3,7 +3,7 @@
 Arte original reproducible, sin reutilizar el padre ni la antigua estatua.
 """
 from pathlib import Path
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 import json,hashlib,math
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'assets/images/enemies_new';OUT.mkdir(parents=True,exist_ok=True)
@@ -57,7 +57,14 @@ def draw(pose,frame):
  if pose=='defeated':
   d.line((9,32,46,62),fill=dark,width=3)
   d.line((42,35,14,59),fill=dark,width=2)
- return im.resize((CW*S,CH*S),Image.Resampling.NEAREST)
+ # Acabado pixel: borde tallado oscuro; jamás reaprovechar el padre.
+ alpha=im.getchannel('A')
+ outer=alpha.filter(ImageFilter.MaxFilter(3))
+ rim=Image.new('RGBA',im.size,(39,47,57,0))
+ rim.putalpha(Image.frombytes('L',im.size,
+   bytes(max(0,a-b) for a,b in zip(outer.tobytes(),alpha.tobytes()))))
+ rim.alpha_composite(im)
+ return rim.resize((CW*S,CH*S),Image.Resampling.NEAREST)
 atlas=Image.new('RGBA',(CW*S*4,CH*S*len(POSES)))
 for row,pose in enumerate(POSES):
  for col in range(4):atlas.alpha_composite(draw(pose,col),(col*CW*S,row*CH*S))
