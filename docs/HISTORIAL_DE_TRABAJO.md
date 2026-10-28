@@ -16,3 +16,9 @@
 | Ejecutar QA gráfico y compilar nueva versión | Pendiente | No lanzar sin recursos nuevos |
 ## Regla para futuros GPT
 No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo evidencia concreta para cada estado. Leer archivos y comparar historial del repo antes de modificar. Actualizar este registro después de cada commit, captura, test y acción CI. Nunca dejar avances importantes solo en la conversación.
+
+## 2026-10-28 — Inicio de implementación visual (commit cbbe363)
+- Primer cambio de código REAL, en la rama de trabajo: `tools/build_interiors_parallax_twc.py` deja de generar paisajes simplificados mediante figuras geométricas para colegio y danza; pasa a derivarlos de las panorámicas detalladas aprobadas de capítulo 1, conservando originales, proporciones, ciclo continuo y velocidades de cámara.
+- **Importante: todavía no se han regenerado ni subido los PNG ni ejecutado Flutter/Android con este cambio.** Por ello los capítulos aún NO están resueltos y el APK de main sigue igual.
+- Validación pendiente: ejecutar generador en copia con assets reales, verificar ruta de fuentes, pruebas Python y capturas en Android; inspeccionar si el cambio de calidad es suficiente. No considerar una aprobación artística automática.
+- Pendiente todavía: uniones del colegio, variación arquitectónica de danza, integración del fútbol y portada.
