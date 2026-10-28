@@ -20,6 +20,17 @@ import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
 import 'new_enemy_behaviors.dart';
 
+// Puerta artística conservadora, evaluada en tiempo de ejecución para evitar
+// ramas muertas en flutter analyze. Cambiar un valor exige evidencia de
+// captura auténtica del juego y pruebas por enemigo.
+const Map<String,bool> enemyArtValidated = {
+  'cleaning_robot': false,
+  'rival_supporter': false,
+  'tipsy_tourist': false,
+  'navarre_king': false,
+};
+bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
+
 const double viewW = 800;
 const double viewH = 450;
 const double groundY = 390;
@@ -532,8 +543,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     // jamás repetido aleatoriamente como una rata o una paloma.
     // Calidad bloqueada: no activar al rey hasta revisar su captura REAL.
     // El comportamiento y el atlas candidato permanecen disponibles para QA.
-    const bool kingVisualApproved = false;
-    if (kingVisualApproved && stage == 3) {
+    if (hasApprovedEnemyArtwork('navarre_king') && stage == 3) {
       enemies.add(Enemy(enemies.length,'navarre_king',stageWidth*.54));
     }
     // Tres nuevos enemigos aprobados: colocación por capítulo, separados.
@@ -541,8 +551,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     final newKind = newKinds[stage];
     // Los cuatro diseños candidatos han sido rechazados artísticamente.
     // No introducirlos en partidas hasta contar con capturas reales aprobadas.
-    const bool newEnemyArtApproved = false;
-    if (newEnemyArtApproved && newKind != null) {
+    if (newKind != null && hasApprovedEnemyArtwork(newKind)) {
       final typ = switch (stage) {
         0 => NewEnemyKind.tipsyTourist,
         4 => NewEnemyKind.rivalSupporter,
