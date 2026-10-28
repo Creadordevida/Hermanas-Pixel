@@ -18,6 +18,7 @@ import 'jump_visuals.dart';
 import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
+import 'new_enemy_behaviors.dart';
 
 const double viewW = 800;
 const double viewH = 450;
@@ -80,6 +81,8 @@ class Enemy {
   double animalTime = 0, flightAltitude = 0, flightDuration = 0;
   bool biteApplied = false;
   bool launched = false;
+  NewEnemyMotion? newMotion;
+  bool get newArchetype => ['cleaning_robot','rival_supporter','tipsy_tourist'].contains(kind);
   bool get defeated => deathAt >= 0;
   bool get ranged => ['referee','breakdancer','teacher','statue'].contains(kind);
   bool get dog => kind.startsWith('dog_');
@@ -453,6 +456,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           for (int j=0;j<5;j++) paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
         }
       }
+      for (final kind in ['robot','supporter','tourist']) {
+        paths['enemy_new_$kind'] = 'assets/images/enemies_new/${kind}_atlas.png';
+      }
       // Eight true flight silhouettes (upstroke, downstroke, glide, hit, fall).
       // The old pigeon frames remain for genuine ground walking/pecking.
       paths['pigeon_flight_sheet'] = 'assets/images/enemies_hifi/pigeon_flight_sheet.png';
@@ -516,6 +522,19 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         type=kinds.first;
       }
       enemies.add(Enemy(enemies.length,type,x));
+    }
+    // Tres nuevos enemigos aprobados: colocación por capítulo, separados.
+    const newKinds = <int, String>{0:'tipsy_tourist', 4:'rival_supporter', 6:'cleaning_robot'};
+    final newKind = newKinds[stage];
+    if (newKind != null) {
+      final typ = switch (stage) {
+        0 => NewEnemyKind.tipsyTourist,
+        4 => NewEnemyKind.rivalSupporter,
+        _ => NewEnemyKind.cleaningRobot,
+      };
+      for (final wx in plannedNewEnemySpawns(typ, stage, stageWidth)) {
+        enemies.add(Enemy(enemies.length,newKind,wx));
+      }
     }
     // The chapter's strong thematic opponent always appears near its last segment.
     if (stage>=4) enemies.add(Enemy(enemies.length,level.enemies.last,stageWidth-980));
@@ -741,6 +760,21 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         continue;
       }
       if(foe.stunned>0){foe.stunned=math.max(0,foe.stunned-dt);continue;}
+      if(foe.newArchetype) {
+        final typ = switch(foe.kind) {
+          'cleaning_robot' => NewEnemyKind.cleaningRobot,
+          'rival_supporter' => NewEnemyKind.rivalSupporter,
+          _ => NewEnemyKind.tipsyTourist,
+        };
+        final motion=foe.newMotion ??= NewEnemyMotion(kind:typ,home:foe.home,x:foe.x);
+        motion.x=foe.x;
+        if(motion.update(dt,hero.x) && hero.y>groundY-48) {
+          _receiveDamage(motion.direction);
+        }
+        foe.x=motion.x.clamp(70.0,stageWidth-70).toDouble();
+        foe.facing=motion.direction;
+        continue;
+      }
       if(foe.dog || foe.aerial) {
         if(foe.advanceAnimal(dt,hero.x,hero.y))_receiveDamage(foe.facing);
         foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
@@ -1147,6 +1181,37 @@ class StagePainter extends CustomPainter {
       canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),
         width:foe.aerial?39+foe.flightAltitude*.13:53,height:7),
         Paint()..color=Color.fromARGB(shadowAlpha,9,23,35));
+      if(foe.newArchetype) {
+        final kind=switch(foe.kind) {
+          'cleaning_robot'=>'robot',
+          'rival_supporter'=>'supporter',
+          _=>'tourist',
+        };
+        final img=images['enemy_new_$kind'];
+        if(img!=null) {
+          final motion=foe.newMotion;
+          final pose=foe.defeated ? 5 : foe.stunned>0 ? 4 : switch(motion?.pose) {
+            NewEnemyPose.patrol => 1,
+            NewEnemyPose.alert => 2,
+            NewEnemyPose.attack => 3,
+            NewEnemyPose.hit => 4,
+            NewEnemyPose.defeated => 5,
+            _ => 0,
+          };
+          final frame=((foe.t*7).floor()%4);
+          const cellW=144.0,cellH=192.0;
+          final source=Rect.fromLTWH(frame*cellW,pose*cellH,cellW,cellH);
+          final w=kind=='robot'?88.0:98.0;
+          final h=kind=='robot'?112.0:134.0;
+          canvas.save();
+          if(foe.facing<0) { canvas.translate(2*x,0);canvas.scale(-1,1); }
+          canvas.drawImageRect(img,source,
+              Rect.fromLTWH(x-w/2,groundY-h,w,h),
+              Paint()..filterQuality=FilterQuality.none);
+          canvas.restore();
+        }
+        continue;
+      }
       canvas.save();
       if(foe.defeated) {
         final alpha=(1-(time-foe.deathAt-.32)/.53).clamp(0.0,1.0).toDouble();
