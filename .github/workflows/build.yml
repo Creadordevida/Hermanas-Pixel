@@ -29,6 +29,7 @@ jobs:
           python3 tools/build_football_parallax_twc.py
           python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
           python3 qa/check_new_enemy_artifacts.py
           python3 -m unittest qa/test_visual_revision_contract.py
       - name: Guardar imágenes de revisión y vistas de fútbol
@@ -116,6 +117,7 @@ jobs:
           python3 tools/build_football_parallax_twc.py
           python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
       - name: Descargar dependencias Flutter para las capturas
         run: flutter pub get
       - name: Capturar mapa y chapter 1 (Flutter real)
