@@ -64,3 +64,8 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Commit `cd48dfb`: pruebas revisadas para cubrir patrulla, evasión, un solo impacto y derrota. **No ejecutadas todavía**.
 - Commit `1b960192`: contrato de diseño completo en `docs/NUEVOS_ENEMIGOS_CONTRATO_VISUAL_Y_MECANICO.md`. Mantiene requisitos de camiseta y bufanda rival, gorra/cámara/botella turista y robot colegio.
 - **Pendiente:** imágenes pixel art auténticas y atlas, integración de `main.dart`, colisiones e interacción con Miren/Sara, QA visual de todos los capítulos. Sin APK nuevo, según petición del usuario.
+
+## 2026-10-28 — Distribución de nuevos enemigos por capítulo
+- Commit `e2abec24`: mapa `newEnemyAllowedStages` y función `plannedNewEnemySpawns` en `lib/new_enemy_behaviors.dart`, con aparición prevista solo en **colegio (robot, stage 6), fútbol (aficionado, stage 4), barrio (turista, stages 0–3)**. Posiciones deterministas con márgenes, sin activación hasta disponer de sprites.
+- Commit `7c190ae7`: pruebas unitarias añadidas para distribución y separación. Aún **sin ejecutar**; el código no está conectado a `main.dart`.
+- **Pendientes importantes:** sprites reales de 3 enemigos, integración en el juego, pruebas y verificación gráfica del colegio/danza/fútbol/portada. No generar APK antes de terminar cambios visuales, según orden del usuario. Ningún capítulo se declara cerrado.
