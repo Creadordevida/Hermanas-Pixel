@@ -68,12 +68,13 @@ class Obstacle {
 }
 
 class Enemy {
-  Enemy(this.id, this.kind, this.x) : home = x,
+  Enemy(this.id, this.kind, this.x) : home = x, lastRenderedX = x,
     animalMode = kind == 'pigeon' ? 'perch' : 'idle';
   final int id;
   final String kind;
   final double home;
   double x;
+  double lastRenderedX; // Detectar movimiento real para animación, sin moonwalking.
   int facing = -1, hits = 0;
   double t = 0, attackCooldown = 1, stunned = 0, deathAt = -1;
   // Explicit animation/behaviour state: the art must reflect actual movement.
@@ -1269,11 +1270,21 @@ class StagePainter extends CustomPainter {
       } else if(['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'].contains(foe.kind)) {
         // Distinct combat states: a teacher must not run while throwing an exam,
         // and a referee must actually show his raised red card in wind-up.
+        // El bully mostraba pasos mientras estaba detenido: todos los
+        // fotogramas 0-2 se alternaban usando solo el reloj global.
+        // Elegir marcha únicamente si hubo movimiento físico desde el
+        // último render. Reposo y ataque tienen poses específicas.
+        final walkingNow=(foe.x-foe.lastRenderedX).abs() > .12;
+        foe.lastRenderedX=foe.x;
         final int frame;
         if (foe.defeated) {
           frame=4;
         } else if (foe.stunned>0) {
           frame=foe.ranged ? 1 : 3;
+        } else if (foe.kind=='bully') {
+          final nearHero=(hero.x-foe.x).abs()<43;
+          frame=nearHero && foe.attackCooldown>1.35
+              ? 3 : walkingNow ? (1+(foe.t*7).floor()%2) : 0;
         } else if (foe.launched) {
           frame=foe.kind=='goalkeeper' ? (foe.t < .15 ? 0 : foe.t < .27 ? 2 : foe.t < .34 ? 3 : foe.t < .56 ? 4 : 1) : foe.kind=='referee' ? 2 : foe.kind=='breakdancer' ? 3
               : foe.kind=='teacher' ? 2 : 3;
@@ -1308,7 +1319,7 @@ class StagePainter extends CustomPainter {
             // Small movement for large characters whose source sheets have
             // nearly identical waiting/walking poses (not a sprite-scale hack).
             final lean=foe.launched && foe.kind!='goalkeeper' ? -0.085 :
-              (foe.kind=='bully' && !foe.defeated ? .028*math.sin(foe.t*8) : 0.0);
+              0.0;
             canvas.save();
             if(lean != 0){
               canvas.translate(x,groundY+airborne);
