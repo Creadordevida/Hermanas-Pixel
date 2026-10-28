@@ -122,6 +122,24 @@ def make_wall(theme:str,zone:int,variant:int):
     a[:,:,3][blue]=12
     im=Image.fromarray(a,'RGBA')
     dr=ImageDraw.Draw(im,'RGBA')
+    # Profundidad arquitectónica local: zócalo, línea de encuentro y sombra
+    # física debajo del techo. Mantener estas bandas por DELANTE de ventanas,
+    # no convertir ninguna sala en transparencia de pantalla completa.
+    if theme == 'school':
+        trim = ((115,94,78,255),(92,101,99,255),(80,91,111,255))[zone]
+        light = ((218,196,158,255),(191,209,194,255),(178,193,219,255))[zone]
+        dr.rectangle((0,8,TILE_W-1,15),fill=trim)
+        dr.line((0,15,TILE_W-1,15),fill=light,width=2)
+        dr.rectangle((0,H-35,TILE_W-1,H-29),fill=trim)
+        dr.line((0,H-36,TILE_W-1,H-36),fill=light,width=2)
+        # Las juntas de los módulos se encuentran siempre en un pilar,
+        # no en el centro de una ventana o una taquilla.
+    else:
+        # Variar remates estructurales entre recortes, sin repetir pósteres
+        # artificialmente ni colocar elementos sobre el personaje.
+        metal=((145,112,67,255),(120,96,79,255),(158,117,73,255))[zone]
+        dr.rectangle((0,10,TILE_W-1,15),fill=metal)
+        dr.rectangle((0,H-33,TILE_W-1,H-29),fill=metal)
     # Parantes arquitectónicos, idénticos en ambos extremos de todas las piezas.
     if theme=='dance':
         frame=(108,65,38,255);shine=(212,164,91,255);shade=(74,43,29,255)
