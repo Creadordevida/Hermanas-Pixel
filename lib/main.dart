@@ -530,13 +530,19 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     }
     // Hito único: el antiguo rey se encuentra solamente en Plaza del Castillo,
     // jamás repetido aleatoriamente como una rata o una paloma.
-    if (stage == 3) {
+    // Calidad bloqueada: no activar al rey hasta revisar su captura REAL.
+    // El comportamiento y el atlas candidato permanecen disponibles para QA.
+    const bool kingVisualApproved = false;
+    if (kingVisualApproved && stage == 3) {
       enemies.add(Enemy(enemies.length,'navarre_king',stageWidth*.54));
     }
     // Tres nuevos enemigos aprobados: colocación por capítulo, separados.
     const newKinds = <int, String>{0:'tipsy_tourist', 1:'tipsy_tourist', 2:'tipsy_tourist', 3:'tipsy_tourist', 4:'rival_supporter', 6:'cleaning_robot'};
     final newKind = newKinds[stage];
-    if (newKind != null) {
+    // Los cuatro diseños candidatos han sido rechazados artísticamente.
+    // No introducirlos en partidas hasta contar con capturas reales aprobadas.
+    const bool newEnemyArtApproved = false;
+    if (newEnemyArtApproved && newKind != null) {
       final typ = switch (stage) {
         0 => NewEnemyKind.tipsyTourist,
         4 => NewEnemyKind.rivalSupporter,
