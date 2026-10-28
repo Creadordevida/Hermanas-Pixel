@@ -39,4 +39,29 @@ void main() {
     expect(e.x, prior);
     expect(e.pose, NewEnemyPose.defeated);
   });
+
+  test('solo aparecen en los capítulos aprobados', () {
+    for (final kind in NewEnemyKind.values) {
+      for (int stage=0;stage<=6;stage++) {
+        final expected=switch(kind) {
+          NewEnemyKind.cleaningRobot => stage==6,
+          NewEnemyKind.rivalSupporter => stage==4,
+          NewEnemyKind.tipsyTourist => stage<=3,
+        };
+        expect(newEnemyAllowedInStage(kind, stage), expected);
+      }
+    }
+  });
+  test('planes de apariciones dejan márgenes y no se solapan', () {
+    for(final kind in NewEnemyKind.values) {
+      final stage=newEnemyAllowedStages[kind]!.first;
+      final x=plannedNewEnemySpawns(kind,stage,36500);
+      expect(x, isNotEmpty);
+      expect(x.first,greaterThan(900));
+      expect(x.last,lessThan(35600));
+      for(int i=1;i<x.length;i++) expect(x[i]-x[i-1],greaterThan(1000));
+      expect(plannedNewEnemySpawns(kind,5,36500),isEmpty);
+    }
+  });
+
 }
