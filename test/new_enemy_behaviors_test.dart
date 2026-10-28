@@ -2,29 +2,41 @@ import 'package:flutter_test/flutter_test.dart';
 import '../lib/new_enemy_behaviors.dart';
 
 void main() {
-  test('los tres enemigos patrullan sin herir a distancia', () {
+  test('patrullan sin perseguir a jugador lejano y respetan límites', () {
     for (final kind in NewEnemyKind.values) {
       final e = NewEnemyMotion(kind: kind, home: 100, x: 100);
-      expect(e.update(0.1, 600), isFalse);
-      expect(e.pose, NewEnemyPose.patrol);
+      for (int i=0;i<1000;i++) {
+        expect(e.update(.1, 900), isFalse);
+        expect(e.x, inInclusiveRange(-20, 220));
+      }
     }
   });
-
-  test('cada enemigo inicia ataque con cooldown propio', () {
+  test('se ve anticipación antes del impacto y solo hay un golpe', () {
     for (final kind in NewEnemyKind.values) {
       final e = NewEnemyMotion(kind: kind, home: 100, x: 100);
-      expect(e.update(0.05, 125), isTrue);
+      expect(e.update(.05, 125), isFalse);
       expect(e.pose, NewEnemyPose.attack);
-      expect(e.update(0.05, 125), isFalse);
+      expect(e.update(e.attackDelay+.01, 125), isTrue);
+      expect(e.update(.01, 125), isFalse);
       expect(e.cooldown, greaterThan(0));
     }
   });
-
-  test('derrotado deja de moverse y no vuelve a atacar', () {
-    final e = NewEnemyMotion(kind: NewEnemyKind.cleaningRobot, home: 100, x: 100);
+  test('el jugador puede escapar durante anticipación', () {
+    for (final kind in NewEnemyKind.values) {
+      final e = NewEnemyMotion(kind: kind, home: 100, x: 100);
+      e.update(.05, 125);
+      expect(e.update(e.attackDelay+.01, 500), isFalse);
+    }
+  });
+  test('golpe interrumpe ataque, derrotado nunca ataca', () {
+    final e=NewEnemyMotion(kind: NewEnemyKind.cleaningRobot, home: 100, x: 100);
+    e.update(.05, 125);
+    e.hit();
+    expect(e.update(1, 125), isFalse);
     e.defeat();
-    expect(e.update(1, 110), isFalse);
-    expect(e.x, 100);
+    final prior=e.x;
+    expect(e.update(10, 110), isFalse);
+    expect(e.x, prior);
     expect(e.pose, NewEnemyPose.defeated);
   });
 }
