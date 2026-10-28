@@ -1,7 +1,7 @@
 name: Miren y Sara RC3 - Capitulo 1 fisico - APK y auditoria
 on:
   push:
-    branches: [main, work/revision-visual-20261028-continuidad]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
