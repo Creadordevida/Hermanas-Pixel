@@ -2,16 +2,6 @@
 // Never hand-edit: QA checks SHA256 of every source frame.
 import 'dart:ui';
 const Map<String, Rect> enemyVisibleBounds = {
-  'goalkeeper_0': Rect.fromLTWH(6.0, 14.0, 96.0, 106.0),
-  'goalkeeper_1': Rect.fromLTWH(6.0, 14.0, 96.0, 106.0),
-  'goalkeeper_2': Rect.fromLTWH(8.0, 12.0, 119.0, 112.0),
-  'goalkeeper_3': Rect.fromLTWH(8.0, 14.0, 84.0, 106.0),
-  'goalkeeper_4': Rect.fromLTWH(8.0, 86.0, 108.0, 34.0),
-  'goalkeeper_0': Rect.fromLTWH(0.0, 2.0, 57.0, 99.0),
-  'goalkeeper_1': Rect.fromLTWH(6.0, 6.0, 66.0, 102.0),
-  'goalkeeper_2': Rect.fromLTWH(6.0, 6.0, 83.0, 104.0),
-  'goalkeeper_3': Rect.fromLTWH(6.0, 6.0, 90.0, 106.0),
-  'goalkeeper_4': Rect.fromLTWH(0.0, 2.0, 120.0, 55.0),
   'goalkeeper_0': Rect.fromLTWH(0.0, 2.0, 57.0, 99.0),
   'goalkeeper_1': Rect.fromLTWH(6.0, 6.0, 66.0, 102.0),
   'goalkeeper_2': Rect.fromLTWH(6.0, 6.0, 83.0, 104.0),

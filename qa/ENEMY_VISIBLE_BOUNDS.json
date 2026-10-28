@@ -1,4 +1,74 @@
 {
+  "goalkeeper_0": {
+    "bounds": [
+      0,
+      2,
+      57,
+      99
+    ],
+    "image_size": [
+      57,
+      101
+    ],
+    "sha256": "d8f998910f78250aea06b3818fc994e2ab0843c2383601556f04f693cfa3fd16",
+    "canvas_edge_touch": true
+  },
+  "goalkeeper_1": {
+    "bounds": [
+      6,
+      6,
+      66,
+      102
+    ],
+    "image_size": [
+      72,
+      114
+    ],
+    "sha256": "149ab4c79bfa71f6f016c4699638a0dd3176bde69dd5b337740e21ecf4551508",
+    "canvas_edge_touch": true
+  },
+  "goalkeeper_2": {
+    "bounds": [
+      6,
+      6,
+      83,
+      104
+    ],
+    "image_size": [
+      95,
+      116
+    ],
+    "sha256": "c4a89326436a7b6d21db85cefeefba2b8c7a28cb87071ae5a30d62b39b2ef3ca",
+    "canvas_edge_touch": false
+  },
+  "goalkeeper_3": {
+    "bounds": [
+      6,
+      6,
+      90,
+      106
+    ],
+    "image_size": [
+      102,
+      118
+    ],
+    "sha256": "6b39d140b4032ec3969632f9aa35ed9d6b0e1b428bb3bf8c58b32e5b1e29a2ea",
+    "canvas_edge_touch": false
+  },
+  "goalkeeper_4": {
+    "bounds": [
+      0,
+      2,
+      120,
+      55
+    ],
+    "image_size": [
+      122,
+      57
+    ],
+    "sha256": "5f5a4224d770ffb5ff5a929f76067282634c1355c250c60669bfd0773784cf8e",
+    "canvas_edge_touch": true
+  },
   "rival_0": {
     "bounds": [
       0,

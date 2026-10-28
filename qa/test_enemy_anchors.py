@@ -7,7 +7,7 @@ GENERATED=(ROOT/'lib/sprite_bounds.g.dart').read_text()
 SOURCE=(ROOT/'lib/main.dart').read_text()
 class SpritePoseAnchorTests(unittest.TestCase):
  def test_all_visible_pixel_bounds_match_png_and_hash(self):
-  self.assertEqual(50,len(BOUNDS))
+  self.assertEqual(55,len(BOUNDS))
   for key,record in BOUNDS.items():
    f=ROOT/f'assets/images/enemies/{key}.png'
    with self.subTest(sprite=key), Image.open(f) as im:

@@ -10,7 +10,7 @@ ROOT=Path(__file__).resolve().parents[1]
 ASSETS=ROOT/'assets/images/enemies'
 TARGET=ROOT/'lib/sprite_bounds.g.dart'
 REPORT=ROOT/'qa/ENEMY_VISIBLE_BOUNDS.json'
-characters=['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue']
+characters=['goalkeeper','rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue']
 all_data={}
 for character in characters:
  for frame in range(5):
@@ -20,7 +20,9 @@ for character in characters:
    box=im.getchannel('A').getbbox()
    if box is None:raise ValueError('Empty pose: '+str(file))
    x0,y0,x1,y1=box
-   all_data[f'{character}_{frame}']={
+   key=f'{character}_{frame}'
+   if key in all_data: raise ValueError(f'Duplicate sprite key during export: {key}')
+   all_data[key]={
      'bounds':[x0,y0,x1-x0,y1-y0],
      'image_size':list(im.size),'sha256':hashlib.sha256(file.read_bytes()).hexdigest(),
      'canvas_edge_touch':bool(x0==0 or y0==0 or x1==im.width or y1==im.height),
