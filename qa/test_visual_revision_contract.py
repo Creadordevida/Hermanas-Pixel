@@ -60,5 +60,15 @@ class VisualRevisionContract(unittest.TestCase):
         self.assertIn("contour=(13 + 7*np.sin",FOOTBALL)
         self.assertNotIn("for y in range(22):band[y,:,3]",FOOTBALL)
 
+
+    def test_estafeta_encierro_nuevos_personajes_bloqueados_hasta_arte_real(self):
+        self.assertIn("'estafeta_bull': false", MAIN)
+        self.assertIn("'sanfermin_runner': false", MAIN)
+        self.assertIn("if (stage == 2)", MAIN)
+        self.assertIn("hasApprovedEnemyArtwork('estafeta_bull')", MAIN)
+        self.assertIn("hasApprovedEnemyArtwork('sanfermin_runner')", MAIN)
+        self.assertIn("if (foe.estafetaNew)", MAIN)
+        self.assertIn("foe.kind=='estafeta_bull'", MAIN)
+
 if __name__=='__main__':
     unittest.main()
