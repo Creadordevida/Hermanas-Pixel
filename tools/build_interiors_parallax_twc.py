@@ -81,39 +81,29 @@ def make_wall(theme:str,zone:int,variant:int):
         start=(0,385,770)[variant]
         wall=cropped.crop((start,0,start+TILE_W,H))
     else:
-        # Base NEUTRA para repetición. La biblioteca, las dos pizarras y sus
-        # títulos se extraen aparte y NO se repiten como mosaicos enteros.
-        # Se forman 2 tramos de 440 a partir de ventanas y taquillas del
-        # PASILLO original, evitando la zona central de la señal de biblioteca.
-        neutral=Image.open(ASSETS/'scenes/school.png').convert('RGB')
-        v=variant*8
-        left=neutral.crop((18+v,0,458+v,H))
-        right=neutral.crop((862-v,0,1302-v,H))
-        wall=Image.new('RGB',(TILE_W,H))
-        wall.paste(left,(0,0));wall.paste(right,(440,0))
-        # Tres ambientes diferentes, sin duplicar grandes rótulos:
-        # pasillo = taquillas azules originales; aulas = madera azul verdosa;
-        # informática = mobiliario de azul pizarra. Conserva sombras y textura.
-        if zone in (1,2):
-            pixels=np.asarray(wall).copy()
-            pr=pixels[:,:,0].astype(np.int16)
-            pg=pixels[:,:,1].astype(np.int16)
-            pb=pixels[:,:,2].astype(np.int16)
-            mask=(pr<90)&(pg<150)&(pb>pg+18)&(np.arange(H)[:,None]>34)
-            if zone==1:
-                pixels[:,:,0][mask]=np.clip(pr[mask]*.73+24,0,255)
-                pixels[:,:,1][mask]=np.clip(pg[mask]*.91+43,0,255)
-                pixels[:,:,2][mask]=np.clip(pb[mask]*.70+2,0,255)
-            else:
-                pixels[:,:,0][mask]=np.clip(pr[mask]*.87+22,0,255)
-                pixels[:,:,1][mask]=np.clip(pg[mask]*.73+20,0,255)
-                pixels[:,:,2][mask]=np.clip(pb[mask]*.68+31,0,255)
-            wall=Image.fromarray(pixels,'RGB')
-        # La partición en el centro es un pilar realista, no una transición
-        # entre dos fotografías mediante opacidad variable.
+        # Colegio: cada sala emplea SU ilustración fuente; antes las tres
+        # zonas repetían la misma panorámica del pasillo recoloreada.
+        # Los hitos (biblioteca, pizarras) se insertan aparte en mundo 1:1.
+        # Extraemos bandas amplias, sin pegar dos mitades con corte a x=440.
+        master = Image.open(ASSETS/SRCS['school'][zone]).convert('RGB')
+        source_w, source_h = master.size
+        if source_w < 880 or source_h < H:
+            raise ValueError(f'Fuente insuficiente para colegio: {SRCS["school"][zone]}')
+        # Aprovechar tres tramos diferentes de la imagen respetando la
+        # relación de aspecto y manteniendo el límite vertical original.
+        # No reescalar el mismo fragmento del pasillo como aula.
+        crop_w = min(source_w, max(TILE_W, int(source_h * TILE_W / H)))
+        # Las posiciones de recorte se distribuyen por todo el original.
+        left = round((source_w-crop_w) * variant / 2)
+        crop = master.crop((left, 0, left+crop_w, source_h))
+        wall = crop.resize((TILE_W,H),Image.Resampling.LANCZOS)
+        # Un montante fino y regular en el extremo evita que los marcos
+        # queden partidos al cambiar de panel, sin falsa junta central.
         post=ImageDraw.Draw(wall)
-        post.rectangle((430,0,450,H),fill=(143,120,102))
-        post.rectangle((434,0,438,H),fill=(224,201,169))
+        post.rectangle((0,0,10,H-1),fill=(143,120,102))
+        post.rectangle((3,0,5,H-1),fill=(224,201,169))
+        post.rectangle((TILE_W-11,0,TILE_W-1,H-1),fill=(143,120,102))
+        post.rectangle((TILE_W-8,0,TILE_W-6,H-1),fill=(224,201,169))
     im=wall.convert('RGBA'); a=np.array(im)
     # Sólo azules luminosos dentro de ventanas permiten asomar el paisaje
     # .30/.56; NO se transparentan fachadas, mesas, columnas ni salas enteras.
