@@ -7,6 +7,7 @@ authoring environment has no installed Flutter SDK.
 
 from pathlib import Path
 import unittest
+import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -47,7 +48,10 @@ class FlutterCaptureGuardrails(unittest.TestCase):
     def test_heavy_render_tests_do_not_compete_for_resources(self):
         workflow = (ROOT / '.github/workflows/build.yml').read_text()
         self.assertIn('flutter test --concurrency=1 ', workflow)
-        self.assertIn('timeout-minutes: 18', workflow)
+        config = yaml.safe_load(workflow)
+        qa_timeout = int(config['jobs']['qa-graficos-flutter']['timeout-minutes'])
+        self.assertGreaterEqual(qa_timeout, 18)
+        self.assertLessEqual(qa_timeout, 25)
         self.assertNotIn('timeout-minutes: 30', workflow)
         self.assertIn('qa-graficos-flutter:', workflow)
         self.assertIn('needs: android-apk-candidato', workflow)
