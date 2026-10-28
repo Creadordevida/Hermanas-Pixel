@@ -35,3 +35,9 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Commit `ec86860b`: se actualizó `qa/test_interiors_twc.py` para exigir el nuevo contrato; el test viejo comprobaba exactamente el defecto (uso del pasillo para todas las salas).
 - **Pendiente:** regenerar los PNG de colegio y danza; el código de Flutter sigue cargando los anteriores mientras no se publiquen assets. No se ha realizado CI de esta rama ni un APK de esta revisión. Los elementos singulares y suelo físico permanecen separados.
 - **Riesgo a validar visualmente:** los paneles se recortan de ilustraciones enteras y pueden repetir pizarras/objetos emblemáticos que después se dibujan como hitos únicos; en ese caso hay que enmascararlos de los paneles repetibles antes de aprobar el colegio.
+
+## 2026-10-28 — Portada: primer arreglo del código Flutter
+- Commit `d5a05146`: en `lib/main.dart` se eliminó la copia del arte con desenfoque de 32 px usada para rellenar pantallas panorámicas; ahora se muestran márgenes de color neutro, conservando la portada nítida a proporción 800x450.
+- Se suprimió el `Container` con fondo azul oscuro alrededor del logo The Wolf Company y se amplió moderadamente su área de presentación, sin modificar el PNG original.
+- **Importante:** en pantallas panorámicas aún puede haber márgenes planos, aunque ya no bandas borrosas. La transparencia del PNG del logo y su contraste quedan por validar en Android. No declarar solucionada la portada hasta ver una captura real.
+- Estado de trabajo global: cambios de `main.dart` y generadores únicamente en la rama; PNG originales aún no regenerados; NO hay APK de esta revisión y NO se han ejecutado pruebas Flutter.
