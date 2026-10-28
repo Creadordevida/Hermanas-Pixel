@@ -69,3 +69,10 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Commit `e2abec24`: mapa `newEnemyAllowedStages` y función `plannedNewEnemySpawns` en `lib/new_enemy_behaviors.dart`, con aparición prevista solo en **colegio (robot, stage 6), fútbol (aficionado, stage 4), barrio (turista, stages 0–3)**. Posiciones deterministas con márgenes, sin activación hasta disponer de sprites.
 - Commit `7c190ae7`: pruebas unitarias añadidas para distribución y separación. Aún **sin ejecutar**; el código no está conectado a `main.dart`.
 - **Pendientes importantes:** sprites reales de 3 enemigos, integración en el juego, pruebas y verificación gráfica del colegio/danza/fútbol/portada. No generar APK antes de terminar cambios visuales, según orden del usuario. Ningún capítulo se declara cerrado.
+
+## 2026-10-28 — Puerta visual independiente (sin APK)
+- Commit `9bd6884f`: workflow `.github/workflows/revision_visual.yml` creado. Ejecuta generadores interiores/fútbol, pruebas Python y publica imágenes y vistas de 12 cámaras sin instalar ni compilar Android.
+- Ejecución inicial: `https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/40740103491`, inicialmente en cola. **Resultado aún no verificado**.
+- Al retomar, comprobar resultado de esta ejecución, leer logs, descargar e inspeccionar las vistas; identificar y corregir los defectos visuales restantes.
+- Los tres enemigos solo cuentan con lógica aislada y tests escritos, no con sprites reales, integración ni prueba jugable.
+- **No dar la versión por lista** hasta concluir sprites, integración y revisión de composición (colegio/danza/fútbol/portada), sin reutilizar atlas de enemigos anteriores como reemplazos.
