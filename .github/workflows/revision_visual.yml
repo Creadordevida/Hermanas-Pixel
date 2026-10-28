@@ -5,6 +5,9 @@ on:
       - work/revision-visual-20261028-continuidad
     paths:
       - 'tools/build_interiors_parallax_twc.py'
+      - 'tools/generate_new_enemy_sprites.py'
+      - 'tools/generate_navarre_king.py'
+      - 'qa/check_new_enemy_artifacts.py'
       - 'tools/build_football_parallax_twc.py'
       - 'lib/new_enemy_behaviors.dart'
       - 'lib/main.dart'
@@ -29,6 +32,7 @@ jobs:
         run: |
           python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
+          python3 qa/check_new_enemy_artifacts.py
       - name: Probar contratos y recursos de interiores
         run: |
           python3 -m unittest qa/test_visual_revision_contract.py
