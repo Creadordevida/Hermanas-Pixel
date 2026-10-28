@@ -1,7 +1,7 @@
-name: Miren y Sara RC3 - Capitulo 1 fisico - APK y auditoria
+name: Miren y Sara PR5 - Candidata Android y auditoria
 on:
   push:
-    branches: [main]
+    branches: [main, work/revision-visual-20261028-continuidad]
   workflow_dispatch:
 
 jobs:
