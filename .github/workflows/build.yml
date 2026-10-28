@@ -27,6 +27,7 @@ jobs:
         run: |
           python3 tools/build_interiors_parallax_twc.py
           python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
           python3 -m unittest qa/test_visual_revision_contract.py
       - name: Guardar imágenes de revisión y vistas de fútbol
         uses: actions/upload-artifact@v4
@@ -111,6 +112,7 @@ jobs:
         run: |
           python3 tools/build_interiors_parallax_twc.py
           python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
       - name: Descargar dependencias Flutter para las capturas
         run: flutter pub get
       - name: Capturar mapa y chapter 1 (Flutter real)
