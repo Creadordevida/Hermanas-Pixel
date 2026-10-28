@@ -6,6 +6,28 @@ import 'dart:math' as math;
 enum NewEnemyKind { cleaningRobot, rivalSupporter, tipsyTourist }
 enum NewEnemyPose { idle, patrol, alert, attack, hit, defeated }
 
+/// Distribución explícita: los nuevos enemigos nunca se mezclan entre
+/// capítulos por error. 0-3: barrio; 4: fútbol; 5: danza; 6: colegio.
+const Map<NewEnemyKind, List<int>> newEnemyAllowedStages = {
+  NewEnemyKind.cleaningRobot: [6],
+  NewEnemyKind.rivalSupporter: [4],
+  NewEnemyKind.tipsyTourist: [0, 1, 2, 3],
+};
+
+bool newEnemyAllowedInStage(NewEnemyKind kind, int stage) =>
+    newEnemyAllowedStages[kind]!.contains(stage);
+
+/// Posiciones de aparición deterministas a nivel de mundo.
+/// Deja margen al inicio/final y separa enemigos nuevos entre sí;
+/// no activa apariciones hasta contar con sprites y colisiones.
+List<double> plannedNewEnemySpawns(NewEnemyKind kind, int stage, double worldWidth) {
+  if (!newEnemyAllowedInStage(kind, stage) || worldWidth <= 2400) return [];
+  final count = kind == NewEnemyKind.tipsyTourist ? 3 : 4;
+  final span = worldWidth - 1800;
+  return List<double>.generate(count, (i) => 900 + span * (i+1)/(count+1));
+}
+
+
 class NewEnemyMotion {
   NewEnemyMotion({required this.kind, required this.home, required this.x});
   final NewEnemyKind kind;
