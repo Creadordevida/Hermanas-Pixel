@@ -115,3 +115,8 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - En el render se dibuja una **onda física visible** durante el golpe de suelo, sin monedas. `e61d2005` ajusta el alfa a entero para Dart.
 - `db2136c4`: tests contractuales para ubicación única y representación de onda. **Pendientes de verificación CI más reciente**.
 - El atlas es candidato original procedimental, no se ha aprobado aún su acabado artístico; consultar la última ejecución de `Revision visual - recursos y controles (SIN APK)`. No montar APK ni fusionar PR #5 antes de QA visual y Flutter.
+
+## 28/10/2026 — Bloqueo efectivo de los 4 enemigos de calidad rechazada
+- Petición del usuario: **rehacer** robot, aficionado, turista y rey de Navarra para próxima versión; revisar **captura REAL del motor del juego** (no PNG aislado ni montaje).
+- **No se dispone todavía de sprites rediseñados y verificados en captura real.** Por seguridad artística, commit `ec23966e`: constantes `newEnemyArtApproved=false` y `kingVisualApproved=false` impiden su aparición en partidas de la candidata, mientras se conservan IA/atlas para desarrollo. No afirmar que los cuatro estén solucionados: falta rediseñarlos, integrarlos y revisar juego renderizado.
+- `a35d8c18`: test contractual refleja bloqueo de la estatua y otros tres hasta aprobación. Para desbloquear hay que reemplazar sprites procedimentales por arte de calidad, comprobar cada animación in-game y pasar QA; jamás levantar flags antes de ello.
