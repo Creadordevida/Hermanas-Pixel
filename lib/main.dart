@@ -479,6 +479,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         paths['enemy_new_$kind'] = 'assets/images/enemies_new/${kind}_atlas.png';
       }
       paths['enemy_navarre_king_atlas'] = 'assets/images/enemies_new/navarre_king_atlas.png';
+      for (final kind in ['estafeta_bull','sanfermin_runner']) {
+        paths['enemy_$kind'] = 'assets/images/enemies_new/${kind}_atlas.png';
+      }
       // Eight true flight silhouettes (upstroke, downstroke, glide, hit, fall).
       // The old pigeon frames remain for genuine ground walking/pecking.
       paths['pigeon_flight_sheet'] = 'assets/images/enemies_hifi/pigeon_flight_sheet.png';
@@ -1294,6 +1297,25 @@ class StagePainter extends CustomPainter {
       canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),
         width:foe.aerial?39+foe.flightAltitude*.13:53,height:7),
         Paint()..color=Color.fromARGB(shadowAlpha,9,23,35));
+      if (foe.estafetaNew) {
+        final art=images['enemy_${foe.kind}'];
+        if(art!=null) {
+          final bull=foe.kind=='estafeta_bull';
+          final pose=foe.defeated?5:foe.stunned>0?4:
+            bull?(foe.launched?3:foe.attackCooldown<=0?1:0):
+            ((hero.x-foe.x).abs()<235?2:0);
+          final col=(foe.t*8).floor()%4;
+          final cw=bull?270.0:156.0, ch=bull?192.0:210.0;
+          final w=bull?168.0:94.0, h=bull?116.0:128.0;
+          canvas.save();
+          if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(art,Rect.fromLTWH(col*cw,pose*ch,cw,ch),
+            Rect.fromLTWH(x-w/2,groundY-h,w,h),
+            Paint()..filterQuality=FilterQuality.none);
+          canvas.restore();
+        }
+        continue;
+      }
       if(foe.kind=='navarre_king') {
         final art=images['enemy_navarre_king_atlas'];
         if(art!=null) {
