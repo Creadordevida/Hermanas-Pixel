@@ -252,9 +252,9 @@ class StageData {
   String get sceneKey => chapterScenes[index];
   List<String> get enemies => switch (index) {
     0 => ['dog_dalmatian','dog_brown','rat','pigeon'],
-    1 => ['dog_brown','pigeon','navarre_king','dog_dalmatian'],
+    1 => ['dog_brown','pigeon','rat','dog_dalmatian'],
     2 => ['dog_brown','cat','rat','dog_doberman'],
-    3 => ['pigeon','cat','navarre_king','dog_doberman','rat'],
+    3 => ['pigeon','cat','dog_brown','dog_doberman','rat'],
     4 => ['rival','goalkeeper','referee'],
     5 => ['novice','breakdancer'],
     _ => ['bully','teacher'],
@@ -527,6 +527,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         type=kinds.first;
       }
       enemies.add(Enemy(enemies.length,type,x));
+    }
+    // Hito único: el antiguo rey se encuentra solamente en Plaza del Castillo,
+    // jamás repetido aleatoriamente como una rata o una paloma.
+    if (stage == 3) {
+      enemies.add(Enemy(enemies.length,'navarre_king',stageWidth*.54));
     }
     // Tres nuevos enemigos aprobados: colocación por capítulo, separados.
     const newKinds = <int, String>{0:'tipsy_tourist', 1:'tipsy_tourist', 2:'tipsy_tourist', 3:'tipsy_tourist', 4:'rival_supporter', 6:'cleaning_robot'};
@@ -1228,6 +1233,22 @@ class StagePainter extends CustomPainter {
           canvas.drawImageRect(art,Rect.fromLTWH(col*cw,row*ch,cw,ch),
             Rect.fromLTWH(x-42,groundY-116,84,116),
             Paint()..filterQuality=FilterQuality.none);
+          canvas.restore();
+          // Impacto visible y anticipado: onda baja nacida de los pies de
+          // piedra. El daño SOLO se aplica por la lógica al final del golpe.
+          if(foe.kingAttackAt>=0) {
+            final e=time-foe.kingAttackAt;
+            if(e>=.35 && e<.70) {
+              final radius=(e-.35)*210;
+              final opacity=((.70-e)/.35*160).round().clamp(0,160);
+              final p=Paint()
+                ..color=Color.fromARGB(opacity,193,181,144)
+                ..style=PaintingStyle.stroke..strokeWidth=3;
+              canvas.drawOval(Rect.fromCenter(
+                center:Offset(x,groundY-2),
+                width:radius*2+28,height:8+radius*.07),p);
+            }
+          }
           canvas.restore();
         }
         continue;
