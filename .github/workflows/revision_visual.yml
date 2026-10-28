@@ -37,6 +37,7 @@ jobs:
         with:
           name: Revision-Visual-PR5-Recursos-Y-Capturas
           path: |
+            assets/images/enemies_new/
             assets/images/interiors_parallax/
             assets/images/chapter45/football_parallax/
             qa/interiors_twc_lab/
