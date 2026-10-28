@@ -76,3 +76,10 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Al retomar, comprobar resultado de esta ejecución, leer logs, descargar e inspeccionar las vistas; identificar y corregir los defectos visuales restantes.
 - Los tres enemigos solo cuentan con lógica aislada y tests escritos, no con sprites reales, integración ni prueba jugable.
 - **No dar la versión por lista** hasta concluir sprites, integración y revisión de composición (colegio/danza/fútbol/portada), sin reutilizar atlas de enemigos anteriores como reemplazos.
+
+## 2026-10-28 — TRES ENEMIGOS conectados al juego; pendientes de validación de arte/Flutter
+- `20e7efec`: generador reproducible `tools/generate_new_enemy_sprites.py`, atlas de 6 poses y 4 fotogramas por pose para robot de limpieza, aficionado rival y turista. **Arte candidato procedural**, no aprobación SNES de alta fidelidad por el usuario.
+- `3a384ff2`: los enemigos nuevos ya se registran en aparición por capítulo, se cargan sus hojas, se dibujan en coordenadas de mundo y ejecutan IA con anticipación. `7427b620`: daños de balón interrumpen ataque y derrota actualiza animación.
+- `abefad4c`: nueva ruta de assets en pubspec; `c31861ef`: workflow de QA gráfico genera y publica los atlas; `9f0809c0`: workflow de APK final regenerará los nuevos atlas antes de compilar.
+- **No afirmar terminado/validado** sin confirmar ejecución completa de QA gráfico y Flutter, revisar sprites reales y su coherencia, colisiones, ataques contra Miren/Sara, e interacción con pirueta de Sara, incluyendo probar versión final en Android.
+- En caso de fallos GitHub, revisar últimas ejecuciones de la rama (p. ej. `40740792295`, `40740791903`) y sus logs. Mantener PR #5 en borrador; no fusionar por el mero éxito de los generadores.
