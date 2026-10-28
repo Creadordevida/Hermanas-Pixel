@@ -73,8 +73,12 @@ def make_wall(theme:str,zone:int,variant:int):
     src=Image.open(p).convert('RGB')
     if theme=='dance':
         # identical Y scale to original source; no vertical distortions.
-        cropped=src.crop((0,55,1672,600)).resize((1010,H),Image.Resampling.LANCZOS)
-        start=(0,65,130)[variant]
+        # Antes solo variábamos 65 px dentro de una banda de 1010: el mismo
+        # cuadro/cartel reaparecía en casi todos los paneles. Ahora se
+        # aprovecha toda la panorámica original para tres encuadres amplios.
+        # NO estiramos hasta 1010 ni reflejamos puertas o letreros.
+        cropped=src.crop((0,55,1672,600)).resize((1650,H),Image.Resampling.LANCZOS)
+        start=(0,385,770)[variant]
         wall=cropped.crop((start,0,start+TILE_W,H))
     else:
         # Base NEUTRA para repetición. La biblioteca, las dos pizarras y sus
