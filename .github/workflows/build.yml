@@ -1,7 +1,7 @@
 name: Miren y Sara RC3 - Capitulo 1 fisico - APK y auditoria
 on:
   push:
-    branches: [main]
+    branches: [main, work/revision-visual-20261028-continuidad]
   workflow_dispatch:
 
 jobs:
@@ -23,6 +23,20 @@ jobs:
           flutter --version --machine | python3 -c 'import json,sys; f=json.load(sys.stdin); assert f["frameworkVersion"]=="3.47.8", f'
       - name: Dependencias auditoría
         run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Generar capas revisadas de fútbol, danza y colegio
+        run: |
+          python3 tools/build_interiors_parallax_twc.py
+          python3 tools/build_football_parallax_twc.py
+          python3 -m unittest qa/test_visual_revision_contract.py
+      - name: Guardar imágenes de revisión y vistas de fútbol
+        uses: actions/upload-artifact@v4
+        with:
+          name: Revision-grafica-20261028
+          path: |
+            assets/images/interiors_parallax/
+            assets/images/chapter45/football_parallax/
+            qa/football_twc_lab/CONTACTO_12_CAMARAS.jpg
+          if-no-files-found: error
       - name: Integridad base 0.8.0 y de todos los assets de la candidata
         shell: bash
         run: |
@@ -70,7 +84,7 @@ jobs:
       - name: Publicar APK de prueba en cuanto esté construido
         uses: actions/upload-artifact@v4
         with:
-          name: Miren-y-Sara-0.9.1-RC3-APK-PRUEBAS
+          name: Miren-y-Sara-revision-visual-PR5-APK-PRUEBAS
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
 
@@ -93,6 +107,10 @@ jobs:
           cache: true
       - name: Dependencias de comprobación visual
         run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Regenerar recursos de revisión para capturas Flutter
+        run: |
+          python3 tools/build_interiors_parallax_twc.py
+          python3 tools/build_football_parallax_twc.py
       - name: Descargar dependencias Flutter para las capturas
         run: flutter pub get
       - name: Capturar mapa y chapter 1 (Flutter real)
