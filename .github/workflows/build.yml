@@ -29,6 +29,7 @@ jobs:
           python3 tools/build_football_parallax_twc.py
           python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
+          python3 qa/check_new_enemy_artifacts.py
           python3 -m unittest qa/test_visual_revision_contract.py
       - name: Guardar imágenes de revisión y vistas de fútbol
         uses: actions/upload-artifact@v4
@@ -124,6 +125,9 @@ jobs:
       - name: Capturar uniformes de Miren y Sara
         timeout-minutes: 5
         run: flutter test --reporter expanded --concurrency=1 --timeout=4m test/qa_outfits_capture_test.dart
+      - name: Capturar los cuatro enemigos nuevos en StagePainter REAL
+        timeout-minutes: 5
+        run: flutter test --reporter expanded --concurrency=1 --timeout=4m test/qa_new_enemy_real_render_test.dart
       - name: Capturar rata y gato
         timeout-minutes: 3
         run: flutter test --concurrency=1 --timeout=2m test/qa_creature_render_test.dart
