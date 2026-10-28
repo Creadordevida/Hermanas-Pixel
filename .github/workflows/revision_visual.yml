@@ -16,7 +16,7 @@ on:
 jobs:
   graphics:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Preparar Pillow, NumPy y PyYAML
@@ -31,6 +31,18 @@ jobs:
         run: |
           python3 -m unittest qa/test_visual_revision_contract.py
           python3 -m unittest qa/test_interiors_twc.py
+      - name: Preparar Flutter para analizar enemigos y pantallas (sin APK)
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Resolver dependencias Flutter
+        run: flutter pub get
+      - name: Comprobar Dart y lógica de los tres enemigos
+        run: |
+          flutter analyze --no-pub lib
+          flutter test test/new_enemy_behaviors_test.dart
       - name: Guardar todos los recursos y vistas para inspección
         if: always()
         uses: actions/upload-artifact@v4
