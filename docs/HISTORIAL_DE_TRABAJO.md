@@ -109,3 +109,9 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - `9971e7ab`: `main.dart` cambia el enemigo antiguo por `navarre_king` en capítulos urbanos, carga nuevo atlas, lo representa a escala 84x116, se activa por cercanía, camina lentamente y golpea el suelo a corta distancia con aviso (~0,42 s); no dispara monedas. Código original del padre no se reutiliza.
 - `d4b1a5c6`, `c63d67c5`: generación de atlas incluida en procesos visual y APK final. `2d330f2b`: test del contrato evita reintroducir la estatua anterior.
 - Pendiente: confirmar CI con generación de imagen, analizar Flutter, revisar sprites reales, la transición pedestal/suelo, físicas de proximidad, animación de onda (actualmente el daño se calcula pero **no existe VFX de onda dibujado**), integración del golpe de Sara, versión móvil. **No declarar completamente terminado** ni aprobado hasta esas comprobaciones.
+
+## 2026-10-28 — Rey de Navarra pasa a hito único y añade ataque visible
+- `40b0e5bc`: eliminado `navarre_king` de apariciones aleatorias en Ayuntamiento y Plaza. Se coloca **una sola estatua** en el capítulo 3 (Plaza del Castillo) en 54% del recorrido, para preservar la lógica narrativa.
+- En el render se dibuja una **onda física visible** durante el golpe de suelo, sin monedas. `e61d2005` ajusta el alfa a entero para Dart.
+- `db2136c4`: tests contractuales para ubicación única y representación de onda. **Pendientes de verificación CI más reciente**.
+- El atlas es candidato original procedimental, no se ha aprobado aún su acabado artístico; consultar la última ejecución de `Revision visual - recursos y controles (SIN APK)`. No montar APK ni fusionar PR #5 antes de QA visual y Flutter.
