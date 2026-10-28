@@ -26,7 +26,8 @@ jobs:
       - name: Regenerar unión de capas de fútbol y vistas multicámara
         run: python3 tools/build_football_parallax_twc.py
       - name: Generar atlas nuevos enemigos
-        run: python3 tools/generate_new_enemy_sprites.py
+        run: |
+          python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
       - name: Probar contratos y recursos de interiores
         run: |
