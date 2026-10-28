@@ -255,7 +255,7 @@ class StageData {
     1 => ['dog_brown','pigeon','rat','dog_dalmatian'],
     2 => ['dog_brown','cat','rat','dog_doberman'],
     3 => ['pigeon','cat','dog_brown','dog_doberman','rat'],
-    4 => ['rival','goalkeeper','referee'],
+    4 => ['goalkeeper','referee'],
     5 => ['novice','breakdancer'],
     _ => ['bully','teacher'],
   };
