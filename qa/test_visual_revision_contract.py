@@ -41,6 +41,16 @@ class VisualRevisionContract(unittest.TestCase):
         self.assertIn("foe.t < .65 ? 2 : 1",MAIN)
         self.assertNotIn("foe.kind=='breakdancer' ? 3",MAIN)
 
+    def test_navarre_king_replaces_old_statue_and_coins(self):
+        self.assertNotIn("'statue'", MAIN)
+        self.assertIn("'navarre_king'", MAIN)
+        self.assertIn("paths['enemy_navarre_king_atlas']", MAIN)
+        self.assertIn("if(foe.kind=='navarre_king')", MAIN)
+        self.assertIn("foe.kingAwakeAt", MAIN)
+        self.assertIn("foe.kingImpactDelivered", MAIN)
+        self.assertIn("foe.kingAttackAt=time", MAIN)
+        self.assertNotIn("'statue' => 139.0", MAIN)
+
     def test_football_transition_not_straight_line(self):
         self.assertIn("contour=(13 + 7*np.sin",FOOTBALL)
         self.assertNotIn("for y in range(22):band[y,:,3]",FOOTBALL)
