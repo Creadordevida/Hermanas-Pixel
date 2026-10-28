@@ -25,7 +25,9 @@ class FlutterCaptureGuardrails(unittest.TestCase):
 
     def test_outfits_have_realistic_timeout_and_async_capture(self):
         source = (ROOT / 'test/qa_outfits_capture_test.dart').read_text()
-        self.assertIn('attempt < 225', source)
+        self.assertIn('attempt < 450', source)
+        self.assertIn('QA_UNIFORMES_CARGA', source)
+        self.assertIn('superó los 180 segundos', source)
         self.assertIn('Duration(milliseconds: 400)', source)
         self.assertIn('tester.runAsync<int>', source)
         self.assertIn('boundary.toImage', source)
