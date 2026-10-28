@@ -743,7 +743,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           if((shot.x-foe.x).abs()<37 && (shot.y-ey).abs()<(foe.aerial?42:51)) {
             foe.hits++;foe.stunned=.66;foe.t=0;shot.active=false;
             particlesUntil=time+.4;
-            if(foe.hits>=foe.hp)foe.deathAt=time;
+            if(foe.hits>=foe.hp){foe.deathAt=time;foe.newMotion?.defeat();}
+            else if(foe.newArchetype){foe.newMotion?.hit();}
             if(foe.dog || foe.aerial) foe.animalHit();
             break;
           }
