@@ -1240,7 +1240,7 @@ class StagePainter extends CustomPainter {
             final e=time-foe.kingAttackAt;
             if(e>=.35 && e<.70) {
               final radius=(e-.35)*210;
-              final opacity=((.70-e)/.35*160).round().clamp(0,160);
+              final opacity=((.70-e)/.35*160).round().clamp(0,160).toInt();
               final p=Paint()
                 ..color=Color.fromARGB(opacity,193,181,144)
                 ..style=PaintingStyle.stroke..strokeWidth=3;
