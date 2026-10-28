@@ -13,7 +13,11 @@ const _view = Size(800, 450);
 Future<void> _awaitGameReady(WidgetTester tester) async {
   // En GitHub, la decodificación inicial de sprites puede tardar más de 20 s.
   // Una única carga es necesaria; el resto de capturas reutiliza esas imágenes.
-  for (var attempt = 0; attempt < 225; attempt++) {
+  for (var attempt = 0; attempt < 450; attempt++) {
+    if (attempt % 25 == 0) {
+      // ignore: avoid_print
+      print('QA_CARGA_RECURSOS ${attempt * 400 ~/ 1000}s: esperando');
+    }
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 400)));
     await tester.pump(const Duration(milliseconds: 30));
     final errors = find.textContaining('ERROR AL CARGAR RECURSOS');
@@ -22,7 +26,7 @@ Future<void> _awaitGameReady(WidgetTester tester) async {
     }
     if (find.byType(CircularProgressIndicator).evaluate().isEmpty) return;
   }
-  fail('La carga inicial de recursos no finalizó en 90 segundos. Revisar los mensajes Recursos incompletos y los tiempos de decodificación.');
+  fail('La carga inicial de recursos no finalizó en 180 segundos. Revisar los mensajes Recursos incompletos y los tiempos de decodificación.');
 }
 
 // Las imagenes insertadas con Image.asset usan un ImageProvider aparte
@@ -30,10 +34,14 @@ Future<void> _awaitGameReady(WidgetTester tester) async {
 // la portada o el mapa hayan terminado de decodificarse y pintarse.
 Future<void> _waitForImageWidgets(WidgetTester tester, String name,
     {required int loadedImages}) async {
-  for (var attempt = 0; attempt < 100; attempt++) {
+  for (var attempt = 0; attempt < 240; attempt++) {
     await tester.pump(const Duration(milliseconds: 50));
     final count = tester.widgetList<RawImage>(find.byType(RawImage))
         .where((image) => image.image != null).length;
+    if (attempt % 40 == 0) {
+      // ignore: avoid_print
+      print('QA_ESPERA_IMAGES $name $count/$loadedImages intento $attempt');
+    }
     if (count >= loadedImages) {
       // Una pasada extra permite que el RepaintBoundary pinte la imagen.
       await tester.pump(const Duration(milliseconds: 50));
@@ -180,6 +188,8 @@ void main() {
     ];
     for (var i = 0; i < targets.length; i++) {
       final target = targets[i];
+      // ignore: avoid_print
+      print('QA_INICIO_ESCENA ${i + 1}/${targets.length}: ${target.title}');
       // El GlobalKey de HermanasGame mantiene el mismo State y la memoria de
       // imágenes entre capítulos; didUpdateWidget modifica solo el escenario.
       await tester.pumpWidget(MaterialApp(home: RepaintBoundary(

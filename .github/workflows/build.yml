@@ -81,7 +81,7 @@ jobs:
     name: Capturas y auditoría gráfica real Flutter
     needs: android-apk-candidato
     runs-on: ubuntu-24.04
-    timeout-minutes: 18
+    timeout-minutes: 25
     steps:
       - name: Descargar proyecto para QA gráfica
         uses: actions/checkout@v4
@@ -96,8 +96,9 @@ jobs:
       - name: Descargar dependencias Flutter para las capturas
         run: flutter pub get
       - name: Capturar mapa y chapter 1 (Flutter real)
-        timeout-minutes: 4
-        run: flutter test --concurrency=1 --timeout=3m test/qa_render_capture_test.dart
+        timeout-minutes: 10
+        # La salida expandida muestra el fallo completo en los registros de GitHub.
+        run: flutter test --reporter expanded --concurrency=1 --timeout=9m test/qa_render_capture_test.dart
       - name: Capturar uniformes de Miren y Sara
         timeout-minutes: 3
         run: flutter test --concurrency=1 --timeout=2m test/qa_outfits_capture_test.dart
