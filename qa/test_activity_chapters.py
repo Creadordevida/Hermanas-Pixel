@@ -57,10 +57,12 @@ class ActivitySceneryQuality(unittest.TestCase):
                 self.assertIn(f'activity_${{zone.asset}}',CODE)
         self.assertEqual(MANIFEST['zone_ranges'],[[0,10500],[10500,25500],[25500,36500]])
         self.assertIn('stage == 4 || stage == 5',CODE)
-        self.assertIn('_activityBackground(canvas);',CODE)
-        self.assertIn('if(fade>0) _activityBackdrop(canvas,zones[index+1],fade);',CODE)
-        self.assertIn('sourceWidth=viewW*sourceHeight/destinationBottom;',CODE)
-        self.assertNotIn('canvas.scale(-1,1)',CODE.split('void _activityBackdrop(',1)[1].split('void _activityProps(',1)[0])
+        self.assertNotIn('void _activityBackground(Canvas canvas)',CODE)
+        self.assertIn('stage == 5 || stage == 6',CODE)
+        self.assertIn('_interiorBackgroundTWC(canvas);',CODE)
+        self.assertNotIn('if(fade>0) _activityBackdrop(canvas,zones[index+1],fade);',CODE)
+        self.assertIn('interiorModuleXWorldTWC(zone,index)-cameraX',CODE)
+        self.assertNotIn('canvas.scale(-1,1)',CODE.split('void _interiorBackgroundTWC(',1)[1].split('void _background(',1)[0])
 
     def test_six_props_per_atlas_cropped_to_real_solid_alpha(self):
         for basename in ('football','dance'):

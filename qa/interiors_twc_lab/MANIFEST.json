@@ -1,0 +1,91 @@
+{
+  "version": "interiores-twc-local-v1",
+  "world": 36500,
+  "width": 880,
+  "zones": [
+    {
+      "start": 0,
+      "end": 10500
+    },
+    {
+      "start": 10500,
+      "end": 25500
+    },
+    {
+      "start": 25500,
+      "end": 36500
+    }
+  ],
+  "speed": {
+    "far": 0.3,
+    "mid": 0.56,
+    "near": 1.0
+  },
+  "protected_originals": {
+    "chapter45/dance_foyer.png": "ef674f8d0f809f4713262de5850764ab144413b0e4d4a0e8d398cb1538fccf6f",
+    "chapter45/dance_studio.png": "83ca272fc72cb342d4e40a3c0e4aabfd422cafb62c71dea573dd1f3665ea1ae1",
+    "chapter45/dance_stage.png": "5d6870fa25b01d81080fac30e524256ef630d0df1799821d11b4129faa5dabe2",
+    "scenes/school.png": "141ec8eb8138974222a4123bce085dfb817bb6a8c9d69a8e89dfc25d3728ec8c",
+    "scenes/school_classroom.png": "fd4ef4cdd6f92c0bd0df6c271f6ed334d03046b792244070e1da11b41b3211d7",
+    "scenes/school_computers.png": "ffa4d7e8b422be9c886ea1a2d32e7181f7bb6ccf19e3be1b3cf8eb4dfb90cfde"
+  },
+  "stages": {
+    "dance": {
+      "height": 286,
+      "far_width": 2200,
+      "mid_width": 2020,
+      "zones": [
+        {
+          "id": "foyer",
+          "start": 0,
+          "end": 10500,
+          "panels": 3
+        },
+        {
+          "id": "studio",
+          "start": 10500,
+          "end": 25500,
+          "panels": 3
+        },
+        {
+          "id": "stage",
+          "start": 25500,
+          "end": 36500,
+          "panels": 3
+        }
+      ],
+      "far_period": 7333.333333333334,
+      "mid_period": 3607.142857142857,
+      "assets_count": 12
+    },
+    "school": {
+      "height": 278,
+      "far_width": 2200,
+      "mid_width": 2020,
+      "zones": [
+        {
+          "id": "hall",
+          "start": 0,
+          "end": 10500,
+          "panels": 3
+        },
+        {
+          "id": "classroom",
+          "start": 10500,
+          "end": 25500,
+          "panels": 3
+        },
+        {
+          "id": "computers",
+          "start": 25500,
+          "end": 36500,
+          "panels": 3
+        }
+      ],
+      "far_period": 7333.333333333334,
+      "mid_period": 3607.142857142857,
+      "assets_count": 17
+    }
+  },
+  "render_rules": "walls 1:1, windows show 0.30/0.56, no full-screen alpha fades"
+}

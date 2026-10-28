@@ -1,0 +1,46 @@
+{
+  "name": "TWC_FOOTBALL_PARALLAX_V1",
+  "reference": "TWC_PARALLAX_2D_RC3_FIX2_V1",
+  "status": "local candidate; pending Flutter and Android",
+  "width_world": 36500,
+  "viewport": [
+    800,
+    450
+  ],
+  "backdrop_height": 386,
+  "far": {
+    "asset": "chapter45/football_parallax/montanas_ciudad_deportiva_ciclo.png",
+    "width": 2200,
+    "speed": 0.3,
+    "repeat_world": 7333.333333333334
+  },
+  "mid": {
+    "asset": "chapter45/football_parallax/arbolado_deportivo_ciclo.png",
+    "width": 2020,
+    "speed": 0.56,
+    "repeat_world": 3607.142857142857
+  },
+  "near": {
+    "dir": "chapter45/football_parallax/near_world_tiles",
+    "tile_width": 1100,
+    "count": 6,
+    "cycle_width": 6600,
+    "speed": 1
+  },
+  "source_sha256": {
+    "football_arrival": "cf581eb61a84882ae3957e1ebcdc8a9b9f33cfe910db06acddc540f4d54b078f",
+    "football_drills": "b01a9fc76802f9a7d6c9ae84d96b4ac8da87b3912a70dbf3da5464fd113d558b",
+    "football_stands": "92ef77a5d83d7b6ee10d5c0ed1704a0b1b385932ddcb7e157180bb693a851a03"
+  },
+  "generated_seed": 20261028,
+  "protected": [
+    "football_arrival.png",
+    "football_drills.png",
+    "football_stands.png"
+  ],
+  "changed_gameplay": false,
+  "changed_other_chapters": false,
+  "no_whole_photo_crossfade": true,
+  "source_master_files_edited": false,
+  "qa_note": "Masks are only used to isolate vegetational midground and softly land the field fence; no full scene alpha fade."
+}
