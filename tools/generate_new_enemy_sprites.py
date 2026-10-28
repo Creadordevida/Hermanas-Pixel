@@ -82,6 +82,36 @@ def frame(kind,pose,n):
   d.rectangle((15,45+y,18,47+y),fill='#d9f5ef')
   d.rectangle((35,45+y,37,47+y),fill='#163849')
   d.arc((11,32+y,40,53+y),0,165,fill='#234452',width=1)
+ # Diferencias materiales entre fotogramas: animaciones, no copias estáticas.
+ # Todas las piezas usan coordenadas nativas con el suelo en y=59.
+ if kind=='robot':
+  # Giro de ruedas y luces de estado; barrido lateral al atacar.
+  for cx in (18,36):
+   box(d,(cx-1,52+y,cx+1,54+y),'#d4eef4' if n%2==0 else '#37677b')
+  box(d,(23,23+y,24,24+y),'#ffcc75' if n%2 else '#e85c64')
+  if pose=='attack':
+   d.line((38,37+n%2,47,33+n%3),fill='#a7e8ef',width=2)
+  if pose=='alert':
+   d.arc((10,18,38,40),200,340,fill='#ffe390',width=2)
+ elif kind=='supporter':
+  # Bufanda dinámica y cambios de zancada observables.
+  dx=(-2,0,2,0)[n] if pose=='patrol' else (0,1,0,-1)[n]
+  d.polygon([(32,23+y),(38+dx,22+y),(43+dx,25+y),(38+dx,28+y),(31,27+y)],
+            fill='#f4cc4e',outline='#4a3848')
+  d.line((34,26+y,42+dx,26+y),fill='#ac365a',width=1)
+  if pose=='attack':
+   d.polygon([(38,23),(43+n%2,14),(46,16),(44,29)],fill=skin)
+  if pose=='hit':
+   d.line((16,12,10,9),fill='#f1d8bd',width=2)
+ elif kind=='tourist':
+  # Mareo visible: balanceo de sombrero, botella y cambio de pies.
+  if pose in ('idle','patrol','alert'):
+   d.line((14+tilt,8,34+tilt,8),fill='#e8d8a2',width=2)
+  if pose=='attack':
+   d.polygon([(39+tilt,29),(44+tilt,24+n),(46+tilt,26+n),(42+tilt,40)],
+             fill='#5b794b')
+  if pose=='hit':
+   d.line((17+tilt,15,12+tilt,12),fill='#ffe0c4',width=2)
  if pose=='hit':box(d,(6,13,10,17),'#ffffcd')
  if pose=='defeated':
   # crouch/drop sprite while keeping the same cell and floor.
