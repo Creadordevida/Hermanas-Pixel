@@ -10,9 +10,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hermanas_aventura/main.dart';
 
 Future<void> _waitForAssets(WidgetTester tester) async {
-  // El mismo margen de carga (90 s) que la prueba general de capítulos.
+  // El motor decodifica más de 130 sprites; en CI la primera carga real
+  // de la prueba de 41 escenas necesitó aproximadamente 92 segundos.
+  // Mismo margen de 180 s que qa_render_capture_test.dart.
   // runAsync permite avanzar al decodificador real, fuera de FakeAsync.
-  for (var attempt = 0; attempt < 225; attempt++) {
+  for (var attempt = 0; attempt < 450; attempt++) {
+    if (attempt % 25 == 0) {
+      // ignore: avoid_print
+      print('QA_UNIFORMES_CARGA ${attempt * 400 ~/ 1000}s: esperando');
+    }
     await tester.runAsync(() =>
         Future<void>.delayed(const Duration(milliseconds: 400)));
     await tester.pump(const Duration(milliseconds: 30));
@@ -23,7 +29,7 @@ Future<void> _waitForAssets(WidgetTester tester) async {
     }
     if (find.byType(CircularProgressIndicator).evaluate().isEmpty) return;
   }
-  fail('La carga de recursos superó los 90 segundos. Revisar el registro '
+  fail('La carga de recursos superó los 180 segundos. Revisar el registro '
       'Recursos incompletos y los tiempos de decodificación.');
 }
 
