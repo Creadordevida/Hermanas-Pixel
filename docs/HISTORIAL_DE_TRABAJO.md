@@ -134,3 +134,8 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - `ca6d7322`: nueva prueba Flutter que usa el `StagePainter` real del juego y captura 16 imágenes de los 4 enemigos, en las etapas correspondientes, al directorio `qa/rendered_from_flutter`. No confundir con capturas desde móvil/APK; es el render Flutter auténtico.
 - `d520d52e`: se añade la captura al workflow Android y los PNG al artefacto de revisión. Pendiente ejecutar, descargar y **abrir cada captura real** para inspección artística. Los cuatro enemigos siguen bloqueados para partidas mediante la puerta de calidad hasta conseguir y aprobar el resultado.
 - Pendiente prioritario: redibujo artístico profundo; los nuevos detalles no bastan para afirmar calidad SNES. Repetir diseño y captura hasta calidad suficiente. No publicar como terminado.
+
+## 28/10/2026 — Rediseño geométrico en atlas reales, pendiente de inspección
+- `1e52bff0`: nuevo trabajo sobre los tres atlas: figura humana con hombros/codos/pómulos/mandíbula, volúmenes y pliegues, cámara con óptica y robot con chasis curvo, visor, ruedas y reflejos.
+- `cfd29005`: rey con rostro esculpido, barba, corona, coraza, emblema medieval, grebas y texturas de piedra.
+- Generación CI y captura Flutter se han solicitado automáticamente tras los commits. **No confundir la revisión del código/generador con calidad artística demostrada.** Mantener la puerta de aceptación cerrada hasta poder abrir las capturas reales recién generadas de los cuatro, corregir defectos y superar las pruebas.
