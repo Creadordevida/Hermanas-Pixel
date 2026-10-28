@@ -16,6 +16,8 @@ import 'creature_sheet_bounds.dart';
 import 'animal_sprite_bounds.dart';
 import 'jump_visuals.dart';
 import 'activity_chapters.dart';
+import 'football_parallax_twc.dart';
+import 'interiors_parallax_twc.dart';
 
 const double viewW = 800;
 const double viewH = 450;
@@ -367,6 +369,32 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         'assets/images/chapter1/ch1_parallax/montanas_ciudad_ciclo.png';
       paths['ch1_mid_woodland_loop'] =
         'assets/images/chapter1/ch1_parallax/arbolado_medio_ciclo.png';
+      // FÚTBOL: mismo movimiento aprobado que el capítulo 1; arte propio.
+      paths['football_far_twc'] = footballFarAssetTWC;
+      paths['football_mid_twc'] = footballMidAssetTWC;
+      for (int i = 0; i < footballTileCountTWC; i++) {
+        paths['football_near_tile_$i'] = footballNearTileAssetTWC(i);
+      }
+      // Interiores TWC: muros físicos 1:1 y vistas exteriores por ventanas.
+      // El colegio y la academia NO funden panoramas de habitaciones.
+      for (final theme in ['dance','school']) {
+        paths['interior_${theme}_far'] =
+          interiorAssetTWC(theme,'exterior_lejano_ciclo');
+        paths['interior_${theme}_mid'] =
+          interiorAssetTWC(theme,'arbolado_tras_ventanas_ciclo');
+        paths['interior_${theme}_passage'] =
+          interiorAssetTWC(theme,'marco_paso');
+        for (var room=0;room<3;room++) {
+          for (var variant=0;variant<interiorVariantsPerRoomTWC;variant++) {
+            paths['interior_${theme}_z${room}_panel_$variant'] =
+                interiorPanelAssetTWC(theme,room,variant);
+          }
+        }
+      }
+      for (final name in ['pizarra_matematicas','pizarra_informatica',
+          'estanteria_biblioteca','mesa_aula','ordenador_aula']) {
+        paths['interior_school_$name'] = interiorAssetTWC('school',name);
+      }
       // 72 teselas de mundo FISICO, generadas una sola vez fuera del juego.
       for (int i=0; i<ch1PhysicalTileCount; i++) {
         paths['ch1_world_tile_$i'] = ch1PhysicalTileAsset(i);
@@ -1267,11 +1295,6 @@ class StagePainter extends CustomPainter {
   static const List<double> _floorArtTop = [380,390,390,390,386,286,278];
   static const List<double> _midArtTop = [330,355,330,345,196,170,172];
 
-  ui.Image? _schoolImage(int index,bool mid) {
-    final suffix = index==1 ? 'classroom' : 'computers';
-    return images[mid ? 'mid_school_$suffix' : 'scene_school_$suffix'];
-  }
-
   void _backLayer(Canvas canvas,ui.Image? source,double sceneAlpha,double parallax,{double zoneOrigin=0}) {
     if(source == null || sceneAlpha <= 0)return;
     final limit=math.max(0.0,source.width.toDouble()-viewW);
@@ -1597,42 +1620,9 @@ class StagePainter extends CustomPainter {
     _neighborhoodTrees(canvas); // connector-only, never hide landmarks
   }
 
-  // The outdoors and indoors require DIFFERENT camera crops and occlusion:
-  // grass begins at Y=386, polished dance parquet at Y=286. Preserve each
-  // underlying approved physical floor tile; no generated image replaces it.
-  void _activityBackdrop(Canvas canvas,ActivityZone zone,double alpha) {
-    if(alpha<=0)return;
-    final art=images['activity_${zone.asset}'];
-    if(art==null)return;
-    final destinationBottom=stage==4?386.0:286.0;
-    final sourceHeight=stage==4?690.0:545.0;
-    const sourceTop=55.0;
-    final sourceWidth=viewW*sourceHeight/destinationBottom;
-    final panLimit=math.max(0.0,art.width-sourceWidth);
-    final local=(cameraX-zone.start).clamp(0.0,zone.length-viewW).toDouble();
-    final fraction=local/math.max(1.0,zone.length-viewW);
-    final srcX=panLimit*fraction;
-    // Identical X/Y source scale: NEVER stretch a 16:9 painting to an
-    // unrelated theatre-wall or outdoor-field aspect ratio.
-    canvas.drawImageRect(art,
-      Rect.fromLTWH(srcX,sourceTop,sourceWidth,sourceHeight),
-      Rect.fromLTWH(0,0,viewW,destinationBottom),
-      Paint()..filterQuality=FilterQuality.low
-             ..color=Colors.white.withValues(alpha:alpha));
-  }
-
-  void _activityBackground(Canvas canvas) {
-    final zones=activityZones(stage);
-    final center=cameraX+viewW/2;
-    final index=activityZoneIndex(zones,center);
-    final zone=zones[index];
-    const transitionWidth=900.0;
-    final fade=index==zones.length-1?0.0:
-      ((center-(zone.end-transitionWidth))/transitionWidth)
-        .clamp(0.0,1.0).toDouble();
-    _activityBackdrop(canvas,zone,1);
-    if(fade>0) _activityBackdrop(canvas,zones[index+1],fade);
-  }
+  // El antiguo método de grandes panoramas y fundidos entre estancias
+  // queda retirado. Fútbol usa el paralaje exterior; danza y colegio usan
+  // muros físicos, marcos de puertas y vistas tras ventanas (abajo).
 
   void _activityProps(Canvas canvas) {
     final football=stage==4;
@@ -1661,35 +1651,129 @@ class StagePainter extends CustomPainter {
     }
   }
 
+  // Capa X 0.30 y 0.56: mismo contrato TWC del barrio, arte de fútbol.
+  // La transparencia sólo pertenece al arbolado recortado, no a escenas
+  // enteras. Cada recurso puede repetirse cíclicamente sin fundidos en juego.
+  void _footballLoopTWC(Canvas canvas, ui.Image? image, double speed) {
+    if (image == null) return;
+    final width = image.width.toDouble();
+    final shift = footballLoopShiftTWC(cameraX, speed, image.width);
+    for (double x = -shift; x < viewW; x += width) {
+      canvas.drawImageRect(image,
+        Rect.fromLTWH(0,0,width,image.height.toDouble()),
+        Rect.fromLTWH(x,0,width,footballBackdropHeightTWC),
+        Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
+  void _footballBackgroundTWC(Canvas canvas) {
+    canvas.drawRect(const Rect.fromLTWH(0,0,viewW,footballBackdropHeightTWC),
+      Paint()..color=const Color(0xff54a4ed));
+    _footballLoopTWC(canvas,images['football_far_twc'],footballFarSpeedTWC);
+    _footballLoopTWC(canvas,images['football_mid_twc'],footballMidSpeedTWC);
+    // Construcción física real 1:1. No fotos panorámicas lentas ni fundidos.
+    for (final n in footballVisibleModulesTWC(cameraX,viewportWidth:viewW)) {
+      final img=images['football_near_tile_${footballNearModuleAssetIndex(n)}'];
+      if (img==null) continue;
+      final x=footballNearModuleX(n)-cameraX;
+      canvas.drawImageRect(img,
+        Rect.fromLTWH(0,0,footballTileWidthTWC,footballBackdropHeightTWC),
+        Rect.fromLTWH(x,0,footballTileWidthTWC,footballBackdropHeightTWC),
+        Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
+  // INTERIORES aprobados TWC: misma cámara que fútbol/barrio, pero el
+  // parallax se ve ÚNICAMENTE tras el cristal de los paneles RGBA.
+  // La pared, el mobiliario y el suelo siguen en coordenadas de mundo 100%.
+  void _interiorLoopTWC(Canvas canvas, ui.Image? image,
+      double speed, double height) {
+    if (image == null) return;
+    final width=image.width.toDouble();
+    final shift=interiorLoopOffsetTWC(cameraX,speed,image.width);
+    for(double x=-shift;x<viewW;x+=width) {
+      canvas.drawImageRect(image,
+        Rect.fromLTWH(0,0,width,image.height.toDouble()),
+        Rect.fromLTWH(x,0,width,height),
+        Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
+  void _interiorBackgroundTWC(Canvas canvas) {
+    final theme=stage==5 ? 'dance' : 'school';
+    final height=stage==5 ? 286.0 : 278.0;
+    canvas.drawRect(Rect.fromLTWH(0,0,viewW,height),
+      Paint()..color=const Color(0xffabd7e9));
+    // El orden se conserva: lejos 0.30, medio 0.56, muros y objetos 1.00.
+    _interiorLoopTWC(canvas,images['interior_${theme}_far'],
+        interiorFarSpeedTWC,height);
+    _interiorLoopTWC(canvas,images['interior_${theme}_mid'],
+        interiorMidSpeedTWC,height);
+    for (var zone=0;zone<3;zone++) {
+      final start=interiorZoneEdgesTWC[zone];
+      final end=interiorZoneEdgesTWC[zone+1];
+      if (end<=cameraX || start>=cameraX+viewW) continue;
+      final clip=Rect.fromLTRB(
+        math.max(0.0,start-cameraX),0,
+        math.min(viewW,end-cameraX),height);
+      canvas.save();canvas.clipRect(clip);
+      for (final index in interiorVisibleModulesTWC(zone,cameraX,
+          viewportWidth:viewW)) {
+        final variant=interiorModuleVariantTWC(zone,index);
+        final image=images['interior_${theme}_z${zone}_panel_$variant'];
+        if(image==null)continue;
+        final x=interiorModuleXWorldTWC(zone,index)-cameraX;
+        canvas.drawImageRect(image,
+          Rect.fromLTWH(0,0,interiorModuleWidthTWC,height),
+          Rect.fromLTWH(x,0,interiorModuleWidthTWC,height),
+          Paint()..filterQuality=FilterQuality.none);
+      }
+      canvas.restore();
+    }
+    // Pizarras y biblioteca: Hitos ÚNICOS. No forman parte del panel
+    // repetible; su posición es 100% mundo, no fade ni parallax.
+    if(stage==6) {
+      for(final item in <(String,double,double)>[
+        ('estanteria_biblioteca',1720,0),
+        ('pizarra_matematicas',15320,52),
+        ('pizarra_informatica',29820,51)]) {
+        final art=images['interior_school_${item.$1}'];
+        if(art==null)continue;
+        final x=item.$2-cameraX;
+        if(x+art.width<0 || x>=viewW)continue;
+        canvas.drawImageRect(art,
+          Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+          Rect.fromLTWH(x,item.$3,art.width.toDouble(),art.height.toDouble()),
+          Paint()..filterQuality=FilterQuality.none);
+      }
+    }
+    // Marcos de paso colocados en x absoluto. No crossfade de habitaciones.
+    final passage=images['interior_${theme}_passage'];
+    if(passage!=null) {
+      for (final edge in [interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2]]) {
+        final x=edge-cameraX-60;
+        if(x+120<=0 || x>=viewW) continue;
+        canvas.drawImageRect(passage,
+          Rect.fromLTWH(0,0,120,height),Rect.fromLTWH(x,0,120,height),
+          Paint()..filterQuality=FilterQuality.none);
+      }
+    }
+  }
+
   void _background(Canvas canvas) {
     // The approved detailed backdrop is a DISTANT vista. Its limited camera
     // pan cannot wrap the same clock, cathedral, car or kiosk indefinitely.
     // Foreground structures scroll at full world speed, just like sprites.
     if(stage == 0) {
       _neighborhoodBackground(canvas);
-    } else if(stage == 4 || stage == 5) {
-      _activityBackground(canvas);
-    } else if(stage != 6) {
+    } else if(stage == 4) {
+      _footballBackgroundTWC(canvas);
+    } else if(stage == 5 || stage == 6) {
+      // Sala de danza y colegio: interiores por piezas, sin fantasmas.
+      _interiorBackgroundTWC(canvas);
+    } else {
       _backLayer(canvas,images['scene_$stage'],1,0.014);
       _midLayer(canvas,images['mid_$stage'],1);
-    } else {
-      // Hallway -> classroom -> computer room, once per chapter (not repeated
-      // cyclically as was the case in RC3). The final 700 units of each zone
-      // crossfade; the scenery layer keeps exact pixel dimensions throughout.
-      final zone=stageWidth/3;
-      final int part=(cameraX/zone).floor().clamp(0,2).toInt();
-      final towardsNext=(cameraX-(part+1)*zone+700).clamp(0.0,700.0)/700;
-      final next=math.min(2,part+1);
-      final currentArt=part==0?images['scene_6']:_schoolImage(part,false);
-      final currentMid=part==0?images['mid_6']:_schoolImage(part,true);
-      final nextArt=next==0?images['scene_6']:_schoolImage(next,false);
-      final nextMid=next==0?images['mid_6']:_schoolImage(next,true);
-      _backLayer(canvas,currentArt,1,0.014,zoneOrigin:part*zone);
-      _midLayer(canvas,currentMid,1);
-      if(next!=part && towardsNext>0){
-        _backLayer(canvas,nextArt,towardsNext.toDouble(),0.014,zoneOrigin:next*zone);
-        _midLayer(canvas,nextMid,towardsNext.toDouble());
-      }
     }
     // Rich APPROVED world floor tiles: stone, turf, polished parquet or school
     // flooring. The exact same groundY governs hero feet and collision tests.
@@ -1703,6 +1787,36 @@ class StagePainter extends CustomPainter {
       }
     }
     if(stage == 4 || stage == 5) _activityProps(canvas);
+    if(stage==6) {
+      final desk=images['interior_school_mesa_aula'];
+      if(desk!=null) {
+        // Mesas sobre el suelo a la velocidad 1:1, solo en las aulas.
+        for(final room in [1,2]) {
+          final start=interiorZoneEdgesTWC[room];
+          final end=interiorZoneEdgesTWC[room+1];
+          final first=((cameraX-start)/570).floor()-1;
+          for(var n=math.max(0,first);n<first+5;n++) {
+            final worldX=start+260+n*570;
+            if(worldX>end-180)break;
+            final x=worldX-cameraX;
+            if(x+desk.width<0||x>=viewW)continue;
+            canvas.drawImageRect(desk,
+              Rect.fromLTWH(0,0,desk.width.toDouble(),desk.height.toDouble()),
+              Rect.fromLTWH(x,286,desk.width.toDouble(),desk.height.toDouble()),
+              Paint()..filterQuality=FilterQuality.none);
+            if(room==2) {
+              final pc=images['interior_school_ordenador_aula'];
+              if(pc!=null) {
+                canvas.drawImageRect(pc,
+                  Rect.fromLTWH(0,0,pc.width.toDouble(),pc.height.toDouble()),
+                  Rect.fromLTWH(x+34,233,pc.width.toDouble(),pc.height.toDouble()),
+                  Paint()..filterQuality=FilterQuality.none);
+              }
+            }
+          }
+        }
+      }
+    }
   }
   void _actor(Canvas canvas,Character c,String role,int index,bool active) {
     final costume=(stage==4 && role=='futbolista')||(stage==5 && role=='bailarina');

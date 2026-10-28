@@ -87,7 +87,7 @@ class NeighborhoodChapterOneQA(unittest.TestCase):
 
     def test_vistas_do_not_repeat_or_fullscreen_dissolve(self):
         area = MAIN.split('void _neighborhoodVista(', 1)[1].split(
-            'void _activityBackdrop(', 1)[0]
+            'void _activityProps(', 1)[0]
         self.assertIn('neighborhoodPanFraction(panel, cameraX)', area)
         self.assertIn('neighborhoodViewSourceWidth(panel.asset)', area)
         self.assertIn('canvas.clipRect(area)', area)

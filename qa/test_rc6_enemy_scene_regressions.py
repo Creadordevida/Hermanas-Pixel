@@ -80,8 +80,10 @@ class RC6SceneryCorrections(unittest.TestCase):
   self.assertNotEqual(p.read_bytes(),(ROOT/'assets/images/mid/stage_4.png').read_bytes())
 
  def test_school_has_three_real_zones_with_local_camera(self):
-  self.assertIn('zoneOrigin:part*zone',CODE)
-  self.assertIn('zoneOrigin:next*zone',CODE)
+  self.assertIn('interiorZoneEdgesTWC[zone]',CODE)
+  self.assertIn('interiorModuleXWorldTWC(zone,index)-cameraX',CODE)
+  self.assertIn('_interiorBackgroundTWC(canvas);',CODE)
+  self.assertNotIn('zoneOrigin:part*zone',CODE)
   for scene in ('school','school_classroom','school_computers'):
    self.assertTrue((ROOT/f'assets/images/scenes/{scene}.png').is_file())
 
