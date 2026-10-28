@@ -83,3 +83,9 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - `abefad4c`: nueva ruta de assets en pubspec; `c31861ef`: workflow de QA gráfico genera y publica los atlas; `9f0809c0`: workflow de APK final regenerará los nuevos atlas antes de compilar.
 - **No afirmar terminado/validado** sin confirmar ejecución completa de QA gráfico y Flutter, revisar sprites reales y su coherencia, colisiones, ataques contra Miren/Sara, e interacción con pirueta de Sara, incluyendo probar versión final en Android.
 - En caso de fallos GitHub, revisar últimas ejecuciones de la rama (p. ej. `40740792295`, `40740791903`) y sus logs. Mantener PR #5 en borrador; no fusionar por el mero éxito de los generadores.
+
+## 2026-10-28 — Cierre de lagunas de integración de enemigos y nueva puerta Dart
+- Commit `2b90e0cd`: `lib/main.dart` ahora programa al turista en todos los capítulos urbanos 0–3 (antes solo en 0, pese al contrato aprobado). Al finalizar aturdimiento, estado `hit` transiciona a `alert` antes de seguir simulando.
+- Commit `0f25c1be`: se amplió la puerta visual sin APK para ejecutar Flutter 3.47.8, `flutter analyze --no-pub lib` y `flutter test test/new_enemy_behaviors_test.dart` tras generar todos los assets. Esto detecta errores de compilación Dart y mecánicas antes del último APK.
+- Hasta la comprobación: QA visual anterior `40740951313` finalizó success, pero **no incluía necesariamente Flutter/análisis en ese momento**. Revisar nueva ejecución y si falla obtener el paso y arreglarlo.
+- Arte de enemigos aún candidato; no hay conformidad artística ni pruebas físicas Android. No declarar completa la revisión.
