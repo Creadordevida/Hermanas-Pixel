@@ -41,7 +41,7 @@ const List<String> chapterProps = [
   'crate', 'crate', 'crate', 'planter', 'cone', 'gym_bench', 'backpack',
 ];
 const List<String> enemyKinds = [
-  'dog_dalmatian', 'dog_brown', 'dog_doberman', 'pigeon', 'cat', 'statue',
+  'dog_dalmatian', 'dog_brown', 'dog_doberman', 'pigeon', 'cat', 'navarre_king',
   'rat', 'rival', 'goalkeeper', 'referee', 'novice', 'breakdancer', 'bully', 'teacher',
 ];
 const List<String> poses = ['idle', 'walk', 'attack', 'hit', 'defeated'];
@@ -83,9 +83,12 @@ class Enemy {
   bool biteApplied = false;
   bool launched = false;
   NewEnemyMotion? newMotion;
+  double kingAwakeAt = -1;
+  double kingAttackAt = -1;
+  bool kingImpactDelivered = false;
   bool get newArchetype => ['cleaning_robot','rival_supporter','tipsy_tourist'].contains(kind);
   bool get defeated => deathAt >= 0;
-  bool get ranged => ['referee','breakdancer','teacher','statue'].contains(kind);
+  bool get ranged => ['referee','breakdancer','teacher'].contains(kind);
   bool get dog => kind.startsWith('dog_');
   bool get aerial => kind == 'pigeon';
   int get hp => kind == 'dog_doberman' ? 2 : ranged ? 3 : 1;
@@ -249,9 +252,9 @@ class StageData {
   String get sceneKey => chapterScenes[index];
   List<String> get enemies => switch (index) {
     0 => ['dog_dalmatian','dog_brown','rat','pigeon'],
-    1 => ['dog_brown','pigeon','statue','dog_dalmatian'],
+    1 => ['dog_brown','pigeon','navarre_king','dog_dalmatian'],
     2 => ['dog_brown','cat','rat','dog_doberman'],
-    3 => ['pigeon','cat','statue','dog_doberman','rat'],
+    3 => ['pigeon','cat','navarre_king','dog_doberman','rat'],
     4 => ['rival','goalkeeper','referee'],
     5 => ['novice','breakdancer'],
     _ => ['bully','teacher'],
@@ -448,7 +451,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           paths['dog_${v}_$pose'] = 'assets/images/dog/$v/$pose.png';
         }
       }
-      for (final v in ['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue']) {
+      for (final v in ['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher']) {
         if (v=='cat' || v=='rat') {
           // Se carga la hoja nueva única, con cinco poses coherentes y
           // recortes medidos; no se usan los cinco dibujos planos originales.
@@ -460,6 +463,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       for (final kind in ['robot','supporter','tourist']) {
         paths['enemy_new_$kind'] = 'assets/images/enemies_new/${kind}_atlas.png';
       }
+      paths['enemy_navarre_king_atlas'] = 'assets/images/enemies_new/navarre_king_atlas.png';
       // Eight true flight silhouettes (upstroke, downstroke, glide, hit, fall).
       // The old pigeon frames remain for genuine ground walking/pecking.
       paths['pigeon_flight_sheet'] = 'assets/images/enemies_hifi/pigeon_flight_sheet.png';
@@ -519,7 +523,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     for (double x=820; x<stageWidth-300; x+=930+rng.nextInt(300)) {
       final prog=x/stageWidth;
       String type=kinds[rng.nextInt(kinds.length)];
-      if (prog<.3 && ['goalkeeper','referee','breakdancer','teacher','statue','dog_doberman'].contains(type)) {
+      if (prog<.3 && ['goalkeeper','referee','breakdancer','teacher','dog_doberman'].contains(type)) {
         type=kinds.first;
       }
       enemies.add(Enemy(enemies.length,type,x));
@@ -762,6 +766,33 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         continue;
       }
       if(foe.stunned>0){foe.stunned=math.max(0,foe.stunned-dt);continue;}
+      if(foe.kind=='navarre_king') {
+        // Una estatua histórica: quieta hasta acercarse, se despierta y
+        // camina despacio; ataca con onda cercana, NUNCA lanza monedas.
+        final distance=hero.x-foe.x,near=distance.abs();
+        if(foe.kingAwakeAt<0 && near<170)foe.kingAwakeAt=time;
+        if(foe.kingAwakeAt>=0) {
+          foe.facing=distance>=0?1:-1;
+          if(time-foe.kingAwakeAt>.85) {
+            if(foe.kingAttackAt>=0) {
+              final elapsed=time-foe.kingAttackAt;
+              if(elapsed>=.42 && !foe.kingImpactDelivered) {
+                foe.kingImpactDelivered=true;
+                if(near<83 && hero.y>groundY-55)_receiveDamage(foe.facing);
+              }
+              if(elapsed>.9)foe.kingAttackAt=-1;
+            } else if(near<105 && foe.attackCooldown<=0) {
+              foe.kingAttackAt=time;
+              foe.kingImpactDelivered=false;
+              foe.attackCooldown=2.8;
+            } else if(near>95 && near<225) {
+              foe.x+=foe.facing*36*dt;
+            }
+          }
+        }
+        foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
+        continue;
+      }
       if(foe.newArchetype) {
         final typ = switch(foe.kind) {
           'cleaning_robot' => NewEnemyKind.cleaningRobot,
@@ -1184,6 +1215,23 @@ class StagePainter extends CustomPainter {
       canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),
         width:foe.aerial?39+foe.flightAltitude*.13:53,height:7),
         Paint()..color=Color.fromARGB(shadowAlpha,9,23,35));
+      if(foe.kind=='navarre_king') {
+        final art=images['enemy_navarre_king_atlas'];
+        if(art!=null) {
+          final row=foe.defeated?5:foe.stunned>0?4:
+            foe.kingAwakeAt<0?0:time-foe.kingAwakeAt<.85?1:
+            foe.kingAttackAt>=0?3:(hero.x-foe.x).abs()>100?2:0;
+          final col=(foe.t*6).floor()%4;
+          const cw=168.0,ch=216.0;
+          canvas.save();
+          if(foe.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(art,Rect.fromLTWH(col*cw,row*ch,cw,ch),
+            Rect.fromLTWH(x-42,groundY-116,84,116),
+            Paint()..filterQuality=FilterQuality.none);
+          canvas.restore();
+        }
+        continue;
+      }
       if(foe.newArchetype) {
         final kind=switch(foe.kind) {
           'cleaning_robot'=>'robot',
@@ -1267,7 +1315,7 @@ class StagePainter extends CustomPainter {
             groundY-foe.flightAltitude-pigeonFlightFootY[frame]*flightScale+bob,
             pigeonAtlasWorldCell,pigeonAtlasWorldCell),
           source:pigeonFlightSource(frame));
-      } else if(['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'].contains(foe.kind)) {
+      } else if(['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher'].contains(foe.kind)) {
         // Distinct combat states: a teacher must not run while throwing an exam,
         // and a referee must actually show his raised red card in wind-up.
         // El bully mostraba pasos mientras estaba detenido: todos los
@@ -1304,7 +1352,7 @@ class StagePainter extends CustomPainter {
           final targetHeight = switch(foe.kind) {
             'rival' => 124.0, 'goalkeeper' => 121.0, 'novice' => 117.0, 'bully' => 137.0,
             'referee' => 143.0, 'teacher' => 145.0, 'breakdancer' => 126.0,
-            'statue' => 139.0, 'pigeon' => 64.0,
+             'pigeon' => 64.0,
             'rat' => creatureIdleHeights['rat']!,
             'cat' => creatureIdleHeights['cat']!, _ => 105.0,
           };
