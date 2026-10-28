@@ -139,3 +139,9 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - `1e52bff0`: nuevo trabajo sobre los tres atlas: figura humana con hombros/codos/pómulos/mandíbula, volúmenes y pliegues, cámara con óptica y robot con chasis curvo, visor, ruedas y reflejos.
 - `cfd29005`: rey con rostro esculpido, barba, corona, coraza, emblema medieval, grebas y texturas de piedra.
 - Generación CI y captura Flutter se han solicitado automáticamente tras los commits. **No confundir la revisión del código/generador con calidad artística demostrada.** Mantener la puerta de aceptación cerrada hasta poder abrir las capturas reales recién generadas de los cuatro, corregir defectos y superar las pruebas.
+
+## 28/10/2026 — Seguimiento de los seis enemigos
+- Se mantienen seis diseños en trabajo: cleaning_robot, rival_supporter, tipsy_tourist, navarre_king, estafeta_bull y sanfermin_runner. **Ninguno tiene todavía aprobación visual de captura real y los seis continúan con su flag artístico a false.**
+- La CI 40769777925 ya compiló el APK Android; la auditoría Flutter estaba ejecutándose al comprobarlo. Un APK compilado no implica personajes aprobados.
+- Corrección `adc93ffc`: la cuenta atrás de recuperación del toro no se reinicia durante el cooldown. Sin esta corrección, el aviso/pose quedaba forzado a cero entre embestidas.
+- Los atlas de los seis son candidatos y deben contrastarse contra capturas reales de StagePainter. La siguiente acción técnica es recoger la ejecución completa, inspeccionar visualmente los fotogramas reales, documentar defectos por personaje y continuar redibujando. No levantar flags basándose en que el workflow termina en verde.
