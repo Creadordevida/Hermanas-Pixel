@@ -147,7 +147,17 @@ for j,idx in enumerate(order):
 ring=loop_panels(variants,overlap=100,wrap=300)
 assert ring.size==(6600,142),ring.size
 band=np.array(ring.convert('RGBA'))
-for y in range(22):band[y,:,3]=np.uint8(round(255*eased(y/22)))
+# La antigua máscara horizontal de 22 píxeles dejaba un borde demasiado
+# regular visible entre el paisaje y la banda de vallas. Se recorta la parte
+# superior siguiendo un perfil suave e irregular que se repite sin costura:
+# elementos del perímetro, NO un fundido de panorámicas completas.
+phase=np.arange(band.shape[1],dtype=np.float64)*2*math.pi/band.shape[1]
+contour=(13 + 7*np.sin(9*phase) + 4*np.sin(17*phase+0.7) +
+         3*np.sin(31*phase+1.2))
+for y in range(39):
+    depth=np.clip((y-contour)/11.0,0,1)
+    fade=depth*depth*(3-2*depth)
+    band[y,:,3]=np.uint8(np.rint(255*fade))
 near_band=Image.fromarray(band,'RGBA')
 # Seis paneles únicos que forman un anillo. 1100x386, alfa natural.
 for old in TILES.glob('world_*.png'):old.unlink()
