@@ -22,3 +22,10 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - **Importante: todavía no se han regenerado ni subido los PNG ni ejecutado Flutter/Android con este cambio.** Por ello los capítulos aún NO están resueltos y el APK de main sigue igual.
 - Validación pendiente: ejecutar generador en copia con assets reales, verificar ruta de fuentes, pruebas Python y capturas en Android; inspeccionar si el cambio de calidad es suficiente. No considerar una aprobación artística automática.
 - Pendiente todavía: uniones del colegio, variación arquitectónica de danza, integración del fútbol y portada.
+
+## 2026-10-28 — Continuación: variedad danza + borde fútbol (código, no recursos compilados)
+- Commit `521c5b7`: generador de danza `make_wall` utiliza tres ventanas de recorte mucho más separadas (0/385/770) del original de 1.672 px, en vez de encuadres separados 65 px. Busca evitar que reaparezcan de inmediato idénticos cuadros y puertas.
+- Commit `0f331db`: generador de fútbol reemplaza máscara horizontal uniforme por contorno periódico irregular del perímetro deportivo, continuo en el bucle de 6.600 px. Conserva fondos y físicas.
+- Modificación anterior `cbbe363`: paisajes visibles por ventanas de danza/colegio ahora derivados de los fondos detallados aprobados RC3 FIX2; **no se han regenerado los PNG**.
+- **Estado real:** se han subido CAMBIOS DE GENERADORES a rama de revisión, NO imágenes resultantes, NO APK, NO pruebas Flutter/Android. Ningún capítulo resuelto ni aprobado; comprobar que generadores producen assets correctos, que cambios no empeoran uniones y que no hay imágenes fantasma.
+- Siguiente: regenerar imágenes desde recursos originales, comparar capturas en múltiples cámaras y vídeos de Flutter, completar variación arquitectónica del colegio y portada; revisar calidad del fútbol y danza con usuario antes de fusionar.
