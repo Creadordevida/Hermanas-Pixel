@@ -95,3 +95,10 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - Inspección del código encontró dos posibles causas concretas: el bully alternaba fotogramas de pasos con `foe.t` aun quieto; además se rotaba periódicamente con `sin(foe.t*8)`, provocando balanceo perpetuo.
 - Commit `d25291e4`: `Enemy.lastRenderedX` detecta desplazamiento real, y bully utiliza `frame=0` en reposo, `1/2` al andar, `3` como anticipación de contacto y `4` al ser derrotado. Se eliminó la oscilación angular continua.
 - Commit `ca319b7c`: prueba de regresión estática para garantizar reposo/marcha diferenciados y eliminación del balanceo. **Falta verificar CI y el vídeo o una nueva captura para confirmar la solución visual**. No afirmar resuelto en móvil.
+
+## 2026-10-28 — Breakdancer: animación de bajada y subida del suelo
+- Usuario observa en capítulo danza que `breakdancer` alternaba directamente estar erguido y tumbado, sin transición.
+- Se comprobó `lib/main.dart`: con `foe.launched`, el renderizador asignaba siempre `frame=3` al breakdancer (pose en el suelo), aunque había fotogramas 1 y 2 de transición; el proyectil sale tras 0,75 s.
+- Commit `3e7db825`: secuencia temporal 0→1→2→3→2→1 durante la preparación del ataque. Se conservan pies anclados al suelo y el lanzamiento posterior. Al terminar `foe.launched`, retoma animación de espera. La secuencia usa los dibujos existentes, **no añade dibujos nuevos**.
+- Commit `d23afbb0`: nueva prueba de regresión del contrato en `qa/test_visual_revision_contract.py`.
+- **Sin validación visual en vídeo o dispositivo aún**. Revisar coherencia de dibujos intermedios y la transición de recuperación en la siguiente ronda visual. No considerar resolución artística definitiva hasta visualizarla.
