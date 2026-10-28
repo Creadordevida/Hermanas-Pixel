@@ -91,7 +91,7 @@ class Enemy {
   bool get ranged => ['referee','breakdancer','teacher'].contains(kind);
   bool get dog => kind.startsWith('dog_');
   bool get aerial => kind == 'pigeon';
-  int get hp => kind == 'dog_doberman' ? 2 : ranged ? 3 : 1;
+  int get hp => kind == 'dog_doberman' ? 2 : (ranged || kind == 'navarre_king') ? 3 : 1;
   double get speed => switch(kind) {
     'dog_dalmatian' => 56, 'dog_doberman' => 112,
     'rat' => 118, 'cat' => 92, 'pigeon' => 84,
