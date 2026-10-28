@@ -57,6 +57,50 @@ def draw(pose,frame):
  if pose=='defeated':
   d.line((9,32,46,62),fill=dark,width=3)
   d.line((42,35,14,59),fill=dark,width=2)
+ # Rediseño de superficie: proporción escultórica, placa heráldica,
+ # cincelado de la cota y capa de piedra, sin reciclar ninguna figura humana.
+ d.polygon([(14,27+squat),(9,33+squat),(6,49+squat),
+            (11,55+squat),(17,47+squat),(19,33+squat)],
+           fill='#65727a',outline='#35444e')
+ d.polygon([(39,27+squat),(44,32+squat),(49,48+squat),
+            (46,54+squat),(39,48+squat),(36,33+squat)],
+           fill='#74838a',outline='#35444e')
+ d.line((11,34+squat,8,48+squat),fill='#a9b3ad',width=2)
+ d.line((44,34+squat,47,47+squat),fill='#bcc1b8',width=1)
+ # Talla de rostro, sienes, pómulos, puente nasal y barba segmentada.
+ d.polygon([(22,16+squat),(34,16+squat),(34,24+squat),
+            (31,28+squat),(27,31+squat),(23,26+squat)],
+           fill='#aab3b1',outline='#475660')
+ d.polygon([(25,24+squat),(33,24+squat),(31,32+squat),
+            (27,35+squat),(23,29+squat)],fill='#6c7a80')
+ d.line((24,22+squat,27,21+squat),fill='#d9d7c8',width=1)
+ d.line((31,22+squat,33,22+squat),fill='#d9d7c8',width=1)
+ d.polygon([(27,22+squat),(29,22+squat),(30,26+squat),
+            (28,27+squat)],fill='#e0d8bd')
+ d.line((25,30+squat,29,32+squat,31,29+squat),
+        fill='#3f525d',width=1)
+ # Bordes metálicos pétreos de la corona y las gemas fosilizadas.
+ for xx in (19,26,34):
+  d.line((xx,11+squat,xx+2,15+squat),fill='#e0ce92',width=1)
+ d.rectangle((27,13+squat,30,15+squat),fill='#7e5952')
+ d.point((28,13+squat),fill='#edc88a')
+ # Peto de piedra tallada y cadenas del antiguo reino, nunca letras.
+ d.polygon([(19,32+squat),(37,32+squat),(40,44+squat),
+            (34,50+squat),(21,50+squat),(16,44+squat)],
+           fill='#a0aba9',outline='#47545e')
+ for xx in range(21,35,4):
+  d.line((xx,34+squat,xx+2,47+squat),fill='#697b80',width=1)
+ d.polygon([(25,34+squat),(30,34+squat),(33,39+squat),
+            (30,45+squat),(25,45+squat),(23,39+squat)],
+           fill='#c0ad76',outline='#6b6459')
+ d.line((25,38+squat,31,38+squat),fill='#7e5a4d',width=1)
+ d.line((28,35+squat,28,44+squat),fill='#76594a',width=1)
+ # Trama de piedra en botas, capa y hombros.
+ for xx in (16,33):
+  d.line((xx,55+squat,xx+6,55+squat),fill='#bcc1b7',width=2)
+  d.line((xx,59+squat,xx+8,59+squat),fill='#4c5961',width=1)
+ d.line((12,35+squat,15,41+squat,13,48+squat),fill=moss,width=1)
+ d.line((42,34+squat,40,40+squat,44,47+squat),fill=moss,width=1)
  # Fotogramas únicos según fase: grietas progresivas, paso y golpe al suelo.
  if pose=='awaken':
   cracks=((23,17,25,25),(22,16,26,27),(21,15,28,31),(18,14,30,36))
