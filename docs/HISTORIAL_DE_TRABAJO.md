@@ -258,3 +258,8 @@ Rama de trabajo: `work/revision-visual-20261028-continuidad`. Sin Actions, APK, 
 - `915fa48e`: pruebas que rechazan una extracción con fondos rectangulares y exigen huecos transparentes entre las patas de la mesa y alrededor del monitor.
 - Los dos **recursos PNG antiguos y los recortes mejorados** se inspeccionaron localmente, sobre fondo de comprobación ajedrezado: mejora perceptible de la silueta sin artefactos de fondo. Esto valida la operación de recorte sobre materiales existentes, NO una escena del juego ni la calidad completa del capítulo.
 - Todos estos cambios se aplicarán cuando el generador vuelva a ejecutarse en el próximo proceso autorizado; no se han subido PNG regenerados ni ejecutado Android/Actions.
+
+### Cierre provisional del bloque de trabajo del colegio (sin dar el arte por aprobado)
+- `f8b3dfcc`: nuevo `qa/build_school_contact.py` genera, a partir de los PNG auténticos del juego, tres planchas de nueve módulos (pasillo, clases, informática) y dos capturas comparativas que mantienen la habitación quieta mientras mueven únicamente el exterior. Se declara en cada archivo que **son renderizaciones Python, NO capturas de Flutter**.
+- `d3ba3dc0` y `07596b67`: sólo cuando se autorice una ejecución manual se generarán estas planchas y pasarán al informe gráfico; se conserva el bloqueo de Actions automáticas. No se han ejecutado workflows.
+- Estado de verificación actual: diagnóstico exacto de clonación antigua y prueba geométrica de 9 índices/6 distribuciones (comprobados en la sesión); máscaras reales del pupitre y ordenador revisadas visualmente con el artefacto anterior; las 27 nuevas imágenes finales y las pruebas Flutter siguen PENDIENTES. No inventar visualización de módulos no generados.
