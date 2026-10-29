@@ -95,6 +95,9 @@ class Enemy {
   double animalTime = 0, flightAltitude = 0, flightDuration = 0;
   bool biteApplied = false;
   bool launched = false;
+  // Separate charge warning from lifetime animation: avoid instant bull rush
+  // when the hero first enters detection range.
+  double bullWarnedAt = -1;
   NewEnemyMotion? newMotion;
   double kingAwakeAt = -1;
   double kingAttackAt = -1;
@@ -559,9 +562,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     // Los cuatro diseños candidatos han sido rechazados artísticamente.
     // No introducirlos en partidas hasta contar con capturas reales aprobadas.
     if (newKind != null && hasApprovedEnemyArtwork(newKind)) {
-      final typ = switch (stage) {
-        0 => NewEnemyKind.tipsyTourist,
-        4 => NewEnemyKind.rivalSupporter,
+      final typ = switch (newKind) {
+        'tipsy_tourist' => NewEnemyKind.tipsyTourist,
+        'rival_supporter' => NewEnemyKind.rivalSupporter,
         _ => NewEnemyKind.cleaningRobot,
       };
       for (final wx in plannedNewEnemySpawns(typ, stage, stageWidth)) {
@@ -788,6 +791,15 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           final ey=groundY-(foe.aerial?foe.flightAltitude+24:foe.kind=='rat'?24:64);
           if((shot.x-foe.x).abs()<37 && (shot.y-ey).abs()<(foe.aerial?42:51)) {
             foe.hits++;foe.stunned=.66;foe.t=0;shot.active=false;
+            // Interrupt the active attack when a character is struck.
+            if(foe.kind=='estafeta_bull') {
+              foe.launched=false;foe.bullWarnedAt=-1;
+              foe.biteApplied=false;foe.attackCooldown=2.2;
+            }
+            if(foe.kind=='navarre_king') {
+              foe.kingAttackAt=-1;foe.kingImpactDelivered=false;
+              foe.attackCooldown=2.2;
+            }
             particlesUntil=time+.4;
             if(foe.hits>=foe.hp){foe.deathAt=time;foe.newMotion?.defeat();}
             else if(foe.newArchetype){foe.newMotion?.hit();}
@@ -821,15 +833,17 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
             }
             if(foe.t>.9 || (foe.x-foe.home).abs()>310) {
               foe.launched=false;foe.biteApplied=false;foe.t=0;
-              foe.attackCooldown=2.2;
+              foe.bullWarnedAt=-1;foe.attackCooldown=2.2;
             }
           } else if(near<250 && foe.attackCooldown<=0) {
             foe.facing=dx>=0?1:-1;
-            // Aviso visual antes de embestir. El cronómetro se conserva
-            // durante la aproximación; tras embestir empieza el enfriamiento.
-            if(foe.t>.55) {foe.launched=true;foe.t=0;}
-          } else if(foe.attackCooldown<=0) {
-            foe.t=0;
+            // Use an explicit warning timestamp, never the general frame timer.
+            if(foe.bullWarnedAt<0)foe.bullWarnedAt=time;
+            if(time-foe.bullWarnedAt>=.55) {
+              foe.launched=true;foe.t=0;foe.bullWarnedAt=-1;
+            }
+          } else {
+            foe.bullWarnedAt=-1;
           }
         } else {
           // Corredor de encierro: se desplaza alejándose y puede tropezar.
@@ -884,7 +898,6 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         };
         final motion=foe.newMotion ??= NewEnemyMotion(kind:typ,home:foe.home,x:foe.x);
         motion.x=foe.x;
-        if(motion.pose == NewEnemyPose.hit) motion.pose=NewEnemyPose.alert;
         if(motion.update(dt,hero.x) && hero.y>groundY-48) {
           _receiveDamage(motion.direction);
         }
@@ -1308,9 +1321,9 @@ class StagePainter extends CustomPainter {
           final pose=foe.defeated?5:foe.stunned>0?4:
             bull ? (foe.launched
               ? (foe.t<.28?2:3)
-              : near<250 && foe.attackCooldown<=0 ? 1
-              : foe.attackCooldown>0 && foe.t>.01 ? 4 : 0)
-            : (near<110 && foe.attackCooldown>0 ? 4
+              : foe.bullWarnedAt>=0 ? 1
+              : 0)
+            : (near<110 && foe.attackCooldown>0 ? 3
               : near<240 ? (foe.t%1.5<.4?1:2) : 0);
           final col=(foe.t*8).floor()%4;
           final cw=bull?270.0:156.0, ch=bull?192.0:210.0;
