@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Extract the actual corporate wolf + approval seal onto transparency.
+"""Clean the actual TIKU TWC monogram onto transparency.
 
-The original TWC artwork is used verbatim. Only a uniform rectangular
+The source is copied byte-for-byte from the connected TIKU GitHub project.\nOnly a uniform rectangular
 background is turned transparent; no invented logo or new lettering.
 This script MUST be run before a Flutter build (only with user authorization).
 """
@@ -15,8 +15,8 @@ import numpy as np
 from PIL import Image
 
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE=ROOT/"assets/images/twc_corporate_verified_091.png"
-TARGET=ROOT/"assets/images/twc_logo_transparent_091.png"
+SOURCE=ROOT/"assets/images/twc_mark_from_tiku.png"
+TARGET=ROOT/"assets/images/twc_title_mark_clean.png"
 REPORT=ROOT/"qa/title_logo_alpha_report.json"
 
 
@@ -48,7 +48,7 @@ def extract(source: Image.Image) -> tuple[Image.Image,dict]:
     keyed=np.clip((distance-12.0)/21.0,0.0,1.0)
     new_alpha=np.rint(original_alpha*keyed).astype(np.uint8)
     if np.count_nonzero(new_alpha>24)<max(150,int(h*w*.0004)):
-        raise ValueError("TWC asset contains no recoverable opaque seal/logo")
+        raise ValueError("TIKU TWC mark contains no recoverable artwork")
     image[:,:,3]=new_alpha
     box=Image.fromarray(new_alpha,"L").getbbox()
     if box is None: raise ValueError("Corporate artwork completely removed")
@@ -59,7 +59,7 @@ def extract(source: Image.Image) -> tuple[Image.Image,dict]:
     clean=Image.fromarray(image,"RGBA").crop(box)
     a=np.asarray(clean)[:,:,3]
     if np.count_nonzero(a[0])>0 or np.count_nonzero(a[-1])>0:
-        raise ValueError("Logo art touches top/bottom; need manual review")
+        raise ValueError("Monogram touches top/bottom; need manual review")
     return clean,{
         "source_size":[w,h],"crop":list(box),
         "clean_size":list(clean.size),
