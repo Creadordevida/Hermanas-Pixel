@@ -2055,23 +2055,12 @@ class StagePainter extends CustomPainter {
       }
       canvas.restore();
     }
-    // Pizarras y biblioteca: Hitos ÚNICOS. No forman parte del panel
-    // repetible; su posición es 100% mundo, no fade ni parallax.
-    if(stage==6) {
-      for(final item in <(String,double,double)>[
-        ('estanteria_biblioteca',1720,0),
-        ('pizarra_matematicas',15320,52),
-        ('pizarra_informatica',29820,51)]) {
-        final art=images['interior_school_${item.$1}'];
-        if(art==null)continue;
-        final x=item.$2-cameraX;
-        if(x+art.width<0 || x>=viewW)continue;
-        canvas.drawImageRect(art,
-          Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
-          Rect.fromLTWH(x,item.$3,art.width.toDouble(),art.height.toDouble()),
-          Paint()..filterQuality=FilterQuality.none);
-      }
-    }
+    // Las ilustraciones aprobadas del colegio ya incluyen su pizarra,
+// estantería y señalética. NO dibujar encima una segunda copia:
+// duplicaba la biblioteca en x=1720 y las pizarras en x=15320/29820,
+// creando pegotes superpuestos y una composición incoherente.
+    // Sólo se añaden mesas RECORTADAS con alpha y mobiliario real
+    // independiente en la capa física, a velocidad mundial 1:1.
     // Marcos de paso colocados en x absoluto. No crossfade de habitaciones.
     final passage=images['interior_${theme}_passage'];
     if(passage!=null) {
