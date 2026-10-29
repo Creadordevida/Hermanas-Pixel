@@ -85,7 +85,7 @@ def render(theme,cam,exterior_cam=None):
           if -desk.width<x<W:
             target.alpha_composite(desk,(x,286))
             if zone==2:
-              target.alpha_composite(d['features']['ordenador_aula'],(x+34,233))
+              target.alpha_composite(d['features']['ordenador_aula'],(x+34,198))
   hero=d['hero'];target.alpha_composite(hero,(327-hero.width//2,390-hero.height))
   return target.convert('RGB')
 
