@@ -230,22 +230,55 @@ def extract_school_features():
     sign=hall.crop((581,9,749,59))
     target.alpha_composite(sign,(0,0))
     target.save(out/'estanteria_biblioteca.png',optimize=True)
-    # Mesita realista del arte original, recorte por tonalidad madera para
-    # dejar ver el suelo original y no superponer un rectángulo sólido.
+    # EXTRAER SILUETAS auténticas, NO pegar una baldosa con fondo.
+    # El recorte viejo declaraba el 82.6% opaco: conservaba paredes y
+    # baldosas a modo de rectángulo superpuesto junto con el pupitre.
+    # Esta máscara conserva sólo los píxeles ORIGINALES del mueble,
+    # cuadernos/lápices y sombra parcial. Probada contra el PNG real.
     desk=mathsc.crop((60,258,230,362)).convert('RGBA')
-    a=np.asarray(desk).copy();r=a[:,:,0].astype('int16');g=a[:,:,1].astype('int16');b=a[:,:,2].astype('int16')
-    wood=((r>g+8)&(g>b+5)&(r<225))|((r<96)&(g<90)&(b<87))
-    a[:,:,3]=np.where(wood,255,0).astype('uint8')
-    desk=Image.fromarray(a,'RGBA')
-    desk.save(out/'mesa_aula.png',optimize=True)
-    # Monitor pixel-art auténtico, usado SOLO en la sala de informática,
-    # colocado sobre cada mesa en una posición de mundo idéntica a esta.
+    aa=np.asarray(desk).copy()
+    r=aa[:,:,0].astype('int16')
+    g=aa[:,:,1].astype('int16')
+    b=aa[:,:,2].astype('int16')
+    y,x=np.indices(r.shape)
+    wood=((r>g+21)&(g>b+7)&(r<230))|((r<115)&(g<106)&(b<103))
+    paper=(y<24)&(x>=30)&(x<117)&(r>165)&(g>155)&(b>115)
+    book=(y<28)&(x>75)&(x<114)&(b>r*.6)&(b>g*.7)&(r<175)
+    shadow=(y>=88)&(y<102)&(r<132)&(g<119)&(b<110)
+    alpha=np.zeros_like(aa[:,:,3])
+    alpha[wood|paper|book]=255
+    alpha[shadow & ~(wood|paper|book)]=90
+    cut=Image.new('L',desk.size,0);md=ImageDraw.Draw(cut)
+    md.polygon([(0,20),(140,20),(169,35),(155,43),(138,43),
+                (138,93),(120,96),(118,49),(42,49),(42,92),
+                (24,92),(24,42),(0,40)],fill=255)
+    md.polygon([(36,4),(89,4),(119,20),(35,22)],fill=255)
+    md.ellipse((3,85,163,102),fill=255)
+    alpha=np.minimum(alpha,np.asarray(cut))
+    # Preserve the original uninterrupted wood tabletop, including its
+    # lighter highlight, instead of punching a sky-blue hole into it.
+    top=Image.new('L',desk.size,0)
+    ImageDraw.Draw(top).polygon(
+        [(0,20),(139,20),(168,35),(156,42),(15,43),(0,35)],fill=255)
+    alpha=np.maximum(alpha,np.asarray(top))
+    # No opaque rectangular ground shadow between the legs.
+    outside_legs=(y>=88)&~(
+        ((x>=24)&(x<=44))|((x>=123)&(x<=140)))
+    alpha[outside_legs]=np.minimum(alpha[outside_legs],95)
+    aa[:,:,3]=alpha.astype('uint8')
+    Image.fromarray(aa,'RGBA').save(out/'mesa_aula.png',optimize=True)
+
+    # El recorte anterior del monitor contenía un rectángulo de pared azul
+    # detrás. Usar marcos verdaderos del original: monitor, pedestal,
+    # teclado y ratón. La ventana exterior queda a la vista alrededor.
     monitor=comp.crop((97,194,213,285)).convert('RGBA')
-    m=Image.new('L',monitor.size,0);d=ImageDraw.Draw(m)
-    d.polygon([(18,0),(84,0),(93,72),(15,72)],fill=255)
-    d.rectangle((0,82,114,89),fill=255)
-    d.rectangle((49,70,59,83),fill=255)
-    monitor.putalpha(m)
+    mask=Image.new('L',monitor.size,0);md=ImageDraw.Draw(mask)
+    md.polygon([(18,5),(76,5),(82,12),(82,59),(79,65),
+                (16,65),(16,12)],fill=255)
+    md.polygon([(49,62),(62,62),(62,81),(49,81)],fill=255)
+    md.polygon([(0,83),(114,83),(114,89),(0,89)],fill=255)
+    md.ellipse((90,79,108,88),fill=255)
+    monitor.putalpha(mask)
     monitor.save(out/'ordenador_aula.png',optimize=True)
 
 
