@@ -96,14 +96,10 @@ def make_wall(theme:str,zone:int,variant:int):
         # zonas repetían la misma panorámica del pasillo recoloreada.
         # Los hitos (biblioteca, pizarras) se insertan aparte en mundo 1:1.
         # Extraemos bandas amplias, sin pegar dos mitades con corte a x=440.
-        # Use the actual source of the selected room transition. The
-        # world zone remains physically stable; only the backdrop panel
-        # changes, and joins are hidden behind architectural pillars.
+        # Use the actual approved source corresponding to a corridor,
+        # classroom or computer lab. No tint/flip/copy from one classroom.
         source_zone=SCHOOL_SOURCE_PLAN[zone][variant]
-        master = Image.open(ASSETS/SRCS['school'][zone]).convert('RGB')
-        if source_zone!=zone:
-            master.close()
-            master=Image.open(ASSETS/SRCS['school'][source_zone]).convert('RGB')
+        master=Image.open(ASSETS/SRCS['school'][source_zone]).convert('RGB')
         source_w, source_h = master.size
         if source_w < 880 or source_h < H:
             raise ValueError(f'Fuente insuficiente para colegio: {SRCS["school"][zone]}')
@@ -123,6 +119,18 @@ def make_wall(theme:str,zone:int,variant:int):
         max_left=source_w-TILE_W
         left=round(max_left * variant/(SCHOOL_PANEL_VARIANTS-1))
         wall=master.crop((left,0,left+TILE_W,H))
+        if source_zone in (1,2):
+            # AULAS: los maestros originales tienen pupitres y monitores
+            # parcialmente dibujados en los últimos 26px de la pared.
+            # Como StagePainter añade los muebles físicos aparte, esas
+            # mitades de mesa parecían flotar encima del verdadero suelo.
+            # Recuperamos SOLO la base mural original del pasillo (mismos
+            # 1320px y misma perspectiva), sin estirar ni crear ilustraciones.
+            hall=Image.open(ASSETS/SRCS['school'][0]).convert('RGB')
+            lower=hall.crop((left,251,left+TILE_W,H))
+            wall.paste(lower,(0,251))
+            hall.close()
+        master.close()
         # Un montante fino y regular en el extremo evita que los marcos
         # queden partidos al cambiar de panel, sin falsa junta central.
         post=ImageDraw.Draw(wall)
