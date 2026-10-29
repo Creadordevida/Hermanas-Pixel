@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermanas_aventura/main.dart';
+import 'package:hermanas_aventura/new_enemy_behaviors.dart';
 
 Future<ui.Image> loadPng(String path) async {
   final data=await rootBundle.load(path);
@@ -41,18 +42,49 @@ void main() {
      }
      for(final pair in kinds.entries) {
        final kind=pair.key,stage=pair.value.$2;
-       for(var pose=0;pose<4;pose++) {
+       // Six distinct conditions, one authentic StagePainter image each:
+       // 0 idle, 1 alert, 2 locomotion, 3 attack, 4 hit, 5 defeat.
+       for(var pose=0;pose<6;pose++) {
          final foe=Enemy(0,kind,390)..facing=1
            ..t=pose*.22;
-         if(pose==2)foe.stunned=.6;
-         if(pose==3)foe.deathAt=0;
-         if(kind=='navarre_king' && pose==1)foe.kingAwakeAt=0;
-         if(kind=='estafeta_bull' && pose==1)foe.launched=true;
+         if(foe.newArchetype) {
+           final archetype=switch(kind) {
+             'cleaning_robot'=>NewEnemyKind.cleaningRobot,
+             'rival_supporter'=>NewEnemyKind.rivalSupporter,
+             _=>NewEnemyKind.tipsyTourist,
+           };
+           final motion=NewEnemyMotion(kind:archetype,home:foe.home,x:foe.x);
+           motion.pose=switch(pose) {
+             0=>NewEnemyPose.idle,
+             1=>NewEnemyPose.alert,
+             2=>NewEnemyPose.patrol,
+             3=>NewEnemyPose.attack,
+             4=>NewEnemyPose.hit,
+             _=>NewEnemyPose.defeated,
+           };
+           foe.newMotion=motion;
+         }
+         if(kind=='navarre_king' && pose>=1 && pose<=3) {
+           foe.kingAwakeAt=0;
+           if(pose==3)foe.kingAttackAt=.2;
+         }
+         if(kind=='estafeta_bull') {
+           if(pose==1)foe.bullWarnedAt=0;
+           if(pose==2 || pose==3) {
+             foe.launched=true;
+             foe.t=pose==2?.1:.4;
+           }
+         }
+         if(kind=='sanfermin_runner' && pose==3)foe.attackCooldown=1;
+         if(pose==4)foe.stunned=.6;
+         if(pose==5)foe.deathAt=.5;
          final key=GlobalKey();
          final painter=StagePainter(
-           images:images,stage:stage,cameraX:0,time:.6,
+           images:images,stage:stage,cameraX:0,
+           time:pose==2 && kind=='navarre_king'?2.0:.6,
            lastAttackTime:-10,
-           hero:Character(140),otherSister:Character(195),
+           hero:Character(kind=='sanfermin_runner'&&pose==3?320:140),
+           otherSister:Character(195),
            father:Character(70),showFamily:false,selected:0,
            obstacles:const <Obstacle>[],platforms:const <Rect>[],
            coins:const <Offset>[],collected:const <int>{},
