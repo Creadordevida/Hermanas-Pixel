@@ -414,7 +414,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         paths['interior_${theme}_passage'] =
           interiorAssetTWC(theme,'marco_paso');
         for (var room=0;room<3;room++) {
-          for (var variant=0;variant<interiorVariantsPerRoomTWC;variant++) {
+          final count=theme=='school'
+              ? interiorSchoolVariantsTWC : interiorVariantsPerRoomTWC;
+          for (var variant=0;variant<count;variant++) {
             paths['interior_${theme}_z${room}_panel_$variant'] =
                 interiorPanelAssetTWC(theme,room,variant);
           }
@@ -2042,7 +2044,7 @@ class StagePainter extends CustomPainter {
       canvas.save();canvas.clipRect(clip);
       for (final index in interiorVisibleModulesTWC(zone,cameraX,
           viewportWidth:viewW)) {
-        final variant=interiorModuleVariantTWC(zone,index);
+        final variant=interiorModuleVariantTWC(zone,index,theme:theme);
         final image=images['interior_${theme}_z${zone}_panel_$variant'];
         if(image==null)continue;
         final x=interiorModuleXWorldTWC(zone,index)-cameraX;
@@ -2117,23 +2119,32 @@ class StagePainter extends CustomPainter {
         for(final room in [1,2]) {
           final start=interiorZoneEdgesTWC[room];
           final end=interiorZoneEdgesTWC[room+1];
-          final first=((cameraX-start)/570).floor()-1;
-          for(var n=math.max(0,first);n<first+5;n++) {
-            final worldX=start+260+n*570;
-            if(worldX>end-180)break;
-            final x=worldX-cameraX;
-            if(x+desk.width<0||x>=viewW)continue;
-            canvas.drawImageRect(desk,
-              Rect.fromLTWH(0,0,desk.width.toDouble(),desk.height.toDouble()),
-              Rect.fromLTWH(x,286,desk.width.toDouble(),desk.height.toDouble()),
-              Paint()..filterQuality=FilterQuality.none);
-            if(room==2) {
-              final pc=images['interior_school_ordenador_aula'];
-              if(pc!=null) {
-                canvas.drawImageRect(pc,
-                  Rect.fromLTWH(0,0,pc.width.toDouble(),pc.height.toDouble()),
-                  Rect.fromLTWH(x+34,233,pc.width.toDouble(),pc.height.toDouble()),
-                  Paint()..filterQuality=FilterQuality.none);
+          // Approved desks in varied classroom groupings, no permanent
+          // 570px infinite repeat. Empty modules become school corridors.
+          final first=math.max(0,((cameraX-start)/interiorModuleWidthTWC)
+              .floor()-1);
+          final last=((cameraX+viewW-start)/interiorModuleWidthTWC)
+              .floor()+1;
+          for(var n=first;n<=last;n++) {
+            final moduleStart=start+n*interiorModuleWidthTWC;
+            if(moduleStart>=end)break;
+            for(final dx in interiorSchoolDeskOffsetsTWC(room,n)) {
+              final worldX=moduleStart+dx;
+              if(worldX+desk.width>end)continue;
+              final x=worldX-cameraX;
+              if(x+desk.width<0||x>=viewW)continue;
+              canvas.drawImageRect(desk,
+                Rect.fromLTWH(0,0,desk.width.toDouble(),desk.height.toDouble()),
+                Rect.fromLTWH(x,286,desk.width.toDouble(),desk.height.toDouble()),
+                Paint()..filterQuality=FilterQuality.none);
+              if(room==2) {
+                final pc=images['interior_school_ordenador_aula'];
+                if(pc!=null) {
+                  canvas.drawImageRect(pc,
+                    Rect.fromLTWH(0,0,pc.width.toDouble(),pc.height.toDouble()),
+                    Rect.fromLTWH(x+34,233,pc.width.toDouble(),pc.height.toDouble()),
+                    Paint()..filterQuality=FilterQuality.none);
+                }
               }
             }
           }
