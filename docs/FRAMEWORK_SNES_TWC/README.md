@@ -10,6 +10,7 @@
 4. **[Protocolo de aceptación visual](PROTOCOLO_ACEPTACION_VISUAL.md):** niveles de evidencia distintos: archivo real, render del motor, dispositivo y aprobación humana.
 5. **[Errores y soluciones](ERRORES_Y_SOLUCIONES.md):** antipatrones concretos encontrados durante el desarrollo.
 6. **[Regresión de referencia](../../qa/test_snes_framework_contract.py):** prueba de sólo stdlib para vigilar que el capítulo 1 y los PNG originales no cambien sin revisar.
+7. **[Exportador de procedencia](../../tools/export_twc_snes_knowledge.py):** crea/compara un inventario SHA256 de los archivos fuente reales y dimensiones de PNG con `--write` y `--check`. Requiere un checkout completo; **aún no se ha ejecutado ni se ha generado su manifiesto**.
 
 **Invariante estratégica:** el conocimiento validado es un activo versionado. No basta con añadir un resumen en una conversación; cada solución crítica debe tener código fuente, parámetros, evidencia, commit, ejemplo y prueba recuperables desde GitHub.
 
