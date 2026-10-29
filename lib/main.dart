@@ -1470,7 +1470,8 @@ class StagePainter extends CustomPainter {
         final walkingNow=(foe.x-foe.lastRenderedX).abs() > .12;
         foe.lastRenderedX=foe.x;
         final int frame;
-        if (const ['rival','referee','breakdancer','bully'].contains(foe.kind)) {
+        if (foe.kind=='rival' || foe.kind=='referee' ||
+            foe.kind=='breakdancer' || foe.kind=='bully') {
           // Original, detailed art is preserved. Never loop a run frame while idle;
           // a hit never accidentally plays the throwing animation.
           frame=classicEnemyFrame(
@@ -1521,8 +1522,8 @@ class StagePainter extends CustomPainter {
             // The pivot is the feet, so a wind-up never slides the enemy off the floor.
             // Small movement for large characters whose source sheets have
             // nearly identical waiting/walking poses (not a sprite-scale hack).
-            final lean=foe.launched &&
-                !const ['goalkeeper','breakdancer','referee'].contains(foe.kind)
+            final lean=foe.launched && foe.kind!='goalkeeper' &&
+                foe.kind!='breakdancer' && foe.kind!='referee'
                 ? -0.085 : 0.0;
             canvas.save();
             if(lean != 0){
