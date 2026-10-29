@@ -26,7 +26,8 @@ void main() {
    final art=<String,ui.Image>{};
    try {
      for(final kind in cases.keys) {
-       for(var frame=0;frame<5;frame++) {
+       final frames=(kind=='referee' || kind=='breakdancer')?6:5;
+       for(var frame=0;frame<frames;frame++) {
          art['enemy_${kind}_$frame']=await tester.runAsync(
            () => _load('assets/images/enemies/${kind}_$frame.png'))
            ?? (throw StateError('No se cargó $kind/$frame'));
