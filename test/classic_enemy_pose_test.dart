@@ -41,11 +41,13 @@ void main() {
       seen.add(f('rival',t:i*.08,moving:true));
     }
     expect(seen,{1,2,3});
-    expect(f('rival',distance:35,cooldown:1.5),3);
+    expect(f('rival',t:.2,attacking:true,distance:35),3);
+    expect(f('rival',t:.05,attacking:true,distance:35),2);
   });
 
   test('bully uses strong attack pose at close range, not while distant', () {
-    expect(f('bully',distance:40,cooldown:1.5),3);
+    expect(f('bully',t:.2,attacking:true,distance:40),3);
+    expect(f('bully',t:.05,attacking:true,distance:40),2);
     expect(f('bully',distance:250,cooldown:1.5),0);
     expect(f('bully',t:.1,moving:true),inInclusiveRange(1,2));
   });
