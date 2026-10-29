@@ -21,7 +21,8 @@ def bull(p,n):
  im=Image.new('RGBA',(90,64));d=ImageDraw.Draw(im)
  movement=p in ('run','attack')
  step=(-3,2,4,-1)[n] if movement else 0
- low=3 if p=='attack' else 8 if p=='defeated' else 0
+ # Defeat is a real fall, not a vertical displacement through the ground.
+ low=3 if p=='attack' else 0
  # Four articulated legs and separate hooves. A rear pair is occluded.
  for x in (22,43,58,73):
   swing=step*(1 if x%2 else -1)
@@ -62,8 +63,11 @@ def bull(p,n):
  if p=='hit':
   d.line((56,13,52,7),fill='#d7b77c',width=2)
  if p=='defeated':
-  # Collapsed posture stays aligned to bottom.
-  d.ellipse((42,47,81,60),fill='#30292e')
+  # Draw a distinct prone silhouette aligned to the same floor.
+  flat=im.crop((3,8,89,61)).resize((86,37),Image.Resampling.NEAREST)
+  down=Image.new('RGBA',(90,64))
+  down.alpha_composite(flat,(2,24))
+  im=down
  return im
 def runner(p,n):
  im=Image.new('RGBA',(52,70));d=ImageDraw.Draw(im)
@@ -116,7 +120,13 @@ def runner(p,n):
  d.polygon([(33,25+crouch),(39+n%3,28+crouch),
     (42+n%3,36+crouch),(36,34+crouch)],fill='#a91731')
  if p=='hit':d.line((11,14,5,10),fill='#e8ca99',width=2)
- if p=='defeated':d.line((18,60,38,61),fill='#ce3c51',width=2)
+ if p=='defeated':
+  # Fallen runner, not a standing runner with a line underneath.
+  rotated=im.rotate(72,resample=Image.Resampling.NEAREST,expand=True)
+  rotated.thumbnail((48,31),resample=Image.Resampling.NEAREST)
+  down=Image.new('RGBA',(52,70))
+  down.alpha_composite(rotated,((52-rotated.width)//2,63-rotated.height))
+  im=down
  return im
 for kind,cell,draw in [('estafeta_bull',(90,64),bull),('sanfermin_runner',(52,70),runner)]:
  w,h=cell
