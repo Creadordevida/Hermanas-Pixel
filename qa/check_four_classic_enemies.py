@@ -12,11 +12,11 @@ errors=[]
 if not manifest.exists():
     raise SystemExit("Run tools/refine_four_classic_enemies.py first")
 data=json.loads(manifest.read_text(encoding="utf-8"))
-required={"breakdancer":2,"bully":1,"referee":2,"rival":2}
+required={"breakdancer":(2,6),"bully":(1,5),"referee":(2,6),"rival":(2,5)}
 
-for kind,scale in required.items():
+for kind,(scale,count) in required.items():
     visible=[]
-    for idx in range(5):
+    for idx in range(count):
         name=f"{kind}_{idx}"
         p=SRC/f"{name}.png"
         info=data.get(name,{})
@@ -46,7 +46,7 @@ for kind,scale in required.items():
         with Image.open(sheet) as im:
             if im.width<1000 or im.height<500:
                 errors.append(kind+": contact sheet truncated")
-    print(f"{kind}: {len(visible)} original-illustration poses inspected (geometry)")
+    print(f"{kind}: {len(visible)} of {count} original-illustration poses inspected (geometry)")
 if errors:
     for err in errors:print("ERROR:",err,file=sys.stderr)
     raise SystemExit(1)
