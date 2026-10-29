@@ -37,6 +37,7 @@ class NewEnemyMotion {
   double elapsed = 0;
   double cooldown = 0;
   double windup = 0;
+  double hitRecovery = 0;
   NewEnemyPose pose = NewEnemyPose.idle;
   bool defeated = false;
   bool _impactDelivered = false;
@@ -69,6 +70,11 @@ class NewEnemyMotion {
     if (dt <= 0 || defeated) return false;
     elapsed += dt;
     cooldown = math.max(0.0, cooldown-dt);
+    if (hitRecovery > 0) {
+      hitRecovery = math.max(0.0, hitRecovery-dt);
+      pose = NewEnemyPose.hit;
+      return false;
+    }
     final distance = heroX-x;
     final near = distance.abs();
     if (windup > 0) {
@@ -107,12 +113,15 @@ class NewEnemyMotion {
     if (defeated) return;
     windup=0;
     _impactDelivered=true;
+    hitRecovery=.35;
+    cooldown=math.max(cooldown,.65);
     pose=NewEnemyPose.hit;
   }
 
   void defeat() {
     defeated=true;
     windup=0;
+    hitRecovery=0;
     pose=NewEnemyPose.defeated;
   }
 }
