@@ -25,6 +25,15 @@ SRCS={'dance':['chapter45/dance_foyer.png','chapter45/dance_studio.png','chapter
 FAR_W=2200; MID_W=2020; FAR_SPEED=.30; MID_SPEED=.56
 SCHOOL_PANEL_VARIANTS=9
 DANCE_PANEL_VARIANTS=3
+# Physical rooms preserve their dominant theme, with genuine corridors
+# at natural transitions. Every image comes from the three ALREADY
+# APPROVED 1320x480 school illustrations; nothing is invented or redrawn.
+# 0: corridor/library, 1: maths/classroom, 2: computing lab.
+SCHOOL_SOURCE_PLAN=(
+    (0,0,0,1,0,0,0,2,0),  # hall with occasional classroom/technology doorway
+    (1,1,0,1,1,0,1,1,2),  # lessons with corridors between classroom wings
+    (2,2,0,2,2,0,2,2,1),  # computers with access passages + study corner
+)
 
 
 def pixel_rgb(row, n):
@@ -87,7 +96,14 @@ def make_wall(theme:str,zone:int,variant:int):
         # zonas repetían la misma panorámica del pasillo recoloreada.
         # Los hitos (biblioteca, pizarras) se insertan aparte en mundo 1:1.
         # Extraemos bandas amplias, sin pegar dos mitades con corte a x=440.
+        # Use the actual source of the selected room transition. The
+        # world zone remains physically stable; only the backdrop panel
+        # changes, and joins are hidden behind architectural pillars.
+        source_zone=SCHOOL_SOURCE_PLAN[zone][variant]
         master = Image.open(ASSETS/SRCS['school'][zone]).convert('RGB')
+        if source_zone!=zone:
+            master.close()
+            master=Image.open(ASSETS/SRCS['school'][source_zone]).convert('RGB')
         source_w, source_h = master.size
         if source_w < 880 or source_h < H:
             raise ValueError(f'Fuente insuficiente para colegio: {SRCS["school"][zone]}')
@@ -255,12 +271,14 @@ def main():
                 im=make_wall(theme,zone,variant)
                 im.save(o/f'z{zone}_panel_{variant}.png',optimize=True)
             zone_entries.append({'id':NAMES[theme][zone],'start':ZONES[zone][0],
-                                 'end':ZONES[zone][1],'panels':count})
+                                 'end':ZONES[zone][1],'panels':count,
+                                 'source_sequence':list(SCHOOL_SOURCE_PLAN[zone])
+                                   if theme=='school' else [zone]*count})
         passage(theme).save(o/'marco_paso.png',optimize=True)
         manifest['stages'][theme]={'height':H,'far_width':FAR_W,'mid_width':MID_W,
                                   'zones':zone_entries,
                                   'far_period':FAR_W/FAR_SPEED,'mid_period':MID_W/MID_SPEED,
-                                  'assets_count':35 if theme=='school' else 12,
+                                  'assets_count':34 if theme=='school' else 11,
                                   'variants_per_zone':SCHOOL_PANEL_VARIANTS if theme=='school' else DANCE_PANEL_VARIANTS}
     extract_school_features()
     manifest['protected_originals']=master_hashes
