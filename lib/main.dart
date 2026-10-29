@@ -476,7 +476,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           // recortes medidos; no se usan los cinco dibujos planos originales.
           paths['enemy_${v}_sheet'] = 'assets/images/enemies_hifi/${v}_sheet.png';
         } else {
-          for (int j=0;j<5;j++) paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
+          final amount=(v=='referee' || v=='breakdancer')?6:5;
+          for (int j=0;j<amount;j++) {
+            paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
+          }
         }
       }
       for (final kind in ['robot','supporter','tourist']) {
@@ -1514,8 +1517,13 @@ class StagePainter extends CustomPainter {
             'rat' => creatureIdleHeights['rat']!,
             'cat' => creatureIdleHeights['cat']!, _ => 105.0,
           };
-          final visible=hiFiCreature ? creatureFrameBounds['${foe.kind}_$frame']
+          final recorded=hiFiCreature ? creatureFrameBounds['${foe.kind}_$frame']
             : enemyVisibleBounds['${foe.kind}_$frame'];
+          // Local checkout may not have regenerated the precise extra hit
+          // bounds yet; the manual release pipeline always recalculates them.
+          final visible=recorded ?? (frame==5
+            ? Rect.fromLTWH(0,0,img.width.toDouble(),img.height.toDouble())
+            : null);
           final canonical=hiFiCreature ? creatureFrameBounds['${foe.kind}_0']
             : enemyVisibleBounds['${foe.kind}_0'];
           if(visible != null && canonical != null){
