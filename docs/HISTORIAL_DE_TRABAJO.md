@@ -145,3 +145,9 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - La CI 40769777925 ya compiló el APK Android; la auditoría Flutter estaba ejecutándose al comprobarlo. Un APK compilado no implica personajes aprobados.
 - Corrección `adc93ffc`: la cuenta atrás de recuperación del toro no se reinicia durante el cooldown. Sin esta corrección, el aviso/pose quedaba forzado a cero entre embestidas.
 - Los atlas de los seis son candidatos y deben contrastarse contra capturas reales de StagePainter. La siguiente acción técnica es recoger la ejecución completa, inspeccionar visualmente los fotogramas reales, documentar defectos por personaje y continuar redibujando. No levantar flags basándose en que el workflow termina en verde.
+
+## 29/10/2026 — Retoma de trabajo artístico SIN ejecutar GitHub Actions
+- `e85a9a3b`: los estados derrotados del toro y del corredor tienen ahora una silueta distinta, tumbada y anclada en suelo. Se elimina el desplazamiento del toro derrotado que podía llevar partes fuera de los límites de la celda.
+- `74ee8b9f`: robot, aficionado y turista ya no usan el mismo muñeco vertical simplemente comprimido al perder: se introducen poses caídas diferenciadas.
+- Son cambios reales de código fuente del generador y **no pruebas de calidad artística superadas**. Pendiente regeneración, inspección de PNG reales y capturas del StagePainter, sin lanzar Actions porque el usuario ordenó compilación únicamente bajo petición expresa y alertó del límite de almacenamiento.
+- Los seis enemigos permanecen bloqueados en las partidas normales hasta superar revisión artística y técnica. Priorizar a continuación maestro gráfico de toro y corredor, y luego rey, robot, aficionado y turista.
