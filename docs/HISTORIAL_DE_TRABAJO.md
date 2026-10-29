@@ -197,3 +197,9 @@ Encargo directo, rama `work/revision-visual-20261028-continuidad`, sin merge, AP
 - No se ha ejecutado aquí el script de pulido ni se han regenerado/subido PNG binarios. Los cambios de código ya están en GitHub y el pipeline manual los aplicará antes del próximo build autorizado.
 - No se ha podido ejecutar Flutter ni examinar capturas nuevas por la prohibición de usar Actions y la falta de SDK Flutter local en esta sesión. Las 24 capturas serán auténticas solo cuando se ejecute StagePainter.
 - La comparación posterior de los PNG regenerados con Miren/Sara y la validación de colisiones/anatomía quedan PENDIENTES. No declarar que los cuatro enemigos alcanzaron ya la misma calidad artística ni que han sido probados en Android.
+
+### Revisión final del mismo bloque
+- `384f92b1` — se añade ventana de aviso de 0,36 segundos al ataque cuerpo a cuerpo de `rival` y `bully`. El golpe se aplica UNA vez al finalizar el aviso solamente si el jugador sigue al alcance y a nivel del suelo; saltar o golpear interrumpe. Sus signos de alerta se muestran con la animación actual del mundo.
+- `03912d1f`, `018e7cb8` — los dibujos de aviso y ataque se seleccionan antes del daño y tienen tests puros dedicados.
+- `1202e636` — captura real preparada para activar el estado de ataque del bully y del rival, no dibujar por error reposo en el caso de prueba.
+- Estas mejoras son modificaciones verificadas por lectura del código en GitHub, todavía NO probadas ejecutando Flutter ni una partida.
