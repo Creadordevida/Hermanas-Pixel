@@ -19,6 +19,9 @@ jobs:
           python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
           python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+          python3 qa/check_four_classic_enemies.py
           python3 qa/check_new_enemy_artifacts.py
           python3 qa/create_six_enemy_review.py
       - name: Probar contratos y recursos de interiores
@@ -37,6 +40,7 @@ jobs:
         run: |
           flutter analyze --no-pub lib
           flutter test test/new_enemy_behaviors_test.dart
+          flutter test test/classic_enemy_pose_test.dart
       - name: Guardar todos los recursos y vistas para inspección
         if: always()
         uses: actions/upload-artifact@v4
@@ -45,6 +49,7 @@ jobs:
           path: |
             assets/images/enemies_new/
             qa/art_review/seis_enemigos_vs_miren_sara_RECURSOS.png
+            qa/art_review/*_original_vs_polished.png
             assets/images/interiors_parallax/
             assets/images/chapter45/football_parallax/
             qa/interiors_twc_lab/
