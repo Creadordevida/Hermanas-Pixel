@@ -101,6 +101,62 @@ def draw(pose,frame):
   d.line((xx,59+squat,xx+8,59+squat),fill='#4c5961',width=1)
  d.line((12,35+squat,15,41+squat,13,48+squat),fill=moss,width=1)
  d.line((42,34+squat,40,40+squat,44,47+squat),fill=moss,width=1)
+ # Remodelación escultórica: placas de hombrera con bisel,
+ # cadena de Navarra grabada en el peto y fragmentos de piedra a cincel.
+ for side in (-1,1):
+  cx=28+side*18
+  d.polygon([(cx-5,29+squat),(cx-3,25+squat),
+             (cx+3,26+squat),(cx+6,31+squat),
+             (cx+4,37+squat),(cx-4,36+squat)],
+            fill='#87939a',outline='#384652')
+  d.line((cx-3,28+squat,cx+2,28+squat),
+         fill='#c4c8bd',width=2)
+  d.line((cx-2,34+squat,cx+3,35+squat),
+         fill='#51616a',width=1)
+ # Stone beard curls and distinct cheek, brow and nose planes.
+ d.line((22,18+squat,27,17+squat),fill='#444f59',width=2)
+ d.line((30,17+squat,34,18+squat),fill='#444f59',width=2)
+ for px,py in ((24,27),(26,30),(29,31),(32,27)):
+  d.line((px,py+squat,px-1,py+3+squat),fill='#b3b9b1',width=1)
+ d.polygon([(26,21+squat),(29,20+squat),(31,25+squat),
+            (29,28+squat),(27,26+squat)],fill='#dad9c9')
+ d.line((25,24+squat,25,25+squat),
+        fill='#f7cc77' if active else '#4c5962',width=2)
+ d.line((32,24+squat,32,25+squat),
+        fill='#f7cc77' if active else '#4c5962',width=2)
+ # The historic Navarre chain motif is carved as connected gold links.
+ links=((28,35),(24,38),(32,38),(28,41),(24,44),(32,44))
+ for px,py in links:
+  d.ellipse((px-2,py-2+squat,px+2,py+2+squat),
+            outline='#e1d19a',width=1)
+ d.line((24,38+squat,32,38+squat),fill='#816c50',width=1)
+ d.line((28,35+squat,28,44+squat),fill='#816c50',width=1)
+ d.point((28,39+squat),fill='#3d755c')
+ # Independent chisel marks keep the faceted stone surface from
+ # becoming flat blocks; avoid opaque strokes across the silhouette.
+ for px,py in ((10,42),(16,52),(38,51),(43,42),(18,58),(37,58)):
+  d.line((px,py+squat,px+3,py-1+squat),
+         fill='#ccd0c8',width=1)
+ d.line((14,38+squat,11,45+squat),fill='#48575d',width=1)
+ d.line((42,37+squat,44,45+squat),fill='#45545f',width=1)
+ # Pose changes in stone joints / fists; don't merely shift a still.
+ if pose=='awaken':
+  d.polygon([(8,34),(5-frame,29),(9,25),(12,32)],
+            fill='#c2c9c1',outline='#45535d')
+ elif pose=='walk':
+  offset=(-3,0,4,1)[frame]
+  d.polygon([(40,38),(44+offset,41),(47+offset,47),
+             (43,50),(39,46)],fill='#9ca6a4',outline='#46535e')
+  d.line((18+offset,48,16+offset,56),fill='#e0d8b9',width=2)
+ elif pose=='slam':
+  rise=(0,8,5,0)[frame]
+  d.polygon([(41,34-rise),(48,35-rise),(51,42-rise),
+             (48,49-rise),(42,47-rise)],
+            fill='#bdc5be',outline='#46515c')
+  d.line((45,37-rise,50,40-rise),fill='#f0e0b4',width=2)
+ elif pose=='hit':
+  d.polygon([(14,34),(7,30),(3,36),(8,42),(14,40)],
+            fill='#c3c6b8',outline='#51626b')
  # Fotogramas únicos según fase: grietas progresivas, paso y golpe al suelo.
  if pose=='awaken':
   cracks=((23,17,25,25),(22,16,26,27),(21,15,28,31),(18,14,30,36))
@@ -135,9 +191,10 @@ def draw(pose,frame):
                  fill='#829197',outline='#35444e')
   rubble.polygon([(25,64),(28,60),(33,64),(32,69),(24,69)],
                  fill='#b6bdb5')
-  fallen=im.rotate(78 if frame%2==0 else -78,
+  fall_angles=(26,48,66,80)
+  fallen=im.rotate(fall_angles[frame],
                    resample=Image.Resampling.NEAREST,expand=True)
-  fallen.thumbnail((46,34),resample=Image.Resampling.NEAREST)
+  fallen.thumbnail((48,46-frame*4),resample=Image.Resampling.NEAREST)
   fragments.alpha_composite(fallen,((CW-fallen.width)//2,68-fallen.height))
   rubble=ImageDraw.Draw(fragments)
   for x,y in ((8,54),(45,53),(17,66),(38,67)):
