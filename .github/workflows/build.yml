@@ -126,6 +126,8 @@ jobs:
           python3 qa/create_six_enemy_review.py
           python3 tools/extract_twc_title_logo.py
           python3 qa/verify_adaptive_title_art.py
+      - name: Preparar comparativa REAL de 27 módulos del colegio (Python, no Flutter)
+        run: python3 qa/build_school_contact.py
       - name: Descargar dependencias Flutter para las capturas
         run: flutter pub get
       - name: Capturar mapa y chapter 1 (Flutter real)
@@ -177,6 +179,8 @@ jobs:
           name: Informe-QA-0.9.1-RC3
           path: |
             qa/RESULTADO_PUERTAS.txt
+            qa/interiors_twc_lab/CONTACTO_COLEGIO_*_9_MODULOS_PYTHON.jpg
+            qa/interiors_twc_lab/VENTANA_CIELO_*_PYTHON.png
             qa/art_review/seis_enemigos_vs_miren_sara_RECURSOS.png
             qa/art_review/*_original_vs_polished.png
             qa/CANDIDATE_ASSET_INVENTORY.json
