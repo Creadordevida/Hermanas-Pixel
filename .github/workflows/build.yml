@@ -1,7 +1,6 @@
 name: Miren y Sara PR5 - Candidata Android y auditoria
 on:
-  push:
-    branches: [main, work/revision-visual-20261028-continuidad]
+  # Las compilaciones se ejecutan SOLO bajo orden expresa del usuario.
   workflow_dispatch:
 
 jobs:
