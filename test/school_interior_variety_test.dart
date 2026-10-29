@@ -21,6 +21,27 @@ void main() {
     }
   });
 
+  test('Las puertas aparecen en cambios reales de habitación, no cíclicamente', () {
+    const originalPlan=<List<int>>[
+      [0,0,0,1,0,0,0,2,0],
+      [1,1,0,1,1,0,1,1,2],
+      [2,2,0,2,2,0,2,2,1],
+    ];
+    for (var zone=0;zone<3;zone++) {
+      for (var i=0;i<25;i++) {
+        final selected=interiorModuleVariantTWC(zone,i,theme:'school');
+        expect(interiorSchoolRoomTypeTWC(zone,i),
+               originalPlan[zone][selected]);
+        if(i>0) {
+          expect(interiorSchoolDoorAtModuleTWC(zone,i),
+            interiorSchoolRoomTypeTWC(zone,i-1)!=
+              interiorSchoolRoomTypeTWC(zone,i));
+        }
+      }
+      expect(interiorSchoolDoorAtModuleTWC(zone,0),isFalse);
+    }
+  });
+
   test('Danza conserva sus tres módulos sin cambios', () {
     for(var zone=0;zone<3;zone++) {
       expect(interiorModuleVariantTWC(zone,0),0);
