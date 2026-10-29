@@ -16,6 +16,6 @@
 | PR verde pero enemigo horrible | Tests automáticos verificaban bytes/dimensiones, no arte | Verificación humana y capturas auténticas obligatorias |
 | Actions sin espacio | APK y capturas publicados repetidamente | Workflows manuales y una única ronda final |
 | Preview distinto del juego | Capas duplicadas en render Python y no en Flutter | Una fuente de verdad para datos y orden de capas |
-| YAML parecía ejecutar dos líneas | `run:` sin `|\` había plegado de línea | Validar flujo manual y usar bloque de shell explícito |
+| YAML parecía ejecutar dos líneas | `run:` sin bloque literal `|` plegaba las líneas | Validar flujo manual y usar bloque de shell explícito |
 
 Estos son defectos observados en **Miren y Sara**, no una afirmación de que hayan sido resueltos de forma universal. Reutilizar la solución exige comprobarla en cada nuevo proyecto.
