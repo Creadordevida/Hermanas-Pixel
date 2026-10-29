@@ -275,3 +275,24 @@ Rama de trabajo: `work/revision-visual-20261028-continuidad`. Sin Actions, APK, 
 - `daa20106`: análisis reproducible de PNG verdaderos/alfas/detalle que **NO** afirma calidad artística por sí mismo; incorporado a workflows manuales.
 - `d0e7fe8c`: informe `docs/AUDITORIA_ARTISTICA_COLEGIO_2026-10-29.md` con tabla 10 criterios aplicada SÓLO a las capturas previas, causas y estado explícito NO APROBADO hasta observar nuevo Flutter.
 - No se han regenerado los 27 PNG nuevos ni generado capturas de Flutter; sin Actions, merge, APK. La referencia de calidad sigue siendo el capítulo 1. No declarar que el colegio ya está al nivel esperado.
+
+## 29/10/2026 — Preservación del conocimiento para el futuro TWC SNES Game Creator
+
+**Mandato del usuario:** preservar, documentar y convertir en procedimientos reutilizables TODO lo aprendido durante el desarrollo, con prioridad al movimiento y calidad de los escenarios del capítulo 1 y al estándar artístico de Miren y Sara. La siguiente versión del juego continúa siendo la prioridad inmediata.
+
+### Trabajo real guardado
+
+- `4c04d55b`: `docs/FRAMEWORK_SNES_TWC/01_MOTOR_ESCENARIOS_PARALLAX.md`. Fórmulas exactas y fuentes: 36.500 unidades, 72 tiles de 512px (última 148), cámara x−327, capas .30/.56/1, ciclos 2200/2020, paneles de ventanas alfa, reglas de unión y evidencias. Se identifica el render de producción frente a V3/V4 experimental.
+- `3915e15e`: `02_PERSONAJES_ESTANDAR_MIREN_SARA.md`. Inspección real de PNG de las protagonistas, SHAs Git, 10 dimensiones nativas contrastadas, escala basada en `idle_0`, pivotes y errores artísticos que evitar. Se advierte que un PNG `run_0` existente no demuestra que sea usado por el motor.
+- `ace39743`: `qa/test_snes_framework_contract.py`. Tests reproducibles sin dependencias adicionales para detectar alteración de parámetros parallax, longitudes de las teselas, originales de Miren/Sara y ruta de producción. **Creado, no ejecutado todavía.**
+- `d431daec`: `03_HISTORIAL_DE_APRENDIZAJES.md`. Cronología real de commits de 24–29/10/2026, métodos descartados y pautas de investigación histórica; los commits genéricos no se anuncian como arte aprobado.
+- `61eecbd0`: `tools/export_twc_snes_knowledge.py`. Exportación offline de SHA256 de recursos auténticos, dimensiones reales de PNG y variables canónicas a un manifiesto; comandos `--write`/`--check`. **Manifiesto aún no generado** (requiere checkout local); no confundir control de identidad con aprobación visual.
+- `96445a07`: `04_LECCIONES_TEMPRANAS.md`. Lecciones del ciclo de revisión de 24–27/10: fondos casi fijos, animales y sombras, salto, objetos repetitivos, interfaz móvil, método de muestra pequeña antes de un nivel largo. Se identifica cada evidencia como relato histórico o fuente verificada.
+- `19edaa69`, `21d51e57`, `e8c08895`: índice en `docs/FRAMEWORK_SNES_TWC/README.md` actualizado con las fuentes y herramientas.
+
+### Comprobaciones y límites
+
+- **Revisado:** archivos `lib/main.dart`, `lib/chapter_one_world_tiles.dart`, `lib/chapter_one_camera_v3.dart`, `lib/neighborhood_scene_engine.dart`, `lib/interiors_parallax_twc.dart`; PNG originales y poses de las dos protagonistas; historial de commits específicos.
+- **Sin ejecutar:** exportador de SHA, nuevo test Python, Flutter, Android, GitHub Actions; sin APK ni merge.
+- **Pendiente:** recuperar más commits, validar otras poses una a una, copiar artefactos de prueba antiguos que puedan recuperarse legalmente, completar ejemplos genéricos reutilizables, y documentar el estado de aprobación por SHA tras los próximos renders.
+- **No confundir:** documentación creada ≠ futuro GPT ya construido o entrenado. El framework requerirá un paquete de instrucciones/archivos/herramientas accesibles al GPT y pruebas reales de capacidad.
