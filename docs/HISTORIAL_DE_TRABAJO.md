@@ -173,3 +173,27 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - NO se ha regenerado ni inspeccionado el nuevo atlas como imagen. Hasta ello no puede certificarse la calidad artística.
 - **Las seis puertas `enemyArtValidated` siguen en `false`**: los enemigos no salen en partidas normales. No declararlos integrados plenamente para nueva versión.
 - Validación pendiente: ejecutar generadores y QA Python localmente, comprobar 36 capturas reales Flutter y contrastar visualmente todos los estados con Miren y Sara; corregir cualquier irregularidad. Para activar y publicar es necesaria aprobación artística y pruebas técnicas con autorización del usuario para correr Actions.
+
+## 29/10/2026 — Cuatro enemigos clásicos: breakdancer, bully, referee y rival
+Encargo directo, rama `work/revision-visual-20261028-continuidad`, sin merge, APK ni GitHub Actions.
+
+### Referencia realmente inspeccionada
+- Sprites originales `assets/images/futbolista.png` y `assets/images/bailarina.png` (mayor riqueza de anatomía/rostros/volumen).
+- PNG originales `assets/images/enemies/{breakdancer,bully,referee,rival}_0..4.png` y reacción adicional `breakdancer_5.png`, `referee_5.png` inspeccionados mediante GitHub. No confundir `rival` con `rival_supporter`.
+- Estos cuatro conservan dibujos artísticos originales más ricos que los seis enemigos nuevos; rehacer sus siluetas con primitivas empeoraría el resultado.
+
+### Trabajo de código y de arte subido a GitHub
+- `f2df0d3d` + `bdb1c279`: nuevo selector `lib/classic_enemy_pose.dart` y `StagePainter` con secuencias de reposo, desplazamiento, ataque, impacto y derrota específicas para cada personaje; evita carreras en el sitio, cardazo fijo y rotación genérica del bailarín.
+- `c9a45ff3`: nuevo restaurador de PNG genuinos `tools/refine_four_classic_enemies.py`, opera sobre imágenes reales, no sustituye caras/cuerpos por formas genéricas. Mejora color/separación, bordes, costuras, prendas, equipación/insignias y calzado; escala nativa x2 sin suavizado solo donde conviene, conserva original del bully a escala x1. Antes/después generado en `qa/art_review`; no es captura del juego.
+- `792b9c7b`, `34e6e81b`, `9031b6b0`, `162d4b36`: se recuperan poses REALES de impacto `breakdancer_5` y `referee_5`, se cargan por el motor, se pulen 22 PNG y se calculan sus recortes reales en la próxima ejecución manual.
+- `ceb6d192`: un golpe del balón o del peine cancela el ataque pendiente de árbitro y bailarín; no puede dispararse un proyectil después de haber recibido el impacto.
+- `65a33866`: condiciones explícitas en Dart para evitar ambigüedad de análisis.
+- `4116a20b`, `69a07fc0`: incorporación del generador y exportador de recortes a workflows YA MANUALES; no se han ejecutado.
+- `d69ef3ec`, `9226a5aa`: QA técnica de integridad PNG, 22 poses y cuatro hojas originales/vs/revisadas.
+- `d3b8c057`: tests de secuencia de animación pura (no ejecutados).
+- `f4986a0e`, `fa4ee149`: capturador Flutter real de 24 escenas, diseñado para verificar seis estados de cuatro enemigos al autorizar ejecución.
+
+### Pendiente: NO afirmar que el arte está aprobado
+- No se ha ejecutado aquí el script de pulido ni se han regenerado/subido PNG binarios. Los cambios de código ya están en GitHub y el pipeline manual los aplicará antes del próximo build autorizado.
+- No se ha podido ejecutar Flutter ni examinar capturas nuevas por la prohibición de usar Actions y la falta de SDK Flutter local en esta sesión. Las 24 capturas serán auténticas solo cuando se ejecute StagePainter.
+- La comparación posterior de los PNG regenerados con Miren/Sara y la validación de colisiones/anatomía quedan PENDIENTES. No declarar que los cuatro enemigos alcanzaron ya la misma calidad artística ni que han sido probados en Android.
