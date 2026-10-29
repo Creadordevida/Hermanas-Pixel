@@ -263,3 +263,15 @@ Rama de trabajo: `work/revision-visual-20261028-continuidad`. Sin Actions, APK, 
 - `f8b3dfcc`: nuevo `qa/build_school_contact.py` genera, a partir de los PNG auténticos del juego, tres planchas de nueve módulos (pasillo, clases, informática) y dos capturas comparativas que mantienen la habitación quieta mientras mueven únicamente el exterior. Se declara en cada archivo que **son renderizaciones Python, NO capturas de Flutter**.
 - `d3ba3dc0` y `07596b67`: sólo cuando se autorice una ejecución manual se generarán estas planchas y pasarán al informe gráfico; se conserva el bloqueo de Actions automáticas. No se han ejecutado workflows.
 - Estado de verificación actual: diagnóstico exacto de clonación antigua y prueba geométrica de 9 índices/6 distribuciones (comprobados en la sesión); máscaras reales del pupitre y ordenador revisadas visualmente con el artefacto anterior; las 27 nuevas imágenes finales y las pruebas Flutter siguen PENDIENTES. No inventar visualización de módulos no generados.
+
+## 29/10/2026 — Auditoría artística independiente colegio vs capítulo 1 (seguimiento)
+- Comparación REAL previa: capturas de Flutter `capitulo_1_inicio.png`, `barrio_residencial.png`, `barrio_paseo.png`, `barrio_cubierta.png`, `capitulo_7_inicio.png` del artefacto Actions `12846407243`. Antiguas, no capturas de este nuevo código.
+- Indicadores medidos sobre escenas reales en y48..360/x25..775: cap. 1 ~11.85 de gradiente RGB horizontal, colegio antiguo ~5.42; color RGB media (máximo-mínimo): cap.1 140.45, colegio 55.48. Son métricas diagnósticas, NO aprobaciones estéticas.
+- `34f313f5`: se eliminaron pizarras y biblioteca duplicadas que ya figuraban en los murales originales.
+- `621124f0`: evita que haya partes de escritorios pintadas en el fondo y además mesas físicas en primer plano; reemplaza base mural baja por fragmento original del pasillo, sin escalar y sin tocar ventanas.
+- `fdd7a662`: juntas de pilares de 44px simplificadas a 22px compartidos.
+- `d9054114`, `8422de02`: monitor físico alineado con teclado sobre la mesa (y198 en vez de y233); deja de cargar pizarras/shelf superpuestos; vista Python actualizada.
+- `2f0fcc40`, `9c87d39b`, `c30204f6`, `440df2f7`: tests anteriores ajustados tras eliminar esos defectos, conservando la comprobación de 27 paneles y ventana de parallax.
+- `daa20106`: análisis reproducible de PNG verdaderos/alfas/detalle que **NO** afirma calidad artística por sí mismo; incorporado a workflows manuales.
+- `d0e7fe8c`: informe `docs/AUDITORIA_ARTISTICA_COLEGIO_2026-10-29.md` con tabla 10 criterios aplicada SÓLO a las capturas previas, causas y estado explícito NO APROBADO hasta observar nuevo Flutter.
+- No se han regenerado los 27 PNG nuevos ni generado capturas de Flutter; sin Actions, merge, APK. La referencia de calidad sigue siendo el capítulo 1. No declarar que el colegio ya está al nivel esperado.
