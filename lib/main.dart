@@ -20,6 +20,7 @@ import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
 import 'new_enemy_behaviors.dart';
 import 'classic_enemy_pose.dart';
+import 'adaptive_title_screen.dart';
 
 // Puerta artística conservadora, evaluada en tiempo de ejecución para evitar
 // ramas muertas en flutter analyze. Cambiar un valor exige evidencia de
@@ -1075,7 +1076,14 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) => Scaffold(
     backgroundColor: const Color(0xff0d2943),
-    body: LayoutBuilder(builder: (context, constraints) => Stack(
+    body: LayoutBuilder(builder: (context, constraints) =>
+      screen==Screen.title && resourcesReady && loadError==null
+        ? AdaptiveTitleScreen(
+            onNewGame: _startNew,
+            onContinue: _continue,
+            hasSavedGame: savedAvailable,
+          )
+        : Stack(
       fit: StackFit.expand,
       children: [
         // Extra-wide Android displays get illustrated, not black, gutters.
@@ -1120,21 +1128,12 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     }
   }
 
-  Widget _title() => Stack(children:[
-    Positioned.fill(child:Image.asset('assets/images/title_cars_fixed_091.png',fit:BoxFit.fill)),
-    Positioned(left:551,top:183,width:208,height:59,child:Material(color:Colors.transparent,
-      child:InkWell(onTap:_startNew))),
-    Positioned(left:557,top:249,width:203,height:61,child:Material(
-      color:savedAvailable?Colors.transparent:const Color(0x99505b67),
-      child:InkWell(onTap:savedAvailable?_continue:null))),
-    if(!savedAvailable)const Positioned(left:579,top:299,child:Text('Sin partida guardada',
-      style:TextStyle(color:Colors.white,fontSize:11,shadows:[Shadow(color:Colors.black,blurRadius:3)]))),
-    // El sello deja de estar dentro de una caja azul oscura.
-    // La transparencia/contorno dependen ahora del PNG original.
-    Positioned(left:284,bottom:2,width:232,height:51,
-      child:Image.asset('assets/images/twc_corporate_verified_091.png',
-        fit:BoxFit.contain)),
-  ]);
+  // El mismo componente adaptable se usa también en pruebas aisladas.
+  Widget _title() => AdaptiveTitleScreen(
+    onNewGame:_startNew,
+    onContinue:_continue,
+    hasSavedGame:savedAvailable,
+  );
 
   // Las coordenadas de esta imagen proceden de la ilustración EXACTA aprobada
   // (1672 x 941). No generar carteles ni duplicar títulos encima del arte.
