@@ -132,6 +132,103 @@ def frame(kind,pose,n):
   ellipse(d,(21,34+y,30,40+y),'#142d46')
   ellipse(d,(23,35+y,28,38+y),'#e8c66c')
   d.point((24,35+y),fill='#fff5bb')
+ # Second-pass material art: clustered native pixels, curved borders,
+ # non-symmetric highlights and articulated gestures. Never smear by resize.
+ if kind=='robot':
+  # Metal panels, visible cleaning roller, revolving brushes and venting.
+  d.polygon([(12,39+y),(16,36+y),(33,36+y),(38,40+y),
+             (36,44+y),(15,44+y)],fill='#376a7c')
+  d.line((14,38+y,32,38+y),fill='#8cd2d4',width=2)
+  d.line((15,40+y,19,42+y,32,42+y),fill='#182e43',width=1)
+  for px in (16,20,24,28,32):
+   d.line((px,46+y,px+1,47+y),fill='#d3d1a2',width=2)
+  for px in (19,32):
+   d.arc((px-5,49+y,px+6,60+y),50,170,fill='#a6c1c7',width=1)
+   d.point((px-1,54+y),fill='#0e2536')
+  d.polygon([(18,30+y),(21,27+y),(31,27+y),
+             (34,31+y),(28,33+y),(21,33+y)],fill='#86c0c4')
+  d.line((20,30+y,30,30+y),fill='#dcecea',width=1)
+  # Small rotating lidar turret and amber on-board status display.
+  d.ellipse((22,22+y,27,27+y),fill='#26374a',outline='#79bbc4')
+  d.line((24,24+y,25+(n-1),21+y),fill='#ffb75b',width=1)
+  d.rectangle((29,35+y,33,37+y),fill='#182b41')
+  d.point((31,36+y),fill='#85ffa8' if pose!='hit' else '#e64e55')
+  if pose=='patrol':
+   for px in (10,35):
+    d.line((px,55,px+(n-2)*2,60),fill='#c6c4a6',width=1)
+  elif pose=='alert':
+   d.arc((13,17,38,34),195,335,fill='#f7d67c',width=2)
+  elif pose=='attack':
+   # Articulated brush arm extends, with two-frame sweep.
+   d.polygon([(38,39),(42,35-n%2),(46,36-n%2),
+              (47,40),(42,44),(38,43)],fill='#5fa5b2',outline='#233e56')
+   d.line((43,38,47,39+n%2),fill='#e5f0ef',width=2)
+ elif kind=='supporter':
+  # Hair highlights, face expression, shirt shoulder seams, fabric shadows.
+  d.line((19,9+y,24,7+y,29,8+y),fill='#8c6250',width=2)
+  d.line((20,11+y,23,9+y),fill='#c88e61',width=1)
+  d.line((29,14+y,32,14+y),fill='#553c3c',width=1)
+  d.point((31,16+y),fill='#253340')
+  d.line((30,20+y,33,21+y),fill='#a15e53',width=1)
+  d.line((16,27+y,19,30+y),fill='#e88397',width=2)
+  d.line((34,29+y,34,40+y),fill='#6d233c',width=2)
+  for row in (32,36,40):
+   d.line((21,row+y,24,row+y),fill='#f5a7af',width=1)
+  d.polygon([(20,26+y),(24,25+y),(27,28+y),
+             (24,31+y),(20,30+y)],fill='#f4d889',outline='#9d614d')
+  d.line((17,48,20,53),fill='#425c79',width=2)
+  d.line((32,49,30,54),fill='#59657c',width=2)
+  for sx in (15,28):
+   d.line((sx,57,sx+7,57),fill='#e1d5c0',width=1)
+  if pose=='patrol':
+   kick=(-2,1,3,-1)[n]
+   d.polygon([(30,45),(36,45),(36+kick,54),
+              (31+kick,57),(27,53)],fill='#263d59')
+   d.line((30+kick,57,39+kick,58),fill='#dce2e5',width=2)
+  elif pose=='alert':
+   d.polygon([(10,36),(7,31),(4,32),(7,41),(12,42)],
+             fill='#f4c9a9',outline='#6d4948')
+   d.line((7,31,5,28),fill='#e8b899',width=2)
+  elif pose=='attack':
+   d.polygon([(40,34),(43,24-n%3),(46,19-n%3),
+              (45,15-n%3),(40,17),(38,27)],
+             fill='#edbf9a',outline='#724b45')
+   d.line((40,19,43,20),fill='#f9d3aa',width=2)
+ elif kind=='tourist':
+  # Actual separated collar, checked cloth and sunhat rim.
+  d.polygon([(18+tilt,25),(23+tilt,30),(26+tilt,26),
+             (23+tilt,23)],fill='#f9dfb6')
+  d.polygon([(28+tilt,25),(30+tilt,30),(34+tilt,24)],
+            fill='#d3e8d1')
+  for row in (31,35,39):
+   d.line((18+tilt,row,22+tilt,row),fill='#b3d4ae',width=1)
+   d.line((30+tilt,row,34+tilt,row),fill='#315b54',width=1)
+  for px in (21,27,33):
+   d.line((px+tilt,30,px+tilt,41),fill='#4d856f',width=1)
+  d.line((16+tilt,10,35+tilt,10),fill='#e8d6a9',width=2)
+  d.polygon([(19+tilt,8),(23+tilt,5),(31+tilt,5),
+             (35+tilt,9)],fill='#d3b984')
+  d.line((20+tilt,15,25+tilt,14),fill='#8a6657',width=1)
+  d.point((25+tilt,18),fill='#2e3338')
+  d.point((32+tilt,18),fill='#2e3338')
+  d.line((27+tilt,23,33+tilt,22),fill='#9b6757',width=1)
+  d.line((20+tilt,47,24+tilt,52),fill='#778dab',width=2)
+  d.line((31+tilt,46,32+tilt,53),fill='#293d64',width=2)
+  # Camera is an actual device with shutter, grip and shiny glass.
+  d.rectangle((20+tilt,32,23+tilt,35),fill='#667581')
+  d.ellipse((25+tilt,32,33+tilt,40),fill='#273441',
+            outline='#e5d9b6',width=1)
+  d.ellipse((28+tilt,34,31+tilt,37),fill='#73aac0')
+  d.point((29+tilt,34),fill='#e8f6e8')
+  if pose=='patrol':
+   d.line((10+tilt,33,8+tilt+(-2,1,2,-1)[n],43),
+          fill='#f3c9a4',width=2)
+  elif pose=='alert':
+   d.line((39+tilt,29,44+tilt,22),fill='#f5c9a1',width=3)
+  elif pose=='attack':
+   d.polygon([(36+tilt,27),(40+tilt,23),(44+tilt,21),
+              (46+tilt,24),(40+tilt,30)],fill='#dfb18e')
+   d.line((41+tilt,20,43+tilt,16),fill='#a1c5a0',width=2)
  # Detalles locales, modulados por cada estado, en la imagen real del atlas.
  if kind=='supporter':
   d.line((13,27+y,16,42+y),fill='#52283d',width=2)
