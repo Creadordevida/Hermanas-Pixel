@@ -56,12 +56,20 @@ def render(theme,cam,exterior_cam=None):
       if -image.width<x<W:target.alpha_composite(image,(x,yy))
   transitions=list(Z[1:-1])
   if theme=='school':
+    source_plan=(
+      (0,0,0,1,0,0,0,2,0),
+      (1,1,0,1,1,0,1,1,2),
+      (2,2,0,2,2,0,2,2,1),
+    )
     for zone in range(3):
       lo,hi=Z[zone:zone+2]
-      for n in range(4,100,4):
+      for n in range(1,100):
         world=lo+n*T
         if world>=hi-120:break
-        transitions.append(world)
+        v=(n*5+zone*2)%9
+        previous=((n-1)*5+zone*2)%9
+        if source_plan[zone][v]!=source_plan[zone][previous]:
+          transitions.append(world)
   for edge in transitions:
     x=edge-c-60
     if -120<x<W:target.alpha_composite(d['passage'],(x,0))
