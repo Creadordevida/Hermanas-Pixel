@@ -16,7 +16,7 @@ import json,sys,hashlib
 ROOT=Path(__file__).resolve().parents[1]
 ORIGINAL=ROOT/"assets/images/title_cars_fixed_091.png"
 PANORAMA=ROOT/"assets/images/title_wide_20x9.png"
-LOGO=ROOT/"assets/images/twc_logo_transparent_091.png"
+LOGO=ROOT/"assets/images/twc_title_mark_clean.png"
 OUTPUT=ROOT/"qa/title_art_audit.json"
 
 def fail(message):
