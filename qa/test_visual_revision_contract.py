@@ -21,7 +21,7 @@ class VisualRevisionContract(unittest.TestCase):
     def test_interior_detailed_sources_and_real_rooms(self):
         self.assertIn("montanas_ciudad_ciclo.png",INTERIORS)
         self.assertIn("arbolado_medio_ciclo.png",INTERIORS)
-        self.assertIn("ASSETS/SRCS['school'][zone]",INTERIORS)
+        self.assertIn("ASSETS/SRCS['school'][source_zone]",INTERIORS)
         self.assertNotIn("neutral=Image.open(ASSETS/'scenes/school.png')",INTERIORS)
 
     def test_dance_use_wider_source(self):
