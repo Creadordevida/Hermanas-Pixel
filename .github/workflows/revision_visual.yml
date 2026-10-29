@@ -20,6 +20,7 @@ jobs:
           python3 tools/generate_navarre_king.py
           python3 tools/generate_estafeta_enemies.py
           python3 qa/check_new_enemy_artifacts.py
+          python3 qa/create_six_enemy_review.py
       - name: Probar contratos y recursos de interiores
         run: |
           python3 -m unittest qa/test_visual_revision_contract.py
@@ -43,6 +44,7 @@ jobs:
           name: Revision-Visual-PR5-Recursos-Y-Capturas
           path: |
             assets/images/enemies_new/
+            qa/art_review/seis_enemigos_vs_miren_sara_RECURSOS.png
             assets/images/interiors_parallax/
             assets/images/chapter45/football_parallax/
             qa/interiors_twc_lab/
