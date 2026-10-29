@@ -187,10 +187,15 @@ def make_wall(theme:str,zone:int,variant:int):
     else:
         frame=(143,120,102,255);shine=(224,201,169,255);shade=(94,79,68,255)
         dr.rectangle((0,0,TILE_W-1,7),fill=frame)
-        for x0 in (0,TILE_W-22):
-            dr.rectangle((x0,0,x0+21,H-1),fill=frame)
-            dr.rectangle((x0+2,0,x0+7,H-1),fill=shine)
-            dr.rectangle((x0+17,0,x0+21,H-1),fill=shade)
+        # Una jamba COMPARTIDA de 22px entre dos módulos, no DOS
+        # pilares de 22px contiguos (=44px repetidos cada 880).
+        # Mitades de 11px, con bisel continuo y eje de luz coherente.
+        dr.rectangle((0,0,10,H-1),fill=frame)
+        dr.rectangle((0,0,2,H-1),fill=shine)
+        dr.rectangle((8,0,10,H-1),fill=shade)
+        dr.rectangle((TILE_W-11,0,TILE_W-1,H-1),fill=frame)
+        dr.rectangle((TILE_W-11,0,TILE_W-9,H-1),fill=shine)
+        dr.rectangle((TILE_W-3,0,TILE_W-1,H-1),fill=shade)
         dr.rectangle((0,H-10,TILE_W,H-1),fill=frame)
         dr.line((0,H-11,TILE_W,H-11),fill=shine,width=2)
     return im
