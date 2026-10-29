@@ -44,6 +44,7 @@ jobs:
           flutter test test/new_enemy_behaviors_test.dart
           flutter test test/classic_enemy_pose_test.dart
           flutter test test/adaptive_title_screen_test.dart
+          flutter test test/school_interior_variety_test.dart
       - name: Guardar todos los recursos y vistas para inspección
         if: always()
         uses: actions/upload-artifact@v4
