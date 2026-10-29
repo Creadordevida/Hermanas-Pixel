@@ -24,6 +24,8 @@ jobs:
           python3 qa/check_four_classic_enemies.py
           python3 qa/check_new_enemy_artifacts.py
           python3 qa/create_six_enemy_review.py
+          python3 tools/extract_twc_title_logo.py
+          python3 qa/verify_adaptive_title_art.py
       - name: Probar contratos y recursos de interiores
         run: |
           python3 -m unittest qa/test_visual_revision_contract.py
@@ -41,6 +43,7 @@ jobs:
           flutter analyze --no-pub lib
           flutter test test/new_enemy_behaviors_test.dart
           flutter test test/classic_enemy_pose_test.dart
+          flutter test test/adaptive_title_screen_test.dart
       - name: Guardar todos los recursos y vistas para inspección
         if: always()
         uses: actions/upload-artifact@v4
