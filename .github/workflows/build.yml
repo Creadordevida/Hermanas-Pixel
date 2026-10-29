@@ -37,6 +37,7 @@ jobs:
           python3 qa/create_six_enemy_review.py
           python3 tools/extract_twc_title_logo.py
           python3 qa/verify_adaptive_title_art.py
+          python3 qa/next_version_preflight.py --strict-assets
           python3 -m unittest qa/test_visual_revision_contract.py
       # Redundant ~12 MB graphics artifact intentionally removed.
       # The final visual QA contains the authoritative Flutter screenshots.
@@ -66,12 +67,8 @@ jobs:
           sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
       - name: Descargar dependencias del juego
         run: flutter pub get
-      - name: Guardar resolucion de dependencias
-        uses: actions/upload-artifact@v4
-        with:
-          name: Pubspec-Lock-0.9.1-RC3
-          path: pubspec.lock
-          if-no-files-found: error
+      # Resolución de dependencias disponible en el log de pub get.
+      # No consumir almacenamiento de Actions con un lockfile redundante.
       - name: Analizar Dart del juego
         run: flutter analyze --no-pub lib
       # Dart y los tests rápidos se comprueban ANTES de la costosa compilación
