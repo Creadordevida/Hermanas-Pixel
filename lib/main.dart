@@ -1307,6 +1307,10 @@ class StagePainter extends CustomPainter {
     for(final foe in enemies) {
       final x=foe.x-cameraX;if(x< -110 || x>900)continue;
       if(foe.defeated && time-foe.deathAt>.85)continue;
+      // One shared fade for every enemy type, including all six new atlases.
+      final deathOpacity=foe.defeated
+        ? (1-(time-foe.deathAt-.32)/.53).clamp(0.0,1.0).toDouble()
+        : 1.0;
       final shadowAlpha=foe.aerial ? (0x55*(1-foe.flightAltitude/190)).round().clamp(12,85).toInt() : 0x55;
       canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),
         width:foe.aerial?39+foe.flightAltitude*.13:53,height:7),
@@ -1332,7 +1336,8 @@ class StagePainter extends CustomPainter {
           if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
           canvas.drawImageRect(art,Rect.fromLTWH(col*cw,pose*ch,cw,ch),
             Rect.fromLTWH(x-w/2,groundY-h,w,h),
-            Paint()..filterQuality=FilterQuality.none);
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
           canvas.restore();
         }
         continue;
@@ -1349,7 +1354,8 @@ class StagePainter extends CustomPainter {
           if(foe.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
           canvas.drawImageRect(art,Rect.fromLTWH(col*cw,row*ch,cw,ch),
             Rect.fromLTWH(x-42,groundY-116,84,116),
-            Paint()..filterQuality=FilterQuality.none);
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
           canvas.restore();
           // Impacto visible y anticipado: onda baja nacida de los pies de
           // piedra. El daño SOLO se aplica por la lógica al final del golpe.
@@ -1395,7 +1401,8 @@ class StagePainter extends CustomPainter {
           if(foe.facing<0) { canvas.translate(2*x,0);canvas.scale(-1,1); }
           canvas.drawImageRect(img,source,
               Rect.fromLTWH(x-w/2,groundY-h,w,h),
-              Paint()..filterQuality=FilterQuality.none);
+              Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
           canvas.restore();
         }
         continue;
