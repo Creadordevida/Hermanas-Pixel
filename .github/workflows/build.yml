@@ -34,6 +34,8 @@ jobs:
           python3 qa/check_four_classic_enemies.py
           python3 qa/check_new_enemy_artifacts.py
           python3 qa/create_six_enemy_review.py
+          python3 tools/extract_twc_title_logo.py
+          python3 qa/verify_adaptive_title_art.py
           python3 -m unittest qa/test_visual_revision_contract.py
       # Redundant ~12 MB graphics artifact intentionally removed.
       # The final visual QA contains the authoritative Flutter screenshots.
@@ -74,6 +76,8 @@ jobs:
       # Dart y los tests rápidos se comprueban ANTES de la costosa compilación
       # Android. RC8 REV2 gastó seis minutos compilando para después fallar
       # por tres avisos de `unawaited_return_in_try_block` detectables en 9 s.
+      - name: Verificar coordenadas y áreas táctiles de la portada (16:9 a 20:9)
+        run: flutter test --no-pub test/adaptive_title_screen_test.dart
       - name: Analizar Dart de las pruebas
         run: flutter analyze --no-pub test
       - name: Probar mecánicas, composición, saltos, sombras y carga de imágenes
@@ -118,6 +122,8 @@ jobs:
           python3 tools/export_sprite_bounds.py
           python3 qa/check_four_classic_enemies.py
           python3 qa/create_six_enemy_review.py
+          python3 tools/extract_twc_title_logo.py
+          python3 qa/verify_adaptive_title_art.py
       - name: Descargar dependencias Flutter para las capturas
         run: flutter pub get
       - name: Capturar mapa y chapter 1 (Flutter real)
