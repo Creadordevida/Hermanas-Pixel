@@ -1,14 +1,7 @@
 name: Capitulo 1 RC3 - continuidad fisica y pruebas sin APK
 on:
+  # Bajo orden expresa, para no consumir almacenamiento de GitHub Actions.
   workflow_dispatch:
-  push:
-    paths:
-      - 'lib/**'
-      - 'assets/images/chapter1/**'
-      - 'qa/**'
-      - 'tools/**'
-      - 'test/**'
-      - '.github/workflows/ch1-rc3-integridad.yml'
 jobs:
   art-and-coordinates:
     runs-on: ubuntu-latest
