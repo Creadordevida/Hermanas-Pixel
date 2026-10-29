@@ -185,9 +185,20 @@ def frame(kind,pose,n):
    d.line((17+tilt,15,12+tilt,12),fill='#ffe0c4',width=2)
  if pose=='hit':box(d,(6,13,10,17),'#ffffcd')
  if pose=='defeated':
-  # crouch/drop sprite while keeping the same cell and floor.
-  im=im.crop((0,10,W,H)).resize((W,44),Image.Resampling.NEAREST)
-  down=Image.new('RGBA',(W,H));down.alpha_composite(im,(0,15));im=down
+  # Distinct defeat poses. Do not merely squash every enemy into a standing
+  # rectangle: people fall sideways, while the cleaning robot tilts over.
+  if kind=='robot':
+   fall=im.rotate(-18,resample=Image.Resampling.NEAREST,expand=True)
+   fall.thumbnail((W-4,42),resample=Image.Resampling.NEAREST)
+   down=Image.new('RGBA',(W,H))
+   down.alpha_composite(fall,((W-fall.width)//2,59-fall.height))
+  else:
+   fall=im.rotate(67 if kind=='supporter' else -67,
+                  resample=Image.Resampling.NEAREST,expand=True)
+   fall.thumbnail((W-4,28),resample=Image.Resampling.NEAREST)
+   down=Image.new('RGBA',(W,H))
+   down.alpha_composite(fall,((W-fall.width)//2,59-fall.height))
+  im=down
  if pose=='alert':box(ImageDraw.Draw(im),(1,4,4,10),'#f4cc4e')
  return finish_pixel_art(im).resize((W*S,H*S),Image.Resampling.NEAREST)
 manifest={'cell':[W*S,H*S],'poses':list(POSES),'frames_per_pose':4,'pose_rows':6,'frame_columns':4,'art_status':'candidate_requires_user_review','enemies':{}}
