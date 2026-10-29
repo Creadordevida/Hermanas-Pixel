@@ -55,13 +55,13 @@ int classicEnemyFrame({
   }
 
   if (kind == 'rival') {
-    if (heroDistance < 49 && attackCooldown > 1.10) return 3;
+    if (attacking) return elapsed < .13 ? 2 : 3;
     // The authentic three running frames are used only when x changed.
     return moving ? 1 + ((elapsed * 8).floor() % 3) : 0;
   }
 
   if (kind == 'bully') {
-    if (heroDistance < 47 && attackCooldown > 1.10) return 3;
+    if (attacking) return elapsed < .13 ? 2 : 3;
     return moving ? 1 + ((elapsed * 7).floor() % 2) : 0;
   }
 
