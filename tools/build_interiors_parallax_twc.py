@@ -117,7 +117,19 @@ def make_wall(theme:str,zone:int,variant:int):
         if not 0 <= variant < SCHOOL_PANEL_VARIANTS:
             raise ValueError('Variación escolar fuera de rango')
         max_left=source_w-TILE_W
-        left=round(max_left * variant/(SCHOOL_PANEL_VARIANTS-1))
+        if source_zone in (1,2):
+            # Las pizarras originales de MATEMÁTICAS e INFORMÁTICA
+            # ocupan aproximadamente x=330..1005. Los recortes anteriores
+            # con left=0/55/385/440 las partían por el borde del módulo.
+            # Para aulas usar sólo aperturas que muestran la pizarra ENTERA.
+            # Conservamos una variación genuina de 9 posiciones, sin
+            # deformar un solo píxel ni recortar las palabras.
+            safe_left=125
+            safe_right=min(max_left,330)
+            left=round(safe_left+(safe_right-safe_left)*variant/
+                       (SCHOOL_PANEL_VARIANTS-1))
+        else:
+            left=round(max_left*variant/(SCHOOL_PANEL_VARIANTS-1))
         wall=master.crop((left,0,left+TILE_W,H))
         if source_zone in (1,2):
             # AULAS: los maestros originales tienen pupitres y monitores
