@@ -73,9 +73,34 @@ def extract(source: Image.Image) -> tuple[Image.Image,dict]:
 def main():
     if not SOURCE.exists():raise FileNotFoundError(SOURCE)
     original=Image.open(SOURCE).convert("RGBA")
-    final,info=extract(original)
-    TARGET.parent.mkdir(parents=True,exist_ok=True)
-    final.save(TARGET,optimize=True)
+    source_alpha=np.asarray(original.getchannel("A"))
+    # TIKU's approved monogram is ALREADY a real transparent RGBA asset.
+    # Re-keying transparent edges would damage its hand-drawn gold
+    # anti-aliasing. Prefer the existing pixels unchanged whenever it has
+    # a transparent backing; only use matte extraction for opaque sources.
+    if (source_alpha.min()==0 and
+        sum(int(original.getpixel(pt)[3]) for pt in (
+            (0,0),(original.width-1,0),(0,original.height-1),
+            (original.width-1,original.height-1)))<=16):
+        final=original
+        info={
+            "source_size":list(original.size),
+            "clean_size":list(original.size),
+            "operation":"preserved authentic RGBA pixels without re-keying",
+            "transparent_corner":True,
+            "opaque_pixel_count":int((source_alpha>=128).sum()),
+        }
+        TARGET.parent.mkdir(parents=True,exist_ok=True)
+        # Preserve the original PNG bytes, palette and alpha: approved
+        # corporate mark already copied to assets as the actual runtime file.
+        if TARGET.resolve()!=SOURCE.resolve():
+            import shutil
+            shutil.copyfile(SOURCE,TARGET)
+    else:
+        final,info=extract(original)
+        info["operation"]="remove original opaque backing via alpha mask"
+        TARGET.parent.mkdir(parents=True,exist_ok=True)
+        final.save(TARGET,optimize=True)
     info.update({
         "source_sha256":hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
         "out_sha256":hashlib.sha256(TARGET.read_bytes()).hexdigest(),
@@ -84,7 +109,7 @@ def main():
     REPORT.parent.mkdir(parents=True,exist_ok=True)
     REPORT.write_text(json.dumps(info,indent=2),encoding="utf-8")
     print(f"Actual corporate seal extracted (not regenerated): {TARGET}")
-    print(f"Removed rectangular backing; {info['clean_size']} with alpha")
+    print(f"Logo operation: {info['operation']}; {info['clean_size']} with alpha")
 
 
 if __name__=="__main__":
