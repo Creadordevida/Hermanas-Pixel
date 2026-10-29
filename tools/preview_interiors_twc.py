@@ -13,7 +13,7 @@ for theme in ['dance','school']:
   frames[theme]={'far':Image.open(p/'exterior_lejano_ciclo.png').convert('RGBA'),
     'mid':Image.open(p/'arbolado_tras_ventanas_ciclo.png').convert('RGBA'),
     'passage':Image.open(p/'marco_paso.png').convert('RGBA'),
-    'features':{name:Image.open(p/f'{name}.png').convert('RGBA') for name in (['pizarra_matematicas','pizarra_informatica','estanteria_biblioteca','mesa_aula','ordenador_aula'] if theme=='school' else [])},
+    'features':{name:Image.open(p/f'{name}.png').convert('RGBA') for name in (['mesa_aula','ordenador_aula'] if theme=='school' else [])},
     'wall':[[Image.open(p/f'z{z}_panel_{v}.png').convert('RGBA') for v in range(9 if theme=='school' else 3)] for z in range(3)],
     'floor':Image.open(A/'ground'/f'stage_{5 if theme=="dance" else 6}.png').convert('RGBA'),
     'hero':Image.open(A/('outfits/bailarina_walk_0.png' if theme=='dance' else 'frames/futbolista_walk_0.png')).convert('RGBA')}
@@ -50,10 +50,9 @@ def render(theme,cam,exterior_cam=None):
       if src_r<=src_l:continue
       cropped=source.crop((src_l,0,src_r,height))
       target.alpha_composite(cropped,(x+src_l,0))
-  if theme=='school':
-    for name,xx,yy in [('estanteria_biblioteca',1720,0),('pizarra_matematicas',15320,52),('pizarra_informatica',29820,51)]:
-      image=d['features'][name];x=xx-c
-      if -image.width<x<W:target.alpha_composite(image,(x,yy))
+  # NOTE: school murals already contain blackboards and library shelves.
+  # Do NOT paste them again in previews: this used to show a *different*
+  # picture than the real StagePainter and hid genuine artwork defects.
   transitions=list(Z[1:-1])
   if theme=='school':
     source_plan=(
