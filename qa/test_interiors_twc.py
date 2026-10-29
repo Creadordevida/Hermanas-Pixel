@@ -129,4 +129,70 @@ class InteriorTWCQA(unittest.TestCase):
    self.assertNotEqual(hashlib.sha256(before.tobytes()).digest(),
                        hashlib.sha256(after.tobytes()).digest(),theme)
 
+ def test_13_school_has_nine_genuinely_distinct_original_art_modules(self):
+  from PIL import Image
+  import numpy as np
+  school=MAN['stages']['school']
+  self.assertEqual(school['variants_per_zone'],9)
+  for zone in range(3):
+   entry=school['zones'][zone]
+   self.assertEqual(entry['panels'],9)
+   self.assertGreaterEqual(len(set(entry['source_sequence'])),2,
+                           'Pasillo, clase y aula TIC deben intercalarse')
+   digests=[]
+   for variant in range(9):
+    p=DIR/'school'/f'z{zone}_panel_{variant}.png'
+    self.assertTrue(p.exists(),p)
+    digests.append(hashlib.sha256(p.read_bytes()).hexdigest())
+    img=np.asarray(Image.open(p).convert('RGBA'))
+    self.assertEqual(img.shape,(278,880,4))
+    # 1:1 pixel provenance: keep original school source RGB details
+    # untouched by geometry; only window alpha/architectural seam changes.
+    source=entry['source_sequence'][variant]
+    original=np.asarray(Image.open(R/'assets/images'/
+      ['scenes/school.png','scenes/school_classroom.png',
+       'scenes/school_computers.png'][source]).convert('RGB'))
+    left=round((original.shape[1]-880)*variant/8)
+    for x,y in ((105,101),(285,147),(675,160)):
+     self.assertTrue(np.array_equal(img[y,x,:3],original[y,left+x,:3]),
+       f'Original source pixels stretched or recolored: {zone}/{variant}')
+   self.assertEqual(len(set(digests)),9,
+     f'Colegio zona {zone}: siguen repitiéndose las mismas aulas')
+
+ def test_14_exterior_moves_only_through_existing_school_windows(self):
+  import runpy
+  preview=runpy.run_path(str(R/'tools/preview_interiors_twc.py'))
+  render=preview['render']
+  fixed=np.asarray(render('school',0,exterior_cam=0).convert('RGB'))
+  moving=np.asarray(render('school',0,exterior_cam=540).convert('RGB'))
+  panel=np.asarray(Image.open(DIR/'school/z0_panel_0.png').convert('RGBA'))
+  window=panel[:200,:800,3]<100
+  self.assertGreater(int(window.sum()),3000,
+    'Se han perdido las ventanas transparentes del colegio')
+  diff=np.any(fixed[:200]!=moving[:200],axis=2)
+  self.assertGreater(float(diff[window].mean()),.15,
+    'Las vistas exteriores deberían moverse tras el cristal')
+  self.assertLess(float(diff[~window].mean()),.01,
+    'El paisaje no puede desplazar paredes ni mobiliario opaco')
+  self.assertTrue(np.array_equal(fixed[280:],moving[280:]),
+    'El suelo y los personajes no deben seguir el parallax exterior')
+
+ def test_15_native_geometry_and_furniture_variety_contract(self):
+  generator=(R/'tools/build_interiors_parallax_twc.py').read_text()
+  model=(R/'lib/interiors_parallax_twc.dart').read_text()
+  main=(R/'lib/main.dart').read_text()
+  self.assertIn('wall=master.crop((left,0,left+TILE_W,H))',generator)
+  self.assertIn('SCHOOL_SOURCE_PLAN',generator)
+  self.assertIn('interiorSchoolVariantsTWC = 9',model)
+  self.assertIn('interiorSchoolDeskOffsetsTWC',model)
+  self.assertIn('interiorSchoolDeskOffsetsTWC(room,n)',main)
+  self.assertIn('interiorModuleVariantTWC(zone,index,theme:theme)',main)
+  self.assertIn("theme=='school'",main)
+  self.assertNotIn('wall = crop.resize((TILE_W,H)',generator)
+  # Seven distinct desk groupings, including transitions without furniture.
+  configurations=[tuple(x) for x in [
+   [270,590],[],[390],[190,580],[490],[240,600],[]]]
+  self.assertGreaterEqual(len(set(configurations)),6)
+
+
 if __name__=='__main__':unittest.main()
