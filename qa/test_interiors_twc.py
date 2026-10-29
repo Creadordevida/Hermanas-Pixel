@@ -83,7 +83,7 @@ class InteriorTWCQA(unittest.TestCase):
   self.assertEqual(MAN['zones'],[{'start':0,'end':10500},{'start':10500,'end':25500},{'start':25500,'end':36500}])
   self.assertIn('for (var zone=0;zone<3;zone++)',MAIN)
   self.assertIn('canvas.clipRect(clip);',MAIN)
-  self.assertIn('interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2]',MAIN.replace(' ','').replace('\\n',''))
+  self.assertIn('interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2]', ''.join(MAIN.split()))
   self.assertNotIn('void _activityBackdrop(Canvas canvas,ActivityZone zone',MAIN)
   self.assertNotIn('if(fade>0) _activityBackdrop',MAIN)
   self.assertIn('stage == 5 || stage == 6',MAIN)
