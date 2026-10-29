@@ -76,7 +76,7 @@ class AdaptiveTitleScreen extends StatelessWidget {
   final bool hasSavedGame;
 
   static const panoramaAsset = 'assets/images/title_wide_20x9.png';
-  static const cleanLogoAsset = 'assets/images/twc_logo_transparent_091.png';
+  static const cleanLogoAsset = 'assets/images/twc_title_mark_clean.png';
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
@@ -132,10 +132,25 @@ class AdaptiveTitleScreen extends StatelessWidget {
               )),
             ),
         ],
+        // Authentic TIKU TWC emblem. The wordmark and seal are rendered
+        // transparently; there is no dark rectangular backing.
         Positioned.fromRect(rect:g.logo,child:IgnorePointer(
-          child:Image.asset(cleanLogoAsset,fit:BoxFit.contain,
-            errorBuilder:(_,_,_) => const SizedBox.shrink(),
-          ),
+          child:Column(mainAxisAlignment:MainAxisAlignment.end,children:[
+            Expanded(child:Image.asset(cleanLogoAsset,fit:BoxFit.contain,
+              errorBuilder:(_,_,_) => const SizedBox.shrink())),
+            Text('THE WOLF COMPANY',
+              textAlign:TextAlign.center,
+              style:TextStyle(color:const Color(0xffffe2a1),
+                fontSize:9*g.scale,fontWeight:FontWeight.w900,
+                letterSpacing:1.5*g.scale,
+                shadows:const [Shadow(color:Colors.black87,blurRadius:2)])),
+            Text('MIREN & SARA SEAL OF APPROVAL',
+              textAlign:TextAlign.center,
+              style:TextStyle(color:const Color(0xffffe2a1),
+                fontSize:5.5*g.scale,fontWeight:FontWeight.w600,
+                letterSpacing:.5*g.scale,
+                shadows:const [Shadow(color:Colors.black87,blurRadius:2)])),
+          ]),
         )),
       ]);
     },
