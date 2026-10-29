@@ -2,6 +2,19 @@
 
 **Propósito:** extraer herramientas y decisiones técnicas **comprobadas** de *Las aventuras de Miren y Sara* para ayudar a crear en el futuro otros juegos originales de estética Super Nintendo. Esto NO es todavía un GPT listo para publicar.
 
+## Biblioteca prioritaria recuperada del código auténtico
+
+1. **[01 — Escenarios, cámara y parallax](01_MOTOR_ESCENARIOS_PARALLAX.md):** 36500 unidades, 72 teselas físicas 512px (última 148), seguimiento a 327px, velocidades .30/.56/1, fórmulas de recorte, exteriores por ventanas, suelos y controles de calidad. **NO** simplificar o sustituir por un fondo estático.
+2. **[02 — Personajes: estándar Miren y Sara](02_PERSONAJES_ESTANDAR_MIREN_SARA.md):** tamaños exactos de PNG originales y frames, SHAs, método de escala del motor, anclaje de pies, selección de poses y por qué los enemigos geométricos fracasaron. **NO** asumir que los PNG `run_0` están activos porque existen.
+3. **[03 — Historial de aprendizajes](03_HISTORIAL_DE_APRENDIZAJES.md):** cronología contrastada con commits históricos, decisiones fallidas, pruebas y huecos de evidencia por recuperar.
+4. **[Protocolo de aceptación visual](PROTOCOLO_ACEPTACION_VISUAL.md):** niveles de evidencia distintos: archivo real, render del motor, dispositivo y aprobación humana.
+5. **[Errores y soluciones](ERRORES_Y_SOLUCIONES.md):** antipatrones concretos encontrados durante el desarrollo.
+6. **[Regresión de referencia](../../qa/test_snes_framework_contract.py):** prueba de sólo stdlib para vigilar que el capítulo 1 y los PNG originales no cambien sin revisar.
+
+**Invariante estratégica:** el conocimiento validado es un activo versionado. No basta con añadir un resumen en una conversación; cada solución crítica debe tener código fuente, parámetros, evidencia, commit, ejemplo y prueba recuperables desde GitHub.
+
+**Límite de lo recuperado:** hemos consultado el historial visible de GitHub y los recursos clave, pero no auditado todas las iteraciones antiguas ni todos los fotogramas; **ningún documento afirma lo contrario**. La siguiente ronda histórica debe ampliar commits antiguos y materiales de prueba, sin distraerse del cierre de la versión.
+
 ## Reglas no negociables
 
 1. Una imagen conceptual, un sprite de origen, un atlas generado, una captura de Flutter y un fotograma de Android son pruebas distintas; no etiquetarlos como equivalentes.
