@@ -1,21 +1,6 @@
 name: Revision visual - recursos y controles (SIN APK)
 on:
-  push:
-    branches:
-      - work/revision-visual-20261028-continuidad
-    paths:
-      - 'tools/build_interiors_parallax_twc.py'
-      - 'tools/generate_new_enemy_sprites.py'
-      - 'tools/generate_navarre_king.py'
-      - 'tools/generate_estafeta_enemies.py'
-      - 'qa/check_new_enemy_artifacts.py'
-      - 'tools/build_football_parallax_twc.py'
-      - 'lib/new_enemy_behaviors.dart'
-      - 'lib/main.dart'
-      - 'qa/test_visual_revision_contract.py'
-      - 'qa/test_interiors_twc.py'
-      - 'test/new_enemy_behaviors_test.dart'
-      - '.github/workflows/revision_visual.yml'
+  # Revisión visual manual: no generar artefactos de 14 MB en cada commit.
   workflow_dispatch:
 jobs:
   graphics:
