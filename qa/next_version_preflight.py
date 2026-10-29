@@ -90,6 +90,12 @@ def resource_inventory():
             "fuentes_presentes": sum(classic.values()),
             "fuentes_esperadas": len(classic),
             "scripts_de_retoque": present("tools/refine_four_classic_enemies.py"),
+            "retoque_generado": present(
+                "qa/art_review/four_existing_enemy_polish_state.json"),
+            "contactos_antes_despues": sum(present(
+                "qa/art_review/{}_original_vs_polished.png".format(k))
+                for k in original),
+            "contactos_esperados": len(original),
         },
         "G_integracion": {
             "pruebas_rendimiento_y_regresion": present("test/qa_render_capture_test.dart"),
@@ -118,7 +124,9 @@ def missing_art(result):
              obj["aprobados"] < obj["aprobados_esperados"])
         ) or (
             name == "F_enemigos_clasicos" and
-            obj["fuentes_presentes"] < obj["fuentes_esperadas"]
+            (obj["fuentes_presentes"] < obj["fuentes_esperadas"] or
+             not obj["retoque_generado"] or
+             obj["contactos_antes_despues"] < obj["contactos_esperados"])
         )
     ]
 
