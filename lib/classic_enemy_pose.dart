@@ -21,8 +21,9 @@ int classicEnemyFrame({
     return switch (kind) {
       'rival' => 2,
       'bully' => 3,
-      'referee' => 1,
-      'breakdancer' => 2,
+      // Authentically illustrated struck poses already exist in the repo.
+      'referee' => 5,
+      'breakdancer' => 5,
       _ => 3,
     };
   }
