@@ -152,7 +152,10 @@ class InteriorTWCQA(unittest.TestCase):
     original=np.asarray(Image.open(R/'assets/images'/
       ['scenes/school.png','scenes/school_classroom.png',
        'scenes/school_computers.png'][source]).convert('RGB'))
-    left=round((original.shape[1]-880)*variant/8)
+    if source in (1,2):
+     left=round(125+(min(original.shape[1]-880,330)-125)*variant/8)
+    else:
+     left=round((original.shape[1]-880)*variant/8)
     for x,y in ((105,101),(285,147),(675,160)):
      self.assertTrue(np.array_equal(img[y,x,:3],original[y,left+x,:3]),
        f'Original source pixels stretched or recolored: {zone}/{variant}')
