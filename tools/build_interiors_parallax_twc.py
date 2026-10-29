@@ -23,6 +23,8 @@ NAMES={'dance':['foyer','studio','stage'], 'school':['hall','classroom','compute
 SRCS={'dance':['chapter45/dance_foyer.png','chapter45/dance_studio.png','chapter45/dance_stage.png'],
       'school':['scenes/school.png','scenes/school_classroom.png','scenes/school_computers.png']}
 FAR_W=2200; MID_W=2020; FAR_SPEED=.30; MID_SPEED=.56
+SCHOOL_PANEL_VARIANTS=9
+DANCE_PANEL_VARIANTS=3
 
 
 def pixel_rgb(row, n):
@@ -89,14 +91,22 @@ def make_wall(theme:str,zone:int,variant:int):
         source_w, source_h = master.size
         if source_w < 880 or source_h < H:
             raise ValueError(f'Fuente insuficiente para colegio: {SRCS["school"][zone]}')
-        # Aprovechar tres tramos diferentes de la imagen respetando la
-        # relación de aspecto y manteniendo el límite vertical original.
-        # No reescalar el mismo fragmento del pasillo como aula.
-        crop_w = min(source_w, max(TILE_W, int(source_h * TILE_W / H)))
-        # Las posiciones de recorte se distribuyen por todo el original.
-        left = round((source_w-crop_w) * variant / 2)
-        crop = master.crop((left, 0, left+crop_w, source_h))
-        wall = crop.resize((TILE_W,H),Image.Resampling.LANCZOS)
+        # DEFECTO RC3 FIX2: crop_w era 1320 (ancho completo del original
+        # 1320x480), y los tres offsets calculados eran SIEMPRE cero.
+        # Las 3 variantes repetían la MISMA imagen, comprimida de 1320x480
+        # a 880x278. Es la causa real del aula/pasillo clonado.
+        #
+        # Ahora el interior se extrae a escala nativa 1:1 del PNG original:
+        # nueve ventanas espaciales distintas a lo largo de sus 440px de
+        # margen horizontal. Sin estirar ventanas, pizarras ni mobiliario.
+        # El entorno exterior conserva ALFA sobre los cristales.
+        if source_w < TILE_W or source_h < H:
+            raise ValueError('La fuente del colegio no permite recortes 1:1')
+        if not 0 <= variant < SCHOOL_PANEL_VARIANTS:
+            raise ValueError('Variación escolar fuera de rango')
+        max_left=source_w-TILE_W
+        left=round(max_left * variant/(SCHOOL_PANEL_VARIANTS-1))
+        wall=master.crop((left,0,left+TILE_W,H))
         # Un montante fino y regular en el extremo evita que los marcos
         # queden partidos al cambiar de panel, sin falsa junta central.
         post=ImageDraw.Draw(wall)
@@ -240,20 +250,22 @@ def main():
         mid.save(o/'arbolado_tras_ventanas_ciclo.png',optimize=True)
         zone_entries=[]
         for zone in range(3):
-            for variant in range(3):
+            count=SCHOOL_PANEL_VARIANTS if theme=='school' else DANCE_PANEL_VARIANTS
+            for variant in range(count):
                 im=make_wall(theme,zone,variant)
                 im.save(o/f'z{zone}_panel_{variant}.png',optimize=True)
             zone_entries.append({'id':NAMES[theme][zone],'start':ZONES[zone][0],
-                                 'end':ZONES[zone][1],'panels':3})
+                                 'end':ZONES[zone][1],'panels':count})
         passage(theme).save(o/'marco_paso.png',optimize=True)
         manifest['stages'][theme]={'height':H,'far_width':FAR_W,'mid_width':MID_W,
                                   'zones':zone_entries,
                                   'far_period':FAR_W/FAR_SPEED,'mid_period':MID_W/MID_SPEED,
-                                  'assets_count':17 if theme=='school' else 12}
+                                  'assets_count':35 if theme=='school' else 12,
+                                  'variants_per_zone':SCHOOL_PANEL_VARIANTS if theme=='school' else DANCE_PANEL_VARIANTS}
     extract_school_features()
     manifest['protected_originals']=master_hashes
     (QA/'MANIFEST.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
-    print(json.dumps({'themes':list(HEIGHT),'panels':18,'other_images':10,
+    print(json.dumps({'themes':list(HEIGHT),'panels':36,'other_images':10,
         'world':WORLD,'far_period':round(FAR_W/FAR_SPEED),'mid_period':round(MID_W/MID_SPEED)},ensure_ascii=False))
 
 if __name__=='__main__': main()
