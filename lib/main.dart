@@ -422,8 +422,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           }
         }
       }
-      for (final name in ['pizarra_matematicas','pizarra_informatica',
-          'estanteria_biblioteca','mesa_aula','ordenador_aula']) {
+      // Pizarras y biblioteca están integradas en los murales originales.
+      // Sólo cargar objetos físicos independientes que se dibujan en 1:1.
+      for (final name in ['mesa_aula','ordenador_aula']) {
         paths['interior_school_$name'] = interiorAssetTWC('school',name);
       }
       // 72 teselas de mundo FISICO, generadas una sola vez fuera del juego.
@@ -2146,7 +2147,7 @@ class StagePainter extends CustomPainter {
                 if(pc!=null) {
                   canvas.drawImageRect(pc,
                     Rect.fromLTWH(0,0,pc.width.toDouble(),pc.height.toDouble()),
-                    Rect.fromLTWH(x+34,233,pc.width.toDouble(),pc.height.toDouble()),
+                    Rect.fromLTWH(x+34,198,pc.width.toDouble(),pc.height.toDouble()),
                     Paint()..filterQuality=FilterQuality.none);
                 }
               }
