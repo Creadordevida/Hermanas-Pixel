@@ -130,6 +130,9 @@ jobs:
         timeout-minutes: 10
         # La salida expandida muestra el fallo completo en los registros de GitHub.
         run: flutter test --reporter expanded --concurrency=1 --timeout=9m test/qa_render_capture_test.dart
+      - name: Capturar portada REAL Flutter en cuatro relaciones de aspecto
+        timeout-minutes: 4
+        run: flutter test --reporter expanded --concurrency=1 --timeout=3m test/qa_adaptive_title_render_test.dart
       - name: Capturar uniformes de Miren y Sara
         timeout-minutes: 5
         run: flutter test --reporter expanded --concurrency=1 --timeout=4m test/qa_outfits_capture_test.dart
