@@ -99,6 +99,8 @@ class Enemy {
   // Separate charge warning from lifetime animation: avoid instant bull rush
   // when the hero first enters detection range.
   double bullWarnedAt = -1;
+  // Visible melee warning for bully and rival soccer player.
+  double meleeWarning = 0;
   NewEnemyMotion? newMotion;
   double kingAwakeAt = -1;
   double kingAttackAt = -1;
@@ -808,7 +810,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
                 foe.kind=='rival' || foe.kind=='bully') {
               // A successful ball/comb hit cancels the wind-up, including
               // the referee card throw and the breakdancer shoe projectile.
-              foe.launched=false;
+              foe.launched=false;foe.meleeWarning=0;
               foe.attackCooldown=math.max(foe.attackCooldown,1.0);
             }
             particlesUntil=time+.4;
@@ -958,6 +960,29 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
             foe.launched=false;foe.t=0;foe.attackCooldown=3.6;
           }
         } else if(absDist>390)foe.launched=false;
+      } else if(foe.kind=='rival' || foe.kind=='bully') {
+        // Telegraph close-quarters contact before damage; a jump or a hit
+        // during the warning window cancels the player's exposure.
+        if(foe.meleeWarning>0) {
+          foe.meleeWarning=math.max(0.0,foe.meleeWarning-dt);
+          if(foe.meleeWarning<=0) {
+            if(absDist<54 && hero.y>groundY-55) {
+              _receiveDamage(foe.facing);
+            }
+            foe.attackCooldown=1.9;
+            foe.t=0;
+          }
+        } else if(absDist<54 && foe.attackCooldown<=0) {
+          foe.facing=distance>=0?1:-1;
+          foe.meleeWarning=.36;
+          foe.t=0;
+        } else if(absDist<foe.detection) {
+          foe.facing=distance>=0?1:-1;
+          if(absDist>50)foe.x+=foe.facing*foe.speed*dt;
+        } else {
+          foe.x+=foe.facing*foe.speed*.36*dt;
+          if((foe.x-foe.home).abs()>87)foe.facing=-foe.facing;
+        }
       } else if(absDist<foe.detection) {
         foe.facing=distance>=0?1:-1;
         if(absDist>34)foe.x+=foe.facing*foe.speed*dt;
@@ -1486,7 +1511,8 @@ class StagePainter extends CustomPainter {
           // a hit never accidentally plays the throwing animation.
           frame=classicEnemyFrame(
             kind:foe.kind,elapsed:foe.t,moving:walkingNow,
-            attacking:foe.launched,stunned:foe.stunned>0,
+            attacking:foe.launched || foe.meleeWarning>0,
+            stunned:foe.stunned>0,
             defeated:foe.defeated,
             heroDistance:(hero.x-foe.x).abs(),
             attackCooldown:foe.attackCooldown,
@@ -1554,7 +1580,8 @@ class StagePainter extends CustomPainter {
       }
       if(foe.defeated)canvas.restore();
       canvas.restore();
-      if(foe.launched)_outlined(canvas,'!',Offset(x,groundY-126),const Color(0xffffdc58),23);
+      if(foe.launched || foe.meleeWarning>0)
+        _outlined(canvas,'!',Offset(x,groundY-126),const Color(0xffffdc58),23);
       if(foe.stunned>0 || foe.defeated) {
         for(int j=0;j<3;j++) {
           final a=time*7+j*math.pi*2/3;
