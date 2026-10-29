@@ -54,7 +54,15 @@ def render(theme,cam,exterior_cam=None):
     for name,xx,yy in [('estanteria_biblioteca',1720,0),('pizarra_matematicas',15320,52),('pizarra_informatica',29820,51)]:
       image=d['features'][name];x=xx-c
       if -image.width<x<W:target.alpha_composite(image,(x,yy))
-  for edge in Z[1:-1]:
+  transitions=list(Z[1:-1])
+  if theme=='school':
+    for zone in range(3):
+      lo,hi=Z[zone:zone+2]
+      for n in range(4,100,4):
+        world=lo+n*T
+        if world>=hi-120:break
+        transitions.append(world)
+  for edge in transitions:
     x=edge-c-60
     if -120<x<W:target.alpha_composite(d['passage'],(x,0))
   floor=d['floor']
@@ -94,6 +102,10 @@ if __name__=='__main__':
   cams=[0,400,1280,2460,5100,10090,10475,10530,12300,15000,24320,25460,25560,27000,31900,35700]
   for theme in ('school','dance'):
     contact(theme,cams,f'CONTACTO_{theme.upper()}_16_CAMARAS.jpg',columns=4)
+  # Explicitly sample nine different classroom modules: this is a Python
+  # rendering of authentic generated resources, NOT a Flutter screenshot.
+  sample=[10500+880*n+40 for n in range(9)]
+  contact('school',sample,'CONTACTO_COLEGIO_9_VARIANTES_REALES_PYTHON.jpg',columns=3)
     for c in [0,600,10475,10530,25460,25560,31900]:
       render(theme,c).save(Q/f'{theme}_{c:05}.png')
   # Parallax test: move across 1200 world pixels, 72 frames, one per 16.7px.
