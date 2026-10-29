@@ -278,7 +278,7 @@ def main():
         manifest['stages'][theme]={'height':H,'far_width':FAR_W,'mid_width':MID_W,
                                   'zones':zone_entries,
                                   'far_period':FAR_W/FAR_SPEED,'mid_period':MID_W/MID_SPEED,
-                                  'assets_count':34 if theme=='school' else 11,
+                                  'assets_count':35 if theme=='school' else 12,
                                   'variants_per_zone':SCHOOL_PANEL_VARIANTS if theme=='school' else DANCE_PANEL_VARIANTS}
     extract_school_features()
     manifest['protected_originals']=master_hashes
