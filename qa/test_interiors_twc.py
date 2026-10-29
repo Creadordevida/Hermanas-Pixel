@@ -24,7 +24,7 @@ class InteriorTWCQA(unittest.TestCase):
    with Image.open(folder/'arbolado_tras_ventanas_ciclo.png') as f: self.assertEqual(f.size,(2020,height))
    with Image.open(folder/'marco_paso.png') as f: self.assertEqual(f.size,(120,height))
    for zone in range(3):
-    for variant in range(3):
+    for variant in range(9 if theme=='school' else 3):
      with Image.open(folder/f'z{zone}_panel_{variant}.png') as src:
       self.assertEqual(src.size,(880,height))
       self.assertEqual(src.mode,'RGBA')
@@ -83,7 +83,7 @@ class InteriorTWCQA(unittest.TestCase):
   self.assertEqual(MAN['zones'],[{'start':0,'end':10500},{'start':10500,'end':25500},{'start':25500,'end':36500}])
   self.assertIn('for (var zone=0;zone<3;zone++)',MAIN)
   self.assertIn('canvas.clipRect(clip);',MAIN)
-  self.assertIn('interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2]',MAIN)
+  self.assertIn('interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2]',MAIN.replace(' ','').replace('\\n',''))
   self.assertNotIn('void _activityBackdrop(Canvas canvas,ActivityZone zone',MAIN)
   self.assertNotIn('if(fade>0) _activityBackdrop',MAIN)
   self.assertIn('stage == 5 || stage == 6',MAIN)
