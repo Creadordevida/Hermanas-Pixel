@@ -203,3 +203,29 @@ Encargo directo, rama `work/revision-visual-20261028-continuidad`, sin merge, AP
 - `03912d1f`, `018e7cb8` — los dibujos de aviso y ataque se seleccionan antes del daño y tienen tests puros dedicados.
 - `1202e636` — captura real preparada para activar el estado de ataque del bully y del rival, no dibujar por error reposo en el caso de prueba.
 - Estas mejoras son modificaciones verificadas por lectura del código en GitHub, todavía NO probadas ejecutando Flutter ni una partida.
+
+## 29/10/2026 — Portada adaptable: corrección técnica, aprobación gráfica PENDIENTE
+Encargo: corregir franjas laterales, logotipo TWC y botones sin alterar portada aprobada; cambios guardados exclusivamente en rama de desarrollo, sin Action ni APK.
+
+### Defecto confirmado en código y en captura real anterior
+- `lib/main.dart`: incluso en `Screen.title` se renderizaba `FittedBox(BoxFit.contain)` con contenido fijo 800×450; cualquier dispositivo más panorámico dejaba bandas laterales fuera del juego.
+- Dentro de `_title()` el PNG se dibujaba con `BoxFit.fill`, peligro de deformación si cambian las proporciones.
+- El logotipo se superponía como `twc_corporate_verified_091.png` sin garantizar que el archivo careciera de rectángulo de fondo.
+- La captura REAL del dispositivo aportada en la conversación (1536×691) muestra un área central ~1229×691 y las franjas a ambos lados. No confundir esa captura ANTERIOR con una prueba del código nuevo.
+
+### Cambios reales guardados
+- `157524ac`: nuevo `lib/adaptive_title_screen.dart` con superficie panorámica 20:9 de borde a borde, sin escalar y sin recortar la composición 16:9 central; posicionamiento de botones y logotipo con transformada física única, estados habilitado/deshabilitado de Continuar.
+- `84844512`: `main.dart` evita exclusivamente para portada el `FittedBox` heredado del gameplay; capítulos, mapas y demás interfaz siguen con su render anterior.
+- `743d06b3`: PNG panorámico y logo de transparencia registrados en `pubspec.yaml` (ARCHIVOS BINARIOS AÚN NO PRESENTES).
+- `0d816328`: `tools/extract_twc_title_logo.py` extrae TWC/sello desde PNG existente y elimina matte rectangular mediante alfa; si no puede conservar el sello, aborta con error en lugar de inventar logotipo.
+- `377ef5cd`: `qa/verify_adaptive_title_art.py` exige panorama real sin réplica/espejo/desenfoque y **centro original idéntico píxel por píxel**, con costuras suaves y logotipo de transparencia. Bloquea la versión si falta el arte.
+- `77ad2002`: tests de 16:9,18:9,19,5:9,20:9 y 19,5:9/20:9 en Android; verifican posición de hitboxes y Continuar desactivado.
+- `b0fb6834`: captura real futura de las cuatro proporciones con `AdaptiveTitleScreen` en Flutter, sin fingir una captura Android.
+- `e26c5c72`, `73813974`, `b017ab53`: QA y generación de logo integradas en workflows **manuales**; bloqueo por falta de panorama/arte de calidad antes de compilar APK. No se ha ejecutado ningún workflow.
+
+### Pruebas realizadas
+- Geometría calculada INDEPENDIENTEMENTE mediante Python local para 800×450, 900×450, 975×450, 1000×450 y 2340×1080: centro íntegro; rectángulos de botones dentro del centro y sin solapamiento; PASS. No equivale a test Flutter.
+- Dos experimentos locales de prolongación con recortes de una captura anterior (no PNG original) dieron mosaicos/repeticiones artificiales; **descartados**, NO subidos a GitHub ni vendidos como solución.
+- No se han regenerado PNG de logo ni panorama sobre los recursos originales: no se dispone del PNG grande del repositorio dentro del contenedor local; GitHub sí permite leer el código y guardar commits.
+- **BLOQUEADOR PENDIENTE:** el recurso `assets/images/title_wide_20x9.png` debe contener laterales artísticos coherentes y preservar el PNG original en el centro. Sin imagen de ese nivel, la QA impide generar próxima versión; no declarar corrección definitiva completa.
+- **BLOQUEADOR PENDIENTE:** ejecutar limpieza del sello y examinar PNG nuevo; revisar luego capturas Flutter auténticas a cuatro aspectos.
