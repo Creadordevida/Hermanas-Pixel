@@ -22,9 +22,21 @@ function chunk(type,data){const b=[...type].map(c=>c.charCodeAt(0)).concat(data)
 function encode(px,w,h){const raw=new Uint8Array(h*(w*4+1));for(let y=0;y<h;y++)raw.set(px.subarray(y*w*4,(y+1)*w*4),y*(w*4+1)+1);const z=[120,1];let A=1,B=0;for(let i=0;i<raw.length;i+=65535){const n=Math.min(65535,raw.length-i),end=i+n>=raw.length;z.push(end?1:0,n&255,n>>8,(~n)&255,((~n)>>8)&255);for(let j=i;j<i+n;j++){const v=raw[j];z.push(v);A=(A+v)%65521;B=(B+A)%65521}}z.push(B>>8&255,B&255,A>>8&255,A&255);return[137,80,78,71,13,10,26,10,...chunk("IHDR",[w>>>24&255,w>>>16&255,w>>>8&255,w&255,h>>>24&255,h>>>16&255,h>>>8&255,h&255,8,6,0,0,0]),...chunk("IDAT",z),...chunk("IEND",[])]}
 function to64(p){let s="";for(let i=0;i<p.length;i+=3){const a=p[i],b=p[i+1],c=p[i+2],v=a<<16|(b??0)<<8|(c??0);s+=alpha[v>>>18&63]+alpha[v>>>12&63]+(b===undefined?"=":alpha[v>>>6&63])+(c===undefined?"=":alpha[v&63])}return s}
 function panel(z,v){const plan=[[0,0,0,1,0,0,0,2,0],[1,1,0,1,1,0,1,1,2],[2,2,0,2,2,0,2,2,1]],source=plan[z][v],im=sources[source],hall=sources[0],W=880,H=278;
-const left=source===0?Math.round((im.w-W)*v/8):Math.round(125+(Math.min(im.w-W,330)-125)*v/8);
+const left=source===0?Math.round(65+(im.w-W-65)*v/8):Math.round(145+(Math.min(im.w-W-15,325)-145)*v/8);
 const px=new Uint8Array(W*H*4);
-for(let y=0;y<H;y++){const original=source!==0&&y>=251?hall:im;for(let x=0;x<W;x++){const p=(y*original.w+x+left)*3,q=(y*W+x)*4,R=original.px[p],G=original.px[p+1],B=original.px[p+2];px[q]=R;px[q+1]=G;px[q+2]=B;px[q+3]=y<210&&R>=80&&G>130&&B>=148&&B>R+21&&B>G+12?12:255}}
+for(let y=0;y<H;y++){const original=source!==0&&y>=251?hall:im;for(let x=0;x<W;x++){const sx=x+left,p=(y*original.w+sx)*3,q=(y*W+x)*4;let R=original.px[p],G=original.px[p+1],B=original.px[p+2];
+// Hallway-only AULAS sign must NOT ghost under classroom/ICT blackboards.
+// For the 27px base strip, fill only the source sign's real bounding region
+// from a sign-free native-size section of the SAME original painting.
+// Feather both edges; no stretching or repainting master files.
+if(source!==0&&y>=251&&sx>=750&&sx<=955){
+ const opacity=Math.max(0,Math.min(1,(sx-750)/18,(955-sx)/18));
+ const alt=(y*hall.w+sx+200)*3;
+ R=Math.round(R*(1-opacity)+hall.px[alt]*opacity);
+ G=Math.round(G*(1-opacity)+hall.px[alt+1]*opacity);
+ B=Math.round(B*(1-opacity)+hall.px[alt+2]*opacity);
+}
+px[q]=R;px[q+1]=G;px[q+2]=B;px[q+3]=y<210&&R>=80&&G>130&&B>=148&&B>R+21&&B>G+12?12:255}}
 function rect(x1,y1,x2,y2,c){for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++)px.set(c,(y*W+x)*4)}
 const trims=[[115,94,78,255],[92,101,99,255],[80,91,111,255]],lights=[[218,196,158,255],[191,209,194,255],[178,193,219,255]];
 rect(0,8,W-1,15,trims[z]);rect(0,15,W-1,16,lights[z]);rect(0,H-35,W-1,H-29,trims[z]);rect(0,H-36,W-1,H-35,lights[z]);rect(0,0,W-1,7,[143,120,102,255]);rect(0,0,10,H-1,[143,120,102,255]);rect(0,0,2,H-1,[224,201,169,255]);rect(8,0,10,H-1,[94,79,68,255]);rect(W-11,0,W-1,H-1,[143,120,102,255]);rect(W-11,0,W-9,H-1,[224,201,169,255]);rect(W-3,0,W-1,H-1,[94,79,68,255]);rect(0,H-10,W-1,H-1,[143,120,102,255]);rect(0,H-11,W-1,H-10,[224,201,169,255]);return encode(px,W,H)}
