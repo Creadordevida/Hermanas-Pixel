@@ -16,6 +16,13 @@ const int interiorSchoolVariantsTWC = 9; // colegio: 9 recortes 1:1 por estancia
 const List<double> interiorZoneEdgesTWC = [0, 10500, 25500, 36500];
 const List<String> interiorDanceRoomsTWC = ['foyer','studio','stage'];
 const List<String> interiorSchoolRoomsTWC = ['hall','classroom','computers'];
+// Misma secuencia de ilustraciones ORIGINALES que el generador Python.
+// El paso a otro tipo de estancia se señala con una puerta física 1:1.
+const List<List<int>> interiorSchoolSourcePlanTWC = [
+  [0,0,0,1,0,0,0,2,0],
+  [1,1,0,1,1,0,1,1,2],
+  [2,2,0,2,2,0,2,2,1],
+];
 
 String interiorAssetTWC(String theme, String name) =>
     'assets/images/interiors_parallax/$theme/$name.png';
@@ -54,6 +61,21 @@ int interiorModuleVariantTWC(int zone,int index,{String theme='dance'}) {
   }
   return index % interiorVariantsPerRoomTWC;
 }
+
+int interiorSchoolRoomTypeTWC(int zone,int index) {
+  if(zone<0 || zone>=3 || index<0) {
+    throw RangeError('Invalid school room type');
+  }
+  final variant=interiorModuleVariantTWC(zone,index,theme:'school');
+  return interiorSchoolSourcePlanTWC[zone][variant];
+}
+
+/// True if a real change of school space occurs at the boundary
+/// between module index-1 and module index. This is NOT an arbitrary
+/// decorative arch repeated every four panels.
+bool interiorSchoolDoorAtModuleTWC(int zone,int index) =>
+    index>0 && interiorSchoolRoomTypeTWC(zone,index-1)
+        !=interiorSchoolRoomTypeTWC(zone,index);
 
 /// Diverse non-colliding school furnishings in WORLD coordinates.
 /// Each source desk is an AUTHENTIC cutout from the approved classroom.
