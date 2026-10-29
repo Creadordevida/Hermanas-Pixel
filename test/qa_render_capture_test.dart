@@ -167,6 +167,25 @@ void main() {
       (title:'barrio_union_5_despues',stage:0,map:false,worldX:25560),
       (title:'barrio_union_6_antes',stage:0,map:false,worldX:27440),
       (title:'barrio_union_6_despues',stage:0,map:false,worldX:27760),
+      // SCHOOL: independent genuine StagePainter renders of successive
+      // corridor/classroom/computing compositions and both physical joins.
+      // In these images the exterior is the same REAL .30/.56 sky parallax,
+      // only visible through alpha-masked windows.
+      for (final (label,position) in <(String,double)>[
+        ('colegio_pasillo_entrada',450),
+        ('colegio_pasillo_biblioteca',4120),
+        ('colegio_pasillo_final',7360),
+        ('colegio_union_1_antes',10420),
+        ('colegio_union_1_despues',10540),
+        ('colegio_aula_matematicas',12420),
+        ('colegio_aula_distribucion_2',16300),
+        ('colegio_aula_distribucion_3',21000),
+        ('colegio_union_2_antes',25420),
+        ('colegio_union_2_despues',25540),
+        ('colegio_aula_informatica',27800),
+        ('colegio_laboratorio_2',31300),
+        ('colegio_laboratorio_final',34700),
+      ]) (title:label,stage:6,map:false,worldX:position),
       // Two further SNES-visual benchmarks, each with THREE REAL unique
       // environments and both sides of their two camera transitions.
       for (final chapter in [4,5]) ...[
