@@ -801,6 +801,13 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
               foe.kingAttackAt=-1;foe.kingImpactDelivered=false;
               foe.attackCooldown=2.2;
             }
+            if(foe.kind=='breakdancer' || foe.kind=='referee' ||
+                foe.kind=='rival' || foe.kind=='bully') {
+              // A successful ball/comb hit cancels the wind-up, including
+              // the referee card throw and the breakdancer shoe projectile.
+              foe.launched=false;
+              foe.attackCooldown=math.max(foe.attackCooldown,1.0);
+            }
             particlesUntil=time+.4;
             if(foe.hits>=foe.hp){foe.deathAt=time;foe.newMotion?.defeat();}
             else if(foe.newArchetype){foe.newMotion?.hit();}
