@@ -2075,7 +2075,22 @@ class StagePainter extends CustomPainter {
     // Marcos de paso colocados en x absoluto. No crossfade de habitaciones.
     final passage=images['interior_${theme}_passage'];
     if(passage!=null) {
-      for (final edge in [interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2]]) {
+      final transitions=<double>[
+        interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2],
+      ];
+      if(stage==6) {
+        // Puertas de transición distribuidas por el colegio real, no
+        // sólo dos límites a lo largo de 36,5 km de recorrido.
+        // No se mueven con el paisaje exterior ni tapan el suelo.
+        for(var zone=0;zone<3;zone++) {
+          final start=interiorZoneEdgesTWC[zone];
+          final end=interiorZoneEdgesTWC[zone+1];
+          for(var n=4;start+n*interiorModuleWidthTWC<end-120;n+=4) {
+            transitions.add(start+n*interiorModuleWidthTWC);
+          }
+        }
+      }
+      for(final edge in transitions) {
         final x=edge-cameraX-60;
         if(x+120<=0 || x>=viewW) continue;
         canvas.drawImageRect(passage,
