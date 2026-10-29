@@ -29,6 +29,9 @@ jobs:
           python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
           python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+          python3 qa/check_four_classic_enemies.py
           python3 qa/check_new_enemy_artifacts.py
           python3 qa/create_six_enemy_review.py
           python3 -m unittest qa/test_visual_revision_contract.py
@@ -111,6 +114,9 @@ jobs:
           python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
           python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+          python3 qa/check_four_classic_enemies.py
           python3 qa/create_six_enemy_review.py
       - name: Descargar dependencias Flutter para las capturas
         run: flutter pub get
@@ -121,6 +127,9 @@ jobs:
       - name: Capturar uniformes de Miren y Sara
         timeout-minutes: 5
         run: flutter test --reporter expanded --concurrency=1 --timeout=4m test/qa_outfits_capture_test.dart
+      - name: Capturar cuatro enemigos clásicos con StagePainter REAL
+        timeout-minutes: 5
+        run: flutter test --reporter expanded --concurrency=1 --timeout=4m test/qa_four_classic_enemy_render_test.dart
       - name: Capturar los cuatro enemigos nuevos en StagePainter REAL
         timeout-minutes: 5
         run: flutter test --reporter expanded --concurrency=1 --timeout=4m test/qa_new_enemy_real_render_test.dart
@@ -158,6 +167,7 @@ jobs:
           path: |
             qa/RESULTADO_PUERTAS.txt
             qa/art_review/seis_enemigos_vs_miren_sara_RECURSOS.png
+            qa/art_review/*_original_vs_polished.png
             qa/CANDIDATE_ASSET_INVENTORY.json
             qa/SCENE_SEAMS_REPORT.json
           if-no-files-found: warn
