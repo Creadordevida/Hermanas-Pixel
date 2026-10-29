@@ -19,6 +19,7 @@ import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
 import 'new_enemy_behaviors.dart';
+import 'classic_enemy_pose.dart';
 
 // Puerta artística conservadora, evaluada en tiempo de ejecución para evitar
 // ramas muertas en flutter analyze. Cambiar un valor exige evidencia de
@@ -1469,24 +1470,29 @@ class StagePainter extends CustomPainter {
         final walkingNow=(foe.x-foe.lastRenderedX).abs() > .12;
         foe.lastRenderedX=foe.x;
         final int frame;
-        if (foe.defeated) {
+        if (const ['rival','referee','breakdancer','bully'].contains(foe.kind)) {
+          // Original, detailed art is preserved. Never loop a run frame while idle;
+          // a hit never accidentally plays the throwing animation.
+          frame=classicEnemyFrame(
+            kind:foe.kind,elapsed:foe.t,moving:walkingNow,
+            attacking:foe.launched,stunned:foe.stunned>0,
+            defeated:foe.defeated,
+            heroDistance:(hero.x-foe.x).abs(),
+            attackCooldown:foe.attackCooldown,
+          );
+        } else if (foe.defeated) {
           frame=4;
         } else if (foe.stunned>0) {
           frame=foe.ranged ? 1 : 3;
-        } else if (foe.kind=='bully') {
-          final nearHero=(hero.x-foe.x).abs()<43;
-          frame=nearHero && foe.attackCooldown>1.35
-              ? 3 : walkingNow ? (1+(foe.t*7).floor()%2) : 0;
         } else if (foe.launched) {
-          frame=foe.kind=='goalkeeper' ? (foe.t < .15 ? 0 : foe.t < .27 ? 2 : foe.t < .34 ? 3 : foe.t < .56 ? 4 : 1) : foe.kind=='referee' ? 2 : foe.kind=='breakdancer'
-              // Secuencia física: erguido > flexión > apoyo de manos > suelo
-              // > apoyo de manos > flexión. Antes saltaba directamente a 3.
-              ? (foe.t < .12 ? 0 : foe.t < .24 ? 1
-                  : foe.t < .39 ? 2 : foe.t < .53 ? 3
-                  : foe.t < .65 ? 2 : 1)
-              : foe.kind=='teacher' ? 2 : 3;
+          frame=foe.kind=='goalkeeper'
+            ? (foe.t < .15 ? 0 : foe.t < .27 ? 2
+                : foe.t < .34 ? 3 : foe.t < .56 ? 4 : 1)
+            : foe.kind=='teacher' ? 2 : 3;
         } else {
-          frame=foe.ranged ? ((foe.t*2).floor()%2) : ((foe.t*6).floor()%3);
+          frame=foe.ranged
+            ? ((foe.t*2).floor()%2)
+            : walkingNow ? 1+((foe.t*6).floor()%2) : 0;
         }
         final hiFiCreature=foe.kind=='rat' || foe.kind=='cat';
         final img=images[hiFiCreature ? 'enemy_${foe.kind}_sheet' : 'enemy_${foe.kind}_$frame'];
@@ -1515,8 +1521,9 @@ class StagePainter extends CustomPainter {
             // The pivot is the feet, so a wind-up never slides the enemy off the floor.
             // Small movement for large characters whose source sheets have
             // nearly identical waiting/walking poses (not a sprite-scale hack).
-            final lean=foe.launched && foe.kind!='goalkeeper' ? -0.085 :
-              0.0;
+            final lean=foe.launched &&
+                !const ['goalkeeper','breakdancer','referee'].contains(foe.kind)
+                ? -0.085 : 0.0;
             canvas.save();
             if(lean != 0){
               canvas.translate(x,groundY+airborne);
