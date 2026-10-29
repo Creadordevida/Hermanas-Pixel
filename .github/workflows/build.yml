@@ -25,6 +25,7 @@ jobs:
       - name: Generar capas revisadas de fútbol, danza y colegio
         run: |
           python3 tools/build_interiors_parallax_twc.py
+          python3 qa/audit_school_visual_quality.py
           python3 tools/build_football_parallax_twc.py
           python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
