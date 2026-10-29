@@ -124,12 +124,14 @@ def make_wall(theme:str,zone:int,variant:int):
             # Para aulas usar sólo aperturas que muestran la pizarra ENTERA.
             # Conservamos una variación genuina de 9 posiciones, sin
             # deformar un solo píxel ni recortar las palabras.
-            safe_left=125
-            safe_right=min(max_left,330)
+            safe_left=145
+            safe_right=min(max_left-15,325)
             left=round(safe_left+(safe_right-safe_left)*variant/
                        (SCHOOL_PANEL_VARIANTS-1))
         else:
-            left=round(max_left*variant/(SCHOOL_PANEL_VARIANTS-1))
+            # The hall's AULAS -> sign spans x≈770..923. Allow a native
+            # margin so the entire sign fits BEFORE the shared right pillar.
+            left=round(65+(max_left-65)*variant/(SCHOOL_PANEL_VARIANTS-1))
         wall=master.crop((left,0,left+TILE_W,H))
         if source_zone in (1,2):
             # AULAS: los maestros originales tienen pupitres y monitores
@@ -139,8 +141,26 @@ def make_wall(theme:str,zone:int,variant:int):
             # Recuperamos SOLO la base mural original del pasillo (mismos
             # 1320px y misma perspectiva), sin estirar ni crear ilustraciones.
             hall=Image.open(ASSETS/SRCS['school'][0]).convert('RGB')
-            lower=hall.crop((left,251,left+TILE_W,H))
-            wall.paste(lower,(0,251))
+            # Hall corridor signage is appropriate in corridors only.
+            # In the classrooms it used to show the letters "AULAS ->"
+            # severed immediately BELOW the blackboards. Inpaint only
+            # the 27px wall base from a sign-free region of the ORIGINAL hall,
+            # at native 1:1 scale; feather the two boundaries.
+            lower=np.asarray(hall.crop((left,251,left+TILE_W,H)),
+                             dtype=np.uint8).copy()
+            full=np.asarray(hall,dtype=np.uint8)
+            cols=np.arange(left,left+TILE_W)
+            valid=(cols>=750)&(cols<=955)
+            if valid.any():
+                xx=cols[valid]
+                fade=np.maximum(0.0,np.minimum(
+                    1.0,np.minimum((xx-750)/18.0,(955-xx)/18.0)))
+                replacement=full[251:H,xx+200,:]
+                blend=(lower[:,valid,:].astype(np.float32)
+                       *(1-fade[None,:,None])
+                       +replacement.astype(np.float32)*fade[None,:,None])
+                lower[:,valid,:]=np.uint8(np.rint(blend))
+            wall.paste(Image.fromarray(lower,'RGB'),(0,251))
             hall.close()
         master.close()
         # Un montante fino y regular en el extremo evita que los marcos
