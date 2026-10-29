@@ -195,4 +195,24 @@ class InteriorTWCQA(unittest.TestCase):
   self.assertGreaterEqual(len(set(configurations)),6)
 
 
+ def test_16_school_props_do_not_paste_original_wall_rectangles(self):
+  # Regression observed in real previous feature PNGs:
+  # desk had ~82.6% opaque pixels, computer ~60.1%. Both
+  # contained large patches of original wall/floor inside sprites.
+  desk=np.asarray(Image.open(DIR/'school/mesa_aula.png').convert('RGBA'))
+  monitor=np.asarray(Image.open(DIR/'school/ordenador_aula.png').convert('RGBA'))
+  self.assertLess(float((desk[:,:,3]>100).mean()),.60,
+    'Pupitre incluye el fondo rectangular del original')
+  self.assertLess(float((monitor[:,:,3]>100).mean()),.55,
+    'Monitor incluye la pared azul rectangular del original')
+  self.assertEqual(int(desk[78,80,3]),0,
+    'El hueco entre patas no debe tener suelo dibujado')
+  self.assertEqual(int(monitor[2,2,3]),0,
+    'El monitor no debe conservar fondo original fuera de su silueta')
+  self.assertGreater(int(desk[30,75,3]),200,
+    'La mesa debe conservar su tablero sólido, sin agujeros')
+  self.assertGreater(int(monitor[35,45,3]),200,
+    'El monitor debe conservar la pantalla del dibujo original')
+
+
 if __name__=='__main__':unittest.main()
