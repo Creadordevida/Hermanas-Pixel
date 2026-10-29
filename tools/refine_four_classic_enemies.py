@@ -21,7 +21,7 @@ OUT = ROOT / "qa/art_review"
 OUT.mkdir(parents=True, exist_ok=True)
 STATE = OUT / "four_existing_enemy_polish_state.json"
 KIND = ("breakdancer", "bully", "referee", "rival")
-COUNT = 5
+COUNT = {"breakdancer": 6, "bully": 5, "referee": 6, "rival": 5}
 SCALE = {"breakdancer": 2, "bully": 1, "referee": 2, "rival": 2}
 
 
@@ -111,7 +111,7 @@ def polish(im: Image.Image, kind: str, frame: int) -> Image.Image:
 
 
 def contact(before: list[Image.Image], after: list[Image.Image], kind: str):
-    width = 1550
+    width = max(1550, len(before) * 307 + 15)
     result = Image.new("RGBA", (width, 660), "#202c3b")
     draw = ImageDraw.Draw(result)
     draw.text((10, 10), f"{kind}: originales ARRIBA / restaurados ABAJO", fill="#f8f0de")
@@ -131,7 +131,7 @@ def main():
     for kind in KIND:
         originals = []
         refined = []
-        for frame in range(COUNT):
+        for frame in range(COUNT[kind]):
             path = SRC / f"{kind}_{frame}.png"
             current = checksum(path)
             key = f"{kind}_{frame}"
@@ -149,10 +149,10 @@ def main():
                                 new_size=list(new.size))
             originals.append(original)
             refined.append(new)
-        if len(originals) == COUNT:
+        if len(originals) == COUNT[kind]:
             contact(originals, refined, kind)
     STATE.write_text(json.dumps(updated, indent=2), encoding="utf-8")
-    print("Refined 20 real illustrated frames; no app build or APK.")
+    print("Refined 22 real illustrated frames; no app build or APK.")
     print("Source sha256 and pixel dimensions recorded:", STATE)
 
 
