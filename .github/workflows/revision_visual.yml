@@ -12,6 +12,7 @@ jobs:
         run: python3 -m pip install --user pillow numpy pyyaml
       - name: Regenerar paisajes de colegio y danza
         run: python3 tools/build_interiors_parallax_twc.py
+          python3 qa/audit_school_visual_quality.py
       - name: Regenerar unión de capas de fútbol y vistas multicámara
         run: python3 tools/build_football_parallax_twc.py
       - name: Generar atlas nuevos enemigos
