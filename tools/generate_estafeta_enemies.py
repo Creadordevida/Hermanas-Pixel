@@ -55,6 +55,51 @@ def bull(p,n):
    (67,8+low),(66,17+low),(73,21+low)],fill='#dbc49b',outline='#725c52')
  d.polygon([(79,25+low),(81,18+low),(83,13+low),
    (85,13+low),(85,23+low)],fill='#efdeb6',outline='#847462')
+ # Reworked head planes: horn roots, brow ridge, cheek, jaw, muzzle,
+ # nostrils and rounded shoulder/hip muscles, all in native pixels.
+ d.polygon([(19,22+low),(26,16+low),(43,15+low),(54,19+low),
+            (50,23+low),(29,25+low),(18,30+low)],
+           fill='#62464a')
+ d.line((22,21+low,38,16+low,53,20+low),fill='#95716b',width=2)
+ d.arc((14,24+low,43,46+low),175,320,fill='#261f29',width=2)
+ d.arc((43,19+low,72,48+low),210,345,fill='#755454',width=2)
+ d.polygon([(61,28+low),(67,24+low),(78,22+low),(82,26+low),
+            (74,31+low),(68,33+low)],fill='#554047')
+ d.polygon([(71,36+low),(78,32+low),(87,35+low),(88,41+low),
+            (83,46+low),(75,43+low)],fill='#b17a63')
+ d.line((76,42+low,85,43+low),fill='#6c463f',width=2)
+ d.ellipse((83,37+low,86,40+low),fill='#352631')
+ d.point((83,37+low),fill='#1b1c24')
+ d.line((69,27+low,77,26+low),fill='#161923',width=3)
+ d.line((71,24+low,76,23+low),fill='#a18070',width=1)
+ d.ellipse((75,28+low,78,31+low),fill='#f9d99e')
+ d.point((76,29+low),fill='#181d28')
+ # Ivory horn roots are dark and broad; tips are light and tapered.
+ d.line((66,23+low,64,18+low,65,12+low,67,9+low),
+        fill='#eee2c4',width=2)
+ d.line((79,24+low,83,18+low,84,13+low),fill='#fff0d1',width=2)
+ d.line((65,23+low,68,26+low),fill='#80665a',width=3)
+ d.line((79,23+low,81,25+low),fill='#7a6157',width=2)
+ # Hoof rims and stretched flexor muscles move with the stride.
+ for xx in (22,43,58,73):
+  stride=step*(1 if xx%2 else -1)
+  d.line((xx-6+stride,57+low,xx+4+stride,57+low),
+         fill='#67616a',width=1)
+  d.line((xx-3,42+low,xx+stride,49+low),
+         fill='#6e5354',width=2)
+ if p=='alert':
+  # Ground scratch and snort are authored, not translated copies.
+  d.arc((65,44,85,53),15,155,fill='#b89174',width=2)
+  d.point((89,38),fill='#d3d1b8')
+ elif p=='run':
+  for q in range(n%3+1):
+   d.line((6-q*3,56-q*2,10-q*3,54-q*2),fill='#a99484',width=1)
+ elif p=='attack':
+  d.line((78,31,86,27),fill='#d7aa8d',width=2)
+  d.line((16,59,21+n,57),fill='#bfa898',width=2)
+ elif p=='hit':
+  d.line((42,19,48,25,44,32),fill='#cd9b80',width=2)
+  d.line((18,10,13,6),fill='#e7bd78',width=2)
  # Rope-like whip tail, real tail tuft.
  d.line((14,31+low,7,23+low,6,13+low),fill='#342b32',width=3)
  d.ellipse((3,9+low,9,17+low),fill='#1c2028')
@@ -114,6 +159,42 @@ def runner(p,n):
  d.point((31,16+crouch),fill='#252d36')
  d.polygon([(35,16+crouch),(40,18+crouch),(35,20+crouch)],
           fill='#c99575')
+ # Human proportions and clothing planes: replace the flat whites
+ # with directional leg seams, shirt folds, sleeve cuffs and face contour.
+ d.line((16,30+crouch,19,40+crouch),fill='#a8b8bd',width=2)
+ d.line((31,28+crouch,31,38+crouch),fill='#fbfaf2',width=2)
+ d.line((21,23+crouch,25,29+crouch,29,24+crouch),
+        fill='#fffdfa',width=1)
+ d.polygon([(15,35+crouch),(18,33+crouch),(20,39+crouch),
+            (17,42+crouch)],fill='#f7f4e8')
+ for lx,shift in ((18,swing),(29,-swing)):
+  d.line((lx-3,45+crouch,lx-2+shift,54+crouch),
+         fill='#a0acb5',width=2)
+  d.line((lx+1+shift,56+crouch,lx+5+shift,58+crouch),
+         fill='#f9faf4',width=1)
+ # Hair clusters and sideburn / eyebrow are not a plain rectangle.
+ d.polygon([(19,12+crouch),(23,7+crouch),(29,6+crouch),
+            (35,10+crouch),(30,11+crouch),(25,10+crouch)],
+           fill='#70524b')
+ d.line((29,14+crouch,34,14+crouch),fill='#62413e',width=1)
+ d.point((32,16+crouch),fill='#1c2e35')
+ d.line((29,23+crouch,34,22+crouch),fill='#5f3535',width=1)
+ d.line((25,26+crouch,29,29+crouch),fill='#d4a784',width=1)
+ d.line((11,32+crouch,9,41+crouch),fill='#d99f82',width=2)
+ d.line((39,32+crouch,41,39+crouch),fill='#f6d2ac',width=2)
+ if p=='alert':
+  # He checks over his shoulder rather than staring forward forever.
+  d.line((22,13,18,15),fill='#4b3434',width=2)
+  d.point((21,18),fill='#29333a')
+  d.arc((16,12,23,20),180,330,fill='#c68e74',width=1)
+ elif p=='run':
+  # Bent elbows and diagonal momentum lines, alternating per frame.
+  d.line((8,34+(-3,0,3,0)[n],11,28),fill='#f6caa2',width=2)
+  d.line((43,37+(3,0,-3,0)[n],40,30),fill='#a47a66',width=2)
+ elif p=='attack':
+  d.line((40,31,45,27,47,24),fill='#f1c59e',width=3)
+ elif p=='hit':
+  d.line((12,22,8,17),fill='#c79783',width=2)
  # Red scarf and moving tail with correct cloth layers.
  d.polygon([(18,24+crouch),(29,25+crouch),(36,23+crouch),
    (33,29+crouch),(23,30+crouch)],fill='#b51c35')
