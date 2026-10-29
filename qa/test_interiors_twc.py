@@ -91,11 +91,11 @@ class InteriorTWCQA(unittest.TestCase):
  def test_09_themed_school_props_unique_not_in_repeating_wall(self):
   generator=(R/'tools/build_interiors_parallax_twc.py').read_text()
   self.assertIn('def extract_school_features():',generator)
-  self.assertIn("master = Image.open(ASSETS/SRCS['school'][zone]).convert('RGB')",generator)
+  self.assertIn("master=Image.open(ASSETS/SRCS['school'][source_zone]).convert('RGB')",generator)
   self.assertNotIn("neutral=Image.open(ASSETS/'scenes/school.png')",generator)
-  self.assertIn("('pizarra_matematicas',15320,52)",MAIN)
-  self.assertIn("('pizarra_informatica',29820,51)",MAIN)
-  self.assertIn("('estanteria_biblioteca',1720,0)",MAIN)
+  self.assertNotIn("('pizarra_matematicas',15320,52)",MAIN)
+  self.assertNotIn("('pizarra_informatica',29820,51)",MAIN)
+  self.assertNotIn("('estanteria_biblioteca',1720,0)",MAIN)
   self.assertIn("if(room==2)",MAIN)
   self.assertIn("images['interior_school_ordenador_aula']",MAIN)
 
@@ -156,6 +156,11 @@ class InteriorTWCQA(unittest.TestCase):
     for x,y in ((105,101),(285,147),(675,160)):
      self.assertTrue(np.array_equal(img[y,x,:3],original[y,left+x,:3]),
        f'Original source pixels stretched or recolored: {zone}/{variant}')
+    if source in (1,2):
+     # Baseboard comes from the original hall, not a truncated desk.
+     hall=np.asarray(Image.open(R/'assets/images/scenes/school.png').convert('RGB'))
+     self.assertTrue(np.array_equal(img[258,285,:3],hall[258,left+285,:3]),
+       'La pared no debe contener medio pupitre o monitor incrustado')
    self.assertEqual(len(set(digests)),9,
      f'Colegio zona {zone}: siguen repitiéndose las mismas aulas')
 
