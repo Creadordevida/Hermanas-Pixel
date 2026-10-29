@@ -122,6 +122,27 @@ def draw(pose,frame):
  elif pose=='defeated':
   d.line((16,41+frame,42,58),fill=dark,width=2)
   d.line((22,14,31,18+frame),fill=light,width=1)
+ # La estatua derrotada NO puede seguir erguida: cuerpo de piedra
+ # derrumbado, con corona, capa y botas horizontales sobre el pavimento.
+ # Mantener el suelo en y=68 en los cuatro fotogramas.
+ if pose=='defeated':
+  fragments=Image.new('RGBA',(CW,CH))
+  rubble=ImageDraw.Draw(fragments)
+  # Cascotes de piedra desprendidos de la corona y los hombros.
+  rubble.polygon([(4,62),(9,57),(14,60),(15,67),(5,68)],
+                 fill='#596872',outline='#35444e')
+  rubble.polygon([(40,60),(46,55),(52,61),(50,68),(40,68)],
+                 fill='#829197',outline='#35444e')
+  rubble.polygon([(25,64),(28,60),(33,64),(32,69),(24,69)],
+                 fill='#b6bdb5')
+  fallen=im.rotate(78 if frame%2==0 else -78,
+                   resample=Image.Resampling.NEAREST,expand=True)
+  fallen.thumbnail((46,34),resample=Image.Resampling.NEAREST)
+  fragments.alpha_composite(fallen,((CW-fallen.width)//2,68-fallen.height))
+  rubble=ImageDraw.Draw(fragments)
+  for x,y in ((8,54),(45,53),(17,66),(38,67)):
+   rubble.line((x,y,x+3,y-2),fill='#d1c7a7',width=1)
+  im=fragments
  # Acabado pixel: borde tallado oscuro; jamás reaprovechar el padre.
  alpha=im.getchannel('A')
  outer=alpha.filter(ImageFilter.MaxFilter(3))
