@@ -40,6 +40,25 @@ void main() {
     expect(e.pose, NewEnemyPose.defeated);
   });
 
+  test('golpe visible persiste y no dispara otro ataque en la recuperación', () {
+    for (final kind in NewEnemyKind.values) {
+      final e=NewEnemyMotion(kind:kind,home:100,x:100);
+      e.update(.05,125);
+      e.hit();
+      expect(e.pose,NewEnemyPose.hit);
+      expect(e.update(.10,125),isFalse);
+      expect(e.pose,NewEnemyPose.hit);
+      expect(e.update(.20,125),isFalse);
+      expect(e.pose,NewEnemyPose.hit);
+      expect(e.update(.05,125),isFalse);
+      expect(e.cooldown,greaterThan(0));
+      e.defeat();
+      expect(e.pose,NewEnemyPose.defeated);
+      expect(e.update(5,125),isFalse);
+      expect(e.pose,NewEnemyPose.defeated);
+    }
+  });
+
   test('solo aparecen en los capítulos aprobados', () {
     for (final kind in NewEnemyKind.values) {
       for (int stage=0;stage<=6;stage++) {
