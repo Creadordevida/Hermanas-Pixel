@@ -93,19 +93,27 @@ class AdaptiveTitleScreen extends StatelessWidget {
                 key:ValueKey(label=='Nueva partida'
                     ? 'title-new-game' : 'title-continue'),
                 onTap:action,
-                child:const SizedBox.expand(),
+                child:action!=null
+                    ? const SizedBox.expand()
+                    : Container(
+                        decoration:BoxDecoration(
+                          color:Colors.black.withValues(alpha:.38),
+                          borderRadius:BorderRadius.circular(10),
+                        ),
+                      ),
               )),
           ));
       return Stack(fit:StackFit.expand,children:[
-        // The wide image is built FROM the approved original, with its
-        // 800x450 central composition byte-for-byte untouched.
+        // The wide image must be built FROM the approved original, with its
+        // central composition byte-for-byte untouched. Release QA forbids a
+        // placeholder panorama; never mistake fallback for approved artwork.
         // Cover crops only EXTRA periphery within the certified 16:9-20:9
         // formats. No blurred strips, letterboxing or BoxFit.fill.
         Image.asset(panoramaAsset,fit:BoxFit.cover,
           alignment:Alignment.center,
           errorBuilder:(_,_,_) => Image.asset(
             'assets/images/title_cars_fixed_091.png',
-            fit:BoxFit.cover,alignment:Alignment.center,
+            fit:BoxFit.contain,alignment:Alignment.center,
           ),
         ),
         if(g.canShowCentralUncropped) ...[
@@ -115,11 +123,12 @@ class AdaptiveTitleScreen extends StatelessWidget {
           if(!hasSavedGame)
             Positioned.fromRect(
               rect:g.originalRect(const Rect.fromLTWH(578,310,183,17)),
-              child:const IgnorePointer(child:Text(
+              child:IgnorePointer(child:Text(
                 'Sin partida guardada',
                 textAlign:TextAlign.center,
-                style:TextStyle(color:Colors.white,fontSize:11,
-                  shadows:[Shadow(color:Colors.black,blurRadius:3)]),
+                style:TextStyle(color:Colors.white,
+                  fontSize:11*g.scale,
+                  shadows:const [Shadow(color:Colors.black,blurRadius:3)]),
               )),
             ),
         ],
