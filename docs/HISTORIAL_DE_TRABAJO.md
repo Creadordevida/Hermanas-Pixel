@@ -229,3 +229,25 @@ Encargo: corregir franjas laterales, logotipo TWC y botones sin alterar portada 
 - No se han regenerado PNG de logo ni panorama sobre los recursos originales: no se dispone del PNG grande del repositorio dentro del contenedor local; GitHub sí permite leer el código y guardar commits.
 - **BLOQUEADOR PENDIENTE:** el recurso `assets/images/title_wide_20x9.png` debe contener laterales artísticos coherentes y preservar el PNG original en el centro. Sin imagen de ese nivel, la QA impide generar próxima versión; no declarar corrección definitiva completa.
 - **BLOQUEADOR PENDIENTE:** ejecutar limpieza del sello y examinar PNG nuevo; revisar luego capturas Flutter auténticas a cuatro aspectos.
+
+## 29/10/2026 — Colegio interior: se elimina la clonación real de aulas
+Rama de trabajo: `work/revision-visual-20261028-continuidad`. Sin Actions, APK, merge a main ni assets binarios inventados.
+
+**Defecto confirmado con imágenes auténticas:** en el artefacto previo de GitHub Actions `12841021198`, las tres imágenes `z0_panel_0..2`, `z1_panel_0..2` y `z2_panel_0..2` tenían diferencia media de píxel exactamente **0** dentro de su zona: se clonaba la misma imagen. El generador `make_wall` seleccionaba `crop_w=source_w=1320`, por lo que `left=0` para TODAS las variantes. Comprimía además 1320×480 hasta 880×278, deformando los originales.
+
+**Cambios reales en código:**
+- `1d1e3e43` — nueve recortes distintos por zona del arte escolar auténtico, desde el PNG fuente **a escala nativa 1:1**, preservando personajes, cristales y detalles.
+- `2079cd16` — recorrido temático con pasillos, aulas de matemáticas y tecnología usando solamente las tres imágenes originales existentes; pasillos intermedios entre aulas.
+- `e52b805e` — en `lib/interiors_parallax_twc.dart`: nueve variantes escolares permutadas sin repetir durante nueve módulos, frente a las tres variantes de danza que no se alteran. Distribuciones de muebles de seis tipos, incluyendo huecos abiertos.
+- `635b4a70` — `lib/main.dart` carga y pinta esas nueve variantes, y sustituye el pupitre repetido cada 570 unidades por composiciones locales vinculadas a la sala.
+- `4708eb06` — marcos físicos de puerta a intervalos de cuatro módulos escolares, además de los límites del pabellón. Todo a velocidad 1:1 mundo; no mueven el cielo.
+- `8be6b0f6`, `066bb3aa` — reproductor Python para ver cambios reales de salón/ventanas, incluye una plancha de nueve encuadres verdaderos del colegio. No fingir que son capturas del motor Flutter.
+- `d3aa2226` — QA para exigir nueve paneles distintos y comprobar procedencia de píxeles originales, ventanas transparentes y movimiento autónomo del exterior solo a través de ellas.
+- `70f4b079` — tests Dart de composición, distribución de muebles y velocidades parallax .30 / .56 / 1.0.
+- `d147f422` — 13 futuras capturas reales del motor `StagePainter` en corredor, aula, laboratorio y bordes.
+- `32060baf` y `78f4db52` — QA incorporada a los workflows MANUALES; no fueron ejecutados.
+- `84712f70` — conteo correcto del manifiesto: 35 imágenes escolares = 27 paneles + 3 fondos/portada de puerta + 5 objetos.
+
+**Qué hemos comprobado ahora sin compilar:** revisión de los tres PNG fuente reales y del código, clonación exacta de las variantes anteriores; cálculo geométrico de las nueve posiciones de recorte 0,55,110,165,220,275,330,385,440 para originales de 1320px; las secuencias de sala visitan las nueve variaciones sin repetirlas prematuramente; seis patrones de mobiliario, con cuatro grupos sin mesas cada 14 módulos.
+
+**Pendiente de validar y NO APROBADO AÚN:** ejecutar en un checkout real `python3 tools/build_interiors_parallax_twc.py`, `python3 -m unittest qa/test_interiors_twc.py`, `python3 tools/preview_interiors_twc.py`; inspeccionar hojas de contacto de la NUEVA generación, corregir si alguna unión visual desentona; ejecutar Flutter y 13 capturas de juego al autorizar pruebas. No se ha ejecutado el generador en esta sesión porque los PNG fuente del repositorio privado no están materializados localmente. El pipeline sí queda preparado para generarlos antes de cualquier APK futura.
