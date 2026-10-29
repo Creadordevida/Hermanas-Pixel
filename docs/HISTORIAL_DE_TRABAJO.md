@@ -151,3 +151,25 @@ No decir «terminado», «subido», «compilado», «aprobado» o «APK» salvo 
 - `74ee8b9f`: robot, aficionado y turista ya no usan el mismo muñeco vertical simplemente comprimido al perder: se introducen poses caídas diferenciadas.
 - Son cambios reales de código fuente del generador y **no pruebas de calidad artística superadas**. Pendiente regeneración, inspección de PNG reales y capturas del StagePainter, sin lanzar Actions porque el usuario ordenó compilación únicamente bajo petición expresa y alertó del límite de almacenamiento.
 - Los seis enemigos permanecen bloqueados en las partidas normales hasta superar revisión artística y técnica. Priorizar a continuación maestro gráfico de toro y corredor, y luego rey, robot, aficionado y turista.
+
+## 29/10/2026 — Mejoras reales del bloque de seis enemigos, sin usar Actions
+**Rama:** `work/revision-visual-20261028-continuidad`. No se ha tocado `main`.
+
+### Sprites de seis enemigos: código del generador cambiado
+- `df7fde51` — toro de Estafeta: musculatura, planos del morrillo, hocico y ollares, base de los cuernos, pezuñas y cambios de pose (alerta/carrera/ataque/impacto). Corredor: pliegues de vestimenta, cara, cabello, braceros y gestos de alerta/carrera/ataque; conserva blanco y rojo de San Fermín.
+- `75534240` — rey de Navarra: hombreras pétreas con bisel, barba, nariz, relieve de cadenas navarras en el peto, marcas de cincel y poses diferenciadas de despertar, caminar, golpear y recibir un impacto. Derrota de cuatro grados progresivos de desplome y escombros.
+- `aa879761` — robot: ventilación, rodillo, ruedas, torre óptica, cepillos y brazo de ataque. Aficionado: cara, pelo, detalles de camiseta, pliegues y extremidades en acción. Turista: camisa, sombrero, óptica de la cámara, cara, zancada y accesorios.
+
+### Comportamiento e integración corregidos (sin afirmar prueba Android)
+- `72d00905` — toro: 0,55 s de aviso real usando reloj separado (evita embestida instantánea al acercarse); embestida interrumpible al recibir impacto. Rey: interrupción del golpe de tierra cuando recibe daño. Corrección grave: turistas de capítulos 1–3 ya usan IA `tipsyTourist` y no `cleaningRobot`.
+- `36895e21` — estado de reacción al impacto conservado durante recuperación; se cancela la anticipación de ataque.
+- `c50e35d5` — fundido gradual y uniforme tras derrota para los seis sprites.
+- `8097619a` — la captura REAL de Flutter, cuando se ejecute con autorización, comprobará las 6 fases por cada enemigo (36 vistas, no 24). Es prueba de `StagePainter`, no un montaje.
+- `475e5d22` — nuevos tests de recuperación tras impacto.
+- `a26b5cbf` — herramienta local que compara 6 atlas reales con los PNG originales de Miren y Sara, indicando explícitamente que no es una captura Flutter.
+
+### Calidad: restricciones y pendientes
+- NO se ha ejecutado ningún workflow GitHub Actions ni compilado Android en este bloque.
+- NO se ha regenerado ni inspeccionado el nuevo atlas como imagen. Hasta ello no puede certificarse la calidad artística.
+- **Las seis puertas `enemyArtValidated` siguen en `false`**: los enemigos no salen en partidas normales. No declararlos integrados plenamente para nueva versión.
+- Validación pendiente: ejecutar generadores y QA Python localmente, comprobar 36 capturas reales Flutter y contrastar visualmente todos los estados con Miren y Sara; corregir cualquier irregularidad. Para activar y publicar es necesaria aprobación artística y pruebas técnicas con autorización del usuario para correr Actions.
