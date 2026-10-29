@@ -16,6 +16,8 @@ flutter:
   assets:
     - assets/images/title_approved.png
     - assets/images/title_cars_fixed_091.png
+    - assets/images/title_wide_20x9.png
+    - assets/images/twc_logo_transparent_091.png
     - assets/images/twc_corporate_verified_091.png
     - assets/images/brand_logo_twc.png
     - assets/images/level_pixel.png
