@@ -26,6 +26,8 @@ jobs:
           python3 qa/create_six_enemy_review.py
           python3 tools/extract_twc_title_logo.py
           python3 qa/verify_adaptive_title_art.py
+      - name: Generar contact sheets de 27 módulos del colegio (sin APK)
+        run: python3 qa/build_school_contact.py
       - name: Probar contratos y recursos de interiores
         run: |
           python3 -m unittest qa/test_visual_revision_contract.py
