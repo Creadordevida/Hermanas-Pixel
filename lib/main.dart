@@ -2069,14 +2069,17 @@ class StagePainter extends CustomPainter {
         interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2],
       ];
       if(stage==6) {
-        // Puertas de transición distribuidas por el colegio real, no
-        // sólo dos límites a lo largo de 36,5 km de recorrido.
-        // No se mueven con el paisaje exterior ni tapan el suelo.
+        // Marcos auténticamente situados donde el tramo siguiente
+        // pasa de pasillo a clase, o de clase a informática.
+        // No dibujar un arco cada cuatro módulos por costumbre:
+        // la puerta tiene razón arquitectónica y está fijada al mundo.
         for(var zone=0;zone<3;zone++) {
           final start=interiorZoneEdgesTWC[zone];
           final end=interiorZoneEdgesTWC[zone+1];
-          for(var n=4;start+n*interiorModuleWidthTWC<end-120;n+=4) {
-            transitions.add(start+n*interiorModuleWidthTWC);
+          for(var n=1;start+n*interiorModuleWidthTWC<end-120;n++) {
+            if(interiorSchoolDoorAtModuleTWC(zone,n)) {
+              transitions.add(start+n*interiorModuleWidthTWC);
+            }
           }
         }
       }
