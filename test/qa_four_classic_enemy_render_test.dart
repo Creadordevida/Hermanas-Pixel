@@ -41,8 +41,13 @@ void main() {
          // Selection is driven by the original Enemy fields used in gameplay.
          if(pose==1)foe.lastRenderedX=foe.x-12;
          if(pose==2 || pose==3) {
-           foe.launched=true;
-           foe.t=pose==2?.24:.52;
+           foe.t=pose==2?.06:.42;
+           if(kind=='rival' || kind=='bully') {
+             foe.meleeWarning=.3;
+           } else {
+             foe.launched=true;
+             foe.t=pose==2?.24:.52;
+           }
          }
          if(pose==4)foe.stunned=.45;
          if(pose==5)foe.deathAt=.35;
@@ -53,7 +58,9 @@ void main() {
              child:SizedBox(width:800,height:450,
                child:CustomPaint(painter:StagePainter(
                  images:art,stage:caseEntry.value,cameraX:0,
-                 time:.8,lastAttackTime:-10,hero:Character(140),
+                 time:.8,lastAttackTime:-10,
+                 hero:Character((kind=='rival' || kind=='bully') &&
+                   (pose==2 || pose==3)?420:140),
                  otherSister:Character(195),father:Character(70),
                  showFamily:false,selected:0,
                  obstacles:const <Obstacle>[],platforms:const <Rect>[],
