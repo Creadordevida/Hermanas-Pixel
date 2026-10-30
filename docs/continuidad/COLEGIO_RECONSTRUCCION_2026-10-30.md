@@ -18,7 +18,7 @@ La ilustración nueva evita las plantas poligonales y manchas de siluetas oscura
 4. Se compusieron previsualizaciones de tres tramos con el paisaje far/mid aprobado en dos posiciones de cámara. Tasa de píxeles móviles **7,5% / 7,2% / 8,7%**, paredes y mobiliario inmóviles. **Son composiciones PIL, NO capturas reales Flutter**.
 5. Se corrigió una previsualización local que situaba erróneamente el suelo a y=340: el motor Flutter real usa y=278 para el suelo del capítulo del colegio. No certificar calidad a partir de la previsualización errónea.
 
-Fuente maestra local SHA256 `fd56e54b43ce3a871aa85a56bd01d45af1e73f87c98497dae57810c19525c802`. Paquete entregado al usuario en la conversación: `COLEGIO_27_PANELES_RECONSTRUIDOS_LISTOS_PARA_INTEGRAR.zip`, SHA256 `ac7e65824017ac3b3b74b88fa4919d8ed6b863c37183a21bfe68662b71b802a9` (ESTE HASH PUEDE CAMBIAR SI SE ACTUALIZA EL PAQUETE Y DEBE REVALIDARSE).
+Fuente maestra local SHA256 `fd56e54b43ce3a871aa85a56bd01d45af1e73f87c98497dae57810c19525c802`. Paquete entregado al usuario en la conversación: `COLEGIO_27_PANELES_RECONSTRUIDOS_LISTOS_PARA_INTEGRAR.zip`, SHA256 `a168c2898dc30f71d5f3f3a11919b017a856b90d6f486bb14459f9c2e022ba3a` (ESTE HASH PUEDE CAMBIAR SI SE ACTUALIZA EL PAQUETE Y DEBE REVALIDARSE).
 
 ## Integración de código GUARDADA en GitHub
 - `tools/build_school_hifi_twc.py`: generador reproductible usando la fuente original `assets/images/school_hifi/school_five_scenes_master.png`.
@@ -35,3 +35,6 @@ En esta sesión el conector GitHub guardó **todo el código anterior**, pero NO
 **Por ello el capítulo NO ESTÁ TODAVÍA SOLUCIONADO DEFINITIVAMENTE NI OPERATIVO EN UNA BUILD DE GITHUB.** No afirmar lo contrario, incluso si las imágenes locales son visualmente superiores. Para cerrar es imprescindible transferir los bytes reales de fuente + 27 paneles, comprobar SHA remoto, habilitar `TWC_SCHOOL_HIFI_ART=true` en la futura candidata, ejecutar generador y pruebas Flutter REAL en un checkout con los archivos, inspeccionar varias escenas y luego verificar en Android con autorización expresa. Ninguna APK ni Action se ha ejecutado.
 
 **No pedir al usuario que repita el diseño ni reiniciar el trabajo.** El paquete y el generador son resultados de esta sesión: conservarlos y recuperar esos bytes al reanudar.
+
+### Revisión final del paquete local
+Se reorganizó la secuencia real de 9 módulos para impedir espacios idénticos seguidos, de manera compatible con `interiorModuleVariantTWC` cuando `TWC_SCHOOL_HIFI_ART=true`. La copia final de 15.443.906 bytes incorpora comparativa RC4 vs arte nuevo, previsualizaciones con paisaje far/mid en movimiento, maestro de 5 estancias y 27 PNG. SHA256 ZIP final: `a168c2898dc30f71d5f3f3a11919b017a856b90d6f486bb14459f9c2e022ba3a`. La ausencia de bytes GitHub y la falta de pruebas Flutter siguen siendo bloqueantes.
