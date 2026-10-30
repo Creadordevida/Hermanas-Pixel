@@ -366,6 +366,18 @@ def main():
                                   'assets_count':35 if theme=='school' else 12,
                                   'variants_per_zone':SCHOOL_PANEL_VARIANTS if theme=='school' else DANCE_PANEL_VARIANTS}
     extract_school_features()
+    # New authored artwork is authoritative once its five-scene master is
+    # present. Never mix old pixel walls into a final high-fidelity school.
+    # Reuse the exact near-wall assets keys that Flutter already loads.
+    from build_school_hifi_twc import main as rebuild_school_hifi
+    school_master=ASSETS/'school_hifi/school_five_scenes_master.png'
+    if school_master.exists():
+        rebuild_school_hifi()
+        manifest['stages']['school']['visual_source']='school_hifi/5_unique_rooms'
+    elif __import__('os').environ.get('TWC_REQUIRE_SCHOOL_HIFI')=='1':
+        raise FileNotFoundError(
+            'FULL SCHOOL FIX BLOCKED: missing actual authored source '
+            'assets/images/school_hifi/school_five_scenes_master.png')
     manifest['protected_originals']=master_hashes
     (QA/'MANIFEST.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({'themes':list(HEIGHT),'panels':36,'other_images':10,
