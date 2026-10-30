@@ -24,6 +24,8 @@ def verify(strict=False):
     assert REPORT.is_file(),'Generator was not executed'
     d=json.loads(REPORT.read_text(encoding='utf-8'))
     assert d['master_sha256']==hashlib.sha256(ART.read_bytes()).hexdigest()
+    assert d['master_sha256']=='4370a461007d4e96bef60da32e827995301f41f7d1662fec9749da739d72bc9b',(
+        'Wrong five-room reference image: do not substitute other artwork')
     entries=d['panels']
     assert tuple(Image.open(ART).size)==(1448,1086)
     assert sum(x['transparent_pixels']>1000 for x in entries)>=15

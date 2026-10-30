@@ -385,10 +385,11 @@ def main():
         from clean_school_floor_hifi import main as generate_school_floor_hifi
         generate_school_floor_hifi()
         manifest['stages']['school']['visual_source']='school_hifi/5_unique_rooms'
-    elif __import__('os').environ.get('TWC_REQUIRE_SCHOOL_HIFI')=='1':
+    else:
         raise FileNotFoundError(
-            'FULL SCHOOL FIX BLOCKED: missing actual authored source '
-            'assets/images/school_hifi/school_five_scenes_master.png')
+            'SCHOOL FIX BLOCKING: exact user-approved master PNG missing '
+            '(assets/images/school_hifi/school_five_scenes_master.png). '
+            'DO NOT ship old RC4 wall art as if it were the new school.')
     manifest['protected_originals']=master_hashes
     (QA/'MANIFEST.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({'themes':list(HEIGHT),'panels':36,'other_images':10,

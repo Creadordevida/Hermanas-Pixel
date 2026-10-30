@@ -13,7 +13,7 @@ const int interiorMidCycleWidthTWC = 2020;
 const int interiorVariantsPerRoomTWC = 3; // danza: sin cambios
 const int interiorSchoolVariantsTWC = 9; // colegio: 9 recortes 1:1 por estancia
 const bool schoolHifiArtworkEnabled =
-    bool.fromEnvironment('TWC_SCHOOL_HIFI_ART', defaultValue: false);
+    bool.fromEnvironment('TWC_SCHOOL_HIFI_ART', defaultValue: true);
 
 const List<double> interiorZoneEdgesTWC = [0, 10500, 25500, 36500];
 const List<String> interiorDanceRoomsTWC = ['foyer','studio','stage'];
