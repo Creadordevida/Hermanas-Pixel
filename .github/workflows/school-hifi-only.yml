@@ -120,7 +120,8 @@ jobs:
           git add qa/school_hifi_lab/SCHOOL_HIFI_MANIFEST.json
           git add assets/images/interiors_parallax/school/z*_panel_*.png
           git add qa/school_hifi_flutter/*.png
-          git rm -f qa/school_inbox/COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip
+          # Keep the one uploaded ZIP as provenance; deleting it here would
+          # retrigger this paths-filtered workflow and cause a false failure.
           git diff --cached --check
           git commit -m "art(school): integrate exact approved 27 PNG and 7 verified Flutter screenshots"
           git push origin HEAD:"$GITHUB_REF_NAME"
