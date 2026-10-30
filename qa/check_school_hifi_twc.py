@@ -22,6 +22,7 @@ def verify(strict=False):
         print('SKIP: school-hi-fi original not in Git, no fake green art approval')
         return None
     assert REPORT.is_file(),'Generator was not executed'
+    assert (ROOT/'assets/images/ground/stage_6_hifi.png').is_file(), 'School-specific clean floor missing'
     d=json.loads(REPORT.read_text(encoding='utf-8'))
     assert d['master_sha256']==hashlib.sha256(ART.read_bytes()).hexdigest()
     assert d['master_sha256']=='4370a461007d4e96bef60da32e827995301f41f7d1662fec9749da739d72bc9b',(
@@ -46,7 +47,7 @@ def verify(strict=False):
             assert source.size==(880,278) and source.mode=='RGBA'
             rgba=np.asarray(source)
         assert hashlib.sha256(p.read_bytes()).hexdigest()==e['sha256']
-        assert (rgba[:,:,3]<20).sum()==e['transparent_pixels']
+        assert (rgba[:,:,3]<128).sum()==e['transparent_pixels']
         # Not every physical corridor contains a window. A scene can have
     # zero glass; require enough windowed modules across the full chapter.
     assert (rgba[:,:,3]<20).sum()>=0
