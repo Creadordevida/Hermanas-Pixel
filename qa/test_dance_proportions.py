@@ -21,7 +21,7 @@ SOURCE_BLOBS=('a0e98f69853e17f9b0734e6ae496b0cd1ff07153',
               'f48659a6517e6a5c52973441cfce055de8caeae8')
 
 def git_blob_sha(data):
-    return hashlib.sha1(b'blob '+str(len(data)).encode()+b'\\0'+data).hexdigest()
+    return hashlib.sha1(b'blob '+str(len(data)).encode()+bytes([0])+data).hexdigest()
 
 class DanceSourceProportions(unittest.TestCase):
     def test_original_art_protected(self):

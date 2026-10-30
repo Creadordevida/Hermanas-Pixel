@@ -18,4 +18,7 @@
 | Preview distinto del juego | Capas duplicadas en render Python y no en Flutter | Una fuente de verdad para datos y orden de capas |
 | YAML parecía ejecutar dos líneas | `run:` sin bloque literal `|` plegaba las líneas | Validar flujo manual y usar bloque de shell explícito |
 
+| Danza con arcos achatados | Recorte 1672×545 reescalado a 1650×286: relación X/Y 1,88× | Usar recortes 1200×390 a 880×286 con factor uniforme; comparar el PNG real y después StagePainter |
+| Previsualizador Python no arrancaba | Bucle final de capturas desplazado un nivel de indentación | Comprobar sintaxis y ejecutar el script, no asumir que existe = funciona |
+
 Estos son defectos observados en **Miren y Sara**, no una afirmación de que hayan sido resueltos de forma universal. Reutilizar la solución exige comprobarla en cada nuevo proyecto.

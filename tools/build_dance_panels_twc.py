@@ -6,7 +6,7 @@ or build Android. Generated PNGs must be inspected and committed separately.
 """
 from pathlib import Path
 import json, hashlib
-from build_interiors_parallax_twc import make_wall,ASSETS,OUT,SRCS
+from build_interiors_parallax_twc import make_wall,ASSETS,OUT,SRCS,ROOT
 
 def main():
     folder=OUT/'dance'
@@ -25,7 +25,7 @@ def main():
                 'source_sha256':hashlib.sha256(src.read_bytes()).hexdigest(),
                 'artistic_approval':'PENDING_FLUTTER_INSPECTION'
             })
-    report=OUT.parents[1]/'qa/interiors_twc_lab/DANCE_PANEL_GENERATION.json'
+    report=ROOT/'qa/interiors_twc_lab/DANCE_PANEL_GENERATION.json'
     report.parent.mkdir(parents=True,exist_ok=True)
     report.write_text(json.dumps({'type':'REAL_PNG_NOT_FLUTTER','panels':rows},
                                  ensure_ascii=False,indent=2),encoding='utf-8')
