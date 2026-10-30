@@ -2,3 +2,5 @@ Approved school ZIP binary is verified and in qa/school_inbox.
 Run school-only Flutter QA and commit 27 approved PNGs. Retry after fixing missing dart:typed_data import. NO Android/APK, NO merge.
 
 Retry 3: keep a single Flutter game and capture seven distinct world positions; no APK.
+
+Retry 4: exact assets already committed; QA-only decode of school sprites and diagnostics; no APK.
