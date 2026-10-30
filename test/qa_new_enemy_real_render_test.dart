@@ -30,7 +30,50 @@ void main() {
      'sanfermin_runner':('sanfermin_runner',2),
    };
    final images=<String,ui.Image>{};
+   // Each scene must be painted with the SAME live StagePainter assets that
+   // gameplay uses. A new enemy on an empty sky is not valid visual QA.
+   final backdrops=<String,String>{
+     'scene_2':'assets/images/level_estafeta.png',
+     'mid_2':'assets/images/mid/stage_2.png',
+     'ground_2':'assets/images/ground/stage_2.png',
+     'scene_3':'assets/images/level_plaza_castillo.png',
+     'mid_3':'assets/images/mid/stage_3.png',
+     'ground_3':'assets/images/ground/stage_3.png',
+     'football_far_twc':
+         'assets/images/chapter45/football_parallax/montanas_ciudad_deportiva_ciclo.png',
+     'football_mid_twc':
+         'assets/images/chapter45/football_parallax/arbolado_deportivo_ciclo.png',
+     'ground_4':'assets/images/ground/stage_4.png',
+     'interior_school_far':
+         'assets/images/interiors_parallax/school/exterior_lejano_ciclo.png',
+     'interior_school_mid':
+         'assets/images/interiors_parallax/school/arbolado_tras_ventanas_ciclo.png',
+     'interior_school_passage':
+         'assets/images/interiors_parallax/school/marco_paso.png',
+     'ground_6':'assets/images/ground/stage_6.png',
+     'futbolista_idle_0':'assets/images/frames/futbolista_idle_0.png',
+     'costume_futbolista_idle_0':'assets/images/outfits/futbolista_idle_0.png',
+   };
+   for(var index=0;index<6;index++) {
+     backdrops['football_near_tile_$index']=
+         'assets/images/chapter45/football_parallax/near_world_tiles/near_$index.png';
+   }
+   for(var room=0;room<3;room++) {
+     for(var variant=0;variant<9;variant++) {
+       backdrops['interior_school_z${room}_panel_$variant']=
+           'assets/images/interiors_parallax/school/z${room}_panel_$variant.png';
+     }
+   }
+
    try {
+     // Fail early if a level background was not generated: no empty-scene
+     // screenshots can be mislabelled as real gameplay illustrations.
+     for(final entry in backdrops.entries) {
+       images[entry.key]=await tester.runAsync(() => loadPng(entry.value))
+           ?? (throw StateError('Falta fondo REAL de juego: ${entry.value}'));
+     }
+     expect(images.containsKey('football_near_tile_5'),isTrue);
+     expect(images.containsKey('interior_school_z2_panel_8'),isTrue);
      for(final pair in kinds.entries) {
        final short=pair.value.$1;
        final key=short=='navarre_king'?'enemy_navarre_king_atlas':
@@ -42,7 +85,7 @@ void main() {
      }
      for(final pair in kinds.entries) {
        final kind=pair.key,stage=pair.value.$2;
-       // Six distinct conditions, one authentic StagePainter image each:
+       // Six distinct conditions, full scene graphics + StagePainter render:
        // 0 idle, 1 alert, 2 locomotion, 3 attack, 4 hit, 5 defeat.
        for(var pose=0;pose<6;pose++) {
          final foe=Enemy(0,kind,390)..facing=1
