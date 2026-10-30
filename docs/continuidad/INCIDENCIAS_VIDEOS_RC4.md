@@ -26,3 +26,41 @@
 
 ## Registro siguiente
 Esperar más vídeos y anotaciones del usuario. No mezclar dos problemas de orientación nativa y adaptación Flutter con un mero cambio de tamaño CSS/BoxFit.
+
+## VÍDEO 002 — Colegio, «Screenrecorder-2026-10-30-15-54-23-632.mp4» (~29,4 s)
+
+### RC4-002 — Arquitectura interior del colegio: calidad baja y repetición excesiva (P1 ALTA)
+**Observación del usuario:** después de muchas correcciones, las paredes siguen «fatal»; el paisaje móvil detrás de las ventanas es una mejora que SÍ funciona.
+**Evidencia del vídeo:** paredes beige planas, huecos/ventanales y sombras/siluetas oscuras repetidos, encadenados como módulos idénticos. Bibliotecas, taquillas y carteles aparecen, pero no solucionan la calidad del conjunto.
+**Criterio de solución:** rehacer de forma sustancial la arquitectura interior (pilares, muros, materiales, transiciones y variedad real de biblioteca, aulas y pasillo), conservar paralaje exterior, calidad de sprites y objetos aprobados. No aprobar por cambiar colores, desplazar cortes o superar pruebas de hashes. Comparar secuencias reales de 5 o más módulos en Flutter y en móvil.
+**Estado:** REGISTRADO, NO CORREGIDO.
+
+## VÍDEO 003 — Calle Estafeta, «Screenrecorder-2026-10-30-15-56-04-448.mp4» (~36,9 s)
+
+### RC4-003A — Turista: arte muy por debajo del estándar SNES (P1 ALTA)
+**Observación del usuario:** calidad «pésima»; el fotograma muestra figura procedimental muy esquemática frente a la protagonista detallada.
+**Criterio de solución:** REHACER atlas completo, no retoques cosméticos. Cuerpo, rostro, perspectiva, gesto, material, volumen, iluminación y cuatro fotogramas diferenciados de cada acción; coherencia con la escala/detalle de Miren y Sara. Conservar comportamiento si sirve. No considerarlo resuelto sin verlo correr/atacar/recibir impacto y caer en Flutter.
+**Estado:** REGISTRADO, NO CORREGIDO.
+
+### RC4-003B — Corredor de San Fermín: arte muy por debajo del estándar SNES (P1 ALTA)
+**Observación del usuario:** figura se ve artificial y desproporcionada frente a la protagonista; calidad «pésima».
+**Criterio de solución:** rehacer desde una base artística coherente con los sprites originales, atuendo de corredor reconocible, secuencias reales de movimiento y pivotes estables; ensayar acercamiento, advertencia, ataque, esquiva y derrota. No usar el atlas procedimental previo como arte aceptado.
+**Estado:** REGISTRADO, NO CORREGIDO.
+
+### RC4-003C — Fondo de Calle Estafeta: mejora arquitectónica pendiente (P1 ALTA)
+**Observación del usuario:** fondo visual y perspectiva aún inadecuados; problema conocido y pendiente desde antes de RC4. No confundir con fallo de enemigos.
+**Criterio de solución:** escena de Estafeta más coherente y nítida con identidad de la calle, profundidad, geometría y movimiento de cámara sin estiramientos ni retales repetidos; mantener física y circulación. Comparación visual de RC4 con la siguiente APK.
+**Estado:** REGISTRADO, NO CORREGIDO.
+
+## VÍDEO 004 — Escuela de danza, «Screenrecorder-2026-10-30-15-59-02-915.mp4» (~22 s)
+
+### RC4-004 — La variedad prometida en la academia de danza no se aprecia (P1 ALTA)
+**Observación:** el usuario NO considera malo el nivel gráfico de los interiores de danza; aprecia que el paisaje se mueve detrás de las ventanas. Lo rechazado es la repetición continua del mismo mural: ventanas, pilares, lámparas, cuadros, barras. En el vídeo aparece un piano y otros elementos distintos puntualmente, pero una gran parte del recorrido sigue pareciendo igual.
+**Causa técnica confirmada en el código GitHub (30/10/2026):**
+- `tools/build_interiors_parallax_twc.py`: `DANCE_PANEL_VARIANTS=3`; tres zonas `foyer/studio/stage`, cada una recortada de UN mismo original por zona; recortes `sw=1200, sh=390`, `left=(0,236,472)[variant]`. Dos recortes vecinos comparten 964 px de los 1200 originales = **80,3% de solapamiento horizontal**. Esto preserva proporción pero NO crea nuevas estancias.
+- `lib/interiors_parallax_twc.dart`: `interiorVariantsPerRoomTWC=3`, `interiorModuleVariantTWC` devuelve `index%3` para danza; teselas físicas de 880 px, por tanto **la secuencia de 3 módulos se repite cada 2640 unidades** dentro de cada zona de 10.500/15.000/11.000 unidades.
+- `tools/build_dance_panels_twc.py` solo llama a `make_wall('dance',zone,variant)` nueve veces; las comprobaciones de proporciones y SHA **no miden variedad artística ni exposición de repeticiones durante gameplay**.
+**Qué PRESERVAR:** aspecto de paredes y suelo de alta calidad, barras de danza, buena iluminación, cielo/arbolado exterior en paralaje .30/.56, pivotes de los personajes y elementos interesantes como el piano.
+**Qué HACER DE VERDAD:** diseñar e incorporar **secuencias arquitectónicas distinguibles, nuevas composiciones espaciales y transiciones** para las zonas foyer/studio/stage, no simples recortes del mismo mural ni alternancia de 3 paneles solapados. Distribuir elementos únicos con lógica arquitectónica y espacios de descanso; no introducir objetos sin sentido solo para aparentar diversidad; conservar escala proporcional.
+**Criterios de aceptación:** (1) recorrido grabado con varias pantallas por zona, sin patrón evidente de 3 módulos recurrentes; (2) comparación lateral por puntos de mundo entre RC4 y nueva APK, mostrando cambios arquitectónicos reales; (3) continuidad de juntas y parallax en ventanas; (4) mismo nivel pixel-art que escenas aprobadas; (5) 16:9 y pantalla panorámica corregida según RC4-001; (6) validación real Flutter/Android, no solo test de PNG únicos.
+**Estado:** CAUSA IDENTIFICADA EN CÓDIGO + VÍDEO INSPECCIONADO, CORRECCIÓN NO IMPLEMENTADA.
