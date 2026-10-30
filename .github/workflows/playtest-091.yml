@@ -1,0 +1,94 @@
+name: Miren Sara RC4 - APK de pruebas 6 enemigos
+# One-shot authorized trigger file; all other pushes do NOT build.
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - .github/trigger-091-playtest.txt
+
+permissions:
+  contents: read
+
+jobs:
+  playtest:
+    name: Compilar 0.9.1 rc4 Android
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - name: Checkout exacto
+        uses: actions/checkout@v4
+      - name: Flutter estable fijado
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.47.8'
+          cache: true
+      - name: Dependencias imagen
+        run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Regenerar dibujos desde originales sin sustituirlos
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/build_interiors_parallax_twc.py
+          python3 tools/build_dance_panels_twc.py
+          python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
+          python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+      - name: Comprobacion estricta recursos jugables y seis atlas
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 qa/playtest_091_asset_gate.py
+          python3 -m unittest qa.test_dance_proportions
+          python3 qa/check_new_enemy_artifacts.py
+          python3 qa/check_four_classic_enemies.py
+      - name: Crear plantilla Flutter para Android
+        run: flutter create --no-overwrite --platforms=android --project-name hermanas_aventura .
+      - name: Icono y nombre del videojuego
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -R launcher/res/. android/app/src/main/res/
+          test -s android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
+      - name: Dependencias
+        run: flutter pub get
+      - name: Analisis de codigo Dart
+        run: flutter analyze --no-pub lib
+      - name: Probar IA colisiones animacion y titulo
+        run: flutter test --no-pub test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart test/classic_enemy_pose_test.dart
+      - name: Construir APK real con 6 enemigos provisionales
+        timeout-minutes: 20
+        run: flutter build apk --release --dart-define=TWC_GAMEPLAY_PLAYTEST=true
+      - name: Comprobar APK de 0.9.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s build/app/outputs/flutter-apk/app-release.apk
+          sha256sum build/app/outputs/flutter-apk/app-release.apk > qa/PLAYTEST_RC4_APK.sha256
+      - name: Publicar instalador APK para movil
+        uses: actions/upload-artifact@v4
+        with:
+          name: Miren-y-Sara-0.9.1-RC4-APK-con-6-enemigos
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            build/app/outputs/flutter-apk/app-release.apk
+            qa/PLAYTEST_RC4_APK.sha256
+      - name: Guardar informe de recursos aun si falla
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Auditoria-recursos-0.9.1-RC4
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            qa/PLAYTEST_RC4_ASSETS.json
+            qa/interiors_twc_lab/DANCE_PANEL_GENERATION.json
+            assets/images/enemies_new/*_manifest.json
+            qa/art_review/four_existing_enemy_polish_state.json
