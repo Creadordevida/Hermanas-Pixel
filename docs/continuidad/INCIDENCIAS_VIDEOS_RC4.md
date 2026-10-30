@@ -64,3 +64,34 @@ Esperar más vídeos y anotaciones del usuario. No mezclar dos problemas de orie
 **Qué HACER DE VERDAD:** diseñar e incorporar **secuencias arquitectónicas distinguibles, nuevas composiciones espaciales y transiciones** para las zonas foyer/studio/stage, no simples recortes del mismo mural ni alternancia de 3 paneles solapados. Distribuir elementos únicos con lógica arquitectónica y espacios de descanso; no introducir objetos sin sentido solo para aparentar diversidad; conservar escala proporcional.
 **Criterios de aceptación:** (1) recorrido grabado con varias pantallas por zona, sin patrón evidente de 3 módulos recurrentes; (2) comparación lateral por puntos de mundo entre RC4 y nueva APK, mostrando cambios arquitectónicos reales; (3) continuidad de juntas y parallax en ventanas; (4) mismo nivel pixel-art que escenas aprobadas; (5) 16:9 y pantalla panorámica corregida según RC4-001; (6) validación real Flutter/Android, no solo test de PNG únicos.
 **Estado:** CAUSA IDENTIFICADA EN CÓDIGO + VÍDEO INSPECCIONADO, CORRECCIÓN NO IMPLEMENTADA.
+
+## VÍDEO 005 — Colegio, «Screenrecorder-2026-10-30-16-00-26-909.mp4» (36,08 s)
+
+**Candidata evaluada:** 0.9.1 RC4 probada en móvil, NO corregida. Fotogramas inspeccionados a ~3–36 s, con acercamiento a la cabeza del matón y comprobación de las cinco poses PNG originales \`assets/images/enemies/bully_0..4.png\`.
+
+### RC4-005A — Robot de limpieza: base aprovechable, acabado insuficiente (P1 ALTA)
+
+**Usuario:** de los seis enemigos nuevos, el robot es el de mejor calidad, bastante por encima del turista y del corredor de San Fermín, pero aún inferior a Miren y Sara. **No equiparar esta valoración relativa con aprobación.**
+**Vídeo:** robot bajo, turquesa, silueta legible, rasgos todavía demasiado esquemáticos, menor riqueza de volumen/detalle y distinto acabado frente a la protagonista de alta fidelidad.
+**Acción exigida:** pulir a partir de su mejor diseño, no sustituirlo automáticamente por arte peor; revisar forma, detalle, color/materiales, sombreado, escala y animación de espera/patrulla/alerta/impacto/derrota. Comparar cada pose con protagonistas a la **escala real del juego**.
+**Aceptación:** sprite real y atlas mejorado, render StagePainter y vídeo del móvil muestran calidad coherente con el estándar de Miren y Sara, sin perder la silueta que funciona. No bastan variaciones numéricas ni hashes PNG.
+**Estado:** REGISTRADO, NO CORREGIDO / NO APROBADO.
+
+### RC4-005B — Colegio: plantas poligonales, sombras desenfocadas y paredes incoherentes (P1 ALTA; amplía RC4-002)
+
+**Usuario:** plantas visiblemente geométricas/poligonales, paredes de calidad muy baja y fondo desenfocado; la composición conjunta es «espantosa».
+**Vídeo:** se observan plantas con hojas triangulares, estructura repetitiva de marcos y ventanales beige, siluetas oscuras con apariencia de manchas fuera de foco en las ventanas, taquillas que contrastan bruscamente con los fondos y bibliotecas repetidas. Los paisajes exteriores se mueven correctamente en paralaje: **NO destruir ese avance**.
+**Acción exigida:** reconstruir artísticamente las paredes y espacios escolares y sustituir vegetación/siluetas abstractas por vegetación detallada y elementos plausibles. Comprobar si el aparente desenfoque procede de resolución del origen, recorte, compositado o escala; NO limitarse a aumentar resolución o recolorear. Dar identidad diferenciada a pasillo, biblioteca, aulas y taquillas; mantener paralaje exterior.
+**Aceptación:** recorrido real de varias pantallas con paredes nítidas, plantas pixel-art creíbles y zonas distinguibles; sin paneles/beige repetidos ni manchas oscuras difusas; comparativa RC4→siguiente versión en móvil y pantalla completa.
+**Estado:** REGISTRADO, NO CORREGIDO (misma línea de trabajo que RC4-002).
+
+### RC4-005C — Matón («bully»): pelo/gorra prácticamente no reconocible (P1 ALTA; defecto concreto de personaje clásico)
+
+**Usuario:** «no se le ve el pelo o la gorra lo que sea que lleve».
+**Vídeo:** en carrera/encuentro el matón con mochila roja muestra cabeza con parte superior casi desnuda, algo que contrasta con el resto del sprite.
+**Comprobación de recursos reales:** las cinco poses originales \`bully_0.png\` a \`bully_4.png\` tienen alfa y cabeza visible. En \`bully_0.png\` hay un **pequeño copete/mancha oscura**, no una gorra identificable; a escala de partida el peinado se pierde y parece que falte parte de la cabeza. Las cajas alfa reportadas para \`bully_0..3\` comienzan en (6,6), sin prueba de que el motor haya recortado la parte superior. El selector de animación emplea \`classicEnemyFrame(kind:'bully',...)\` con las cinco poses. **No atribuir con certeza al escalado o recorte del motor sin comparar cada PNG en StagePainter.**
+**Acción exigida:** revisar diseño de cabeza, peinado o eventual gorra según caracterización final, y redibujar coherentemente los cinco fotogramas si el original es incompleto. Conservar cuerpo, mochila, proporciones y detalles que sí funcionan. Verificar pivotes, transparencia, distinción del pelo y continuidad fotograma a fotograma.
+**Aceptación:** primer plano comparativo PNG originales/candidatos + captura real en el juego: cabello o prenda de cabeza claramente reconocible en reposo, marcha, ataque, impacto y derrota sin desaparecer entre poses.
+**Estado:** REGISTRADO, NO CORREGIDO.
+
+**Regla común:** Esta ronda recoge observaciones; no modificar sprites ni compilar otra APK hasta que el usuario cierre la lista. No llamar «aprobado» al robot por ser el mejor de los provisionales.

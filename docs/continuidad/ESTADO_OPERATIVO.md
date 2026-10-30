@@ -82,3 +82,6 @@ Usuario envía vídeo `Screenrecorder-2026-10-30-15-53-34-17.mp4` (33.32 s, 1080
 
 ### 2026-10-30 — Vídeos 002, 003 y 004 añadidos a lista (SIN implementar ni compilar)
 Vídeo 002: RC4-002 colegio (paredes/arquitectura repetitivas, preservar paisaje móvil). Vídeo 003: RC4-003A turista y RC4-003B corredor de San Fermín a rehacer completamente, RC4-003C fondo de Estafeta pendiente. Vídeo 004: RC4-004 academia de danza — visual original aceptable y parallax correcto, pero variedad prometida insuficiente; se confirma causa: 3 recortes por zona con solapamiento 80,3% y ciclo cada 2640 unidades. Exigir composición realmente distinta y validar desplazamiento real, no solo hashes. Véase `docs/continuidad/INCIDENCIAS_VIDEOS_RC4.md`. Lista ABIERTA, sin cambios gráficos ni nueva APK.
+
+### 2026-10-30 — Vídeo 005: robot, colegio y cabeza del bully (lista abierta)
+Vídeo `Screenrecorder-2026-10-30-16-00-26-909.mp4` (~36,08 s). Añadidas RC4-005A (robot, mejor de nuevos pero inferior a Miren/Sara), RC4-005B (colegio con plantas poligonales, paredes pobres y siluetas borrosas; amplía RC4-002), RC4-005C (matón: pelo oscuro mínimo en sprites originales y casi invisible a escala de juego; no hay gorra clara, sin prueba de recorte por motor). Ningún gráfico corregido ni APK compilada. Los criterios verificables están en `docs/continuidad/INCIDENCIAS_VIDEOS_RC4.md`.
