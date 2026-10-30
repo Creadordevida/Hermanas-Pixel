@@ -116,3 +116,5 @@ Esperar más vídeos y anotaciones del usuario. No mezclar dos problemas de orie
 **Criterio bloqueante de la futura APK autorizada:** conservar fullscreen en portada, mapa, selección y siete capítulos; probar proporciones 16:9, 19,5:9 y 20:9 con capturas auténticas de Flutter y comprobación posterior en Redmi Note 14. La RC5 pasó CI/Flutter, pero sigue pendiente de confirmar físicamente en móvil. Si el usuario detecta un problema en RC5, corregirlo e incluir la solución más reciente antes de esa APK.
 
 **IMPORTANTE:** el usuario ha prohibido producir o iniciar otras APK/Actions de compilación hasta nueva autorización expresa. Registrar e implementar las mejoras posibles sin APK mientras tanto.
+
+**Actualización RC4-002 y RC4-005B:** reconstrucción de 27 PNG en local y código preparados en GitHub, pero todavía PENDIENTE de transferencia binaria y validación Flutter/Android; véase `docs/continuidad/COLEGIO_RECONSTRUCCION_2026-10-30.md`. Los problemas NO se dan por corregidos en APK.

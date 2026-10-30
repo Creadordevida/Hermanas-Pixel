@@ -96,3 +96,6 @@ El usuario indica: «no hagas mas apks hasta que te lo indique porfavor, tenemos
 
 ### Pantalla completa — incluido OBLIGATORIAMENTE en la siguiente versión conjunta
 La corrección de RC4-001A/001B del RC5 se arrastra a la próxima APK con todas las mejoras. No revertir viewport dinámico, landscape Android, portada/mapa/controles panorámicos. Exigir pruebas reales en 16:9, 19,5:9, 20:9 y posterior comprobación móvil. Sin nueva APK hasta orden expresa. Detalles en `docs/continuidad/INCIDENCIAS_VIDEOS_RC4.md`.
+
+### 2026-10-30 — Reconstrucción real de colegio sin APK: arte LOCAL + código en Git (NO cerrado)
+Generados 27 PNG originales con cinco tipos de interior, 880×278, ventanas transparentes y paisaje far/mid conservado. Entregable local `COLEGIO_27_PANELES_RECONSTRUIDOS_LISTOS_PARA_INTEGRAR.zip`, pruebas PIL y manifest. Código GitHub: `tools/build_school_hifi_twc.py`, hook de generador, `lib/interiors_parallax_twc.dart`, `lib/main.dart`, y QA strict. **BLOQUEO CRÍTICO: el origen binario y los PNG nuevos NO están subidos a GitHub y falta prueba Flutter real. NO marcar solucionado.** Informe `docs/continuidad/COLEGIO_RECONSTRUCCION_2026-10-30.md`. No se ejecutó APK ni Actions.
