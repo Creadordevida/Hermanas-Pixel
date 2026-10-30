@@ -9,7 +9,7 @@ on:
       - .github/trigger-091-playtest.txt
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   playtest:
@@ -71,24 +71,22 @@ jobs:
           set -euo pipefail
           test -s build/app/outputs/flutter-apk/app-release.apk
           sha256sum build/app/outputs/flutter-apk/app-release.apk > qa/PLAYTEST_RC4_APK.sha256
-      - name: Publicar instalador APK para movil
-        uses: actions/upload-artifact@v4
-        with:
-          name: Miren-y-Sara-0.9.1-RC4-APK-con-6-enemigos
-          retention-days: 14
-          if-no-files-found: error
-          path: |
-            build/app/outputs/flutter-apk/app-release.apk
-            qa/PLAYTEST_RC4_APK.sha256
-      - name: Guardar informe de recursos aun si falla
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Auditoria-recursos-0.9.1-RC4
-          retention-days: 14
-          if-no-files-found: warn
-          path: |
-            qa/PLAYTEST_RC4_ASSETS.json
-            qa/interiors_twc_lab/DANCE_PANEL_GENERATION.json
-            assets/images/enemies_new/*_manifest.json
-            qa/art_review/four_existing_enemy_polish_state.json
+      - name: Entregar APK como GitHub Release PRELIMINAR del repositorio privado
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="playtest-0.9.1-rc4"
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK#Miren_y_Sara_0.9.1_RC4.apk" --clobber
+            gh release upload "$TAG" qa/PLAYTEST_RC4_APK.sha256 qa/PLAYTEST_RC4_ASSETS.json --clobber
+          else
+            gh release create "$TAG" "$APK#Miren_y_Sara_0.9.1_RC4.apk" qa/PLAYTEST_RC4_APK.sha256 qa/PLAYTEST_RC4_ASSETS.json \
+              --target "$GITHUB_SHA" \
+              --title "0.9.1 RC4 - APK Android pruebas (seis enemigos)" \
+              --notes "CANDIDATA PRIVADA PARA PRUEBAS EN MOVIL. Seis enemigos con arte provisional NO aprobado. PR 5 no fusionada. No apta para Google Play." \
+              --prerelease
+          fi
+          gh release view "$TAG" --json url -q .url
