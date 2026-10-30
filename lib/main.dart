@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'game_viewport_twc.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'sprite_bounds.g.dart';
@@ -41,7 +42,8 @@ const bool twcGameplayPlaytest = bool.fromEnvironment('TWC_GAMEPLAY_PLAYTEST',
 bool isEnemyPlayableInBuild(String kind) =>
     twcGameplayPlaytest || hasApprovedEnemyArtwork(kind);
 
-const double viewW = 800;
+// Landscape world width tracks the physical phone aspect, preserving height/physics.
+double viewW = 800;
 const double viewH = 450;
 const double groundY = 390;
 const double stageWidth = 36500; // ~3.6 minutes walking, closer to 5 including obstacles and enemies.
@@ -366,7 +368,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       _layoutStage();
       if (widget.qaWorldX != null) {
         hero.x = widget.qaWorldX!.clamp(actorRadius, stageWidth - actorRadius).toDouble();
-        cameraX = (hero.x - 327).clamp(0.0, stageWidth - viewW).toDouble();
+        cameraX = (hero.x - viewW*.41).clamp(0.0, stageWidth - viewW).toDouble();
       }
       screen = Screen.playing;
     } else if (widget.qaMap) {
@@ -521,7 +523,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         _layoutStage();
         if(widget.qaWorldX != null) {
           hero.x=widget.qaWorldX!.clamp(actorRadius,stageWidth-actorRadius).toDouble();
-          cameraX=(hero.x-327).clamp(0.0,stageWidth-viewW).toDouble();
+          cameraX=(hero.x - viewW*.41).clamp(0.0,stageWidth-viewW).toDouble();
         }
         screen = Screen.playing;
       } else {
@@ -1039,7 +1041,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       }
       foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
     }
-    cameraX=_ease(cameraX,(hero.x-327).clamp(0.0,stageWidth-viewW).toDouble(),dt*600);
+    cameraX=_ease(cameraX,(hero.x - viewW*.41).clamp(0.0,stageWidth-viewW).toDouble(),dt*600);
     if(hero.x>checkpointX+2800){checkpointX=hero.x;_save();}
     if(time>lastSaveTime+12){lastSaveTime=time;_save();}
     if(hero.x>=stageWidth-90)_finishChapter();
@@ -1076,7 +1078,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _retry() {
     final cp=checkpointX;
     _layoutStage();hero.x=cp;hearts=maxHeroHearts;
-    cameraX=(cp-300).clamp(0.0,stageWidth-viewW).toDouble();
+    cameraX=(cp-viewW*.375).clamp(0.0,stageWidth-viewW).toDouble();
     // Reset only the unfinished part of the chapter after checkpoint.
     screen=Screen.playing;_save();setState((){});
   }
@@ -1118,36 +1120,20 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xff0d2943),
-    body: LayoutBuilder(builder: (context, constraints) =>
-      screen==Screen.title && resourcesReady && loadError==null
-        ? AdaptiveTitleScreen(
-            onNewGame: _startNew,
-            onContinue: _continue,
-            hasSavedGame: savedAvailable,
-          )
-        : Stack(
-      fit: StackFit.expand,
-      children: [
-        // Extra-wide Android displays get illustrated, not black, gutters.
-        // Crucially the playable 800×450 image remains at its CORRECT aspect
-        // ratio: no stretching of characters or hidden touch buttons.
-        if (screen == Screen.title)
-          // La portada aprobada se conserva sin estirar: bandas de
-          // seguridad neutras, NO otra copia borrosa del mismo dibujo.
-          // El arte completo permanece 800x450 mediante BoxFit.contain.
-          const ColoredBox(color: Color(0xff12334d))
-        else
-          DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
-            begin: Alignment.topCenter, end: Alignment.bottomCenter,
-            colors: stage == 5
-                ? const [Color(0xffcaac8d), Color(0xffba8c67), Color(0xff68462c)]
-                : const [Color(0xff53a9ed), Color(0xffa7d3ee), Color(0xff557c48)],
-          ))),
-        Center(child: FittedBox(fit: BoxFit.contain,
-          child: SizedBox(width:viewW,height:viewH,child:_screen()))),
-      ],
-    )),
+    backgroundColor:const Color(0xff0d2943),
+    body:LayoutBuilder(builder:(context, constraints) {
+      final viewport=GameViewportTWC(
+          Size(constraints.maxWidth,constraints.maxHeight));
+      viewW=viewport.worldWidth;
+      if(screen==Screen.title && resourcesReady && loadError==null){
+        return AdaptiveTitleScreen(onNewGame:_startNew,
+          onContinue:_continue,hasSavedGame:savedAvailable);
+      }
+      return SizedBox.expand(child:FittedBox(
+        fit:BoxFit.contain,child:SizedBox(
+          width:viewW,height:viewH,child:_screen()),
+      ));
+    }),
   );
 
   Widget _screen() {
@@ -1330,14 +1316,14 @@ class StagePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas,Size size) {
-    canvas.save();canvas.clipRect(const Rect.fromLTWH(0,0,viewW,viewH));
+    canvas.save();canvas.clipRect( Rect.fromLTWH(0,0,viewW,viewH));
     canvas.drawColor(const Color(0xff79a9d5),BlendMode.src);
     _background(canvas); // Includes the APPROVED original street pavement; never add a fake second floor.
     // Low, reachable elevated surfaces made of integrated benches/platform props.
     // Exact collision rectangles and visible surfaces share the same coordinates.
     for (final p in platforms) {
       final x = p.left - cameraX;
-      if (x < -225 || x > 850) continue;
+      if (x < -225 || x > viewW+50) continue;
       final prop = images[stage == 5 ? 'gym_bench' : stage == 6 ? 'backpack' : stage == 4 ? 'cone' : 'crate'];
       if (prop != null) {
         if (stage >= 4 && stage <= 6) {
@@ -1352,7 +1338,7 @@ class StagePainter extends CustomPainter {
       }
     }
     for(final o in obstacles) {
-      final x=o.x-cameraX;if(x< -90 || x>880)continue;
+      final x=o.x-cameraX;if(x< -90 || x>viewW+80)continue;
       if(o.destroyed) {
         if(time-o.smashedAt<.48) {
           final elapsed=time-o.smashedAt;
@@ -1680,7 +1666,7 @@ class StagePainter extends CustomPainter {
     final tileW=tile.width.toDouble();
     final y=_midArtTop[stage];
     final first=(cameraX/tileW).floor();
-    for(int n=first;n<=first+2;n++) {
+    for(int n=first;n<=first+(viewW/tileW).ceil()+2;n++) {
       final dx=n*tileW-cameraX;
       // The dugout is a UNIQUE recognizable landmark, not an infinite fence
       // tile. The practice dummies and fence are intentionally repeatable.
@@ -1706,7 +1692,7 @@ class StagePainter extends CustomPainter {
     }
     final maxPan = math.max(0.0, art.width.toDouble() - sw);
     final sx = maxPan * neighborhoodPanFraction(panel, cameraX);
-    _sprite(canvas, art, const Rect.fromLTWH(0, 0, viewW, 380),
+    _sprite(canvas, art,  Rect.fromLTWH(0, 0, viewW, 380),
       pixelated:false, source:Rect.fromLTWH(sx, 0, sw, sh));
   }
 
@@ -1779,7 +1765,7 @@ class StagePainter extends CustomPainter {
 
   void _neighborhoodWorldV3Lab(Canvas canvas) {
     const sceneH = 380.0;
-    canvas.drawRect(const Rect.fromLTWH(0, 0, viewW, sceneH),
+    canvas.drawRect( Rect.fromLTWH(0, 0, viewW, sceneH),
         Paint()..color=const Color(0xff4da9ed));
     final piece = curvedBuildingPilot;
     final img = images['neighborhood_${piece.asset}'];
@@ -1931,7 +1917,7 @@ class StagePainter extends CustomPainter {
   }
 
   void _neighborhoodPhysicalWorld(Canvas canvas) {
-    canvas.drawRect(const Rect.fromLTWH(0,0,viewW,380),
+    canvas.drawRect( Rect.fromLTWH(0,0,viewW,380),
       Paint()..color=const Color(0xff4b9fe8));
     _drawCh1Loop(canvas,images['ch1_far_city_loop'],ch1FarSpeed);
     _drawCh1Loop(canvas,images['ch1_mid_woodland_loop'],ch1MidSpeed);
@@ -1966,7 +1952,7 @@ class StagePainter extends CustomPainter {
       return;
     }
     // Solid sky behind the scene for safe viewport edges even during joins.
-    canvas.drawRect(const Rect.fromLTWH(0, 0, viewW, 380),
+    canvas.drawRect( Rect.fromLTWH(0, 0, viewW, 380),
       Paint()..color=const Color(0xff4da9ed));
     for (final panel in neighborhoodBackdropPanels) {
       final worldLeft=panel.start-cameraX;
@@ -2034,7 +2020,7 @@ class StagePainter extends CustomPainter {
   }
 
   void _footballBackgroundTWC(Canvas canvas) {
-    canvas.drawRect(const Rect.fromLTWH(0,0,viewW,footballBackdropHeightTWC),
+    canvas.drawRect( Rect.fromLTWH(0,0,viewW,footballBackdropHeightTWC),
       Paint()..color=const Color(0xff54a4ed));
     _footballLoopTWC(canvas,images['football_far_twc'],footballFarSpeedTWC);
     _footballLoopTWC(canvas,images['football_mid_twc'],footballMidSpeedTWC);

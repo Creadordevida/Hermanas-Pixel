@@ -110,16 +110,21 @@ class AdaptiveTitleScreen extends StatelessWidget {
         // placeholder panorama; never mistake fallback for approved artwork.
         // Cover crops only EXTRA periphery within the certified 16:9-20:9
         // formats. No blurred strips, letterboxing or BoxFit.fill.
-        Image.asset(
+        // Full-width painted background, with the approved central 16:9
+        // image drawn undistorted over it. No flat/black side bars.
+        Positioned.fill(child:Image.asset(
           useApprovedWideArt ? panoramaAsset
               : 'assets/images/title_cars_fixed_091.png',
-          fit: useApprovedWideArt ? BoxFit.cover : BoxFit.contain,
+          fit:BoxFit.cover,
           alignment:Alignment.center,
-          errorBuilder:(_, error, trace) => Image.asset(
-            'assets/images/title_cars_fixed_091.png',
-            fit:BoxFit.contain,alignment:Alignment.center,
-          ),
-        ),
+          errorBuilder:(_, error, trace)=>const ColoredBox(
+              color:Color(0xff348bc1)),
+        )),
+        Center(child:AspectRatio(
+          aspectRatio:titleArtWidth/titleArtHeight,
+          child:Image.asset('assets/images/title_cars_fixed_091.png',
+            fit:BoxFit.contain,alignment:Alignment.center),
+        )),
         if(g.canShowCentralUncropped) ...[
           button(g.newGame,'Nueva partida',onNewGame),
           button(g.continueGame,'Continuar',
