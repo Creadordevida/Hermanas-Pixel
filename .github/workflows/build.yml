@@ -43,6 +43,7 @@ jobs:
           python3 qa/create_six_enemy_review.py
           python3 tools/extract_twc_title_logo.py
           python3 qa/verify_adaptive_title_art.py
+          python3 qa/verify_integration_before_apk.py --strict
           python3 qa/next_version_preflight.py --strict-assets
           python3 -m unittest qa/test_visual_revision_contract.py
       # Redundant ~12 MB graphics artifact intentionally removed.
@@ -137,6 +138,7 @@ jobs:
           python3 qa/create_six_enemy_review.py
           python3 tools/extract_twc_title_logo.py
           python3 qa/verify_adaptive_title_art.py
+          python3 qa/verify_integration_before_apk.py --strict
       - name: Preparar comparativa REAL de 27 módulos del colegio (Python, no Flutter)
         run: python3 qa/build_school_contact.py
       - name: Descargar dependencias Flutter para las capturas
@@ -200,5 +202,6 @@ jobs:
             qa/art_review/seis_enemigos_vs_miren_sara_RECURSOS.png
             qa/art_review/*_original_vs_polished.png
             qa/CANDIDATE_ASSET_INVENTORY.json
+            qa/PREAPK_INTEGRATION_G.json
             qa/SCENE_SEAMS_REPORT.json
           if-no-files-found: warn
