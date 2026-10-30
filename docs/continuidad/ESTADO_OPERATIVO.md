@@ -85,3 +85,11 @@ Vídeo 002: RC4-002 colegio (paredes/arquitectura repetitivas, preservar paisaje
 
 ### 2026-10-30 — Vídeo 005: robot, colegio y cabeza del bully (lista abierta)
 Vídeo `Screenrecorder-2026-10-30-16-00-26-909.mp4` (~36,08 s). Añadidas RC4-005A (robot, mejor de nuevos pero inferior a Miren/Sara), RC4-005B (colegio con plantas poligonales, paredes pobres y siluetas borrosas; amplía RC4-002), RC4-005C (matón: pelo oscuro mínimo en sprites originales y casi invisible a escala de juego; no hay gorra clara, sin prueba de recorte por motor). Ningún gráfico corregido ni APK compilada. Los criterios verificables están en `docs/continuidad/INCIDENCIAS_VIDEOS_RC4.md`.
+
+## 2026-10-30 — ORDEN EXPRESA: PROHIBIDA NUEVA APK HASTA NUEVA AUTORIZACIÓN
+El usuario indica: «no hagas mas apks hasta que te lo indique porfavor, tenemos que ir mejorando antes de compilar siempre que sea posible».
+**Restricción vinculante para próximas sesiones:**
+- NO crear, lanzar ni programar ninguna compilación Android/APK nueva, ni ejecutar marcadores de GitHub Actions que puedan dispararla, hasta que el usuario lo autorice de nuevo explícitamente.
+- La **RC5 fullscreen** (`0.9.1-rc.5+36`, GitHub Release `playtest-0.9.1-rc5-fullscreen`) es la **última candidata entregada**, todavía pendiente de que el usuario la descargue, instale y confirme la corrección en su Redmi Note 14.
+- Trabajar previamente sobre defectos de código, arquitectura, sprites y escenarios. Guardar commits y documentación, generar comparativas y ejecutar pruebas locales/estáticas/Flutter sin construir APK siempre que se pueda. No confundir pruebas superadas con aprobación artística o en dispositivo.
+- Mantener lista abierta de incidencias, no fusionar PR #5 ni publicar en Google Play. **Una orden antigua de compilar RC5 NO autoriza ninguna nueva APK.**
