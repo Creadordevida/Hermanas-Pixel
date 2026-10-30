@@ -23,6 +23,24 @@ Future<void> waitReady(WidgetTester tester) async {
   throw StateError('Resources not loaded after extended timeout');
 }
 
+// Image.asset finishes decoding AFTER the ui.Image cache of StagePainter.
+// A blank image is NOT a valid screenshot, even when resourcesReady is true.
+Future<void> waitImageAssets(WidgetTester tester, String label, int needed) async {
+  for(var k=0;k<300;k++){
+    await tester.pump(const Duration(milliseconds:45));
+    final ready=tester.widgetList<RawImage>(find.byType(RawImage))
+        .where((widget)=>widget.image!=null).length;
+    if(ready>=needed){
+      await tester.pump(const Duration(milliseconds:80));
+      print('SCREEN_ASSETS_READY $label: $ready/$needed');
+      return;
+    }
+    await tester.runAsync(() =>
+        Future<void>.delayed(const Duration(milliseconds:35)));
+  }
+  throw StateError('Image.asset did not render $label ($needed images)');
+}
+
 Future<void> capture(WidgetTester tester,GlobalKey key,String name,
     Size physical,{bool expectStage=false, int stage=0}) async {
   await tester.pump(const Duration(milliseconds:90));
@@ -102,6 +120,11 @@ void main(){
                              qaMap:target.map,qaWorldX:target.stage==null?null:450),
         )));
         if(first){await waitReady(tester);first=false;}
+        if(target.stage==null){
+          await waitImageAssets(tester,target.label,target.map?2:2);
+        } else {
+          await tester.pump(const Duration(milliseconds:60));
+        }
         await capture(tester,boundary,target.label,target.size,
           expectStage:target.stage!=null,stage:target.stage??0);
       }
