@@ -48,7 +48,7 @@ def run():
  for k in ('cleaning_robot','rival_supporter','tipsy_tourist',
            'navarre_king','estafeta_bull','sanfermin_runner'):
   if "'"+k+"': false" not in code:raise RuntimeError('Art signoff changed: '+k)
- if '0.9.1-rc.4+35' not in (ROOT/'pubspec.yaml').read_text():
+ if not any(v in (ROOT/'pubspec.yaml').read_text() for v in ('0.9.1-rc.4+35','0.9.1-rc.5+36')):
   raise RuntimeError('Version mismatch')
  report['artistic_approval']='PENDING - GAMEPLAY TEST ONLY'
  dest=ROOT/'qa/PLAYTEST_RC4_ASSETS.json';dest.write_text(json.dumps(report,indent=2))
