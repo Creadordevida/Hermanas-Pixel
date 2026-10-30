@@ -38,6 +38,8 @@ jobs:
           python3 tools/export_sprite_bounds.py
           python3 qa/check_four_classic_enemies.py
           python3 qa/check_new_enemy_artifacts.py
+          # No activar ninguno de los seis por un PNG válido sin firma artística.
+          python3 qa/check_new_enemy_signoff.py
           python3 qa/create_six_enemy_review.py
           python3 tools/extract_twc_title_logo.py
           python3 qa/verify_adaptive_title_art.py
@@ -84,6 +86,8 @@ jobs:
         run: flutter test --no-pub test/school_interior_variety_test.dart
       - name: Analizar Dart de las pruebas
         run: flutter analyze --no-pub test
+      - name: Probar IA y colisiones físicas de los seis enemigos antes de Android
+        run: flutter test --no-pub test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart
       - name: Probar mecánicas, composición, saltos, sombras y carga de imágenes
         run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/wildlife_mechanics_test.dart test/jump_visuals_test.dart test/hero_hearts_test.dart test/neighborhood_scene_engine_test.dart test/neighborhood_visual_contract_test.dart test/chapter_one_world_tiles_test.dart test/widget_test.dart
       - name: Construir APK Android de PRUEBA (sin aprobación artística)
