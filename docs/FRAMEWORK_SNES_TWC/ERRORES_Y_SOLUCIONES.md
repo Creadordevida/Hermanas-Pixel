@@ -24,3 +24,7 @@
 Estos son defectos observados en **Miren y Sara**, no una afirmación de que hayan sido resueltos de forma universal. Reutilizar la solución exige comprobarla en cada nuevo proyecto.
 | Cercado deportivo repetitivo | Los tres recortes próximos venían únicamente de football_stands y la supuesta rotación era xx=0 | Mezclar detalles genuinos de entrada/gradas/entrenamiento y comprobar anillo completo y paneles |
 | QA visual obsoleta | El test seguía buscando Widget _title() => Stack y recorte de danza start=(0,385,770) | Sincronizar pruebas de contrato con arquitectura realmente activa, ejecutar antes de compilación |
+
+| Test estático desfasado tras refactor | `qa/test_visual_revision_contract.py` buscaba animaciones en main.dart aunque `classic_enemy_pose.dart` ya las gestionaba | Hacer assertions contra módulo activo + añadir comprobación cruzada entre selector, loader, atlas y caja alfa |
+| APK construida antes de QA visual | `qa-graficos-flutter` dependía de `android-apk-candidato`, permitiendo gastar compilación con errores visuales posteriores | Invertir dependencia: primero capturas auténticas StagePainter y QA, después job Android si todo pasa |
+| Generadores y PNG con versiones distintas | El código puede cambiar sin promover paneles reales; tener un PNG antiguo no prueba actualización | Verificar hashes por manifiesto justo antes de compilar y en ambas máquinas; persistir PNG aprobados en Git |

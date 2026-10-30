@@ -23,3 +23,8 @@ Una vez aplicado este control, el trabajo autorizado pasa al campo de fútbol. C
 
 ## BLOQUEANTE NUEVO — enemigos E (30/10/2026)
 Los seis enemigos siguen DESACTIVADOS. Antes de la siguiente APK, los seis atlas deberán estar creados como arte real de calidad comparable a 0.7.1, subidos como archivos binarios a GitHub, y vinculados a capturas reales de Flutter con hashes. `qa/check_new_enemy_signoff.py` bloquea cualquier flag activado sin evidencia de atlas y render; `qa/next_version_preflight.py --strict-assets` continúa bloqueando la APK mientras falte alguno. Los generadores procedimentales actuales son experimentales, no sustituyen a la aprobación artística. Véase `docs/continuidad/BLOQUE_E_SEIS_ENEMIGOS_2026-10-30.md`.
+
+## BLOQUEANTE G — CONTROL INTEGRADOR Y ORDEN DE TRABAJO (30/10/2026)
+- `qa/verify_integration_before_apk.py --strict` se ejecuta **en los dos jobs** y escribe `qa/PREAPK_INTEGRATION_G.json`: compara SHA de danza y fuentes de fútbol, número/dimensiones de los paneles, atlas, sexto fotograma rival y archivos de motor. Su éxito NO aprueba arte.
+- **La QA real de Flutter precede a Android**: `android-apk-candidato` declara `needs: qa-graficos-flutter`; si falla una captura o gate, NO se construye una APK. Esto evita gasto de builds fallidos y evita el falso verde de Android previo a errores visuales.
+- El workflow sigue manual. Título 20:9 y seis atlas nuevos continúan AUSENTES en Git. Los flags E siguen falsos, el preflight --strict-assets continúa bloqueando con razón. No forzar paso: completar y revisar antes de autorizar workflow.
