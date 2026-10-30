@@ -14,3 +14,6 @@ Pruebas realizadas y evidencia:
 Pruebas NO realizadas:
 Bloqueos:
 Siguiente acción exacta:
+
+## Puertas de revisión del usuario — Orden 30/10/2026
+Ejecutar bloques A portada, B colegio, C danza, D fútbol, E seis enemigos, F clásicos, G integración. Dentro de un bloque están autorizados diseño, generación, código, pruebas locales y commits; no pedir aprobación por cada microcambio. **Al finalizar realmente un bloque**, informar los archivos gráficos finales, SHAs, código, validaciones reales y deficiencias y **detenerse para que el usuario pueda comentar o autorizar el paso al siguiente bloque**. No iniciar el siguiente sin su respuesta. Si un bloque está bloqueado, informar del impedimento sin marcarlo COMPLETADO; preservar evidencia y evitar soluciones falsas para dar apariencia de éxito. No compilar APK, ni lanzar Actions manuales ni fusionar PR #5.
