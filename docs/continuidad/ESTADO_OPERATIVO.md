@@ -93,3 +93,6 @@ El usuario indica: «no hagas mas apks hasta que te lo indique porfavor, tenemos
 - La **RC5 fullscreen** (`0.9.1-rc.5+36`, GitHub Release `playtest-0.9.1-rc5-fullscreen`) es la **última candidata entregada**, todavía pendiente de que el usuario la descargue, instale y confirme la corrección en su Redmi Note 14.
 - Trabajar previamente sobre defectos de código, arquitectura, sprites y escenarios. Guardar commits y documentación, generar comparativas y ejecutar pruebas locales/estáticas/Flutter sin construir APK siempre que se pueda. No confundir pruebas superadas con aprobación artística o en dispositivo.
 - Mantener lista abierta de incidencias, no fusionar PR #5 ni publicar en Google Play. **Una orden antigua de compilar RC5 NO autoriza ninguna nueva APK.**
+
+### Pantalla completa — incluido OBLIGATORIAMENTE en la siguiente versión conjunta
+La corrección de RC4-001A/001B del RC5 se arrastra a la próxima APK con todas las mejoras. No revertir viewport dinámico, landscape Android, portada/mapa/controles panorámicos. Exigir pruebas reales en 16:9, 19,5:9, 20:9 y posterior comprobación móvil. Sin nueva APK hasta orden expresa. Detalles en `docs/continuidad/INCIDENCIAS_VIDEOS_RC4.md`.

@@ -106,3 +106,13 @@ Esperar más vídeos y anotaciones del usuario. No mezclar dos problemas de orie
 - **Documento:** `docs/continuidad/RC5_FULLSCREEN_VERIFICACION_2026-10-30.md`.
 - **Condición para CERRAR de forma definitiva:** vídeo del usuario en Redmi Note 14 confirmando que portada, mapa y gameplay ocupan el área horizontal de extremo a extremo con controles funcionales. No declarar confirmación en dispositivo a partir de capturas de `flutter test`.
 - **Resto de incidencias RC4-002...005:** SIN CAMBIOS. Mantenerlas en lista abierta para próxima ronda de arte.
+
+## ORDEN DE CONTINUIDAD: RC4-001A/001B ES REQUISITO OBLIGATORIO DE LA SIGUIENTE VERSIÓN CON TODAS LAS MEJORAS
+
+**Decisión del usuario:** la corrección de pantalla completa (PRIMER punto de la lista) debe conservarse e integrarse obligatoriamente en la próxima versión que reúna las mejoras de escenarios/enemigos, aunque se desarrolló de forma aislada en RC5. **No puede quedar fuera ni regresarse al render 800×450 con bandas**.
+
+**Base técnica de partida ya integrada en la rama:** `lib/game_viewport_twc.dart`, cambios de `lib/main.dart`, `lib/adaptive_title_screen.dart`, y `tools/configure_android_landscape_twc.py`. Las pruebas `test/game_viewport_twc_test.dart` y `test/fullscreen_real_render_rc5_test.dart` deben conservarse y volver a ejecutarse al integrar las demás mejoras. Mantener mapa, selección, controles, cámara y los siete capítulos en fullscreen sin deformación. Integración de nuevas mejoras NO autoriza revertir el viewport dinámico.
+
+**Criterio bloqueante de la futura APK autorizada:** conservar fullscreen en portada, mapa, selección y siete capítulos; probar proporciones 16:9, 19,5:9 y 20:9 con capturas auténticas de Flutter y comprobación posterior en Redmi Note 14. La RC5 pasó CI/Flutter, pero sigue pendiente de confirmar físicamente en móvil. Si el usuario detecta un problema en RC5, corregirlo e incluir la solución más reciente antes de esa APK.
+
+**IMPORTANTE:** el usuario ha prohibido producir o iniciar otras APK/Actions de compilación hasta nueva autorización expresa. Registrar e implementar las mejoras posibles sin APK mientras tanto.
