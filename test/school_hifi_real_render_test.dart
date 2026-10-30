@@ -2,6 +2,7 @@
 // Requires exact 27 PNGs + master in this checkout. No APK.
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
