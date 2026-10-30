@@ -45,8 +45,6 @@ bool isEnemyPlayableInBuild(String kind) =>
 // Landscape world width tracks the physical phone aspect, preserving height/physics.
 double viewW = 800;
 const double viewH = 450;
-const bool schoolHifiArtworkEnabled =
-    bool.fromEnvironment('TWC_SCHOOL_HIFI_ART', defaultValue:false);
 const double groundY = 390;
 const double stageWidth = 36500; // ~3.6 minutes walking, closer to 5 including obstacles and enemies.
 const double actorRadius = 14;

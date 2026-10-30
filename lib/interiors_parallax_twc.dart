@@ -12,6 +12,8 @@ const int interiorFarCycleWidthTWC = 2200;
 const int interiorMidCycleWidthTWC = 2020;
 const int interiorVariantsPerRoomTWC = 3; // danza: sin cambios
 const int interiorSchoolVariantsTWC = 9; // colegio: 9 recortes 1:1 por estancia
+const bool schoolHifiArtworkEnabled =
+    bool.fromEnvironment('TWC_SCHOOL_HIFI_ART', defaultValue: false);
 
 const List<double> interiorZoneEdgesTWC = [0, 10500, 25500, 36500];
 const List<String> interiorDanceRoomsTWC = ['foyer','studio','stage'];
@@ -22,6 +24,14 @@ const List<List<int>> interiorSchoolSourcePlanTWC = [
   [0,0,0,1,0,0,0,2,0],
   [1,1,0,1,1,0,1,1,2],
   [2,2,0,2,2,0,2,2,1],
+];
+ // New master uses 5 actual illustrated spaces. Library and lockers are
+ // circulation type 0: do not put a classroom's desks on top.
+ // Position names: 0 corridor / 1 classroom / 2 computing lab.
+const List<List<int>> interiorSchoolSourcePlanHifiTWC = [
+  [0,0,0,0,0,0,0,0,0],
+  [1,1,0,1,0,1,0,1,1],
+  [2,2,0,2,0,2,0,2,2],
 ];
 
 String interiorAssetTWC(String theme, String name) =>
@@ -67,7 +77,9 @@ int interiorSchoolRoomTypeTWC(int zone,int index) {
     throw RangeError('Invalid school room type');
   }
   final variant=interiorModuleVariantTWC(zone,index,theme:'school');
-  return interiorSchoolSourcePlanTWC[zone][variant];
+  return (schoolHifiArtworkEnabled
+      ? interiorSchoolSourcePlanHifiTWC
+      : interiorSchoolSourcePlanTWC)[zone][variant];
 }
 
 /// True if a real change of school space occurs at the boundary
