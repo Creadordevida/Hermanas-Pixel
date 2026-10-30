@@ -54,9 +54,18 @@ def panorama(theme: str, H: int):
     if not far_source.is_file() or not mid_source.is_file():
         raise FileNotFoundError('Faltan los paisajes aprobados RC3 FIX2; no generar sustitutos simples')
     with Image.open(far_source) as master:
-        far = master.convert('RGB').resize((FAR_W, H), Image.Resampling.LANCZOS)
+        original=master.convert('RGB')
+        # School's high windows must reveal the real city/trees rather than
+        # an enlarged expanse of blue sky. Select the approved vista's
+        # lower 278px; do not resize it on one axis or redraw the landscape.
+        if theme=='school' and original.height >= H+102:
+            original=original.crop((0,102,original.width,102+H))
+        far=original.resize((FAR_W,H),Image.Resampling.LANCZOS)
     with Image.open(mid_source) as master:
-        mid = master.convert('RGBA').resize((MID_W, H), Image.Resampling.LANCZOS)
+        original=master.convert('RGBA')
+        if theme=='school' and original.height >= H+102:
+            original=original.crop((0,102,original.width,102+H))
+        mid=original.resize((MID_W,H),Image.Resampling.LANCZOS)
     # El colegio y la academia deben mostrar distintas ventanas del paisaje,
     # sin espejar ni duplicar incorrectamente piezas de arquitectura cercana.
     shift_far = 0 if theme == 'school' else 731
