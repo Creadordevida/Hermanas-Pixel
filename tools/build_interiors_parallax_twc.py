@@ -385,7 +385,10 @@ def main():
     school_master=ASSETS/'school_hifi/school_five_scenes_master.png'
     if school_master.exists():
         from clean_school_floor_hifi import main as generate_school_floor_hifi
-        generate_school_floor_hifi()
+        # Preserve the exact approved floor PNG shipped in the user ZIP.
+        # Pillow re-encoding in a future runner must not change its bytes.
+        if not (ASSETS/'ground/stage_6_hifi.png').is_file():
+            generate_school_floor_hifi()
         school_manifest=ROOT/'qa/school_hifi_lab/SCHOOL_HIFI_MANIFEST.json'
         expected=[(OUT/'school'/f'z{z}_panel_{n}.png')
                   for z in range(3) for n in range(9)]
