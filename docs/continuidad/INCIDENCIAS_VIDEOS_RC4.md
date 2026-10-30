@@ -95,3 +95,14 @@ Esperar más vídeos y anotaciones del usuario. No mezclar dos problemas de orie
 **Estado:** REGISTRADO, NO CORREGIDO.
 
 **Regla común:** Esta ronda recoge observaciones; no modificar sprites ni compilar otra APK hasta que el usuario cierre la lista. No llamar «aprobado» al robot por ser el mejor de los provisionales.
+
+## ACTUALIZACIÓN EXCLUSIVA RC5 — 30/10/2026 (RC4-001A/001B)
+
+- **Estado verificado:** incidencias de fullscreen corregidas en código y **superadas en CI/Flutter real**, pero **NO confirmadas todavía en el Redmi Note 14**.
+- **Versión:** `0.9.1-rc.5+36`; APK compilada desde `64fbe769ee62e8e8dd68e5575f0df9ec02319043`. GitHub Actions `41085018018`, SUCCESS.
+- **Evidencia:** 15 capturas reales de portada, mapa y los 7 capítulos, en 16:9 / 19,5:9 / 20:9 (los 7 en 20:9), comparadas por dimensiones del render y diversidad de color en ambos extremos; ZIP descargable en la prerelease RC5.
+- **Android:** orientación `sensorLandscape`, `resizeableActivity=true`, aspecto máximo `2.8` configurados y comprobados en el manifest de la build.
+- **Entrega:** https://github.com/Creadordevida/Hermanas-Pixel/releases/tag/playtest-0.9.1-rc5-fullscreen
+- **Documento:** `docs/continuidad/RC5_FULLSCREEN_VERIFICACION_2026-10-30.md`.
+- **Condición para CERRAR de forma definitiva:** vídeo del usuario en Redmi Note 14 confirmando que portada, mapa y gameplay ocupan el área horizontal de extremo a extremo con controles funcionales. No declarar confirmación en dispositivo a partir de capturas de `flutter test`.
+- **Resto de incidencias RC4-002...005:** SIN CAMBIOS. Mantenerlas en lista abierta para próxima ronda de arte.
