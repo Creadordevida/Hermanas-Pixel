@@ -43,3 +43,6 @@ Consultar el run 41071461780, jobs, registros y artefacto `Miren-y-Sara-0.9.1-RC
 - **NO se ha fusionado** PR #5, no hay publicación de Google Play.
 
 Lección reusable: para repositorios con cuota de artifacts Actions llena, una **GitHub Release privada PRELIMINAR** permite entregar una APK real sin subirla al historial git ni consumir storage de Actions artifacts. Requiere permiso contents:write en workflow. No dar una URL de descarga hasta comprobar la presencia del release asset y tamaño real en la API de GitHub.
+
+## 2026-10-30 — Nuevo punto de partida REAL tras prueba Android de 0.9.1 RC4
+Actualización de evidencia: el usuario ha **instalado y probado** la APK 0.9.1 RC4 (run 41071927964, fuente c08ba002, release playtest-0.9.1-rc4). Indica que hay muchas mejoras pendientes y decepciones, pero **sin detallar aún defectos**. Ordena usar RC4 como base para avanzar, NO como arte aprobado. Se abre lista acumulativa para siguiente versión; no compilar ni modificar jugabilidad hasta recibir las incidencias y criterio de cierre. Informe exacto: `docs/continuidad/BASE_JUGABLE_RC4_Y_REVISION.md`.

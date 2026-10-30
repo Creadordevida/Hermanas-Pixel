@@ -61,3 +61,6 @@ El usuario ordena registrar como BLOQUEANTE la regeneración e integración de l
 
 ## 2026-10-30 — Bloque G: integración de todos los módulos
 Véase `docs/continuidad/BLOQUE_G_INTEGRACION_2026-10-30.md`. Corrigida QA de clásicos que buscaba animaciones en el archivo antiguo; inventariados fotogramas 6.º; añadido `qa/verify_integration_before_apk.py --strict` a ambos jobs con informe de bytes/manifiestos; GitHub Actions reordenadas para que el QA Flutter REAL se ejecute antes de intentar compilar APK. Sin ejecutar Actions, sin APK, sin merge; G PENDIENTE DE VALIDACIÓN por arte A/E y por falta de ejecución Flutter. Solo hay permiso para llegar al cierre de G y pedir revisión antes de siguientes tareas.
+
+## 2026-10-30 — Nuevo punto de partida REAL tras prueba Android de 0.9.1 RC4
+El usuario ha **instalado y probado** la APK 0.9.1 RC4 (run 41071927964, fuente c08ba002, release playtest-0.9.1-rc4). Indica que hay muchas mejoras pendientes y decepciones, pero **sin detallar aún defectos**. Ordena usar RC4 como base para avanzar, NO como arte aprobado. Se abre lista acumulativa para siguiente versión; no compilar ni modificar jugabilidad hasta recibir las incidencias y criterio de cierre. Informe exacto: `docs/continuidad/BASE_JUGABLE_RC4_Y_REVISION.md`.
