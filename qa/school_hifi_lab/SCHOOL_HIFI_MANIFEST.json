@@ -1,0 +1,537 @@
+{
+  "source": "user-supplied five-room image, characters absent",
+  "master_sha256": "4370a461007d4e96bef60da32e827995301f41f7d1662fec9749da739d72bc9b",
+  "stage": 6,
+  "rooms": [
+    "pasillo",
+    "aula",
+    "informatica",
+    "biblioteca",
+    "taquillas"
+  ],
+  "tile_size": [
+    880,
+    278
+  ],
+  "parallax_speeds": [
+    0.3,
+    0.56,
+    1.0
+  ],
+  "panel_count": 27,
+  "panels": [
+    {
+      "zone": 0,
+      "variant": 0,
+      "room": "pasillo",
+      "source_rect": [
+        0,
+        0,
+        646,
+        204
+      ],
+      "scale": 1.362745,
+      "glass_panes": 2,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 34095,
+      "sha256": "0b3fd65f03dc7ccc7ef6b4cf3c84e6da4a800a14c674b27c444f358bfb2d98e1"
+    },
+    {
+      "zone": 0,
+      "variant": 1,
+      "room": "taquillas",
+      "source_rect": [
+        311,
+        832,
+        862,
+        1006
+      ],
+      "scale": 1.597701,
+      "glass_panes": 0,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 0,
+      "sha256": "aeb7d25c6b21b88f46a23d175056d15091d5f33cd46c2a6e42a598941475c3ed"
+    },
+    {
+      "zone": 0,
+      "variant": 2,
+      "room": "pasillo",
+      "source_rect": [
+        624,
+        0,
+        1270,
+        204
+      ],
+      "scale": 1.362745,
+      "glass_panes": 3,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 38936,
+      "sha256": "a3bedd1069fbf71b09a892bacddc60d043ac9afdb15202ac480e45dc3a5cab5b"
+    },
+    {
+      "zone": 0,
+      "variant": 3,
+      "room": "taquillas",
+      "source_rect": [
+        887,
+        832,
+        1438,
+        1006
+      ],
+      "scale": 1.597701,
+      "glass_panes": 2,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 15149,
+      "sha256": "5b30a3e73822ebde9b933e8b6cdced8c929bdd31a5dcd4960a15cfbe4987f4a4"
+    },
+    {
+      "zone": 0,
+      "variant": 4,
+      "room": "biblioteca",
+      "source_rect": [
+        476,
+        624,
+        1087,
+        817
+      ],
+      "scale": 1.440415,
+      "glass_panes": 4,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 71322,
+      "sha256": "b33eef1c1f721a9a83b0f1a3eddc6cd43293f7ef3b4b676a6037dd0a34d85884"
+    },
+    {
+      "zone": 0,
+      "variant": 5,
+      "room": "pasillo",
+      "source_rect": [
+        119,
+        0,
+        765,
+        204
+      ],
+      "scale": 1.362745,
+      "glass_panes": 3,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 40422,
+      "sha256": "14de0791589978ddb0ad1743544541a0288ab63e6bf62bd7fecb4f8d036e08c3"
+    },
+    {
+      "zone": 0,
+      "variant": 6,
+      "room": "taquillas",
+      "source_rect": [
+        843,
+        832,
+        1394,
+        1006
+      ],
+      "scale": 1.597701,
+      "glass_panes": 2,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 15149,
+      "sha256": "80ecf3304817525310a16db56ddaef42e7094820ed4530ac511af4f93b61f8d4"
+    },
+    {
+      "zone": 0,
+      "variant": 7,
+      "room": "biblioteca",
+      "source_rect": [
+        377,
+        624,
+        988,
+        817
+      ],
+      "scale": 1.440415,
+      "glass_panes": 3,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 59120,
+      "sha256": "93410eecf4ad45a818e5781abed23e5b11281163e993549ad78e3f944de8f1d1"
+    },
+    {
+      "zone": 0,
+      "variant": 8,
+      "room": "pasillo",
+      "source_rect": [
+        538,
+        0,
+        1184,
+        204
+      ],
+      "scale": 1.362745,
+      "glass_panes": 4,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 45031,
+      "sha256": "e5e4f9c390183b8ac8c00189a6b6c3d25de84d386fae3cb6f7267f6ca2ce98af"
+    },
+    {
+      "zone": 1,
+      "variant": 0,
+      "room": "aula",
+      "source_rect": [
+        17,
+        218,
+        609,
+        405
+      ],
+      "scale": 1.486631,
+      "glass_panes": 2,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 36910,
+      "sha256": "0bc07586182524f570b82d996f5439b58c145b57c15e1430e76d7e755c200e3b"
+    },
+    {
+      "zone": 1,
+      "variant": 1,
+      "room": "aula",
+      "source_rect": [
+        293,
+        218,
+        885,
+        405
+      ],
+      "scale": 1.486631,
+      "glass_panes": 3,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 59258,
+      "sha256": "f8b24b8315b95c6c28ac8ae6267cd649090d5e14b24be39c2154c6e3eac4b1b4"
+    },
+    {
+      "zone": 1,
+      "variant": 2,
+      "room": "pasillo",
+      "source_rect": [
+        620,
+        0,
+        1266,
+        204
+      ],
+      "scale": 1.362745,
+      "glass_panes": 3,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 39165,
+      "sha256": "c99f2010f20d56bee714f9f2de847be601381210b74b7322d08917c7bda554a3"
+    },
+    {
+      "zone": 1,
+      "variant": 3,
+      "room": "aula",
+      "source_rect": [
+        842,
+        218,
+        1434,
+        405
+      ],
+      "scale": 1.486631,
+      "glass_panes": 0,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 0,
+      "sha256": "cab621a7bd6d636b9f2ea14bf2b6754e3da8506dd193836ad35dd7e453ecd223"
+    },
+    {
+      "zone": 1,
+      "variant": 4,
+      "room": "biblioteca",
+      "source_rect": [
+        472,
+        624,
+        1083,
+        817
+      ],
+      "scale": 1.440415,
+      "glass_panes": 4,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 71206,
+      "sha256": "6d69040eea343596ef551d99c2f958109208000c593841ce258307aa3bbe2952"
+    },
+    {
+      "zone": 1,
+      "variant": 5,
+      "room": "aula",
+      "source_rect": [
+        166,
+        218,
+        758,
+        405
+      ],
+      "scale": 1.486631,
+      "glass_panes": 3,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 59392,
+      "sha256": "e1c0d0dfe6ad560cbf7d0dea10b9fe011b64afc183f46755a69af1ead0630494"
+    },
+    {
+      "zone": 1,
+      "variant": 6,
+      "room": "aula",
+      "source_rect": [
+        801,
+        218,
+        1393,
+        405
+      ],
+      "scale": 1.486631,
+      "glass_panes": 0,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 0,
+      "sha256": "901e3019e1e818d511bf238ed5b87b9528b78b17b5250dcbd543dedaa89235dd"
+    },
+    {
+      "zone": 1,
+      "variant": 7,
+      "room": "pasillo",
+      "source_rect": [
+        358,
+        0,
+        1004,
+        204
+      ],
+      "scale": 1.362745,
+      "glass_panes": 5,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 64280,
+      "sha256": "1534ca17ac0df85cd6494cf9eb8294cde7fd392e250fe591ecc2aee842d6452d"
+    },
+    {
+      "zone": 1,
+      "variant": 8,
+      "room": "biblioteca",
+      "source_rect": [
+        558,
+        624,
+        1169,
+        817
+      ],
+      "scale": 1.440415,
+      "glass_panes": 4,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 71323,
+      "sha256": "334fef89b8ea26c63a557e3080100ec3cf5f0bcefaef953bf1ddbe53ae7f2a42"
+    },
+    {
+      "zone": 2,
+      "variant": 0,
+      "room": "informatica",
+      "source_rect": [
+        13,
+        420,
+        615,
+        610
+      ],
+      "scale": 1.463158,
+      "glass_panes": 2,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 12957,
+      "sha256": "60a8dd6a6417a7a46649c455750259c66fd49c437126958e991c28d6d9224201"
+    },
+    {
+      "zone": 2,
+      "variant": 1,
+      "room": "informatica",
+      "source_rect": [
+        285,
+        420,
+        887,
+        610
+      ],
+      "scale": 1.463158,
+      "glass_panes": 4,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 45211,
+      "sha256": "4d3d1878714c012e43ba0ebf15f66f22f75c3eb758c4b0fe52a370c40135fd10"
+    },
+    {
+      "zone": 2,
+      "variant": 2,
+      "room": "taquillas",
+      "source_rect": [
+        688,
+        832,
+        1239,
+        1006
+      ],
+      "scale": 1.597701,
+      "glass_panes": 2,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 15150,
+      "sha256": "f46ce459df553158791a0c2563fcf0c24a533b631ff3d0fe55d098af60d7c85f"
+    },
+    {
+      "zone": 2,
+      "variant": 3,
+      "room": "informatica",
+      "source_rect": [
+        828,
+        420,
+        1430,
+        610
+      ],
+      "scale": 1.463158,
+      "glass_panes": 3,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 29128,
+      "sha256": "f7d7b0d61aa4ff5ac006356b17f415adeb3758b51cf7c4ea510339547c2af3ab"
+    },
+    {
+      "zone": 2,
+      "variant": 4,
+      "room": "biblioteca",
+      "source_rect": [
+        468,
+        624,
+        1079,
+        817
+      ],
+      "scale": 1.440415,
+      "glass_panes": 4,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 71443,
+      "sha256": "c4c00fa9d6567d6209a9f414bd7065f1598f17c1369fa5f31303db8aa4019204"
+    },
+    {
+      "zone": 2,
+      "variant": 5,
+      "room": "informatica",
+      "source_rect": [
+        160,
+        420,
+        762,
+        610
+      ],
+      "scale": 1.463158,
+      "glass_panes": 3,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 30105,
+      "sha256": "56929092b6f1f3be50506d09a7b0cc8670f11c245834f53a93ca1ab112f25622"
+    },
+    {
+      "zone": 2,
+      "variant": 6,
+      "room": "informatica",
+      "source_rect": [
+        787,
+        420,
+        1389,
+        610
+      ],
+      "scale": 1.463158,
+      "glass_panes": 3,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 34870,
+      "sha256": "7955da072c9196878dce47362529f8e39efc4564ac058198ce3c8a0211d8ee80"
+    },
+    {
+      "zone": 2,
+      "variant": 7,
+      "room": "taquillas",
+      "source_rect": [
+        395,
+        832,
+        946,
+        1006
+      ],
+      "scale": 1.597701,
+      "glass_panes": 0,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 0,
+      "sha256": "54957495ed821a9c97867b5265e81dbaeaacf658719bf0023b9a2c34683f1a20"
+    },
+    {
+      "zone": 2,
+      "variant": 8,
+      "room": "informatica",
+      "source_rect": [
+        560,
+        420,
+        1162,
+        610
+      ],
+      "scale": 1.463158,
+      "glass_panes": 6,
+      "size": [
+        880,
+        278
+      ],
+      "transparent_pixels": 60536,
+      "sha256": "50458f05fe231202b558f1250f09abb2e27d214ec3e88de087c4bbf90bdbaf2e"
+    }
+  ]
+}
