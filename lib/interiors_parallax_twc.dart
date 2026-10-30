@@ -25,13 +25,12 @@ const List<List<int>> interiorSchoolSourcePlanTWC = [
   [1,1,0,1,1,0,1,1,2],
   [2,2,0,2,2,0,2,2,1],
 ];
- // New master uses 5 actual illustrated spaces. Library and lockers are
- // circulation type 0: do not put a classroom's desks on top.
- // Position names: 0 corridor / 1 classroom / 2 computing lab.
+// Five true room types: 0 corridor, 1 desks, 2 computing,
+// 3 library and 4 lockers. Never overlay old desks onto this new artwork.
 const List<List<int>> interiorSchoolSourcePlanHifiTWC = [
-  [0,0,0,0,0,0,0,0,0],
-  [1,0,1,0,1,0,1,0,0],
-  [2,0,2,0,2,0,2,0,0],
+  [0,4,0,4,3,0,4,3,0],
+  [1,1,0,1,3,1,1,0,3],
+  [2,2,4,2,3,2,2,4,2],
 ];
 
 String interiorAssetTWC(String theme, String name) =>
