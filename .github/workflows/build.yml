@@ -5,6 +5,8 @@ on:
 
 jobs:
   android-apk-candidato:
+    # Do not spend Android build minutes if real Flutter visual QA has failed.
+    needs: qa-graficos-flutter
     runs-on: ubuntu-24.04
     timeout-minutes: 24
     steps:
@@ -102,12 +104,11 @@ jobs:
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
 
-  # La compilación de Android tiene su propio resultado: puede terminar VERDE
-  # aunque una prueba visual posterior esté en ROJO. No se ocultan los errores.
-  # Las capturas se ejecutan en otro runner, sin competir con el compilador.
+  # BLOQUEANTE: primero comprobar las capturas auténticas del motor. Una
+  # prueba visual roja impide llegar al job de Android. Este pipeline
+  # sigue siendo EXCLUSIVAMENTE MANUAL (workflow_dispatch).
   qa-graficos-flutter:
     name: Capturas y auditoría gráfica real Flutter
-    needs: android-apk-candidato
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
