@@ -45,6 +45,8 @@ bool isEnemyPlayableInBuild(String kind) =>
 // Landscape world width tracks the physical phone aspect, preserving height/physics.
 double viewW = 800;
 const double viewH = 450;
+const bool schoolHifiArtworkEnabled =
+    bool.fromEnvironment('TWC_SCHOOL_HIFI_ART', defaultValue:false);
 const double groundY = 390;
 const double stageWidth = 36500; // ~3.6 minutes walking, closer to 5 including obstacles and enemies.
 const double actorRadius = 14;
@@ -2153,7 +2155,11 @@ class StagePainter extends CustomPainter {
       }
     }
     if(stage == 4 || stage == 5) _activityProps(canvas);
-    if(stage==6) {
+    // New school master already has authentic desks, computers and shelves
+    // inside each room. Never overlay old clipout furniture on top.
+    // Default remains compatible with RC5 until the new art has been
+    // installed and visually checked in Flutter.
+    if(stage==6 && !schoolHifiArtworkEnabled) {
       final desk=images['interior_school_mesa_aula'];
       if(desk!=null) {
         // Mesas sobre el suelo a la velocidad 1:1, solo en las aulas.
