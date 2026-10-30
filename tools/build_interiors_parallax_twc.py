@@ -373,6 +373,8 @@ def main():
     school_master=ASSETS/'school_hifi/school_five_scenes_master.png'
     if school_master.exists():
         rebuild_school_hifi()
+        from clean_school_floor_hifi import main as generate_school_floor_hifi
+        generate_school_floor_hifi()
         manifest['stages']['school']['visual_source']='school_hifi/5_unique_rooms'
     elif __import__('os').environ.get('TWC_REQUIRE_SCHOOL_HIFI')=='1':
         raise FileNotFoundError(

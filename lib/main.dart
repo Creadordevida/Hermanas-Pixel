@@ -395,7 +395,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       for (int i=0;i<7;i++) {
         paths['scene_$i'] = i<4 ? 'assets/images/${chapterScenes[i]}.png'
           : 'assets/images/scenes/${i==5 ? 'ballet_refined' : chapterScenes[i]}.png';
-        paths['ground_$i'] = 'assets/images/ground/stage_$i.png';
+        paths['ground_$i'] = i==6 && schoolHifiArtworkEnabled
+          ? 'assets/images/ground/stage_6_hifi.png'
+          : 'assets/images/ground/stage_$i.png';
         paths['mid_$i'] = 'assets/images/mid/stage_$i.png';
         if (i == 4) paths['mid_4_plain'] = 'assets/images/mid/stage_4_plain.png';
       }
