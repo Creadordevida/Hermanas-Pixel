@@ -68,13 +68,22 @@ void main(){
    };
    try{
     await tester.binding.setSurfaceSize(const Size(1000,450));
-    for(final item in locations.entries){
-     final key=GlobalKey();
-     await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
-       key:key,child:HermanasGame(qaStage:6,qaWorldX:item.value))));
-     await waitReady(tester);
-     await tester.pump(const Duration(milliseconds:150));
-     await picture(tester,key,item.key);
+    // Load the authentic game ONCE: the previous test recreated the entire
+    // 130+ PNG image cache seven times and exhausted the 10-minute timeout.
+    // Reusing the SAME RenderRepaintBoundary key keeps the live game State,
+    // image cache, StagePainter and parallax implementation intact.
+    final key=GlobalKey();
+    final first=locations.entries.first;
+    await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
+      key:key,child:HermanasGame(qaStage:6,qaWorldX:first.value))));
+    await waitReady(tester);
+    await tester.pump(const Duration(milliseconds:200));
+    await picture(tester,key,first.key);
+    for(final item in locations.entries.skip(1)){
+      await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
+        key:key,child:HermanasGame(qaStage:6,qaWorldX:item.value))));
+      await tester.pump(const Duration(milliseconds:150));
+      await picture(tester,key,item.key);
     }
    }finally{
     await tester.pumpWidget(const SizedBox.shrink());
