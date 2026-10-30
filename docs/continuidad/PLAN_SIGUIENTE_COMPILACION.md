@@ -20,3 +20,6 @@ En la rama `work/revision-visual-20261028-continuidad` existe código que corrig
 ## Bloque D: fútbol
 
 Una vez aplicado este control, el trabajo autorizado pasa al campo de fútbol. Cambios futuros de arte deberán seguir el mismo orden: generar PNG real → verificar proporciones y uniones → inspeccionar render Flutter → guardar SHA y arte aprobado.
+
+## BLOQUEANTE NUEVO — enemigos E (30/10/2026)
+Los seis enemigos siguen DESACTIVADOS. Antes de la siguiente APK, los seis atlas deberán estar creados como arte real de calidad comparable a 0.7.1, subidos como archivos binarios a GitHub, y vinculados a capturas reales de Flutter con hashes. `qa/check_new_enemy_signoff.py` bloquea cualquier flag activado sin evidencia de atlas y render; `qa/next_version_preflight.py --strict-assets` continúa bloqueando la APK mientras falte alguno. Los generadores procedimentales actuales son experimentales, no sustituyen a la aprobación artística. Véase `docs/continuidad/BLOQUE_E_SEIS_ENEMIGOS_2026-10-30.md`.

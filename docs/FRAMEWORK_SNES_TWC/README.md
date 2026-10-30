@@ -56,3 +56,4 @@ En cada fase el proceso debe fallar cerrado: si no hay evidencia, el estado es *
 - Ejemplos validados: arte original propio, capturas de motor y tests vinculados a commits.
 
 **No convertir documentación específica de este videojuego en una garantía genérica de calidad.**
+- [Transferencia binaria GitHub](TRANSFERENCIA_BINARIA_GITHUB.md): subida exacta de PNG grandes a la rama con SHA verificado, independiente de Actions.
