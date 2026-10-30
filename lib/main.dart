@@ -522,7 +522,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         if (key.startsWith('ch1_') || key.startsWith('neighborhood_') ||
             key.startsWith('football_') || key.startsWith('activity_') ||
             key.startsWith('interior_dance_') || key.startsWith('dog_') ||
-            key.startsWith('pigeon_flight_')) return false;
+            key.startsWith('pigeon_flight_') ||
+            key.startsWith('enemy_new_') ||
+            key == 'enemy_navarre_king_atlas' ||
+            key == 'enemy_estafeta_bull' ||
+            key == 'enemy_sanfermin_runner') return false;
         if (key.startsWith('scene_') &&
             key != 'scene_6' && !key.startsWith('scene_school_')) return false;
         if (key.startsWith('ground_') && key != 'ground_6') return false;
