@@ -28,3 +28,6 @@ El usuario ha **instalado y probado la APK en su móvil**. Su valoración inicia
 ## LISTA ACUMULATIVA RC SIGUIENTE
 **ABIERTA — SIN INCIDENCIAS DETALLADAS AÚN.**
 Esperar la primera observación concreta del usuario, agregar sin implementar/compilar automáticamente.
+
+### 30/10/2026 — Vídeo 001: P0 tamaño/ocupación de pantalla (portada Y juego)
+Usuario envía vídeo `Screenrecorder-2026-10-30-15-53-34-17.mp4` (33.32 s, 1080×2400). Registro de dos incidencias críticas RC4-001A (portada) y RC4-001B (juego/mapa). Se documentó franja activa 20:9 en centro del vídeo vertical (filas ~957–1442), exterior negro y márgenes internos; código fuente comprueba BoxFit.contain y viewport fijo 800×450, y manifest Android ausente del repositorio al usar flutter create. **Causa exacta del encajonado nativo aún por validar en móvil.** Requiere corrección de orientación nativa + viewport adaptable sin distorsión ni recorte de HUD. Estado: EN LISTA DE PRÓXIMA VERSIÓN, NO RESUELTO, sin compilar. Detalles y aceptación en `docs/continuidad/INCIDENCIAS_VIDEOS_RC4.md`.
