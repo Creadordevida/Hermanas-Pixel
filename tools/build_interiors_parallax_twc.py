@@ -362,6 +362,9 @@ def main():
         for zone in range(3):
             count=SCHOOL_PANEL_VARIANTS if theme=='school' else DANCE_PANEL_VARIANTS
             for variant in range(count):
+                # Never overwrite accepted artwork with RC4's old wall crops.
+                if theme=='school' and (ASSETS/'school_hifi/school_five_scenes_master.png').is_file():
+                    continue
                 im=make_wall(theme,zone,variant)
                 im.save(o/f'z{zone}_panel_{variant}.png',optimize=True)
             zone_entries.append({'id':NAMES[theme][zone],'start':ZONES[zone][0],
@@ -381,9 +384,25 @@ def main():
     from build_school_hifi_twc import main as rebuild_school_hifi
     school_master=ASSETS/'school_hifi/school_five_scenes_master.png'
     if school_master.exists():
-        rebuild_school_hifi()
         from clean_school_floor_hifi import main as generate_school_floor_hifi
         generate_school_floor_hifi()
+        school_manifest=ROOT/'qa/school_hifi_lab/SCHOOL_HIFI_MANIFEST.json'
+        expected=[(OUT/'school'/f'z{z}_panel_{n}.png')
+                  for z in range(3) for n in range(9)]
+        if school_manifest.is_file() and all(p.is_file() for p in expected):
+            # Exact approved binary files have precedence over recompressing.
+            saved=json.loads(school_manifest.read_text(encoding='utf-8'))
+            if saved.get('master_sha256')!=hashlib.sha256(school_master.read_bytes()).hexdigest():
+                raise ValueError('School master changed since artwork approval')
+            for item in saved.get('panels',[]):
+                path=OUT/'school'/f"z{item['zone']}_panel_{item['variant']}.png"
+                if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=item['sha256']:
+                    raise ValueError('School PNG differs from approved manifest: '+str(path))
+            if len(saved.get('panels',[]))!=27:
+                raise ValueError('School must retain 27 approved panel hashes')
+            print('27 existing school PNGs preserved; hashes verified, NO regeneration')
+        else:
+            rebuild_school_hifi()
         manifest['stages']['school']['visual_source']='school_hifi/5_unique_rooms'
     else:
         raise FileNotFoundError(
