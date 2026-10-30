@@ -25,6 +25,10 @@ jobs:
       - name: Generar capas revisadas de fútbol, danza y colegio
         run: |
           python3 tools/build_interiors_parallax_twc.py
+          # OBLIGATORIO: nueve PNG nuevos antes de compilar / capturar.
+          # Una presencia de PNG antiguos no basta; test contra fuentes genuinas.
+          python3 tools/build_dance_panels_twc.py
+          python3 -m unittest qa.test_dance_proportions
           python3 qa/audit_school_visual_quality.py
           python3 tools/build_football_parallax_twc.py
           python3 tools/generate_new_enemy_sprites.py
@@ -115,6 +119,10 @@ jobs:
       - name: Regenerar recursos de revisión para capturas Flutter
         run: |
           python3 tools/build_interiors_parallax_twc.py
+          # OBLIGATORIO: nueve PNG nuevos antes de compilar / capturar.
+          # Una presencia de PNG antiguos no basta; test contra fuentes genuinas.
+          python3 tools/build_dance_panels_twc.py
+          python3 -m unittest qa.test_dance_proportions
           python3 tools/build_football_parallax_twc.py
           python3 tools/generate_new_enemy_sprites.py
           python3 tools/generate_navarre_king.py
@@ -182,6 +190,9 @@ jobs:
             qa/RESULTADO_PUERTAS.txt
             qa/interiors_twc_lab/CONTACTO_COLEGIO_*_9_MODULOS_PYTHON.jpg
             qa/interiors_twc_lab/VENTANA_CIELO_*_PYTHON.png
+            # Evidencia reproducible de los nueve PNG realmente usados en la candidata.
+            qa/interiors_twc_lab/DANCE_PANEL_GENERATION.json
+            assets/images/interiors_parallax/dance/z*_panel_*.png
             qa/art_review/seis_enemigos_vs_miren_sara_RECURSOS.png
             qa/art_review/*_original_vs_polished.png
             qa/CANDIDATE_ASSET_INVENTORY.json
