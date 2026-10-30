@@ -132,6 +132,13 @@ class InteriorTWCQA(unittest.TestCase):
                        hashlib.sha256(after.tobytes()).digest(),theme)
 
  def test_13_school_has_nine_genuinely_distinct_original_art_modules(self):
+  # The reference-art school deliberately replaces old pixel-identical
+  # 1320x480 source comparisons. Test actual master SHA, room identities,
+  # panel bytes, transparent panes and correct full-screen stage assets.
+  if (R/'assets/images/school_hifi/school_five_scenes_master.png').exists():
+   from qa.check_school_hifi_twc import verify
+   self.assertEqual(len(verify(strict=True)),27)
+   return
   # Offsets must match the real source crops: 145..325 for classes and
   # 65..440 for halls. The previous test used obsolete 125..330/0..440
   # and could reject 26/27 valid assets despite unchanged art.
