@@ -76,13 +76,17 @@ void main(){
     final first=locations.entries.first;
     await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
       key:key,child:HermanasGame(qaStage:6,qaWorldX:first.value))));
+    print('SCHOOL_QA: mounted game, loading actual school images');
     await waitReady(tester);
+    print('SCHOOL_QA: school assets ready');
     await tester.pump(const Duration(milliseconds:200));
+    print('SCHOOL_QA: capture '+first.key);
     await picture(tester,key,first.key);
     for(final item in locations.entries.skip(1)){
       await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
         key:key,child:HermanasGame(qaStage:6,qaWorldX:item.value))));
       await tester.pump(const Duration(milliseconds:150));
+      print('SCHOOL_QA: capture '+item.key);
       await picture(tester,key,item.key);
     }
    }finally{
