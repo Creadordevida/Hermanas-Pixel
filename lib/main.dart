@@ -19,6 +19,7 @@ import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
 import 'new_enemy_behaviors.dart';
+import 'new_enemy_hitboxes.dart';
 import 'classic_enemy_pose.dart';
 import 'adaptive_title_screen.dart';
 
@@ -100,6 +101,9 @@ class Enemy {
   // Separate charge warning from lifetime animation: avoid instant bull rush
   // when the hero first enters detection range.
   double bullWarnedAt = -1;
+  // San Fermín runner: independent, visible stumble warning; never instant damage.
+  double runnerWarningAt = -1;
+  double runnerImpactUntil = -1;
   // Visible melee warning for bully and rival soccer player.
   double meleeWarning = 0;
   NewEnemyMotion? newMotion;
@@ -112,7 +116,9 @@ class Enemy {
   bool get ranged => ['referee','breakdancer','teacher'].contains(kind);
   bool get dog => kind.startsWith('dog_');
   bool get aerial => kind == 'pigeon';
-  int get hp => kind == 'dog_doberman' ? 2 : (ranged || kind == 'navarre_king') ? 3 : 1;
+  int get hp => kind == 'dog_doberman' || kind == 'cleaning_robot' ||
+    kind == 'rival_supporter' || kind == 'estafeta_bull' ? 2 :
+    (ranged || kind == 'navarre_king') ? 3 : 1;
   double get speed => switch(kind) {
     'dog_dalmatian' => 56, 'dog_doberman' => 112,
     'rat' => 118, 'cat' => 92, 'pigeon' => 84,
@@ -798,9 +804,25 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         if(!shot.active) continue;
         for(final foe in enemies) {
           if(foe.defeated || foe.stunned>0)continue;
-          final ey=groundY-(foe.aerial?foe.flightAltitude+24:foe.kind=='rat'?24:64);
-          if((shot.x-foe.x).abs()<37 && (shot.y-ey).abs()<(foe.aerial?42:51)) {
+          // New art uses a different physical silhouette for each enemy:
+          // the bull is 168 px wide but used the 37px hit area of a pigeon.
+          final profile=newEnemyHitProfiles[foe.kind];
+          final intersects = profile != null
+            ? profile.projectileHits(foeX:foe.x, groundY:groundY,
+                shotX:shot.x, shotY:shot.y)
+            : (() {
+                final ey=groundY-(foe.aerial
+                    ? foe.flightAltitude+24 : foe.kind=='rat'?24:64);
+                return (shot.x-foe.x).abs()<37 &&
+                    (shot.y-ey).abs()<(foe.aerial?42:51);
+              })();
+          if(intersects) {
             foe.hits++;foe.stunned=.66;foe.t=0;shot.active=false;
+            // Cancel Estafeta warning and attack without a delayed hit.
+            if(foe.kind=='sanfermin_runner') {
+              foe.runnerWarningAt=-1;foe.runnerImpactUntil=-1;
+              foe.attackCooldown=2.2;
+            }
             // Interrupt the active attack when a character is struck.
             if(foe.kind=='estafeta_bull') {
               foe.launched=false;foe.bullWarnedAt=-1;
@@ -863,14 +885,27 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
             foe.bullWarnedAt=-1;
           }
         } else {
-          // Corredor de encierro: se desplaza alejándose y puede tropezar.
+          // Corredor: se aparta, avisa de un tropiezo y SOLO tras
+          // 0.34s puede impactar una vez si sigue cerca y a ras de suelo.
           foe.facing=dx>=0?-1:1;
-          if(near<240) {
-            foe.x+=foe.facing*110*dt;
-            if(near<32 && foe.attackCooldown<=0
-                && hero.y>groundY-43) {
-              _receiveDamage(-foe.facing);
+          if(foe.runnerWarningAt>=0) {
+            if(near>80 || hero.y<=groundY-55) {
+              // Esquiva y salto cancelan el tropiezo, no golpe fantasma.
+              foe.runnerWarningAt=-1;
+              foe.attackCooldown=math.max(foe.attackCooldown,.65);
+            } else if(time-foe.runnerWarningAt>=.34) {
+              if(near<42 && hero.y>groundY-43) {
+                _receiveDamage(-foe.facing);
+              }
+              foe.runnerImpactUntil=time+.24;
+              foe.runnerWarningAt=-1;
               foe.attackCooldown=2.2;
+            }
+          } else if(near<240) {
+            if(near<45 && foe.attackCooldown<=0 && hero.y>groundY-43) {
+              foe.runnerWarningAt=time;
+            } else {
+              foe.x+=foe.facing*110*dt;
             }
           } else if((foe.x-foe.home).abs()>145) {
             foe.facing=foe.x>foe.home?-1:1;
@@ -1365,8 +1400,9 @@ class StagePainter extends CustomPainter {
               ? (foe.t<.28?2:3)
               : foe.bullWarnedAt>=0 ? 1
               : 0)
-            : (near<110 && foe.attackCooldown>0 ? 3
-              : near<240 ? (foe.t%1.5<.4?1:2) : 0);
+            : (foe.runnerWarningAt>=0 ? 1
+              : foe.runnerImpactUntil>time ? 3
+              : near<240 ? 2 : 0);
           final col=(foe.t*8).floor()%4;
           final cw=bull?270.0:156.0, ch=bull?192.0:210.0;
           final w=bull?168.0:94.0, h=bull?116.0:128.0;
