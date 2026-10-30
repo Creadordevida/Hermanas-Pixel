@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 /// All coordinates refer to the approved 800x450 central composition.
@@ -57,7 +55,7 @@ class TitleGeometry {
   }
 
   static double recommendedPanoramaWidth(double sourceHeight) =>
-      math.ceil(sourceHeight * titleWideAspect).toDouble();
+      (sourceHeight * titleWideAspect).ceilToDouble();
 }
 
 /// Title rendering is isolated from the 800x450 GAMEPLAY FittedBox.
@@ -117,7 +115,7 @@ class AdaptiveTitleScreen extends StatelessWidget {
               : 'assets/images/title_cars_fixed_091.png',
           fit: useApprovedWideArt ? BoxFit.cover : BoxFit.contain,
           alignment:Alignment.center,
-          errorBuilder:(_,_,_) => Image.asset(
+          errorBuilder:(_, error, trace) => Image.asset(
             'assets/images/title_cars_fixed_091.png',
             fit:BoxFit.contain,alignment:Alignment.center,
           ),
@@ -143,7 +141,7 @@ class AdaptiveTitleScreen extends StatelessWidget {
         Positioned.fromRect(rect:g.logo,child:IgnorePointer(
           child:Column(mainAxisAlignment:MainAxisAlignment.end,children:[
             Expanded(child:Image.asset(cleanLogoAsset,fit:BoxFit.contain,
-              errorBuilder:(_,_,_) => const SizedBox.shrink())),
+              errorBuilder:(_, error, trace) => const SizedBox.shrink())),
             Text('THE WOLF COMPANY',
               textAlign:TextAlign.center,
               style:TextStyle(color:const Color(0xffffe2a1),
