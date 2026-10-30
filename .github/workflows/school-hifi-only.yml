@@ -1,0 +1,130 @@
+name: Colegio arte aprobado - integrar PNG y verificar Flutter SIN APK
+# This workflow NEVER builds Android. Trigger only by the approved ZIP upload.
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - qa/school_inbox/COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip
+      - .github/trigger-school-hifi-qa.txt
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: school-hifi-asset-only
+  cancel-in-progress: false
+
+jobs:
+  integrate-school-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout rama exacta PR5
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Flutter estable de referencia
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: PIL y numpy para comprobar arte real
+        run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Verificar paquete original e importar 30 archivos binarios sin rediseñar
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP=qa/school_inbox/COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip
+          test -s "$ZIP"
+          python3 -m py_compile tools/import_school_exact_twc.py qa/check_school_hifi_twc.py
+          python3 tools/import_school_exact_twc.py . "$ZIP"
+      - name: Regenerar SOLO recursos auxiliares ya existentes para render Flutter
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/build_interiors_parallax_twc.py
+          python3 tools/build_dance_panels_twc.py
+          python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
+          python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+      - name: Verificar hashes 27 PNG aprobados, master y suelo tras todos los generadores
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 qa/check_school_hifi_twc.py --strict
+          python3 - <<'PY'
+          import zipfile,hashlib
+          from pathlib import Path
+          z=zipfile.ZipFile('qa/school_inbox/COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip')
+          files=[
+            'assets/images/school_hifi/school_five_scenes_master.png',
+            'assets/images/ground/stage_6_hifi.png',
+            'qa/school_hifi_lab/SCHOOL_HIFI_MANIFEST.json',
+            *[f'assets/images/interiors_parallax/school/z{i}_panel_{j}.png'
+              for i in range(3) for j in range(9)]
+          ]
+          for f in files:
+              current=Path(f)
+              if not current.exists() or hashlib.sha256(current.read_bytes()).digest()!=hashlib.sha256(z.read(f)).digest():
+                  raise AssertionError('Approved asset changed or absent after regeneration: '+f)
+          print('30/30 APPROVED BINARY FILES preserved EXACTLY')
+          PY
+      - name: Flutter package resolution (NO Android build)
+        run: flutter pub get
+      - name: Comprobar codigo Dart con arte definitivo (NO Android)
+        run: flutter analyze --no-pub lib
+      - name: Capturas REAL Flutter del colegio — cinco tipos y dos transiciones, 20 a 9
+        timeout-minutes: 11
+        run: flutter test --reporter expanded --no-pub test/school_hifi_real_render_test.dart
+      - name: Comprobar siete capturas verdaderas y ausencia de escenas idénticas
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image,ImageStat
+          import hashlib
+          root=Path('qa/school_hifi_flutter')
+          names=['01_pasillo','02_taquillas','03_biblioteca',
+                 '04_aula_pupitres','05_informatica',
+                 '06_paso_a_aula','07_paso_a_informatica']
+          hashes=[]
+          for name in names:
+            f=root/(name+'.png')
+            if not f.is_file() or f.stat().st_size<10000:
+                raise AssertionError('Missing REAL Flutter screenshot '+str(f))
+            with Image.open(f) as img:
+                if img.size!=(1000,450):raise AssertionError('Wrong viewport '+name)
+                rgb=img.convert('RGB')
+                if sum(ImageStat.Stat(rgb).stddev)<18:
+                    raise AssertionError('Blank or nearly empty screenshot '+name)
+            hashes.append(hashlib.sha256(f.read_bytes()).hexdigest())
+          if len(set(hashes))!=7:raise AssertionError('Repeated Flutter room screenshots')
+          print('7 distinct ACTUAL Flutter StagePainter screenshots verified')
+          PY
+      - name: Commit SOLO los 30 PNG/manifest y capturas probadas, nunca APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "work/revision-visual-20261028-continuidad"
+          git config user.name "twc-school-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/school_hifi/school_five_scenes_master.png
+          git add assets/images/ground/stage_6_hifi.png
+          git add qa/school_hifi_lab/SCHOOL_HIFI_MANIFEST.json
+          git add assets/images/interiors_parallax/school/z*_panel_*.png
+          git add qa/school_hifi_flutter/*.png
+          git rm -f qa/school_inbox/COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip
+          git diff --cached --check
+          git commit -m "art(school): integrate exact approved 27 PNG and 7 verified Flutter screenshots"
+          git push origin HEAD:"$GITHUB_REF_NAME"
+      - name: Explicar estado final
+        run: |
+          echo "Aprobación visual final depende de inspeccionar las 7 capturas y confirmar en dispositivo en una futura APK autorizada."
+          echo "Este trabajo NO compila Android, NO fusiona PR y NO publica ninguna app."
