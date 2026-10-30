@@ -25,3 +25,21 @@ Consultar el run 41071461780, jobs, registros y artefacto `Miren-y-Sara-0.9.1-RC
 4. APK probada por usuario: pendiente.
 5. Arte aprobado: pendiente.
 6. PR fusionada: no.
+
+## Resultado real de la ejecución (verificado en GitHub, 30/10/2026)
+
+**APK COMPILADA Y PUBLICADA COMO PRERELEASE PRIVADA.** No es publicación en Google Play.
+
+- Run 1: 41071461780, FAILED en `flutter analyze` con cinco errores en `lib/adaptive_title_screen.dart`: `math.ceil` inválido y parámetros `_` duplicados en dos errorBuilder. Los seis atlas y las comprobaciones Python ya habían pasado. El almacenamiento de artefactos Actions estaba agotado y el paso de upload-artifact falló; se cambió la entrega a GitHub Releases privado.
+- Corrección de Dart: commit `f4becfb50f70a7dd46172560d9626e757d484fa5`.
+- Workflow actualizado a entregas por `gh release create --prerelease` sin gastar almacenamiento Actions: commit `4c7405ea35b2d8fc21ac99fff58e3b1734b369b6`.
+- **Run 2: 41071927964, COMPLETED / SUCCESS**, fuente exacta `c08ba00283775b99593ff426e8d4bd2130d35307`. Regenerados seis atlas, nueve módulos danza, seis fútbol, controles Python y tests Dart superados; compilación `flutter build apk --release --dart-define=TWC_GAMEPLAY_PLAYTEST=true` SUPERADA.
+- Release privado **`playtest-0.9.1-rc4`**, prerelease=true, id 429133632. URL https://github.com/Creadordevida/Hermanas-Pixel/releases/tag/playtest-0.9.1-rc4
+- APK VERIFICADA en assets de GitHub Release: `app-release.apk`, asset id 692384866, **142.317.311 bytes**, URL de descarga https://github.com/Creadordevida/Hermanas-Pixel/releases/download/playtest-0.9.1-rc4/app-release.apk
+- Assets auxiliares publicados: `PLAYTEST_RC4_APK.sha256` (id 692384868) y `PLAYTEST_RC4_ASSETS.json` (id 692384867).
+- El modo de juego de los seis enemigos está activado SOLO en esta APK. Los flags `enemyArtValidated` siguen siendo FALSE y los sprites procedimentales siguen SIN aprobación artística.
+- Los 9 PNG danza, 6 fútbol y 6 atlas enemigos fueron regenerados dentro del runner y empaquetados en la APK, **pero no están persistidos como blobs individuales en GitHub**. Esta diferencia se debe conservar como pendiente de integración de recursos definitivos.
+- **No se ha probado aún esta APK en un móvil real**. Usuario debe descargar, instalar y comunicar problemas concretos para revisión y corrección.
+- **NO se ha fusionado** PR #5, no hay publicación de Google Play.
+
+Lección reusable: para repositorios con cuota de artifacts Actions llena, una **GitHub Release privada PRELIMINAR** permite entregar una APK real sin subirla al historial git ni consumir storage de Actions artifacts. Requiere permiso contents:write en workflow. No dar una URL de descarga hasta comprobar la presencia del release asset y tamaño real en la API de GitHub.
