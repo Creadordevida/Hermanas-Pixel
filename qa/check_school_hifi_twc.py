@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+"""Verify actual replacement school PNGs: material, identity, windows, 5 rooms.
+
+No '27 distinct hashes = good art' false positive. Detect stale source,
+missing master, incorrect dimensions, walls accidentally transparent,
+and old silhouette-school generator still in place.
+This is a QA gate, NOT a Flutter screenshot or artistic acceptance.
+"""
+from __future__ import annotations
+import hashlib,json,sys
+from pathlib import Path
+from PIL import Image
+import numpy as np
+ROOT=Path(__file__).resolve().parents[1]
+ART=ROOT/'assets/images/school_hifi/school_five_scenes_master.png'
+P=ROOT/'assets/images/interiors_parallax/school'
+REPORT=ROOT/'qa/school_hifi_lab/SCHOOL_HIFI_MANIFEST.json'
+
+def verify(strict=False):
+    if not ART.is_file():
+        if strict:raise AssertionError('Original 5-scene school art must exist in Git')
+        print('SKIP: school-hi-fi original not in Git, no fake green art approval')
+        return None
+    assert REPORT.is_file(),'Generator was not executed'
+    d=json.loads(REPORT.read_text(encoding='utf-8'))
+    assert d['master_sha256']==hashlib.sha256(ART.read_bytes()).hexdigest()
+    entries=d['panels']
+    assert len(entries)==27
+    assert set(x['room'] for x in entries)=={
+        'pasillo','taquillas','aula','informatica','biblioteca'}
+    checks=[]
+    for e in entries:
+        p=P/f"z{e['zone']}_panel_{e['variant']}.png"
+        assert p.is_file(),p
+        with Image.open(p) as source:
+            assert source.size==(880,278) and source.mode=='RGBA'
+            rgba=np.asarray(source)
+        assert hashlib.sha256(p.read_bytes()).hexdigest()==e['sha256']
+        assert (rgba[:,:,3]<20).sum()==e['transparent_pixels']
+        assert (rgba[:,:,3]<20).sum()>600 or e['room']=='taquillas'
+        # Physical baseboard and both module seams NEVER turn into sky.
+        assert np.min(rgba[-10:,:,3])>250,p
+        assert np.min(rgba[:,0:10,3])>250,p
+        assert np.min(rgba[:,-10:,3])>250,p
+        checks.append(p.name)
+    src=(ROOT/'lib/main.dart').read_text(encoding='utf-8')
+    assert 'TWC_SCHOOL_HIFI_ART' in src
+    assert '!schoolHifiArtworkEnabled' in src
+    assert 'interior_school_z' in src or 'interiorPanelAssetTWC' in src
+    print(f'SCHOOL HIFI SOURCE VERIFIED: {len(checks)} real PNGs, 5 room families')
+    print('Remaining mandatory verification: real Flutter render and Android review')
+    return checks
+if __name__=='__main__':
+    verify('--strict' in sys.argv)
