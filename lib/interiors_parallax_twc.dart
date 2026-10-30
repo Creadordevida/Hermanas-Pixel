@@ -30,8 +30,8 @@ const List<List<int>> interiorSchoolSourcePlanTWC = [
  // Position names: 0 corridor / 1 classroom / 2 computing lab.
 const List<List<int>> interiorSchoolSourcePlanHifiTWC = [
   [0,0,0,0,0,0,0,0,0],
-  [1,1,0,1,0,1,0,1,1],
-  [2,2,0,2,0,2,0,2,2],
+  [1,0,1,0,1,0,1,0,0],
+  [2,0,2,0,2,0,2,0,0],
 ];
 
 String interiorAssetTWC(String theme, String name) =>
@@ -64,9 +64,10 @@ int interiorModuleVariantTWC(int zone,int index,{String theme='dance'}) {
     throw RangeError('Invalid interior variant');
   }
   if(theme=='school') {
-    // Nine 1:1 source-art crops, permuted to avoid scrolling the same
-    // left-to-right photograph over and over. 5 is coprime to 9:
-    // all nine compositions appear before any one is reused.
+    // The five authored HIFI interior types must follow their genuine
+    // physical corridor/classroom/library/IT sequence in the world.
+    if(schoolHifiArtworkEnabled) return index % interiorSchoolVariantsTWC;
+    // Preserve the old permutation for archived RC5 assets only.
     return (index*5 + zone*2) % interiorSchoolVariantsTWC;
   }
   return index % interiorVariantsPerRoomTWC;
@@ -86,7 +87,10 @@ int interiorSchoolRoomTypeTWC(int zone,int index) {
 /// between module index-1 and module index. This is NOT an arbitrary
 /// decorative arch repeated every four panels.
 bool interiorSchoolDoorAtModuleTWC(int zone,int index) =>
-    index>0 && interiorSchoolRoomTypeTWC(zone,index-1)
+    // New authored scenes already have their doors and jambs. Overlaying
+    // the old 120px passage on every classroom change would look pasted-on.
+    !schoolHifiArtworkEnabled && index>0 &&
+    interiorSchoolRoomTypeTWC(zone,index-1)
         !=interiorSchoolRoomTypeTWC(zone,index);
 
 /// Diverse non-colliding school furnishings in WORLD coordinates.
