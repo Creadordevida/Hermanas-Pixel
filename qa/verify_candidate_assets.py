@@ -18,6 +18,7 @@ files=[
  *[f'outfits/{r}_{pose}.png' for r in ['futbolista','bailarina'] for pose in ['idle_0','walk_0','walk_1','jump_0','attack_0']],
  *[f'dog/{prefix}{pose}.png' for prefix in ['', 'dalmatian/','doberman/'] for pose in ['idle','walk','alert','run','bite','hit','stunned','defeated']],
  *[f'enemies/{r}_{i}.png' for r in ['rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'] for i in range(5)],
+ 'enemies/rival_5.png','enemies/referee_5.png','enemies/breakdancer_5.png',
 ]
 errors=[];output={}
 for rel in files:

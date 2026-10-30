@@ -33,19 +33,33 @@ class VisualRevisionContract(unittest.TestCase):
         self.assertIn('if abs(TILE_W/sw-H/sh)>1e-10:',INTERIORS)
         self.assertNotIn("start=(0,385,770)[variant]",INTERIORS)
 
-    def test_school_bully_has_real_idle_walk_and_attack_states(self):
-        self.assertIn("final walkingNow=(foe.x-foe.lastRenderedX).abs() > .12;",MAIN)
-        self.assertIn("else if (foe.kind=='bully')",MAIN)
-        self.assertIn("walkingNow ? (1+(foe.t*7).floor()%2) : 0",MAIN)
+    def test_classic_enemy_states_use_active_pose_module(self):
+        # Animations moved to classic_enemy_pose.dart: old checks of inline
+        # enemy animation branches in main.dart were guaranteed false.
+        classic=(R/'lib/classic_enemy_pose.dart').read_text(encoding='utf-8')
+        self.assertIn("import 'classic_enemy_pose.dart';",MAIN)
+        self.assertIn('frame=classicEnemyFrame(',MAIN)
+        self.assertIn('final walkingNow=(foe.x-foe.lastRenderedX).abs() > .12;',MAIN)
+        self.assertIn("if (kind == 'bully')",classic)
+        self.assertIn("return moving ? 1 + ((elapsed * 7).floor() % 2) : 0;",classic)
+        self.assertIn("if (kind == 'breakdancer')",classic)
+        for mark in ('elapsed < .10','elapsed < .22','elapsed < .34',
+                     'elapsed < .54','elapsed < .66'):
+            self.assertIn(mark,classic)
+        self.assertIn("if (kind == 'referee')",classic)
         self.assertNotIn("foe.kind=='bully' && !foe.defeated ? .028*math.sin",MAIN)
 
-    def test_breakdancer_has_intermediate_floor_transition(self):
-        self.assertIn("foe.kind=='breakdancer'",MAIN)
-        self.assertIn("foe.t < .24 ? 1",MAIN)
-        self.assertIn("foe.t < .39 ? 2",MAIN)
-        self.assertIn("foe.t < .53 ? 3",MAIN)
-        self.assertIn("foe.t < .65 ? 2 : 1",MAIN)
-        self.assertNotIn("foe.kind=='breakdancer' ? 3",MAIN)
+    def test_rival_sixth_prone_pose_integrated_across_pipeline(self):
+        classic=(R/'lib/classic_enemy_pose.dart').read_text(encoding='utf-8')
+        exporter=(R/'tools/export_sprite_bounds.py').read_text(encoding='utf-8')
+        flutter_test=(R/'test/qa_four_classic_enemy_render_test.dart').read_text(encoding='utf-8')
+        unit=(R/'test/classic_enemy_pose_test.dart').read_text(encoding='utf-8')
+        self.assertIn("if (defeated) return kind=='rival' ? 5 : 4;",classic)
+        self.assertIn("v=='referee' || v=='breakdancer' || v=='rival'",MAIN)
+        self.assertIn("('referee','breakdancer','rival')",exporter)
+        self.assertIn("kind=='referee' || kind=='breakdancer' || kind=='rival'",flutter_test)
+        self.assertIn("kind=='rival'?5:4",unit)
+        self.assertTrue((R/'assets/images/enemies/rival_5.png').is_file())
 
     def test_navarre_king_replaces_old_statue_and_coins(self):
         self.assertNotIn("'statue'", MAIN)
