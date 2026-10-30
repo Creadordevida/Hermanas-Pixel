@@ -84,3 +84,6 @@ El usuario indica: «no hagas mas apks hasta que te lo indique porfavor, tenemos
 
 ### 2026-10-30 — Reconstrucción real de colegio sin APK: arte LOCAL + código en Git (NO cerrado)
 Generados 27 PNG originales con cinco tipos de interior, 880×278, ventanas transparentes y paisaje far/mid conservado. Entregable local `COLEGIO_27_PANELES_RECONSTRUIDOS_LISTOS_PARA_INTEGRAR.zip`, pruebas PIL y manifest. Código GitHub: `tools/build_school_hifi_twc.py`, hook de generador, `lib/interiors_parallax_twc.dart`, `lib/main.dart`, y QA strict. **BLOQUEO CRÍTICO: el origen binario y los PNG nuevos NO están subidos a GitHub y falta prueba Flutter real. NO marcar solucionado.** Informe `docs/continuidad/COLEGIO_RECONSTRUCCION_2026-10-30.md`. No se ejecutó APK ni Actions.
+
+### 30/10/2026 — Colegio: referencia exacta y 27 fondos reconstruidos (aún NO integrados binariamente)
+Referencia cargada por usuario 1448×1086 SHA256 4370a461…bc9b. Código nuevo de 5 salas, generación 27 RGBA, ventanas con alfa en paralaje, suelo sin planta poligonal, QA estricto fail-closed y nueva prueba Flutter real en GitHub. Paquete local: COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip, SHA256 c9579acf…dee78. **Master y PNG aún AUSENTES de GitHub, por tanto NO RESUELTO ni validado en Flutter**. No compilar APK. Véase `docs/continuidad/COLEGIO_RECONSTRUCCION_2026-10-30.md`.
