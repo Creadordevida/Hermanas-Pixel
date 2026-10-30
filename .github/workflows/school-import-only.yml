@@ -1,0 +1,66 @@
+name: Colegio - importar SOLO arte exacto a Git (SIN APK)
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - .github/trigger-school-import-only.txt
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: school-exact-binaries-only
+  cancel-in-progress: false
+jobs:
+  commit-exact-school:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout de la rama de trabajo
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Instalar verificador de PNG (NO Flutter ni Android)
+        run: python3 -m pip install --user pillow numpy
+      - name: Importar el ZIP aprobado byte a byte y verificar las cinco estancias
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP=qa/school_inbox/COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip
+          test -s "$ZIP"
+          python3 tools/import_school_exact_twc.py . "$ZIP"
+          python3 qa/check_school_hifi_twc.py --strict
+      - name: Comparar cada archivo con los bytes exactos del ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          p=Path('qa/school_inbox/COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip')
+          assert hashlib.sha256(p.read_bytes()).hexdigest()=='c9579acf7ba154cfaaa31ffd237bacb50d7a723000bbea278f0123008e2dee78'
+          names=['assets/images/school_hifi/school_five_scenes_master.png',
+                 'assets/images/ground/stage_6_hifi.png',
+                 'qa/school_hifi_lab/SCHOOL_HIFI_MANIFEST.json']+[
+                 f'assets/images/interiors_parallax/school/z{i}_panel_{j}.png'
+                 for i in range(3) for j in range(9)]
+          with zipfile.ZipFile(p) as z:
+            for n in names:
+              assert Path(n).is_file() and Path(n).read_bytes()==z.read(n),n
+          print('30/30 SHA256-equivalent exact approved school resources')
+          PY
+      - name: Guardar 27 PNG, master, suelo y manifiesto en PR5 sin fusionar
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "work/revision-visual-20261028-continuidad"
+          git config user.name "twc-school-assets[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/school_hifi/school_five_scenes_master.png
+          git add assets/images/ground/stage_6_hifi.png
+          git add qa/school_hifi_lab/SCHOOL_HIFI_MANIFEST.json
+          git add assets/images/interiors_parallax/school/z*_panel_*.png
+          git diff --cached --check
+          git commit -m "art(school): store exact user-approved 27 panels, master and clean floor"
+          git push origin HEAD:"$GITHUB_REF_NAME"
+          echo "Only approved school files committed. NO APK, no merge."
