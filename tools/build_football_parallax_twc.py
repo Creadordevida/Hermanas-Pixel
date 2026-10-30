@@ -120,30 +120,26 @@ mid.save(DEST/'arbolado_deportivo_ciclo.png',optimize=True)
 # tiles `ground/stage_4.png` originales y nunca se duplica.
 # Recortamos las bases de la verja, el césped y setos, NO estadios enteros.
 strips=[]
-for name,x0,x1 in [('football_stands',160,1010),('football_stands',570,1420),
-                   ('football_stands',390,1240)]:
- sl=art[name].crop((x0,594,x1,724))
- # igualar escala con altura visual 142px; preservar detalle original.
- sl=sl.resize((round(sl.width*142/130),142),Image.Resampling.LANCZOS)
+# Se detectó que los seis módulos del cercado procedían SOLO de la
+# ilustración football_stands (tres franjas solapadas): variedad aparente
+# de hashes pero mismos postes/setos en todos los kilómetros.
+# Usar los tres MAESTROS deportivos aprobados, a la misma escala de
+# verja. Cada fuente es de 1672x941; el recorte mide 870x130.
+near_specs=[('football_arrival',100),('football_stands',160),
+            ('football_drills',440),('football_stands',570)]
+for name,x0 in near_specs:
+ sl=art[name].crop((x0,594,x0+870,724))
+ # X=950/870, Y=142/130: desviación de escala <0.04%.
+ # No hacer scroll ni recorte alfa de panorámicas completas.
+ sl=sl.resize((950,142),Image.Resampling.LANCZOS)
  strips.append(sl)
-# Plano cercano: seis paneles nativos de 1.100px, NO 72 imágenes cargadas.
-# El efecto es idéntico al mundo físico: x del módulo - cameraX (velocidad 1).
-# Un periodo de 6.600px: aproximadamente una quinta parte del capítulo.
-# Esto reduce drásticamente la carga de sprites en Flutter y la RAM en móvil.
-# Ocho franjas originales de entornos deportivos variados, no el decorado
-# repetido cada pantalla. Los únicos fundidos ocurren AL GENERAR el atlas,
-# en una banda deportiva superficial, nunca en las ilustraciones completas.
-variants=[]
-order=[0,1,2,1,2,0,2,0]
-for j,idx in enumerate(order):
-    img=strips[idx]
-    # Rotación cíclica del contenido para alterar la distribución de setos,
-    # vallas y focos, con el mismo estilo de arte aprobado.
-    xx=0
-    rolled=Image.new('RGB',(img.width,img.height))
-    rolled.paste(img.crop((xx,0,img.width,img.height)),(0,0))
-    rolled.paste(img.crop((0,0,xx,img.height)),(img.width-xx,0))
-    variants.append(rolled.resize((950,142),Image.Resampling.LANCZOS))
+# Plano cercano: seis paneles físicos de 1100px; anillo de 6600px.
+# Dibujar puerta real sólo en el módulo de llegada y mezclar
+# setos, vallas, gradas y zona de prácticas sin inventar geometrías.
+# NO se aplica ningún girado fantasma (xx=0) ni espejo del original.
+near_source_order=[0,1,2,3,2,1,3,2]
+near_source_names=[near_specs[i][0] for i in near_source_order]
+variants=[strips[idx].copy() for idx in near_source_order]
 ring=loop_panels(variants,overlap=100,wrap=300)
 assert ring.size==(6600,142),ring.size
 band=np.array(ring.convert('RGBA'))
@@ -174,7 +170,9 @@ manifest={
  'width_world':W,'viewport':[800,450], 'backdrop_height':H,
  'far':{'asset':'chapter45/football_parallax/montanas_ciudad_deportiva_ciclo.png','width':far.width,'speed':FAR_SPEED,'repeat_world':far.width/FAR_SPEED},
  'mid':{'asset':'chapter45/football_parallax/arbolado_deportivo_ciclo.png','width':mid.width,'speed':MID_SPEED,'repeat_world':mid.width/MID_SPEED},
- 'near':{'dir':'chapter45/football_parallax/near_world_tiles','tile_width':1100,'count':6,'cycle_width':6600,'speed':1},
+ 'near':{'dir':'chapter45/football_parallax/near_world_tiles','tile_width':1100,'count':6,'cycle_width':6600,'speed':1,
+         'source_sequence':near_source_names,
+         'source_crop':[870,130], 'source_resize':[950,142]},
  'source_sha256':masters,'generated_seed':SEED,
  'protected':['football_arrival.png','football_drills.png','football_stands.png'],
  'changed_gameplay':False,'changed_other_chapters':False,

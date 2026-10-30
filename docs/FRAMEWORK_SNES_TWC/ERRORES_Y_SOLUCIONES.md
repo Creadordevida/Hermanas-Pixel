@@ -22,3 +22,5 @@
 | Previsualizador Python no arrancaba | Bucle final de capturas desplazado un nivel de indentación | Comprobar sintaxis y ejecutar el script, no asumir que existe = funciona |
 
 Estos son defectos observados en **Miren y Sara**, no una afirmación de que hayan sido resueltos de forma universal. Reutilizar la solución exige comprobarla en cada nuevo proyecto.
+| Cercado deportivo repetitivo | Los tres recortes próximos venían únicamente de football_stands y la supuesta rotación era xx=0 | Mezclar detalles genuinos de entrada/gradas/entrenamiento y comprobar anillo completo y paneles |
+| QA visual obsoleta | El test seguía buscando Widget _title() => Stack y recorte de danza start=(0,385,770) | Sincronizar pruebas de contrato con arquitectura realmente activa, ejecutar antes de compilación |
