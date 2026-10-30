@@ -35,6 +35,11 @@ const Map<String,bool> enemyArtValidated = {
   'sanfermin_runner': false,
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
+// A gameplay-only playtest does NOT constitute artistic approval.
+const bool twcGameplayPlaytest = bool.fromEnvironment('TWC_GAMEPLAY_PLAYTEST',
+    defaultValue: false);
+bool isEnemyPlayableInBuild(String kind) =>
+    twcGameplayPlaytest || hasApprovedEnemyArtwork(kind);
 
 const double viewW = 800;
 const double viewH = 450;
@@ -569,7 +574,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     // jamás repetido aleatoriamente como una rata o una paloma.
     // Calidad bloqueada: no activar al rey hasta revisar su captura REAL.
     // El comportamiento y el atlas candidato permanecen disponibles para QA.
-    if (hasApprovedEnemyArtwork('navarre_king') && stage == 3) {
+    if (isEnemyPlayableInBuild('navarre_king') && stage == 3) {
       enemies.add(Enemy(enemies.length,'navarre_king',stageWidth*.54));
     }
     // Tres nuevos enemigos aprobados: colocación por capítulo, separados.
@@ -577,7 +582,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     final newKind = newKinds[stage];
     // Los cuatro diseños candidatos han sido rechazados artísticamente.
     // No introducirlos en partidas hasta contar con capturas reales aprobadas.
-    if (newKind != null && hasApprovedEnemyArtwork(newKind)) {
+    if (newKind != null && isEnemyPlayableInBuild(newKind)) {
       final typ = switch (newKind) {
         'tipsy_tourist' => NewEnemyKind.tipsyTourist,
         'rival_supporter' => NewEnemyKind.rivalSupporter,
@@ -591,12 +596,12 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     // Encierro Estafeta: dos tipos nuevos, pendientes de arte real aprobado.
     // No apareceran hasta superar inspeccion de capturas del StagePainter.
     if (stage == 2) {
-      if (hasApprovedEnemyArtwork('sanfermin_runner')) {
+      if (isEnemyPlayableInBuild('sanfermin_runner')) {
         for (final x in [stageWidth*.32,stageWidth*.68]) {
           enemies.add(Enemy(enemies.length,'sanfermin_runner',x));
         }
       }
-      if (hasApprovedEnemyArtwork('estafeta_bull')) {
+      if (isEnemyPlayableInBuild('estafeta_bull')) {
         for (final x in [stageWidth*.42,stageWidth*.79]) {
           enemies.add(Enemy(enemies.length,'estafeta_bull',x));
         }

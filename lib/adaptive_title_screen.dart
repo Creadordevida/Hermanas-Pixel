@@ -76,6 +76,9 @@ class AdaptiveTitleScreen extends StatelessWidget {
   final bool hasSavedGame;
 
   static const panoramaAsset = 'assets/images/title_wide_20x9.png';
+  // Unapproved panorama is never needed for RC4 playtests.
+  static const useApprovedWideArt =
+      bool.fromEnvironment('TWC_TITLE_WIDE_APPROVED', defaultValue:false);
   static const cleanLogoAsset = 'assets/images/twc_title_mark_clean.png';
 
   @override
@@ -109,7 +112,10 @@ class AdaptiveTitleScreen extends StatelessWidget {
         // placeholder panorama; never mistake fallback for approved artwork.
         // Cover crops only EXTRA periphery within the certified 16:9-20:9
         // formats. No blurred strips, letterboxing or BoxFit.fill.
-        Image.asset(panoramaAsset,fit:BoxFit.cover,
+        Image.asset(
+          useApprovedWideArt ? panoramaAsset
+              : 'assets/images/title_cars_fixed_091.png',
+          fit: useApprovedWideArt ? BoxFit.cover : BoxFit.contain,
           alignment:Alignment.center,
           errorBuilder:(_,_,_) => Image.asset(
             'assets/images/title_cars_fixed_091.png',
