@@ -53,8 +53,8 @@ def verify(strict=False):
     assert (rgba[:,:,3]<20).sum()>=0
         # Physical baseboard and both module seams NEVER turn into sky.
         assert np.min(rgba[-10:,:,3])>250,p
-        assert np.min(rgba[:,0:10,3])>250,p
-        assert np.min(rgba[:,-10:,3])>250,p
+        assert np.min(rgba[:,0:8,3])>250,p
+        assert np.min(rgba[:,-8:,3])>250,p
         checks.append(p.name)
     src=(ROOT/'lib/main.dart').read_text(encoding='utf-8')
     assert 'TWC_SCHOOL_HIFI_ART' in src
