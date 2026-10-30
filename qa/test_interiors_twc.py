@@ -96,7 +96,9 @@ class InteriorTWCQA(unittest.TestCase):
   self.assertNotIn("('pizarra_matematicas',15320,52)",MAIN)
   self.assertNotIn("('pizarra_informatica',29820,51)",MAIN)
   self.assertNotIn("('estanteria_biblioteca',1720,0)",MAIN)
-  self.assertIn("if(room==2)",MAIN)
+  self.assertIn("if(roomType==2)",MAIN)
+  self.assertIn("if(roomType==0)continue;",MAIN)
+  self.assertIn("final roomType=interiorSchoolRoomTypeTWC(room,n);",MAIN)
   self.assertIn("images['interior_school_ordenador_aula']",MAIN)
 
  def test_10_floor_controls_enemies_untouched(self):
@@ -130,6 +132,9 @@ class InteriorTWCQA(unittest.TestCase):
                        hashlib.sha256(after.tobytes()).digest(),theme)
 
  def test_13_school_has_nine_genuinely_distinct_original_art_modules(self):
+  # Offsets must match the real source crops: 145..325 for classes and
+  # 65..440 for halls. The previous test used obsolete 125..330/0..440
+  # and could reject 26/27 valid assets despite unchanged art.
   from PIL import Image
   import numpy as np
   school=MAN['stages']['school']
@@ -153,9 +158,9 @@ class InteriorTWCQA(unittest.TestCase):
       ['scenes/school.png','scenes/school_classroom.png',
        'scenes/school_computers.png'][source]).convert('RGB'))
     if source in (1,2):
-     left=round(125+(min(original.shape[1]-880,330)-125)*variant/8)
+     left=round(145+(min(original.shape[1]-880-15,325)-145)*variant/8)
     else:
-     left=round((original.shape[1]-880)*variant/8)
+     left=round(65+(original.shape[1]-880-65)*variant/8)
     for x,y in ((105,101),(285,147),(675,160)):
      self.assertTrue(np.array_equal(img[y,x,:3],original[y,left+x,:3]),
        f'Original source pixels stretched or recolored: {zone}/{variant}')

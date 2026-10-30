@@ -2136,6 +2136,11 @@ class StagePainter extends CustomPainter {
           for(var n=first;n<=last;n++) {
             final moduleStart=start+n*interiorModuleWidthTWC;
             if(moduleStart>=end)break;
+            // Furnish the ACTUAL panel source, not merely its broad zone.
+            // A corridor must stay empty; a computer lab needs PCs even
+            // when it appears as a transition within the maths wing.
+            final roomType=interiorSchoolRoomTypeTWC(room,n);
+            if(roomType==0)continue;
             for(final dx in interiorSchoolDeskOffsetsTWC(room,n)) {
               final worldX=moduleStart+dx;
               if(worldX+desk.width>end)continue;
@@ -2145,7 +2150,7 @@ class StagePainter extends CustomPainter {
                 Rect.fromLTWH(0,0,desk.width.toDouble(),desk.height.toDouble()),
                 Rect.fromLTWH(x,286,desk.width.toDouble(),desk.height.toDouble()),
                 Paint()..filterQuality=FilterQuality.none);
-              if(room==2) {
+              if(roomType==2) {
                 final pc=images['interior_school_ordenador_aula'];
                 if(pc!=null) {
                   canvas.drawImageRect(pc,
