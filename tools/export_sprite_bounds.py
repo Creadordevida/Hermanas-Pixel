@@ -14,7 +14,7 @@ characters=['goalkeeper','rival','referee','novice','breakdancer','pigeon','cat'
 all_data={}
 for character in characters:
  # Referee and breakdancer have authentic sixth 'hit' illustrations.
- for frame in range(6 if character in ('referee','breakdancer') else 5):
+ for frame in range(6 if character in ('referee','breakdancer','rival') else 5):
   file=ASSETS/f'{character}_{frame}.png'
   with Image.open(file) as im:
    im=im.convert('RGBA')

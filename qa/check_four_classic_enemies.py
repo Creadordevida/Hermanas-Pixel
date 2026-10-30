@@ -1,54 +1,38 @@
 #!/usr/bin/env python3
-"""Technical QA of 20 genuine polished character frames; not an art approval."""
+"""Checks master/candidate fidelity, never confuses valid PNG with art approval."""
 from pathlib import Path
 from PIL import Image
-import hashlib, json, sys
-
+import hashlib,json,sys
 ROOT=Path(__file__).resolve().parents[1]
-SRC=ROOT/"assets/images/enemies"
-REVIEW=ROOT/"qa/art_review"
-manifest=REVIEW/"four_existing_enemy_polish_state.json"
-errors=[]
-if not manifest.exists():
-    raise SystemExit("Run tools/refine_four_classic_enemies.py first")
-data=json.loads(manifest.read_text(encoding="utf-8"))
-required={"breakdancer":(2,6),"bully":(1,5),"referee":(2,6),"rival":(2,5)}
-
-for kind,(scale,count) in required.items():
-    visible=[]
-    for idx in range(count):
-        name=f"{kind}_{idx}"
-        p=SRC/f"{name}.png"
-        info=data.get(name,{})
-        if not p.exists() or not info:
-            errors.append(name+": source/manifest missing")
-            continue
-        sha=hashlib.sha256(p.read_bytes()).hexdigest()
-        if sha!=info.get("after"):
-            errors.append(name+": generated PNG doesn't match verified SHA")
-        im=Image.open(p).convert("RGBA")
-        w,h=info["old_size"]
-        if im.size != (w*scale,h*scale):
-            errors.append(name+f": expected {(w*scale,h*scale)}, got {im.size}")
-        box=im.getchannel("A").getbbox()
-        if not box:
-            errors.append(name+": no visible pixels")
-            continue
-        visible.append(box)
-        if box[2]-box[0]<im.width*.2:
-            errors.append(name+": unnaturally thin silhouette")
-        if box[3]-box[1]<im.height*.18:
-            errors.append(name+": visible figure is truncated")
-    sheet=REVIEW/f"{kind}_original_vs_polished.png"
-    if not sheet.is_file():
-        errors.append(kind+": contact sheet missing")
-    else:
-        with Image.open(sheet) as im:
-            if im.width<1000 or im.height<500:
-                errors.append(kind+": contact sheet truncated")
-    print(f"{kind}: {len(visible)} of {count} original-illustration poses inspected (geometry)")
-if errors:
-    for err in errors:print("ERROR:",err,file=sys.stderr)
+report=ROOT/'qa/art_review/four_existing_enemy_polish_state.json'
+if not report.is_file():
+    raise SystemExit('Primero ejecutar tools/refine_four_classic_enemies.py')
+state=json.loads(report.read_text(encoding='utf-8'))
+count={'breakdancer':6,'bully':5,'referee':6,'rival':6}
+fail=[]
+def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
+for kind,n in count.items():
+    for index in range(n):
+        key=f'{kind}_{index}'
+        item=state.get(key)
+        if not item:
+            fail.append(f'Falta {key}');continue
+        source=ROOT/item['source'];candidate=ROOT/item['candidate']
+        if not source.exists() or not candidate.exists():
+            fail.append(f'Archivo inexistente {key}');continue
+        if sha(source)!=item['original_sha256'] or sha(candidate)!=item['candidate_sha256']:
+            fail.append(f'SHA no coincide {key}')
+        with Image.open(source) as raw,Image.open(candidate) as revised:
+            a,b=raw.convert('RGBA'),revised.convert('RGBA')
+            if a.size!=b.size or a.getchannel('A').tobytes()!=b.getchannel('A').tobytes():
+                fail.append(f'Silueta/escala modificada {key}')
+            if a.getchannel('A').getbbox() is None:fail.append(f'Vacío {key}')
+        if item['art_approved'] or item['flutter_capture_reviewed']:
+            fail.append(f'Aprobación ficticia {key}')
+    if not (ROOT/f'qa/art_review/{kind}_original_vs_polished.png').is_file():
+        fail.append(f'Falta comparativa {kind}')
+if len(state)!=sum(count.values()):fail.append('Número de candidatos incorrecto')
+if fail:
+    print('\n'.join('ERROR '+x for x in fail),file=sys.stderr)
     raise SystemExit(1)
-print("PASS: source checksums, pixel geometry and contact sheets.")
-print("NOT APPROVED: visual comparison and gameplay captures still required.")
+print(f'PASS: {len(state)} candidatos con misma máscara y escala. NO aprobación artística.')

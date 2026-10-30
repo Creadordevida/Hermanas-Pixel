@@ -488,7 +488,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           // recortes medidos; no se usan los cinco dibujos planos originales.
           paths['enemy_${v}_sheet'] = 'assets/images/enemies_hifi/${v}_sheet.png';
         } else {
-          final amount=(v=='referee' || v=='breakdancer')?6:5;
+          final amount=(v=='referee' || v=='breakdancer' || v=='rival')?6:5;
           for (int j=0;j<amount;j++) {
             paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
           }

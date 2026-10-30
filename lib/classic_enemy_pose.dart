@@ -15,7 +15,9 @@ int classicEnemyFrame({
   required double heroDistance,
   required double attackCooldown,
 }) {
-  if (defeated) return 4;
+  // The rival has a dedicated fully prone sixth image, distinct from
+  // frame 4's transitional fall. Use the actual authored final pose.
+  if (defeated) return kind=='rival' ? 5 : 4;
   // These are genuine original poses, not scaled/upside-down frame tricks.
   if (stunned) {
     return switch (kind) {

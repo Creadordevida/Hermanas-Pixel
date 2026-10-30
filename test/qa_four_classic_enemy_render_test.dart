@@ -26,7 +26,7 @@ void main() {
    final art=<String,ui.Image>{};
    try {
      for(final kind in cases.keys) {
-       final frames=(kind=='referee' || kind=='breakdancer')?6:5;
+       final frames=(kind=='referee' || kind=='breakdancer' || kind=='rival')?6:5;
        for(var frame=0;frame<frames;frame++) {
          art['enemy_${kind}_$frame']=await tester.runAsync(
            () => _load('assets/images/enemies/${kind}_$frame.png'))

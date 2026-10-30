@@ -10,6 +10,11 @@ int f(String kind, {double t=0,bool moving=false,bool attacking=false,
 );
 
 void main() {
+  test('rival uses the genuinely prone source frame on defeat', () {
+    expect(f('rival',defeated:true),5);
+    expect(f('rival',stunned:true),2);
+    expect(f('referee',stunned:true),5);
+  });
   const types=['breakdancer','bully','referee','rival'];
 
   test('all four remain still in authentic idle pose', () {
@@ -55,8 +60,8 @@ void main() {
   test('hit and defeat override attacks for every enemy', () {
     for (final kind in types) {
       expect(f(kind,attacking:true,stunned:true),isNot(4));
-      expect(f(kind,attacking:true,defeated:true),4);
-      expect(f(kind,moving:true,stunned:true,defeated:true),4);
+      expect(f(kind,attacking:true,defeated:true),kind=='rival'?5:4);
+      expect(f(kind,moving:true,stunned:true,defeated:true),kind=='rival'?5:4);
     }
   });
 }
