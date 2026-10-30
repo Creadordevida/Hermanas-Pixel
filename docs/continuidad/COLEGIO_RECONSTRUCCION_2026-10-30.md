@@ -60,3 +60,25 @@ El usuario sustituyó las imágenes conceptuales anteriores por el archivo carga
 **Condición de cierre:** subir maestra + 27 PNG + suelo limpio a las rutas exactas; repetir SHA remoto; ejecutar generador y QA estricto; ejecutar `flutter test test/school_hifi_real_render_test.dart` SIN COMPILAR ANDROID, inspeccionar sus siete capturas reales; comparar con la referencia y corregir cualquier deficiencia. No declarar “resuelto” mientras falte una de esas pruebas.
 
 **Regla del usuario vigente:** NO generar más APK ni disparar builds Android hasta nueva autorización expresa. PR #5 en borrador, sin merge.
+
+## CIERRE TÉCNICO DE LA TRANSFERENCIA: solución de una sola subida (30/10/2026)
+
+**VERIFICADO LOCALMENTE:** recuperado ZIP exacto de 18.505.839 bytes, SHA256
+`c9579acf7ba154cfaaa31ffd237bacb50d7a723000bbea278f0123008e2dee78`.
+Master 1448×1086 SHA256 `4370a461007d4e96bef60da32e827995301f41f7d1662fec9749da739d72bc9b`.
+Los 27 PNG RGBA 880×278 coinciden 27/27 con los SHA del manifiesto.
+El importador `tools/import_school_exact_twc.py` se probó en una carpeta vacía:
+importó 30 archivos exactos (maestro, 27 paneles, suelo, manifiesto) sin error.
+
+**CAMBIOS EFECTIVOS DE CÓDIGO GITHUB:**
+- `qa/check_school_hifi_twc.py`: corregido error Python de sangría y comprobación del flag Dart en el archivo correcto.
+- `tools/build_interiors_parallax_twc.py`: el generador antiguo ya no reescribe los 27 PNG aprobados ni el suelo cuando están presentes; exige hashes idénticos al manifiesto, de lo contrario detiene el proceso. Mantiene far=.30, mid=.56.
+- `tools/import_school_exact_twc.py`: importación autorizada solo si coinciden SHA de ZIP/master y 27 SHA individuales.
+- `.github/workflows/school-hifi-only.yml`: integración AUTOMÁTICA de los binarios originales mediante un ZIP en `qa/school_inbox/`, pruebas Python, Flutter real 20:9 de 5 habitaciones + 2 transiciones, y commit de 30 activos y 7 capturas, sin compilar Android. Se configura `contents:write`; no se ejecuta al modificar solo documentación o código. No borrar el ZIP activador para evitar segundas ejecuciones.
+- `qa/school_inbox/README.md`: instrucción de subida en un solo archivo para el usuario.
+
+**BLOQUEO EXTERNO QUE SIGUE ABIERTO:** el conector GitHub acepta blobs Base64, pero este entorno no dispone de puente para transferirle automáticamente los bytes del contenedor. Tampoco hay credenciales Git de red desde el contenedor. El ZIP sigue AUSENTE de GitHub: **NO afirmar que los 27 PNG nuevos estén en la rama** ni que exista render Flutter aprobado.
+
+**INTERVENCIÓN MÍNIMA NECESARIA:** el usuario sube un ÚNICO ZIP original de 18,5 MB (sin descomprimir) en la carpeta `qa/school_inbox/` de la rama `work/revision-visual-20261028-continuidad`. GitHub permite 25 MiB de subida por archivo desde web. El archivo debe llamarse exactamente `COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip`. Al hacer commit, se dispara exclusivamente `.github/workflows/school-hifi-only.yml`; ejecuta Python/Flutter y, si supera todo, integra y confirma assets/capturas en GitHub sin APK. Si falla, diagnosticar el run y corregir la causa, usar el marcador de reejecución `.github/trigger-school-hifi-qa.txt` sin pedir otra subida.
+
+**ESTADO REAL:** transferencia remota y prueba Flutter PENDIENTES; no se ha ejecutado ninguna Action ni APK; PR #5 abierta sin fusionar. No declarar «solucionado» hasta confirmar SHA remoto y revisar las siete capturas.
