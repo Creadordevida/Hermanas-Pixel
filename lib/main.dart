@@ -1179,14 +1179,19 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     Rect.fromLTWH(240,534,220,88),  // Colegio
   ];
   Widget _map() => Stack(children:[
+    // The original map stays at its genuine 800x450 ratio.
+    // Fill peripheral screen space with matching art, no black bars.
+    Positioned.fill(child:Image.asset(
+      'assets/images/worldmap/pamplona_aprobado.png',fit:BoxFit.cover)),
+    Center(child:SizedBox(width:800,height:viewH,child:Stack(children:[
     // Ajuste 1672/941 ≃ 800/450, sin estirar un fondo antiguo del Ayuntamiento.
     const Positioned.fill(child:Image(image:AssetImage(
-      'assets/images/worldmap/pamplona_aprobado.png'),fit:BoxFit.fill)),
+      'assets/images/worldmap/pamplona_aprobado.png'),fit:BoxFit.contain)),
     for(int i=0;i<mapHitboxesOriginal.length;i++)
       Positioned(
-        left: mapHitboxesOriginal[i].left*viewW/mapArtWidth,
+        left: mapHitboxesOriginal[i].left*800/mapArtWidth,
         top: mapHitboxesOriginal[i].top*viewH/mapArtHeight,
-        width: mapHitboxesOriginal[i].width*viewW/mapArtWidth,
+        width: mapHitboxesOriginal[i].width*800/mapArtWidth,
         height: mapHitboxesOriginal[i].height*viewH/mapArtHeight,
         child:Semantics(label:'Capítulo ${i+1}: ${chapterNames[i]}',button:true,
           child:Material(color:Colors.transparent,
@@ -1205,6 +1210,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         borderRadius:BorderRadius.circular(5)),
       child:Text('COMPLETADOS: ${completed.length}/7  ·  MONEDAS: $totalCoins',
         style:const TextStyle(color:Colors.white,fontSize:10,fontWeight:FontWeight.w900)))),
+  ]))),
   ]);
 
   Widget _chooseScreen()=>Stack(children:[
@@ -1219,7 +1225,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   Widget _chooseCard(int index,double x) {
     final role=index==0?'futbolista':'bailarina';
     final folder=((stage==4 && index==0)||(stage==5 && index==1))?'outfits':'frames';
-    return Positioned(left:x,top:74,width:242,height:346,child:GestureDetector(onTap:()=>_choose(index),
+    return Positioned(left:x+(viewW-800)/2,top:74,width:242,height:346,child:GestureDetector(onTap:()=>_choose(index),
       child:Container(decoration:BoxDecoration(color:const Color(0xee0b305a),borderRadius:BorderRadius.circular(11),
         border:Border.all(color:index==0?const Color(0xffffc748):const Color(0xffffa6d1),width:4)),
         child:Column(children:[const SizedBox(height:9),Text(index==0?'MIREN':'SARA',
