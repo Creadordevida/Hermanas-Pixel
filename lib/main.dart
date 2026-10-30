@@ -513,7 +513,25 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // Eight true flight silhouettes (upstroke, downstroke, glide, hit, fall).
       // The old pigeon frames remain for genuine ground walking/pecking.
       paths['pigeon_flight_sheet'] = 'assets/images/enemies_hifi/pigeon_flight_sheet.png';
+      // Test-only StagePainter capture optimization: a school screenshot must
+      // decode the ACTUAL school + hero sprites, not all 72 chapter-one tiles,
+      // football/dance scenes and six other stages. In Android qaStage is null,
+      // so the complete original asset loading and gameplay are untouched.
+      bool neededForSchoolQA(String key) {
+        if (widget.qaStage != 6) return true;
+        if (key.startsWith('ch1_') || key.startsWith('neighborhood_') ||
+            key.startsWith('football_') || key.startsWith('activity_') ||
+            key.startsWith('interior_dance_') || key.startsWith('dog_') ||
+            key.startsWith('pigeon_flight_')) return false;
+        if (key.startsWith('scene_') &&
+            key != 'scene_6' && !key.startsWith('scene_school_')) return false;
+        if (key.startsWith('ground_') && key != 'ground_6') return false;
+        if (key.startsWith('mid_') &&
+            key != 'mid_6' && !key.startsWith('mid_school_')) return false;
+        return true;
+      }
       for (final item in paths.entries) {
+        if (!neededForSchoolQA(item.key)) continue;
         final blob = await rootBundle.load(item.value);
         final codec = await ui.instantiateImageCodec(blob.buffer.asUint8List());
         images[item.key] = (await codec.getNextFrame()).image;
