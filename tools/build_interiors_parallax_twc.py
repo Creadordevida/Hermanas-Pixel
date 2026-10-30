@@ -83,14 +83,21 @@ def make_wall(theme:str,zone:int,variant:int):
     p=ASSETS/SRCS[theme][zone]
     src=Image.open(p).convert('RGB')
     if theme=='dance':
-        # identical Y scale to original source; no vertical distortions.
-        # Antes solo variábamos 65 px dentro de una banda de 1010: el mismo
-        # cuadro/cartel reaparecía en casi todos los paneles. Ahora se
-        # aprovecha toda la panorámica original para tres encuadres amplios.
-        # NO estiramos hasta 1010 ni reflejamos puertas o letreros.
-        cropped=src.crop((0,55,1672,600)).resize((1650,H),Image.Resampling.LANCZOS)
-        start=(0,385,770)[variant]
-        wall=cropped.crop((start,0,start+TILE_W,H))
+        # Artwork-preserving 1:1 ASPECT crop, not stretched/scaled axes.
+        # Previous source: 1672x545 -> 1650x286 (X 0.987, Y 0.525),
+        # visually flattening arched doors, mirrors, dancers and furniture.
+        # The new 1200x390 window -> 880x286 has identical X/Y scales.
+        # Three native source positions retain detail from each of the three
+        # approved 1672x941 master illustrations without mirrors or new art.
+        sw,sh=1200,390
+        if abs(TILE_W/sw-H/sh)>1e-10:
+            raise ValueError('Dance pixels must scale proportionally')
+        left=(0,236,472)[variant]
+        top=175 if zone==2 else 155
+        if left+sw>src.width or top+sh>src.height:
+            raise ValueError('Dance source too small for authentic crop')
+        wall=src.crop((left,top,left+sw,top+sh)).resize(
+            (TILE_W,H),Image.Resampling.LANCZOS)
     else:
         # Colegio: cada sala emplea SU ilustración fuente; antes las tres
         # zonas repetían la misma panorámica del pasillo recoloreada.

@@ -113,6 +113,9 @@ if __name__=='__main__':
   # rendering of authentic generated resources, NOT a Flutter screenshot.
   sample=[10500+880*n+40 for n in range(9)]
   contact('school',sample,'CONTACTO_COLEGIO_9_VARIANTES_REALES_PYTHON.jpg',columns=3)
+  # Sample BOTH interiors after their contact sheets. This was previously
+  # indented one level too deeply: Python refused to import this renderer.
+  for theme in ('school','dance'):
     for c in [0,600,10475,10530,25460,25560,31900]:
       render(theme,c).save(Q/f'{theme}_{c:05}.png')
   # Parallax test: move across 1200 world pixels, 72 frames, one per 16.7px.
