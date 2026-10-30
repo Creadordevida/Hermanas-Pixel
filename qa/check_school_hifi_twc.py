@@ -48,16 +48,16 @@ def verify(strict=False):
             rgba=np.asarray(source)
         assert hashlib.sha256(p.read_bytes()).hexdigest()==e['sha256']
         assert (rgba[:,:,3]<128).sum()==e['transparent_pixels']
-        # Not every physical corridor contains a window. A scene can have
-    # zero glass; require enough windowed modules across the full chapter.
-    assert (rgba[:,:,3]<20).sum()>=0
+        # A corridor may have no window; the chapter-wide count is checked
+        # above. Physical baseboards and shared panel seams are never sky.
         # Physical baseboard and both module seams NEVER turn into sky.
         assert np.min(rgba[-10:,:,3])>250,p
         assert np.min(rgba[:,0:8,3])>250,p
         assert np.min(rgba[:,-8:,3])>250,p
         checks.append(p.name)
     src=(ROOT/'lib/main.dart').read_text(encoding='utf-8')
-    assert 'TWC_SCHOOL_HIFI_ART' in src
+    assert "schoolHifiArtworkEnabled" in src
+    assert "TWC_SCHOOL_HIFI_ART" in (ROOT/'lib/interiors_parallax_twc.dart').read_text(encoding='utf-8')
     assert '!schoolHifiArtworkEnabled' in src
     assert 'interior_school_z' in src or 'interiorPanelAssetTWC' in src
     print(f'SCHOOL HIFI SOURCE VERIFIED: {len(checks)} real PNGs, 5 room families')
