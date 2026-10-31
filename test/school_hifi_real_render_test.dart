@@ -76,7 +76,7 @@ Future<void> waitForSchoolAssets(WidgetTester tester) async {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('Approved school: 5 rooms, 20:9, 2 transitions', (tester) async {
+  testWidgets('Approved school: 5 rooms, 2 transitions, 2 parallax frames', (tester) async {
     expect(schoolHifiArtworkEnabled, isTrue);
     expect(interiorSchoolRoomTypeTWC(0, 0), 0);
     expect(interiorSchoolRoomTypeTWC(0, 1), 4);
@@ -92,6 +92,10 @@ void main() {
       '05_informatica': 26000,
       '06_paso_a_aula': 10525,
       '07_paso_a_informatica': 25525,
+      // Same physical room, camera +60: architectural walls move 1:1 while
+      // only outside the windows moves at the approved .30/.56 speeds.
+      '08_pasillo_movimiento_60': 560,
+      '09_biblioteca_movimiento_60': 3940,
     };
     await tester.binding.setSurfaceSize(const Size(1000, 450));
     final boundaryKey = GlobalKey();
