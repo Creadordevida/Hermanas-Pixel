@@ -7,7 +7,7 @@ and old silhouette-school generator still in place.
 This is a QA gate, NOT a Flutter screenshot or artistic acceptance.
 """
 from __future__ import annotations
-import hashlib,json,sys
+import hashlib,io,json,sys,zipfile
 from pathlib import Path
 from PIL import Image
 import numpy as np
@@ -28,6 +28,10 @@ def verify(strict=False):
     assert d['master_sha256']=='4370a461007d4e96bef60da32e827995301f41f7d1662fec9749da739d72bc9b',(
         'Wrong five-room reference image: do not substitute other artwork')
     entries=d['panels']
+    # The refined glass is still translucent (alpha 166) and preserves the
+    # exact RGB pixels of each approved ZIP source. Old sources use alpha<128.
+    threshold=d.get('glass_alpha_threshold',128)
+    assert 128<=threshold<=254
     assert tuple(Image.open(ART).size)==(1448,1086)
     assert sum(x['transparent_pixels']>1000 for x in entries)>=15
     assert len(entries)==27
@@ -39,6 +43,9 @@ def verify(strict=False):
     kinds=['pasillo','aula','informatica','biblioteca','taquillas']
     for x in entries:
         assert x['room']==kinds[plan[x['zone']][x['variant']]]
+    archive=ROOT/'qa/school_inbox/COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip'
+    refined='glass_alpha_method' in d
+    if refined:assert archive.is_file(),'Approved ZIP required for RGB provenance'
     checks=[]
     for e in entries:
         p=P/f"z{e['zone']}_panel_{e['variant']}.png"
@@ -47,7 +54,16 @@ def verify(strict=False):
             assert source.size==(880,278) and source.mode=='RGBA'
             rgba=np.asarray(source)
         assert hashlib.sha256(p.read_bytes()).hexdigest()==e['sha256']
-        assert (rgba[:,:,3]<128).sum()==e['transparent_pixels']
+        assert (rgba[:,:,3]<threshold).sum()==e['transparent_pixels']
+        if refined:
+            # The sole permitted alteration is glass opacity: no re-drawn
+            # architecture, no substitute colours, no changed master pixels.
+            with zipfile.ZipFile(archive) as baseline:
+                original=np.asarray(Image.open(io.BytesIO(baseline.read(
+                    f'assets/images/interiors_parallax/school/z{e["zone"]}_panel_{e["variant"]}.png'))).convert('RGBA'))
+            assert np.array_equal(rgba[:,:,:3],original[:,:,:3]),(
+                'User-approved RGB artwork changed',p)
+            assert (rgba[:,:,3]<255).sum()>1000 or e['transparent_pixels']==0
         # A corridor may have no window; the chapter-wide count is checked
         # above. Physical baseboards and shared panel seams are never sky.
         # Physical baseboard and both module seams NEVER turn into sky.
