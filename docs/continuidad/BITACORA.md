@@ -1,3 +1,7 @@
+## 2026-10-31 — Dirección artística robot/corredor aprobada expresamente
+El usuario aprueba identidad y aspecto de las hojas guardadas en qa/enemy_art_20261031; no aprueba aún animación ni render final. Se derivan atlas de producción por recorte, limpieza alfa y escala uniforme por personaje, sin redibujar fotogramas. tools/build_approved_enemy_art.py fija hashes fuente y falla si cambian. Se corrige orden runner idle/alert/run, y recorte de cepillo robot extendido. Generadores antiguos delegan estos dos personajes al importador aprobado, sin fallback procedimental. Render mantiene proporción del atlas para ambos. No se activan flags de aprobación.
+Ejecutado localmente: importador de ambos atlas, inspección de hojas derivadas, dimensiones y manifiestos de procedencia. NO ejecutado Flutter ni Android. Pendientes: revisar recortes finales, legibilidad/escala física, capturas auténticas, ciclos de animación y colisiones. No hay comparación motor ni animación real verificadas todavía. Resto de enemigos sigue pendiente. Sin APK/merge/publicación.
+
 ## 2026-10-31 — Orden vigente: terminar todos los enemigos sin APK
 Autorización explícita en conversación principal Work: seis nuevos y correcciones de clásicos; modificar arte/código, pruebas locales y Actions exclusivamente de pruebas; avanzar sin pausas de aprobación entre enemigos. Prohibidos APK, merge y publicación. Aprobación artística final del usuario sigue pendiente.
 

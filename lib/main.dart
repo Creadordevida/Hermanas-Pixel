@@ -1426,7 +1426,8 @@ class StagePainter extends CustomPainter {
               : near<240 ? 2 : 0);
           final col=(foe.t*8).floor()%4;
           final cw=bull?270.0:156.0, ch=bull?192.0:210.0;
-          final w=bull?168.0:94.0, h=bull?116.0:128.0;
+          final h=bull?116.0:128.0;
+          final w=bull?168.0:h*cw/ch;
           canvas.save();
           if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
           canvas.drawImageRect(art,Rect.fromLTWH(col*cw,pose*ch,cw,ch),
@@ -1490,8 +1491,8 @@ class StagePainter extends CustomPainter {
           final frame=((foe.t*7).floor()%4);
           const cellW=144.0,cellH=192.0;
           final source=Rect.fromLTWH(frame*cellW,pose*cellH,cellW,cellH);
-          final w=kind=='robot'?88.0:98.0;
           final h=kind=='robot'?112.0:134.0;
+          final w=kind=='robot'?h*cellW/cellH:98.0;
           canvas.save();
           if(foe.facing<0) { canvas.translate(2*x,0);canvas.scale(-1,1); }
           canvas.drawImageRect(img,source,

@@ -210,6 +210,10 @@ def runner(p,n):
   im=down
  return im
 for kind,cell,draw in [('estafeta_bull',(90,64),bull),('sanfermin_runner',(52,70),runner)]:
+ if kind=='sanfermin_runner':
+  from build_approved_enemy_art import build
+  build(kind)
+  continue
  w,h=cell
  atlas=Image.new('RGBA',(w*S*4,h*S*len(POSES)))
  for row,pose in enumerate(POSES):

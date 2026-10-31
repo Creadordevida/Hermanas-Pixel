@@ -300,6 +300,11 @@ def frame(kind,pose,n):
  return finish_pixel_art(im).resize((W*S,H*S),Image.Resampling.NEAREST)
 manifest={'cell':[W*S,H*S],'poses':list(POSES),'frames_per_pose':4,'pose_rows':6,'frame_columns':4,'art_status':'candidate_requires_user_review','enemies':{}}
 for kind in COLORS:
+ if kind=='robot':
+  from build_approved_enemy_art import build
+  p=build(kind)
+  manifest['enemies'][kind]={'file':str(p.relative_to(ROOT)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'source':'user_approved_20261031'}
+  continue
  sheet=Image.new('RGBA',(W*S*4,H*S*6))
  for row,pose in enumerate(POSES):
   for col in range(4):
