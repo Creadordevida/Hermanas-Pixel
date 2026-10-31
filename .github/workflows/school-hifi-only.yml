@@ -119,6 +119,12 @@ jobs:
           git add assets/images/ground/stage_6_hifi.png
           git add qa/school_hifi_lab/SCHOOL_HIFI_MANIFEST.json
           git add assets/images/interiors_parallax/school/z*_panel_*.png
+          # The two authentic .30/.56 landscapes are generated from the
+          # approved chapter-one masters above. Persist exactly what Flutter
+          # rendered; otherwise a later Android build could use the old,
+          # geometric placeholder landscapes still stored in the branch.
+          git add assets/images/interiors_parallax/school/exterior_lejano_ciclo.png
+          git add assets/images/interiors_parallax/school/arbolado_tras_ventanas_ciclo.png
           git add qa/school_hifi_flutter/*.png
           # Keep the one uploaded ZIP as provenance; deleting it here would
           # retrigger this paths-filtered workflow and cause a false failure.
