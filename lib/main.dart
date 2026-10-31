@@ -527,6 +527,23 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // football/dance scenes and six other stages. In Android qaStage is null,
       // so the complete original asset loading and gameplay are untouched.
       bool neededForSchoolQA(String key) {
+        // El QA de danza carga solo sus recursos reales y los sprites
+        // compartidos. No exige atlas de enemigos de otros capitulos.
+        // Esto NO cambia el cargador normal ni las reglas de enemigos.
+        if (widget.qaStage == 5) {
+          if (key.startsWith('ch1_') || key.startsWith('neighborhood_') ||
+              key.startsWith('football_') || key.startsWith('activity_') ||
+              key.startsWith('interior_school_') || key.startsWith('dog_') ||
+              key.startsWith('pigeon_flight_') ||
+              key.startsWith('enemy_new_') ||
+              key == 'enemy_navarre_king_atlas' ||
+              key == 'enemy_estafeta_bull' ||
+              key == 'enemy_sanfermin_runner') return false;
+          if (key.startsWith('scene_') && key != 'scene_5') return false;
+          if (key.startsWith('ground_') && key != 'ground_5') return false;
+          if (key.startsWith('mid_') && key != 'mid_5') return false;
+          return true;
+        }
         if (widget.qaStage != 6) return true;
         if (key.startsWith('ch1_') || key.startsWith('neighborhood_') ||
             key.startsWith('football_') || key.startsWith('activity_') ||
