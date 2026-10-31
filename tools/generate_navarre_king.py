@@ -208,6 +208,10 @@ def draw(pose,frame):
    bytes(max(0,a-b) for a,b in zip(outer.tobytes(),alpha.tobytes()))))
  rim.alpha_composite(im)
  return rim.resize((CW*S,CH*S),Image.Resampling.NEAREST)
+from install_illustrated_enemy_candidates import install
+install('navarre_king')
+raise SystemExit(0)
+# Legacy prototype retained for provenance only.
 atlas=Image.new('RGBA',(CW*S*4,CH*S*len(POSES)))
 for row,pose in enumerate(POSES):
  for col in range(4):atlas.alpha_composite(draw(pose,col),(col*CW*S,row*CH*S))

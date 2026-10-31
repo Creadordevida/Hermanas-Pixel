@@ -214,6 +214,10 @@ for kind,cell,draw in [('estafeta_bull',(90,64),bull),('sanfermin_runner',(52,70
   from build_approved_enemy_art import build
   build(kind)
   continue
+ if kind=='estafeta_bull':
+  from install_illustrated_enemy_candidates import install
+  install(kind)
+  continue
  w,h=cell
  atlas=Image.new('RGBA',(w*S*4,h*S*len(POSES)))
  for row,pose in enumerate(POSES):

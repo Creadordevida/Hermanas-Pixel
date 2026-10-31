@@ -300,6 +300,11 @@ def frame(kind,pose,n):
  return finish_pixel_art(im).resize((W*S,H*S),Image.Resampling.NEAREST)
 manifest={'cell':[W*S,H*S],'poses':list(POSES),'frames_per_pose':4,'pose_rows':6,'frame_columns':4,'art_status':'candidate_requires_user_review','enemies':{}}
 for kind in COLORS:
+ if kind in ('supporter','tourist'):
+  from install_illustrated_enemy_candidates import install
+  p=install(kind)
+  manifest['enemies'][kind]={'file':str(p.relative_to(ROOT)),'sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'art_status':'illustrated_candidate_pending_review'}
+  continue
  if kind=='robot':
   from build_approved_enemy_art import build
   p=build(kind)
