@@ -7,6 +7,8 @@ on:
       - qa/dance_inbox/DANZA_CINCO_ESCENAS_APROBADAS_091.zip
       - .github/workflows/dance-hifi-only.yml
       - lib/main.dart
+      - lib/interiors_parallax_twc.dart
+      - tools/prepare_dance_window_alpha_twc.py
       - test/dance_hifi_real_render_test.dart
   workflow_dispatch:
 
@@ -35,6 +37,10 @@ jobs:
           set -euo pipefail
           python3 tools/import_dance_exact_twc.py . qa/dance_inbox/DANZA_CINCO_ESCENAS_APROBADAS_091.zip
           python3 qa/check_dance_hifi_approved.py
+      - name: Preparar SOLO los cristales derivados (RGB de origen intacto)
+        run: |
+          python3 -m pip install --user pillow
+          python3 tools/prepare_dance_window_alpha_twc.py
       - name: Preparar Flutter (solo pruebas)
         run: flutter pub get
       - name: Analizar codigo Flutter
@@ -62,6 +68,7 @@ jobs:
           git config user.name "twc-dance-qa[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add assets/images/interiors_parallax/dance/hifi/*.png
+          git add assets/images/interiors_parallax/dance/hifi_glass/*.png
           git add qa/dance_hifi_flutter/*.png
           git diff --cached --check
           git commit -m "art(dance): approved five-room PNG and real Flutter QA captures"
