@@ -2120,9 +2120,11 @@ class StagePainter extends CustomPainter {
 // creando pegotes superpuestos y una composición incoherente.
     // Sólo se añaden mesas RECORTADAS con alpha y mobiliario real
     // independiente en la capa física, a velocidad mundial 1:1.
-    // Marcos de paso colocados en x absoluto. No crossfade de habitaciones.
+    // El colegio HIFI ya incluye puertas y juntas en los paneles aprobados.
+    // El marco genérico de 120 px tapaba el mural en ambas transiciones.
+    // Conservarlo solo para academia y colegio anterior; sin crossfade.
     final passage=images['interior_${theme}_passage'];
-    if(passage!=null) {
+    if(passage!=null && !(stage==6 && schoolHifiArtworkEnabled)) {
       final transitions=<double>[
         interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2],
       ];
