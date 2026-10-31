@@ -41,19 +41,12 @@ jobs:
           test -s "$ZIP"
           python3 -m py_compile tools/import_school_exact_twc.py qa/check_school_hifi_twc.py
           python3 tools/import_school_exact_twc.py . "$ZIP"
-      - name: Regenerar SOLO recursos auxiliares ya existentes para render Flutter
+      - name: Regenerar SOLO los paisajes escolares sin tocar recursos de enemigos
         shell: bash
         run: |
           set -euo pipefail
           python3 tools/build_interiors_parallax_twc.py
-          python3 tools/build_dance_panels_twc.py
-          python3 tools/build_football_parallax_twc.py
-          python3 tools/generate_new_enemy_sprites.py
-          python3 tools/generate_navarre_king.py
-          python3 tools/generate_estafeta_enemies.py
-          python3 tools/refine_four_classic_enemies.py
-          python3 tools/export_sprite_bounds.py
-      - name: Verificar hashes 27 PNG aprobados, master y suelo tras todos los generadores
+      - name: Verificar hashes 27 PNG aprobados, master y suelo tras el generador escolar
         shell: bash
         run: |
           set -euo pipefail
@@ -85,10 +78,10 @@ jobs:
         run: flutter pub get
       - name: Comprobar codigo Dart con arte definitivo (NO Android)
         run: flutter analyze --no-pub lib
-      - name: Capturas REAL Flutter del colegio — cinco tipos y dos transiciones, 20 a 9
+      - name: Capturas REAL Flutter — cinco salas, dos transiciones, ambas hermanas y paralaje 20 a 9
         timeout-minutes: 11
         run: flutter test --reporter expanded --no-pub test/school_hifi_real_render_test.dart
-      - name: Comprobar nueve capturas y desplazamiento real del paisaje
+      - name: Comprobar once capturas, ambas protagonistas y movimiento real del paisaje
         shell: bash
         run: |
           set -euo pipefail
@@ -101,7 +94,8 @@ jobs:
           names=['01_pasillo','02_taquillas','03_biblioteca',
                  '04_aula_pupitres','05_informatica',
                  '06_paso_a_aula','07_paso_a_informatica',
-                 '08_pasillo_movimiento_60','09_biblioteca_movimiento_60']
+                 '08_pasillo_movimiento_60','09_biblioteca_movimiento_60',
+                 '10_sara_aula','11_sara_biblioteca']
           hashes=[]
           for name in names:
             f=root/(name+'.png')
@@ -113,7 +107,7 @@ jobs:
                 if sum(ImageStat.Stat(rgb).stddev)<18:
                     raise AssertionError('Blank or nearly empty screenshot '+name)
             hashes.append(hashlib.sha256(f.read_bytes()).hexdigest())
-          if len(set(hashes))!=9:raise AssertionError('Repeated Flutter room screenshots')
+          if len(set(hashes))!=11:raise AssertionError('Repeated Flutter room screenshots')
           # A 60-world-pixel camera movement moves the physical school wall
           # 60px. Once the wall is aligned, authentic .30/.56 outdoor motion
           # must still be visible inside the window glass.
@@ -130,9 +124,9 @@ jobs:
             print('REAL_WINDOW_MOTION',base,'wall=',round(fixed,2),'glass=',round(moving,2))
             if moving<=max(1.5,fixed+1.5):
               raise AssertionError('No visible exterior parallax behind glass: '+base)
-          print('9 distinct ACTUAL Flutter StagePainter screenshots and real window parallax verified')
+          print('11 distinct ACTUAL Flutter StagePainter screenshots, two protagonists and real window parallax verified')
           PY
-      - name: Commit SOLO arte aprobado y nueve capturas probadas, nunca APK
+      - name: Commit SOLO arte aprobado y once capturas probadas, nunca APK
         shell: bash
         run: |
           set -euo pipefail
@@ -153,9 +147,9 @@ jobs:
           # Keep the one uploaded ZIP as provenance; deleting it here would
           # retrigger this paths-filtered workflow and cause a false failure.
           git diff --cached --check
-          git commit -m "art(school): preserve approved RGB, refine window alpha, verify 7 Flutter screenshots"
+          git commit -m "art(school): preserve approved pixels and verify 11 real Flutter screenshots"
           git push origin HEAD:"$GITHUB_REF_NAME"
       - name: Explicar estado final
         run: |
-          echo "Aprobación visual final depende de inspeccionar las 7 capturas y confirmar en dispositivo en una futura APK autorizada."
+          echo "Render Flutter 20:9 verificado; prueba en dispositivo requiere una futura APK expresamente autorizada."
           echo "Este trabajo NO compila Android, NO fusiona PR y NO publica ninguna app."
