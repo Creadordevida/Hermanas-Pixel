@@ -1,0 +1,44 @@
+name: Enemy verification only - NO APK
+on:
+  push:
+    branches: [work/revision-visual-20261028-continuidad]
+    paths: [.github/enemy-qa-trigger.txt]
+permissions:
+  contents: read
+concurrency:
+  group: enemy-qa-only
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: python3 -m pip install --user pillow numpy
+      - name: Prepare exact game resources
+        run: |
+          python3 tools/build_interiors_parallax_twc.py
+          python3 tools/build_dance_panels_twc.py
+          python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
+          python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
+          python3 tools/export_sprite_bounds.py
+      - run: flutter pub get
+      - run: flutter analyze --no-pub lib
+      - name: Behaviors and collisions
+        run: flutter test --no-pub test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart test/classic_enemy_pose_test.dart
+      - name: Authentic StagePainter captures
+        run: flutter test --no-pub --reporter expanded test/qa_new_enemy_real_render_test.dart test/qa_four_classic_enemy_render_test.dart
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: enemy-real-flutter-review
+          retention-days: 1
+          path: qa/rendered_from_flutter/
+          if-no-files-found: warn
