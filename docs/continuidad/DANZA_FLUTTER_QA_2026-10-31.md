@@ -59,3 +59,18 @@
 - **Revisión artística abierta:** uniones entre arte HIFI y soporte histórico, variedades insuficientes en secciones largas y repetición del mobiliario físico pertenecen a la siguiente iteración HIFI completa. No informar de cierre artístico ni de equivalencia visual total con el colegio.
 
 No hay APK, release, merge ni cambios a personajes/enemigos/colegio.
+
+## Auditoría ampliada 20 capturas — 31-10-2026, revisión posterior
+
+**GitHub Actions [41207737593](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/41207737593): SUCCESS.** Se ampliaron las capturas auténticas `StagePainter` de 11 a **20**, todas 1000×450; se añadieron cinco muestras de tramo medio, dos transiciones adicionales y extremos de recepción/escenario. Importación 5/5, conservación exacta de RGB original, Flutter analyze, Flutter test, medición de paralaje y commit de recursos/capturas pasaron.
+
+**Hallazgos visuales en imágenes reales:**
+- `12_recepcion_medio.png`: repite mostrador, puertas y ventanales de paneles históricos; no es un espacio de recepción exclusivo de alta fidelidad.
+- `13_pasillo_medio.png`: se repiten puertas, carteles y muebles del mismo ciclo de tres paneles.
+- `14_vestuario_medio.png`: **defecto grave**: se ve una sala de práctica con barras y ventanales, no un vestuario. La imagen aprobada `05_vestuario.png` solo aparece al comienzo de su región; el resto usa todavía material de estudio. Este defecto impide declarar completado el capítulo.
+- `15_estudio_medio.png`: paneles de práctica con piano repetidos en bucle, variación insuficiente.
+- `16_escenario_medio.png`: escenario repetido, con piano y cortinas reiterados.
+
+Estas pruebas demuestran cobertura técnica, **no continuidad artística satisfactoria**. Para cumplir la orden de calidad del usuario hace falta construir paneles adicionales genuinos por ambiente (especialmente vestuario), respetando el diseño aprobado, y volver a inspeccionar 20+ capturas. No reemplazar el problema con reflejos, mosaicos repetidos o estiramientos.
+
+La etapa 5 mantiene su selección obligatoria de Sara; no alterar controles, enemigos ni colegio. Sin APK/merge/publicación.
