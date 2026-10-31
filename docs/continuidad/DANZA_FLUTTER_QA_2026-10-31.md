@@ -44,3 +44,18 @@
 
 ## Estado de cierre
 **NO marcar finalizado artísticamente** hasta resolver juntas, repetición y cristales/paralaje y volver a ejecutar/inspeccionar QA. La integración binaria y capturas de `StagePainter` están ya demostradas. No tocar colegio, enemigos ni controles/físicas.
+
+## Addendum — cromática, cinco zonas y paralaje medido (31-10-2026, posterior)
+
+**Esta actualización prevalece sobre las notas anteriores de paralaje pendiente.**
+
+- Las cinco regiones maestras originales y sus hashes SHA256 permanecen intactos en `dance/hifi/`.
+- Los derivados de Flutter se construyen en `dance/hifi_glass/` con `tools/prepare_dance_window_alpha_twc.py` conservando los RGB *bit a bit*; la única transformación es alfa parcial en píxeles de cielo/vegetación seleccionados geométricamente dentro de huecos de cristal.
+- El mundo ahora tiene cinco regiones de danza; los nueve paneles heredados usados para rellenar tramos se alinean con el tipo de ambiente (foyer/foyer/studio/studio/stage). Siguen existiendo repeticiones en el soporte histórico; esta mejora no equivale a paneles únicos de alta fidelidad a todo lo largo de 36.500 unidades.
+- El punto QA de escenario se corrigió a x=29380 para mostrar de verdad la imagen **03_escenario** y no solamente el teatro previo.
+- **QA-only [41204222652](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/41204222652): SUCCESS**, once StagePainter 1000x450, Flutter analyze limpio, fuente original RGB exacta, verificador del cristal y commits de capturas/derivados.
+- Evidencia cuantitativa del desplazamiento de cámara +60 píxeles: pared alineada diferencia absoluta media **0.000**, máximo de un bloque 20x20 dentro de vidriera **0.147** de media absoluta RGB/canal. Verificador `qa/check_dance_window_parallax.py`. **Movimiento detectado, aunque visualmente sutil**; este resultado no prueba la calidad del panorama exterior ni que las cinco ventanas tengan idéntico nivel de paralaje.
+- Los generadores antiguos `tools/build_dance_panels_twc.py` y `tools/build_interiors_parallax_twc.py` generan solo ficheros `dance/z*_panel_*.png`; no escriben en `dance/hifi/` ni en `dance/hifi_glass/`. La protección final se apoya además en el ZIP de procedencia SHA-estricto y en el comparador RGB de derivados.
+- **Revisión artística abierta:** uniones entre arte HIFI y soporte histórico, variedades insuficientes en secciones largas y repetición del mobiliario físico pertenecen a la siguiente iteración HIFI completa. No informar de cierre artístico ni de equivalencia visual total con el colegio.
+
+No hay APK, release, merge ni cambios a personajes/enemigos/colegio.
