@@ -506,7 +506,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           // recortes medidos; no se usan los cinco dibujos planos originales.
           paths['enemy_${v}_sheet'] = 'assets/images/enemies_hifi/${v}_sheet.png';
         } else {
-          final amount=(v=='referee' || v=='breakdancer' || v=='rival')?6:5;
+          final amount=(v=='referee' || v=='breakdancer' || v=='rival' || v=='bully')?6:5;
           for (int j=0;j<amount;j++) {
             paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
           }
@@ -1451,6 +1451,12 @@ class StagePainter extends CustomPainter {
               : foe.runnerImpactUntil>time ? 3
               : near<240 ? 2 : 0);
           final col=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : bull && foe.bullWarnedAt>=0
+              ? ((time-foe.bullWarnedAt)/.55*4).floor().clamp(0,3)
+              : !bull && foe.runnerWarningAt>=0
+              ? ((time-foe.runnerWarningAt)/.34*4).floor().clamp(0,3)
+              : !bull && foe.runnerImpactUntil>time
+              ? ((1-(foe.runnerImpactUntil-time)/.24)*4).floor().clamp(0,3)
               : (foe.t*8).floor()%4;
           final cw=bull?270.0:156.0, ch=bull?192.0:210.0;
           // Canonical opaque idle heights: bull 154px, runner 150px.
@@ -1474,6 +1480,8 @@ class StagePainter extends CustomPainter {
             foe.kingAwakeAt<0?0:time-foe.kingAwakeAt<.85?1:
             foe.kingAttackAt>=0?3:(hero.x-foe.x).abs()>100?2:0;
           final col=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : foe.kingAttackAt>=0
+              ? ((time-foe.kingAttackAt)/.9*4).floor().clamp(0,3)
               : (foe.t*6).floor()%4;
           const cw=168.0,ch=216.0;
           canvas.save();
@@ -1520,6 +1528,8 @@ class StagePainter extends CustomPainter {
             _ => 0,
           };
           final frame=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : motion!=null && motion.pose==NewEnemyPose.attack
+              ? ((1-motion.windup/motion.attackDelay)*3).floor().clamp(0,3)
               : ((foe.t*7).floor()%4);
           const cellW=144.0,cellH=192.0;
           final source=Rect.fromLTWH(frame*cellW,pose*cellH,cellW,cellH);

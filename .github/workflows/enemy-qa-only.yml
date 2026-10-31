@@ -29,10 +29,11 @@ jobs:
           python3 tools/generate_navarre_king.py
           python3 tools/generate_estafeta_enemies.py
           python3 tools/export_sprite_bounds.py
+          python3 tools/verify_enemy_art.py
       - run: flutter pub get
       - run: flutter analyze --no-pub lib
       - name: Behaviors and collisions
-        run: flutter test --no-pub test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart test/classic_enemy_pose_test.dart
+        run: flutter test --no-pub test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart test/classic_enemy_pose_test.dart test/enemy_gameplay_integration_test.dart
       - name: Authentic StagePainter captures
         run: flutter test --no-pub --reporter expanded test/qa_new_enemy_real_render_test.dart test/qa_four_classic_enemy_render_test.dart
       - name: Save compact genuine render evidence to Git, no artifact quota
@@ -47,7 +48,7 @@ jobs:
               kind=p.stem.rsplit('_',1)[0]
               groups.setdefault(kind,[]).append(p)
           for kind,paths in groups.items():
-              if kind.startswith('nuevo_'):
+              if kind.startswith(('nuevo_','classic_')):
                   frames=[Image.open(p).convert('RGB') for p in paths]
                   frames[0].save(out/(kind+'.gif'),save_all=True,append_images=frames[1:],duration=145,loop=0,optimize=True)
                   paths=paths[::4]
@@ -56,7 +57,7 @@ jobs:
                   im=Image.open(p).convert('RGB')
                   im.thumbnail((400,225))
                   sheet.paste(im,((i%2)*400,(i//2)*250))
-                  ImageDraw.Draw(sheet).text(((i%2)*400,(i//2)*450+230),p.stem,fill='white')
+                  ImageDraw.Draw(sheet).text(((i%2)*400,(i//2)*250+230),p.stem,fill='white')
               sheet.save(out/(kind+'.jpg'),quality=88)
           PY
           git config user.name "twc-enemy-qa[bot]"

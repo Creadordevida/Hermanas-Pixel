@@ -95,6 +95,7 @@ class NewEnemyMotion {
         _impactDelivered = false;
         pose = NewEnemyPose.attack;
       } else if (near > 60) {
+        pose = NewEnemyPose.patrol;
         x += direction*patrolSpeed*dt*.65;
       }
     } else {

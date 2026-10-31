@@ -45,7 +45,9 @@ void main() {
          'assets/images/interiors_parallax/school/arbolado_tras_ventanas_ciclo.png',
      'interior_school_passage':
          'assets/images/interiors_parallax/school/marco_paso.png',
-     'ground_6':'assets/images/ground/stage_6.png',
+     'ground_6':schoolHifiArtworkEnabled
+         ? 'assets/images/ground/stage_6_hifi.png'
+         : 'assets/images/ground/stage_6.png',
      'futbolista_idle_0':'assets/images/frames/futbolista_idle_0.png',
      'bailarina_idle_0':'assets/images/frames/bailarina_idle_0.png',
      'costume_futbolista_idle_0':'assets/images/outfits/futbolista_idle_0.png',
@@ -68,13 +70,19 @@ void main() {
      backdrops['interior_dance_$name']=interiorAssetTWC('dance',
        name=='far'?'exterior_lejano_ciclo':name=='mid'?'arbolado_tras_ventanas_ciclo':'marco_paso');
    }
+   for(var zone=0;zone<3;zone++) {
+     for(var variant=0;variant<interiorVariantsPerRoomTWC;variant++) {
+       backdrops['interior_dance_z${zone}_panel_$variant']=
+         interiorPanelAssetTWC('dance',zone,variant);
+     }
+   }
    try {
      for(final entry in backdrops.entries) {
        art[entry.key]=await tester.runAsync(() => _load(entry.value))
          ?? (throw StateError('Missing game background ${entry.value}'));
      }
      for(final kind in cases.keys) {
-       final frames=(kind=='referee' || kind=='breakdancer' || kind=='rival')?6:5;
+       const frames=6;
        for(var frame=0;frame<frames;frame++) {
          art['enemy_${kind}_$frame']=await tester.runAsync(
            () => _load('assets/images/enemies/${kind}_$frame.png'))
@@ -83,22 +91,23 @@ void main() {
      }
      const states=['idle','patrol','windup','attack','hit','defeated'];
      for(final caseEntry in cases.entries) {
-       for(var pose=0;pose<states.length;pose++) {
+       for(var sample=0;sample<24;sample++) {
+         final pose=sample~/4,phase=sample%4;
          final kind=caseEntry.key;
-         final foe=Enemy(0,kind,385)..facing=1;
+         final foe=Enemy(0,kind,385)..facing=1..t=phase/7;
          // Selection is driven by the original Enemy fields used in gameplay.
          if(pose==1)foe.lastRenderedX=foe.x-12;
          if(pose==2 || pose==3) {
-           foe.t=pose==2 ? 0.06:.42;
+           foe.t=pose==2 ? phase*.035 : .14+phase*.08;
            if(kind=='rival' || kind=='bully') {
              foe.meleeWarning=.3;
            } else {
              foe.launched=true;
-             foe.t=pose==2 ? 0.24:.52;
+             foe.t=pose==2 ? phase*.10 : .38+phase*.13;
            }
          }
          if(pose==4)foe.stunned=.45;
-         if(pose==5)foe.deathAt=.35;
+         if(pose==5)foe.deathAt=.8-phase*.12;
          final repaint=GlobalKey();
          await tester.pumpWidget(Directionality(
            textDirection:TextDirection.ltr,
@@ -129,7 +138,7 @@ void main() {
                  .timeout(const Duration(seconds:20));
              if(png==null)throw StateError('Empty image: $kind/${states[pose]}');
              final file=File(
-               'qa/rendered_from_flutter/classic_${kind}_${states[pose]}.png');
+               'qa/rendered_from_flutter/classic_${kind}_${sample.toString().padLeft(2,'0')}.png');
              await file.parent.create(recursive:true);
              await file.writeAsBytes(png.buffer.asUint8List(),flush:true);
              return file.length();

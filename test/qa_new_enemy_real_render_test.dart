@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermanas_aventura/main.dart';
+import 'package:hermanas_aventura/interiors_parallax_twc.dart';
 import 'package:hermanas_aventura/new_enemy_behaviors.dart';
 
 Future<ui.Image> loadPng(String path) async {
@@ -50,7 +51,9 @@ void main() {
          'assets/images/interiors_parallax/school/arbolado_tras_ventanas_ciclo.png',
      'interior_school_passage':
          'assets/images/interiors_parallax/school/marco_paso.png',
-     'ground_6':'assets/images/ground/stage_6.png',
+     'ground_6':schoolHifiArtworkEnabled
+         ? 'assets/images/ground/stage_6_hifi.png'
+         : 'assets/images/ground/stage_6.png',
      'futbolista_idle_0':'assets/images/frames/futbolista_idle_0.png',
      'bailarina_idle_0':'assets/images/frames/bailarina_idle_0.png',
      'costume_futbolista_idle_0':'assets/images/outfits/futbolista_idle_0.png',
@@ -109,6 +112,7 @@ void main() {
              4=>NewEnemyPose.hit,
              _=>NewEnemyPose.defeated,
            };
+           if(pose==3)motion.windup=motion.attackDelay*(1-phase/3);
            foe.newMotion=motion;
          }
          if(kind=='navarre_king' && pose>=1 && pose<=3) {

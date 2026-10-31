@@ -1,2 +1,1 @@
-2026-10-31 enemy full-body scale, complete bully/referee, 24 actual rendered samples per new enemy.
-No APK. No artifacts quota. Both protagonists visible.
+2026-10-31 final batch: actual ticker interactions for 10 enemies x 2 protagonists; attack phase sync; 240 authentic engine frames; exact art hash protection. No APK.

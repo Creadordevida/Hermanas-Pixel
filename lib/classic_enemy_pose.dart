@@ -22,7 +22,7 @@ int classicEnemyFrame({
   if (stunned) {
     return switch (kind) {
       'rival' => 2,
-      'bully' => 3,
+      'bully' => 5,
       // Authentically illustrated struck poses already exist in the repo.
       'referee' => 5,
       'breakdancer' => 5,
