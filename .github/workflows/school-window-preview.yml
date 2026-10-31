@@ -1,0 +1,82 @@
+name: Colegio QA - revisar transparencia de ventanas SIN APK
+
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - .github/trigger-school-window-preview.txt
+
+permissions:
+  contents: write
+
+concurrency:
+  group: school-window-preview-only
+  cancel-in-progress: false
+
+jobs:
+  preview-windows:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Obtener rama de trabajo, nunca main
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Flutter para capturas autenticas, no Android
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Dependencias de verificacion grafica
+        run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Recuperar arte exacto y regenerar solo sus paisajes auxiliares
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/import_school_exact_twc.py . qa/school_inbox/COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTANAS_MOVILES.zip
+          python3 tools/build_interiors_parallax_twc.py
+          python3 tools/build_dance_panels_twc.py
+          python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
+          python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+          python3 qa/check_school_hifi_twc.py --strict
+      - name: Variar solo transparencia en copia temporal de los paneles
+        run: python3 tools/preview_school_window_alpha.py
+      - name: Analizar motor y capturar las cinco salas y dos uniones
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter pub get
+          flutter analyze --no-pub lib
+          flutter test --reporter expanded --no-pub test/school_hifi_real_render_test.dart
+      - name: Guardar solamente capturas candidatas para revision visual
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, shutil
+          from PIL import Image
+          images=sorted(Path('qa/school_hifi_flutter').glob('*.png'))
+          assert len(images)==7, f'Expected seven true Flutter captures, got {len(images)}'
+          assert len({hashlib.sha256(p.read_bytes()).digest() for p in images})==7
+          target=Path('qa/school_window_review')
+          target.mkdir(parents=True,exist_ok=True)
+          for path in images:
+              with Image.open(path) as image:
+                  assert image.size==(1000,450)
+              shutil.copy2(path,target/path.name)
+          print('Seven genuine StagePainter candidate images retained')
+          PY
+          git config user.name 'twc-school-qa[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # No candidate asset, game code, approved master or Android build is committed.
+          git add qa/school_window_review/*.png
+          git diff --cached --check
+          git commit -m 'qa(school): inspect softer original-glass window compositing'
+          git push origin HEAD:"$GITHUB_REF_NAME"
