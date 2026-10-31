@@ -47,11 +47,15 @@ jobs:
               kind=p.stem.rsplit('_',1)[0]
               groups.setdefault(kind,[]).append(p)
           for kind,paths in groups.items():
-              sheet=Image.new('RGB',(800,450*((len(paths)+1)//2)),(30,30,35))
+              if kind.startswith('nuevo_'):
+                  frames=[Image.open(p).convert('RGB') for p in paths]
+                  frames[0].save(out/(kind+'.gif'),save_all=True,append_images=frames[1:],duration=145,loop=0,optimize=True)
+                  paths=paths[::4]
+              sheet=Image.new('RGB',(800,250*((len(paths)+1)//2)),(30,30,35))
               for i,p in enumerate(paths):
                   im=Image.open(p).convert('RGB')
                   im.thumbnail((400,225))
-                  sheet.paste(im,((i%2)*400,(i//2)*450))
+                  sheet.paste(im,((i%2)*400,(i//2)*250))
                   ImageDraw.Draw(sheet).text(((i%2)*400,(i//2)*450+230),p.stem,fill='white')
               sheet.save(out/(kind+'.jpg'),quality=88)
           PY

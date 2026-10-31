@@ -1450,10 +1450,13 @@ class StagePainter extends CustomPainter {
             : (foe.runnerWarningAt>=0 ? 1
               : foe.runnerImpactUntil>time ? 3
               : near<240 ? 2 : 0);
-          final col=(foe.t*8).floor()%4;
+          final col=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : (foe.t*8).floor()%4;
           final cw=bull?270.0:156.0, ch=bull?192.0:210.0;
-          final h=bull?116.0:128.0;
-          final w=bull?168.0:h*cw/ch;
+          // Canonical opaque idle heights: bull 154px, runner 150px.
+          // Scale the entire cell uniformly; transparent headroom is not body height.
+          final h=bull?110.0*ch/154.0:140.0*ch/150.0;
+          final w=h*cw/ch;
           canvas.save();
           if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
           canvas.drawImageRect(art,Rect.fromLTWH(col*cw,pose*ch,cw,ch),
@@ -1470,12 +1473,14 @@ class StagePainter extends CustomPainter {
           final row=foe.defeated?5:foe.stunned>0?4:
             foe.kingAwakeAt<0?0:time-foe.kingAwakeAt<.85?1:
             foe.kingAttackAt>=0?3:(hero.x-foe.x).abs()>100?2:0;
-          final col=(foe.t*6).floor()%4;
+          final col=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : (foe.t*6).floor()%4;
           const cw=168.0,ch=216.0;
           canvas.save();
           if(foe.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
           canvas.drawImageRect(art,Rect.fromLTWH(col*cw,row*ch,cw,ch),
-            Rect.fromLTWH(x-42,groundY-116,84,116),
+            Rect.fromLTWH(x-(150.0*cw/147.0)/2,
+                groundY-150.0*ch/147.0,150.0*cw/147.0,150.0*ch/147.0),
             Paint()..filterQuality=FilterQuality.none
               ..color=Colors.white.withValues(alpha:deathOpacity));
           canvas.restore();
@@ -1514,11 +1519,14 @@ class StagePainter extends CustomPainter {
             NewEnemyPose.defeated => 5,
             _ => 0,
           };
-          final frame=((foe.t*7).floor()%4);
+          final frame=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : ((foe.t*7).floor()%4);
           const cellW=144.0,cellH=192.0;
           final source=Rect.fromLTWH(frame*cellW,pose*cellH,cellW,cellH);
-          final h=kind=='robot'?112.0:134.0;
-          final w=kind=='robot'?h*cellW/cellH:98.0;
+          final visibleHeight=kind=='robot'?87.0:kind=='supporter'?135.0:132.0;
+          final targetHeight=kind=='robot'?80.0:140.0;
+          final h=targetHeight*cellH/visibleHeight;
+          final w=h*cellW/cellH;
           canvas.save();
           if(foe.facing<0) { canvas.translate(2*x,0);canvas.scale(-1,1); }
           canvas.drawImageRect(img,source,

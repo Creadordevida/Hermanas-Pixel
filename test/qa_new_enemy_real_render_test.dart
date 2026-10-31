@@ -52,6 +52,7 @@ void main() {
          'assets/images/interiors_parallax/school/marco_paso.png',
      'ground_6':'assets/images/ground/stage_6.png',
      'futbolista_idle_0':'assets/images/frames/futbolista_idle_0.png',
+     'bailarina_idle_0':'assets/images/frames/bailarina_idle_0.png',
      'costume_futbolista_idle_0':'assets/images/outfits/futbolista_idle_0.png',
    };
    for(var index=0;index<6;index++) {
@@ -87,9 +88,12 @@ void main() {
        final kind=pair.key,stage=pair.value.$2;
        // Six distinct conditions, full scene graphics + StagePainter render:
        // 0 idle, 1 alert, 2 locomotion, 3 attack, 4 hit, 5 defeat.
-       for(var pose=0;pose<6;pose++) {
+       for(var sample=0;sample<24;sample++) {
+         final pose=sample~/4, phase=sample%4;
+         final elapsed=phase/7.0;
+         final renderTime=2.0+elapsed;
          final foe=Enemy(0,kind,390)..facing=1
-           ..t=pose*.22;
+           ..t=elapsed;
          if(foe.newArchetype) {
            final archetype=switch(kind) {
              'cleaning_robot'=>NewEnemyKind.cleaningRobot,
@@ -109,26 +113,30 @@ void main() {
          }
          if(kind=='navarre_king' && pose>=1 && pose<=3) {
            foe.kingAwakeAt=0;
-           if(pose==3)foe.kingAttackAt=.2;
+           if(pose==1)foe.kingAwakeAt=renderTime-.2;
+           if(pose==3)foe.kingAttackAt=renderTime-elapsed;
          }
          if(kind=='estafeta_bull') {
            if(pose==1)foe.bullWarnedAt=0;
            if(pose==2 || pose==3) {
              foe.launched=true;
-             foe.t=pose==2 ? 0.1:.4;
+             foe.t=pose==2 ? elapsed*.6 : .4+elapsed;
            }
          }
-         if(kind=='sanfermin_runner' && pose==3)foe.attackCooldown=1;
+         if(kind=='sanfermin_runner') {
+           if(pose==1)foe.runnerWarningAt=renderTime-.1;
+           if(pose==3)foe.runnerImpactUntil=renderTime+.2;
+         }
          if(pose==4)foe.stunned=.6;
-         if(pose==5)foe.deathAt=.5;
+         if(pose==5)foe.deathAt=2.0;
          final key=GlobalKey();
          final painter=StagePainter(
            images:images,stage:stage,cameraX:0,
-           time:pose==2 && kind=='navarre_king'?2.0:.6,
+           time:renderTime,
            lastAttackTime:-10,
            hero:Character(kind=='sanfermin_runner'&&pose==3?320:140),
            otherSister:Character(195),
-           father:Character(70),showFamily:false,selected:0,
+           father:Character(70),showFamily:true,selected:pose%2,
            obstacles:const <Obstacle>[],platforms:const <Rect>[],
            coins:const <Offset>[],collected:const <int>{},
            enemies:[foe],shots:const <Projectile>[],particlesUntil:-10,
@@ -150,7 +158,7 @@ void main() {
              final bytes=await frame.toByteData(format:ui.ImageByteFormat.png)
                .timeout(const Duration(seconds:20));
              if(bytes==null)throw StateError('No render $kind/$pose');
-             final file=File('qa/rendered_from_flutter/nuevo_${kind}_$pose.png');
+             final file=File('qa/rendered_from_flutter/nuevo_${kind}_${sample.toString().padLeft(2,'0')}.png');
              await file.parent.create(recursive:true);
              await file.writeAsBytes(bytes.buffer.asUint8List(),flush:true);
              return await file.length();

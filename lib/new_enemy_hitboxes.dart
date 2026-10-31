@@ -17,10 +17,10 @@ class NewEnemyHitProfile {
 /// large texture atlas cell). In particular the charging bull needs a much
 /// broader collision profile than a 37px human-sized foe.
 const Map<String, NewEnemyHitProfile> newEnemyHitProfiles = {
-  'cleaning_robot': NewEnemyHitProfile(43, 56, 49),
-  'rival_supporter': NewEnemyHitProfile(43, 67, 59),
-  'tipsy_tourist': NewEnemyHitProfile(42, 67, 59),
-  'navarre_king': NewEnemyHitProfile(42, 58, 52),
-  'estafeta_bull': NewEnemyHitProfile(75, 58, 51),
-  'sanfermin_runner': NewEnemyHitProfile(42, 64, 57),
+  'cleaning_robot': NewEnemyHitProfile(43, 40, 36),
+  'rival_supporter': NewEnemyHitProfile(27, 70, 64),
+  'tipsy_tourist': NewEnemyHitProfile(34, 70, 64),
+  'navarre_king': NewEnemyHitProfile(48, 75, 67),
+  'estafeta_bull': NewEnemyHitProfile(70, 55, 48),
+  'sanfermin_runner': NewEnemyHitProfile(30, 70, 64),
 };

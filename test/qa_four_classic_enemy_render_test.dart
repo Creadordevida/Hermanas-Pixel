@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermanas_aventura/main.dart';
+import 'package:hermanas_aventura/interiors_parallax_twc.dart';
 
 Future<ui.Image> _load(String path) async {
   final bytes=await rootBundle.load(path);
@@ -24,7 +25,54 @@ void main() {
      'breakdancer':5,'bully':6,'referee':4,'rival':4,
    };
    final art=<String,ui.Image>{};
+   final backdrops=<String,String>{
+     'scene_2':'assets/images/level_estafeta.png',
+     'mid_2':'assets/images/mid/stage_2.png',
+     'ground_2':'assets/images/ground/stage_2.png',
+     'ground_5':'assets/images/ground/stage_5.png',
+     'costume_bailarina_idle_0':'assets/images/outfits/bailarina_idle_0.png',
+     'scene_3':'assets/images/level_plaza_castillo.png',
+     'mid_3':'assets/images/mid/stage_3.png',
+     'ground_3':'assets/images/ground/stage_3.png',
+     'football_far_twc':
+         'assets/images/chapter45/football_parallax/montanas_ciudad_deportiva_ciclo.png',
+     'football_mid_twc':
+         'assets/images/chapter45/football_parallax/arbolado_deportivo_ciclo.png',
+     'ground_4':'assets/images/ground/stage_4.png',
+     'interior_school_far':
+         'assets/images/interiors_parallax/school/exterior_lejano_ciclo.png',
+     'interior_school_mid':
+         'assets/images/interiors_parallax/school/arbolado_tras_ventanas_ciclo.png',
+     'interior_school_passage':
+         'assets/images/interiors_parallax/school/marco_paso.png',
+     'ground_6':'assets/images/ground/stage_6.png',
+     'futbolista_idle_0':'assets/images/frames/futbolista_idle_0.png',
+     'bailarina_idle_0':'assets/images/frames/bailarina_idle_0.png',
+     'costume_futbolista_idle_0':'assets/images/outfits/futbolista_idle_0.png',
+   };
+   for(var index=0;index<6;index++) {
+     backdrops['football_near_tile_$index']=
+         'assets/images/chapter45/football_parallax/near_world_tiles/near_$index.png';
+   }
+   for(var room=0;room<3;room++) {
+     for(var variant=0;variant<9;variant++) {
+       backdrops['interior_school_z${room}_panel_$variant']=
+           'assets/images/interiors_parallax/school/z${room}_panel_$variant.png';
+     }
+   }
+
+   for(var i=0;i<interiorDanceFiveSceneFilesTWC.length;i++) {
+     backdrops['dance_hifi_$i']=interiorDanceFiveSceneAssetTWC(i);
+   }
+   for(final name in ['far','mid','passage']) {
+     backdrops['interior_dance_$name']=interiorAssetTWC('dance',
+       name=='far'?'exterior_lejano_ciclo':name=='mid'?'arbolado_tras_ventanas_ciclo':'marco_paso');
+   }
    try {
+     for(final entry in backdrops.entries) {
+       art[entry.key]=await tester.runAsync(() => _load(entry.value))
+         ?? (throw StateError('Missing game background ${entry.value}'));
+     }
      for(final kind in cases.keys) {
        final frames=(kind=='referee' || kind=='breakdancer' || kind=='rival')?6:5;
        for(var frame=0;frame<frames;frame++) {
@@ -62,7 +110,7 @@ void main() {
                  hero:Character((kind=='rival' || kind=='bully') &&
                    (pose==2 || pose==3)?420:140),
                  otherSister:Character(195),father:Character(70),
-                 showFamily:false,selected:0,
+                 showFamily:true,selected:pose%2,
                  obstacles:const <Obstacle>[],platforms:const <Rect>[],
                  coins:const <Offset>[],collected:const <int>{},
                  enemies:[foe],shots:const <Projectile>[],
