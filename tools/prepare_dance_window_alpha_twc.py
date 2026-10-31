@@ -29,15 +29,17 @@ def main():
                     r,g,b=source[x,y]
                     # Only light blue sky between existing real frames;
                     # dark wood, mirror borders, signs and foliage remain opaque.
-                    if b>r+15 and g>r+12 and b>g+3 and b>145 and r>85:
-                        pixels[x,y]=(r,g,b,166)
+                    blue=(b>r+15 and g>r+12 and b>g+3 and b>145 and r>85)
+                    green=(g>r+11 and g>b-12 and g>110 and 70<r<225)
+                    if blue or green:
+                        pixels[x,y]=(r,g,b,166 if blue else 192)
                         hits+=1
         destination=OUT/name
         output.save(destination)
         check=Image.open(destination).convert('RGBA')
         assert check.size==original.size
         assert check.convert('RGB').tobytes()==original.tobytes(),name
-        assert all(a in (166,255) for a in check.getchannel('A').getdata()),name
+        assert all(a in (166,192,255) for a in check.getchannel('A').getdata()),name
         print('DANCE_GLASS_RGB_IDENTICAL',name,'alpha_pixels',hits,
             'original_sha256',hashlib.sha256((SRC/name).read_bytes()).hexdigest())
     print('5 APPROVED DANCE PNGs preserved exactly; runtime copies differ only in alpha')
