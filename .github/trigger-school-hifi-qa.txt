@@ -4,3 +4,4 @@ Run school-only Flutter QA and commit 27 approved PNGs. Retry after fixing missi
 Retry 3: keep a single Flutter game and capture seven distinct world positions; no APK.
 
 Retry 4: exact assets already committed; QA-only decode of school sprites and diagnostics; no APK.
+2026-10-31 school capture diagnostic: 23d0b4a, no APK
