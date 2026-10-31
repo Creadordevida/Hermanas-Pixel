@@ -2120,8 +2120,35 @@ class StagePainter extends CustomPainter {
     _interiorLoopTWC(canvas,images['interior_${theme}_mid'],
         interiorMidSpeedTWC,height);
     if (stage == 5 && danceFiveSceneArtworkEnabled) {
+      // Continuity safeguard: while unique extended five-room modules
+      // are being authored, retain the existing physical interior panels
+      // beneath the approved single-shot HIFI compositions. Never expose
+      // the outdoor placeholder sky across entire empty academy halls.
+      // This is a QA candidate, not a declaration of artistic completion.
+      for (var oldZone=0;oldZone<3;oldZone++) {
+        final oldStart=interiorZoneEdgesTWC[oldZone];
+        final oldEnd=interiorZoneEdgesTWC[oldZone+1];
+        if(oldEnd<=cameraX || oldStart>=cameraX+viewW) continue;
+        canvas.save();
+        canvas.clipRect(Rect.fromLTRB(
+          math.max(0.0,oldStart-cameraX),0,
+          math.min(viewW,oldEnd-cameraX),height));
+        for(final index in interiorVisibleModulesTWC(
+            oldZone,cameraX,viewportWidth:viewW)) {
+          final variant=interiorModuleVariantTWC(
+            oldZone,index,theme:'dance');
+          final panel=images['interior_dance_z${oldZone}_panel_$variant'];
+          if(panel==null)continue;
+          final x=interiorModuleXWorldTWC(oldZone,index)-cameraX;
+          canvas.drawImageRect(panel,
+            Rect.fromLTWH(0,0,panel.width.toDouble(),panel.height.toDouble()),
+            Rect.fromLTWH(x,0,interiorModuleWidthTWC,height),
+            Paint()..filterQuality=FilterQuality.none);
+        }
+        canvas.restore();
+      }
       // Each approved composition is anchored to the world at 1:1 speed.
-      // No mirrored panoramas, no alpha room crossfades or legacy overlay.
+      // No mirrored approved scenes, no alpha room crossfades.
       for (var zone=0; zone<5; zone++) {
         final left=interiorDanceFiveSceneEdgesTWC[zone];
         final right=interiorDanceFiveSceneEdgesTWC[zone+1];
