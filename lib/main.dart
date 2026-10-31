@@ -441,6 +441,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           }
         }
       }
+      if (danceFiveSceneArtworkEnabled) {
+        for (var i=0;i<interiorDanceFiveSceneFilesTWC.length;i++) {
+          paths['dance_hifi_$i'] = interiorDanceFiveSceneAssetTWC(i);
+        }
+      }
       // Pizarras y biblioteca están integradas en los murales originales.
       // Sólo cargar objetos físicos independientes que se dibujan en 1:1.
       for (final name in ['mesa_aula','ordenador_aula']) {
@@ -2097,6 +2102,32 @@ class StagePainter extends CustomPainter {
         interiorFarSpeedTWC,height);
     _interiorLoopTWC(canvas,images['interior_${theme}_mid'],
         interiorMidSpeedTWC,height);
+    if (stage == 5 && danceFiveSceneArtworkEnabled) {
+      // Each approved composition is anchored to the world at 1:1 speed.
+      // No mirrored panoramas, no alpha room crossfades or legacy overlay.
+      for (var zone=0; zone<5; zone++) {
+        final left=interiorDanceFiveSceneEdgesTWC[zone];
+        final right=interiorDanceFiveSceneEdgesTWC[zone+1];
+        if (right<=cameraX || left>=cameraX+viewW) continue;
+        final img=images['dance_hifi_$zone'];
+        if(img==null) continue;
+        final naturalH=img.height.toDouble();
+        final naturalW=img.width.toDouble();
+        final scale=height/naturalH;
+        final width=naturalW*scale;
+        final zoneClip=Rect.fromLTRB(
+            math.max(0,left-cameraX),0,
+            math.min(viewW,right-cameraX),height);
+        canvas.save(); canvas.clipRect(zoneClip);
+        // Do not tile unique ballet-room furnishings / doors.
+        canvas.drawImageRect(img,
+            Rect.fromLTWH(0,0,naturalW,naturalH),
+            Rect.fromLTWH(left-cameraX,0,width,height),
+            Paint()..filterQuality=FilterQuality.none);
+        canvas.restore();
+      }
+      return;
+    }
     for (var zone=0;zone<3;zone++) {
       final start=interiorZoneEdgesTWC[zone];
       final end=interiorZoneEdgesTWC[zone+1];
