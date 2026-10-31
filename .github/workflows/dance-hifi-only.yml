@@ -41,15 +41,6 @@ jobs:
         run: flutter analyze --no-pub lib
       - name: Generar 11 capturas autenticas StagePainter 20 a 9
         run: flutter test --reporter expanded --no-pub --dart-define=TWC_DANCE_HIFI_ART=true test/dance_hifi_real_render_test.dart
-      - name: Conservar evidencias QA incluso cuando falle una prueba
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: dance-hifi-qa-20x9
-          path: |
-            qa/dance_hifi_flutter/*.png
-          if-no-files-found: warn
-          retention-days: 7
       - name: Verificar once archivos PNG de 1000x450
         run: |
           python3 - <<'PY'
