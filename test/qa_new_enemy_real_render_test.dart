@@ -115,7 +115,7 @@ void main() {
            if(pose==1)foe.bullWarnedAt=0;
            if(pose==2 || pose==3) {
              foe.launched=true;
-             foe.t=pose==2?.1:.4;
+             foe.t=pose==2 ? 0.1:.4;
            }
          }
          if(kind=='sanfermin_runner' && pose==3)foe.attackCooldown=1;

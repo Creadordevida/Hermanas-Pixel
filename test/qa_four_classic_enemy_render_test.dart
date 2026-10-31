@@ -41,12 +41,12 @@ void main() {
          // Selection is driven by the original Enemy fields used in gameplay.
          if(pose==1)foe.lastRenderedX=foe.x-12;
          if(pose==2 || pose==3) {
-           foe.t=pose==2?.06:.42;
+           foe.t=pose==2 ? 0.06:.42;
            if(kind=='rival' || kind=='bully') {
              foe.meleeWarning=.3;
            } else {
              foe.launched=true;
-             foe.t=pose==2?.24:.52;
+             foe.t=pose==2 ? 0.24:.52;
            }
          }
          if(pose==4)foe.stunned=.45;
