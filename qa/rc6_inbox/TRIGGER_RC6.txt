@@ -2,3 +2,5 @@ RC6 private Android playtest authorized 2026-10-31.
 Take exact checkout of this push; do not merge main; do not alter enemy assets.
 
 Retry 2: art variety QA tracked as known issue, basic smoke gates retained.
+
+Retry 3: valid workflow YAML.
