@@ -1,0 +1,65 @@
+name: Danza arte aprobado - importacion y Flutter QA SIN APK
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - qa/dance_inbox/DANZA_CINCO_ESCENAS_APROBADAS_091.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dance-hifi-only
+  cancel-in-progress: false
+
+jobs:
+  integrate-dance-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Importar ZIP con SHA256 exactos
+        run: |
+          set -euo pipefail
+          python3 tools/import_dance_exact_twc.py . qa/dance_inbox/DANZA_CINCO_ESCENAS_APROBADAS_091.zip
+          python3 qa/check_dance_hifi_approved.py
+      - name: Preparar Flutter (solo pruebas)
+        run: flutter pub get
+      - name: Analizar codigo Flutter
+        run: flutter analyze --no-pub lib
+      - name: Generar 11 capturas autenticas StagePainter 20 a 9
+        run: flutter test --reporter expanded --no-pub --dart-define=TWC_DANCE_HIFI_ART=true test/dance_hifi_real_render_test.dart
+      - name: Verificar once archivos PNG de 1000x450
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from struct import unpack
+          files=sorted(Path('qa/dance_hifi_flutter').glob('*.png'))
+          assert len(files)==11, f'Expected 11 real Flutter captures, got {len(files)}'
+          for p in files:
+              b=p.read_bytes()
+              assert b[:8]==b'\x89PNG\r\n\x1a\n'
+              assert unpack('>II',b[16:24])==(1000,450),str(p)
+              assert len(b)>10000,str(p)
+          print('11 Flutter screenshot PNG files pass basic dimensions and size checks')
+          PY
+      - name: Guardar solo los cinco PNG y evidencias que superaron QA
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "work/revision-visual-20261028-continuidad"
+          git config user.name "twc-dance-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/interiors_parallax/dance/hifi/*.png
+          git add qa/dance_hifi_flutter/*.png
+          git diff --cached --check
+          git commit -m "art(dance): approved five-room PNG and real Flutter QA captures"
+          git push origin HEAD:"$GITHUB_REF_NAME"
