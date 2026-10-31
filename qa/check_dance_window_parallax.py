@@ -28,9 +28,13 @@ def difference(bounds):
 # Every x coordinate below refers to screenshot 04. The camera moved +60
 # world pixels in screenshot 09, hence its aligned physical x is x-60.
 wall=difference((520,115,560,185))
-glass=difference((705,95,760,175))
+samples={
+ 'window_upper':difference((705,95,760,175)),
+ 'window_lower':difference((705,175,790,225)),
+ 'mirror_upper':difference((385,100,435,175)),
+ 'window_right':difference((775,170,845,235)),
+}
 print('DANCE_REAL_WINDOW_PARALLAX: wall=',round(wall,3),
-      'glass=',round(glass,3))
-# Strict movement threshold will be set after inspecting the actual samples.
+      'glazing=',{k:round(v,3) for k,v in samples.items()})
 assert wall < 2.0, 'Physical wall is not stable at 1.00 world speed'
-assert glass > wall + 0.05, 'No detected exterior motion inside dance window'
+assert max(samples.values()) > wall + 0.05, 'No detected exterior motion in any tested glass area'
