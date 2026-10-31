@@ -29,7 +29,7 @@ const List<String> interiorDanceFiveSceneFilesTWC = [
 ];
 String interiorDanceFiveSceneAssetTWC(int index) {
   if (index < 0 || index >= 5) throw RangeError.index(index, interiorDanceFiveSceneFilesTWC);
-  return 'assets/images/interiors_parallax/dance/hifi/' +
+  return 'assets/images/interiors_parallax/dance/hifi_glass/' +
       interiorDanceFiveSceneFilesTWC[index];
 }
 const List<String> interiorSchoolRoomsTWC = ['hall','classroom','computers'];
