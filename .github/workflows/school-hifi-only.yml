@@ -75,6 +75,12 @@ jobs:
                   raise AssertionError('Approved asset changed or absent after regeneration: '+f)
           print('30/30 APPROVED BINARY FILES preserved EXACTLY')
           PY
+      - name: Recuperar marcos y exterior original SOLO cambiando alpha de cristal
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/preview_school_window_alpha.py
+          python3 qa/check_school_hifi_twc.py --strict
       - name: Flutter package resolution (NO Android build)
         run: flutter pub get
       - name: Comprobar codigo Dart con arte definitivo (NO Android)
@@ -129,7 +135,7 @@ jobs:
           # Keep the one uploaded ZIP as provenance; deleting it here would
           # retrigger this paths-filtered workflow and cause a false failure.
           git diff --cached --check
-          git commit -m "art(school): integrate exact approved 27 PNG and 7 verified Flutter screenshots"
+          git commit -m "art(school): preserve approved RGB, refine window alpha, verify 7 Flutter screenshots"
           git push origin HEAD:"$GITHUB_REF_NAME"
       - name: Explicar estado final
         run: |
