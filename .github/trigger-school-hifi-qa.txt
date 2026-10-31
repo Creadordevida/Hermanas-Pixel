@@ -6,3 +6,4 @@ Retry 3: keep a single Flutter game and capture seven distinct world positions; 
 Retry 4: exact assets already committed; QA-only decode of school sprites and diagnostics; no APK.
 2026-10-31 school capture diagnostic: 23d0b4a, no APK
 2026-10-31 QA: ordered school scenes and persisted detailed window parallax; no APK
+2026-10-31 release candidate QA: preserve original RGB, alpha-only window correction, detailed landscapes; no APK
