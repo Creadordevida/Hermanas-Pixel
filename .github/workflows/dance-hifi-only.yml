@@ -9,6 +9,7 @@ on:
       - lib/main.dart
       - lib/interiors_parallax_twc.dart
       - tools/prepare_dance_window_alpha_twc.py
+      - qa/check_dance_window_parallax.py
       - test/dance_hifi_real_render_test.dart
   workflow_dispatch:
 
@@ -61,6 +62,8 @@ jobs:
               assert len(b)>10000,str(p)
           print('11 Flutter screenshot PNG files pass basic dimensions and size checks')
           PY
+      - name: Verificar paralaje real en los cristales y muros fisicos
+        run: python3 qa/check_dance_window_parallax.py
       - name: Guardar solo los cinco PNG y evidencias que superaron QA
         run: |
           set -euo pipefail
