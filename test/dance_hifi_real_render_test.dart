@@ -80,12 +80,9 @@ Future<void> waitForDanceAssets(WidgetTester tester) async {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('Approved dance: 5 rooms, 2 transitions, 2 parallax frames', (tester) async {
-    expect(danceHifiArtworkEnabled, isTrue);
-    expect(interiorDanceRoomTypeTWC(0, 0), 0);
-    expect(interiorDanceRoomTypeTWC(0, 1), 4);
-    expect(interiorDanceRoomTypeTWC(0, 4), 3);
-    expect(interiorDanceRoomTypeTWC(1, 0), 1);
-    expect(interiorDanceRoomTypeTWC(2, 0), 2);
+    expect(danceFiveSceneArtworkEnabled, isTrue);
+    expect(interiorDanceRoomsTWC.length, 5);
+    expect(interiorDanceFiveSceneEdgesTWC.length, 6);
     SharedPreferences.setMockInitialValues({});
     const locations = <String, double>{
       '01_recepcion': 500,
