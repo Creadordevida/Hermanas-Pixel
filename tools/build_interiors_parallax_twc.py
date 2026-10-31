@@ -381,7 +381,6 @@ def main():
     # New authored artwork is authoritative once its five-scene master is
     # present. Never mix old pixel walls into a final high-fidelity school.
     # Reuse the exact near-wall assets keys that Flutter already loads.
-    from build_school_hifi_twc import main as rebuild_school_hifi
     school_master=ASSETS/'school_hifi/school_five_scenes_master.png'
     if school_master.exists():
         from clean_school_floor_hifi import main as generate_school_floor_hifi
@@ -405,7 +404,11 @@ def main():
                 raise ValueError('School must retain 27 approved panel hashes')
             print('27 existing school PNGs preserved; hashes verified, NO regeneration')
         else:
-            rebuild_school_hifi()
+            # Fail closed: automatic legacy reconstruction would overwrite
+            # exact user-approved images and the verified alpha refinement.
+            raise FileNotFoundError(
+                'Protected school PNGs/manifest missing. Restore via the '
+                'exact approved ZIP import; NEVER use legacy auto-regeneration.')
         manifest['stages']['school']['visual_source']='school_hifi/5_unique_rooms'
     else:
         raise FileNotFoundError(
