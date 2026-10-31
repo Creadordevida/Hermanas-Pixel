@@ -1,3 +1,20 @@
+## 2026-10-31 — Reanudación principal en Work; auditoría contrastada
+Esta conversación queda como principal por orden del usuario. Corte de código: 429e2ee6f0c465489187da3de1977a539a9454d6; rama work/revision-visual-20261028-continuidad; PR #5 abierta y borrador. No fusionar ni crear APK sin nueva orden.
+
+Hallazgo que sustituye el bloqueo antiguo de transferencia: la ejecución 41133497305 (job 124330106483) SÍ recibió el ZIP escolar, importó 30 archivos, verificó 27 paneles/cinco familias y preservó 30/30 hashes tras los generadores. Flutter analyze --no-pub lib pasó. El test real cargó imágenes y anunció capture 01_pasillo, pero agotó 10 minutos. El paso de commit quedó OMITIDO. Por tanto: paquete transferido y verificado en runner; integración permanente y siete capturas NO acreditadas. No volver a pedir subir el ZIP basándose en el diagnóstico antiguo.
+Evidencia: https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/41133497305
+Inspección de test/school_hifi_real_render_test.dart: rasterización dentro de runAsync; operaciones asíncronas de File fuera de runAsync. Hipótesis de bloqueo por I/O en reloj simulado pendiente de reproducción; no declarar causa confirmada.
+Siguiente trabajo autorizado: aislar y corregir captura/guardado, validar siete renders auténticos y después integración. No aumentar timeout como sustituto de diagnóstico.
+
+Base móvil según documentación recuperada: RC4 probada por usuario; RC5 fullscreen última candidata entregada, aceptación móvil pendiente. Incidencias de viewport, colegio, turista/corredor/Estafeta, danza, robot y bully siguen abiertas salvo evidencia posterior. No reactivar órdenes antiguas de compilación.
+Conocimiento específico: docs/DECISIONES_APROBADAS.md, docs/continuidad/ y docs/HISTORIAL_DE_TRABAJO.md.
+Conocimiento reutilizable: docs/FRAMEWORK_SNES_TWC/. Mantener arte, cámara/parallax, pivotes, pruebas y procedencia separados de personajes y coordenadas propias del juego. Flutter se conserva; framework todavía no equivale a GPT terminado.
+Clasificación obligatoria: propuesto -> aprobado para desarrollar -> generado -> integrado en motor/rama -> comprobado (tipo de prueba y commit) -> aprobado visualmente/dispositivo. Cada transición necesita evidencia; aprobación del concepto no aprueba el resultado.
+
+Límites de esta ronda: recuperación parcial de conversaciones y lectura de documentos actuales de continuidad/decisiones/framework; logs reales inspeccionados. Colegio_TWC.zip localizado (18.505.839 bytes), pero lectura textual no permite inspeccionar contenido ZIP. No se han revisado aquí todos los PNG, vídeos históricos ni todas las ramas; no se ha ejecutado nuevo Flutter/Android. No afirmar auditoría total ni cierre artístico. No se han cambiado jugabilidad ni recursos.
+
+---
+
 # Bitácora de continuidad
 ## 2026-10-30 — Implantación inicial
 Se revisó repositorio privado, PR #5, rama work/revision-visual-20261028-continuidad y HEAD cb8f93a582a3795ae8351c3075f600b6a5b313a0.
