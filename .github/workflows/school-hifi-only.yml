@@ -96,10 +96,12 @@ jobs:
           from pathlib import Path
           from PIL import Image,ImageStat
           import hashlib
+          import numpy as np
           root=Path('qa/school_hifi_flutter')
           names=['01_pasillo','02_taquillas','03_biblioteca',
                  '04_aula_pupitres','05_informatica',
-                 '06_paso_a_aula','07_paso_a_informatica']
+                 '06_paso_a_aula','07_paso_a_informatica',
+                 '08_pasillo_movimiento_60','09_biblioteca_movimiento_60']
           hashes=[]
           for name in names:
             f=root/(name+'.png')
@@ -111,8 +113,24 @@ jobs:
                 if sum(ImageStat.Stat(rgb).stddev)<18:
                     raise AssertionError('Blank or nearly empty screenshot '+name)
             hashes.append(hashlib.sha256(f.read_bytes()).hexdigest())
-          if len(set(hashes))!=7:raise AssertionError('Repeated Flutter room screenshots')
-          print('7 distinct ACTUAL Flutter StagePainter screenshots verified')
+          if len(set(hashes))!=9:raise AssertionError('Repeated Flutter room screenshots')
+          # A 60-world-pixel camera movement moves the physical school wall
+          # 60px. Once the wall is aligned, authentic .30/.56 outdoor motion
+          # must still be visible inside the window glass.
+          for base,moved,wall,window in [
+            ('01_pasillo','08_pasillo_movimiento_60',(210,315),(400,700)),
+            ('03_biblioteca','09_biblioteca_movimiento_60',(85,165),(400,550)),
+          ]:
+            a=np.asarray(Image.open(root/(base+'.png')).convert('RGB'),dtype=np.int16)
+            b=np.asarray(Image.open(root/(moved+'.png')).convert('RGB'),dtype=np.int16)
+            x0,x1=wall
+            fixed=float(np.abs(a[65:145,x0:x1]-b[65:145,x0-60:x1-60]).mean())
+            x0,x1=window
+            moving=float(np.abs(a[55:145,x0:x1]-b[55:145,x0-60:x1-60]).mean())
+            print('REAL_WINDOW_MOTION',base,'wall=',round(fixed,2),'glass=',round(moving,2))
+            if moving<max(5.0,fixed+3.0):
+              raise AssertionError('No visible exterior parallax behind glass: '+base)
+          print('9 distinct ACTUAL Flutter StagePainter screenshots and real window parallax verified')
           PY
       - name: Commit SOLO los 30 PNG/manifest y capturas probadas, nunca APK
         shell: bash
