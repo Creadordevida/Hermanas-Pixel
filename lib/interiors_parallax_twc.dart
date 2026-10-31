@@ -33,6 +33,15 @@ const List<List<int>> interiorSchoolSourcePlanHifiTWC = [
   [2,2,4,2,3,2,2,4,2],
 ];
 
+// Order existing approved PNG crops to avoid adjacent duplicate classroom
+// posters or consecutive IT labs. No pixel, room artwork or physics changes.
+// Each 9-panel cycle still displays every approved school crop exactly once.
+const List<List<int>> interiorSchoolVisualOrderHifiTWC = [
+  [0,1,2,3,4,5,6,8,7],
+  [0,2,1,4,3,7,5,8,6],
+  [0,2,1,3,4,5,6,7,8],
+];
+
 String interiorAssetTWC(String theme, String name) =>
     'assets/images/interiors_parallax/$theme/$name.png';
 
@@ -65,7 +74,10 @@ int interiorModuleVariantTWC(int zone,int index,{String theme='dance'}) {
   if(theme=='school') {
     // The five authored HIFI interior types must follow their genuine
     // physical corridor/classroom/library/IT sequence in the world.
-    if(schoolHifiArtworkEnabled) return index % interiorSchoolVariantsTWC;
+    if(schoolHifiArtworkEnabled) {
+      return interiorSchoolVisualOrderHifiTWC[zone][
+          index % interiorSchoolVariantsTWC];
+    }
     // Preserve the old permutation for archived RC5 assets only.
     return (index*5 + zone*2) % interiorSchoolVariantsTWC;
   }
