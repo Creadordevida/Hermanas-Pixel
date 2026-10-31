@@ -1,8 +1,7 @@
-// ACTUAL Flutter StagePainter school screenshots, not PIL mock.
-// Requires exact 27 PNGs + master in this checkout. No APK.
+// Genuine Flutter StagePainter evidence for the approved school artwork.
+// Captures five school rooms and two joins; never builds an Android APK.
 import 'dart:io';
 import 'dart:ui' as ui;
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,88 +9,113 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hermanas_aventura/main.dart';
 import 'package:hermanas_aventura/interiors_parallax_twc.dart';
 
-Future<void> picture(WidgetTester tester,GlobalKey key,String name) async {
- final boundary=key.currentContext?.findRenderObject();
- expect(boundary,isA<RenderRepaintBoundary>());
- final object=boundary! as RenderRepaintBoundary;
- expect(object.size.width,closeTo(1000,1));
- expect(object.size.height,closeTo(450,1));
- final stage=tester.widgetList<CustomPaint>(find.byType(CustomPaint))
-  .where((x)=>x.painter is StagePainter &&
-              (x.painter! as StagePainter).stage==6);
- expect(stage,isNotEmpty,reason:'Capture must use the real school StagePainter');
- final bytes=await tester.runAsync<ByteData?>(() async{
-   final img=await object.toImage(pixelRatio:1);
-   try{return await img.toByteData(format:ui.ImageByteFormat.png);}
-   finally{img.dispose();}
- });
- expect(bytes,isNotNull);
- final file=File('qa/school_hifi_flutter/'+name+'.png');
- await file.parent.create(recursive:true);
- await file.writeAsBytes(bytes!.buffer.asUint8List(),flush:true);
- expect(await file.length(),greaterThan(10000));
- print('REAL_FLUTTER_SCHOOL_CAPTURE '+name);
-}
+Future<void> captureSchool(WidgetTester tester, GlobalKey key, String name) async {
+  // RepaintBoundary.toImage cannot be called while its current frame needs paint.
+  await tester.pump(const Duration(milliseconds: 100));
+  final render = key.currentContext?.findRenderObject();
+  expect(render, isA<RenderRepaintBoundary>(), reason: 'Missing boundary: $name');
+  final boundary = render! as RenderRepaintBoundary;
+  expect(boundary.size.width, closeTo(1000, 1));
+  expect(boundary.size.height, closeTo(450, 1));
+  expect(boundary.debugNeedsPaint, isFalse, reason: 'Unpainted room: $name');
 
-Future<void> waitReady(WidgetTester t) async {
- for(var i=0;i<400;i++){
-  await t.runAsync(()=>
-    Future<void>.delayed(const Duration(milliseconds:125)));
-  await t.pump(const Duration(milliseconds:40));
-  if(find.textContaining('ERROR AL CARGAR RECURSOS').evaluate().isNotEmpty){
-   throw StateError('Failed to load actual school PNG resources');
-  }
-  if(find.byType(CircularProgressIndicator).evaluate().isEmpty)return;
- }
- throw StateError('Resource loading timed out');
-}
+  final activeSchool = tester.widgetList<CustomPaint>(find.byType(CustomPaint))
+      .where((c) => c.painter is StagePainter &&
+          (c.painter! as StagePainter).stage == 6);
+  expect(activeSchool, isNotEmpty, reason: 'No real school StagePainter: $name');
 
-void main(){
- TestWidgetsFlutterBinding.ensureInitialized();
- testWidgets('Five actual school rooms, 20:9, two world transitions',
-  (tester) async{
-   expect(schoolHifiArtworkEnabled,isTrue);
-   expect(interiorSchoolRoomTypeTWC(0,0),0);
-   expect(interiorSchoolRoomTypeTWC(0,1),4);
-   expect(interiorSchoolRoomTypeTWC(0,4),3);
-   expect(interiorSchoolRoomTypeTWC(1,0),1);
-   expect(interiorSchoolRoomTypeTWC(2,0),2);
-   SharedPreferences.setMockInitialValues({});
-   final locations=<String,double>{
-     '01_pasillo':500,
-     '02_taquillas':1350,
-     '03_biblioteca':3880,
-     '04_aula_pupitres':11000,
-     '05_informatica':26000,
-     '06_paso_a_aula':10525,
-     '07_paso_a_informatica':25525,
-   };
-   try{
-    await tester.binding.setSurfaceSize(const Size(1000,450));
-    // Load the authentic game ONCE: the previous test recreated the entire
-    // 130+ PNG image cache seven times and exhausted the 10-minute timeout.
-    // Reusing the SAME RenderRepaintBoundary key keeps the live game State,
-    // image cache, StagePainter and parallax implementation intact.
-    final key=GlobalKey();
-    final first=locations.entries.first;
-    await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
-      key:key,child:HermanasGame(qaStage:6,qaWorldX:first.value))));
-    print('SCHOOL_QA: mounted game, loading actual school images');
-    await waitReady(tester);
-    print('SCHOOL_QA: school assets ready');
-    await tester.pump(const Duration(milliseconds:200));
-    print('SCHOOL_QA: capture '+first.key);
-    await picture(tester,key,first.key);
-    for(final item in locations.entries.skip(1)){
-      await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
-        key:key,child:HermanasGame(qaStage:6,qaWorldX:item.value))));
-      await tester.pump(const Duration(milliseconds:150));
-      print('SCHOOL_QA: capture '+item.key);
-      await picture(tester,key,item.key);
+  // Both rasterization and real filesystem operations need the real async
+  // zone. Keep all of them inside runAsync (not just toImage/toByteData).
+  final result = await tester.runAsync<({int bytes, int width, int height})>(() async {
+    ui.Image? image;
+    try {
+      print('SCHOOL_QA_RENDER_START $name');
+      image = await boundary.toImage(pixelRatio: 1.0)
+          .timeout(const Duration(seconds: 30));
+      print('SCHOOL_QA_RENDER_DONE $name: ${image.width}x${image.height}');
+      final png = await image.toByteData(format: ui.ImageByteFormat.png)
+          .timeout(const Duration(seconds: 30));
+      if (png == null) throw StateError('No pixels returned: $name');
+      print('SCHOOL_QA_PNG_DONE $name: ${png.lengthInBytes} bytes');
+      final file = File('qa/school_hifi_flutter/$name.png');
+      await file.parent.create(recursive: true)
+          .timeout(const Duration(seconds: 10));
+      await file.writeAsBytes(
+        png.buffer.asUint8List(png.offsetInBytes, png.lengthInBytes),
+        flush: true,
+      ).timeout(const Duration(seconds: 20));
+      final bytes = await file.length().timeout(const Duration(seconds: 10));
+      print('REAL_FLUTTER_SCHOOL_CAPTURE $name: $bytes bytes');
+      return (bytes: bytes, width: image.width, height: image.height);
+    } catch (error) {
+      print('SCHOOL_QA_CAPTURE_ERROR $name: $error');
+      rethrow;
+    } finally {
+      image?.dispose();
     }
-   }finally{
-    await tester.pumpWidget(const SizedBox.shrink());
-    await tester.binding.setSurfaceSize(null);
-   }
- });
+  });
+  expect(result, isNotNull, reason: 'runAsync did not complete: $name');
+  final screenshot = result!;
+  expect(screenshot.width, 1000, reason: 'Invalid school screenshot width');
+  expect(screenshot.height, 450, reason: 'Invalid school screenshot height');
+  expect(screenshot.bytes, greaterThan(10000), reason: 'Empty school screenshot');
+}
+
+Future<void> waitForSchoolAssets(WidgetTester tester) async {
+  for (var i = 0; i < 400; i++) {
+    await tester.runAsync(() =>
+        Future<void>.delayed(const Duration(milliseconds: 125)));
+    await tester.pump(const Duration(milliseconds: 40));
+    if (find.textContaining('ERROR AL CARGAR RECURSOS').evaluate().isNotEmpty) {
+      throw StateError('The game could not load the actual school PNGs');
+    }
+    if (find.byType(CircularProgressIndicator).evaluate().isEmpty) return;
+  }
+  throw StateError('School assets did not become ready');
+}
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets('Approved school: 5 rooms, 20:9, 2 transitions', (tester) async {
+    expect(schoolHifiArtworkEnabled, isTrue);
+    expect(interiorSchoolRoomTypeTWC(0, 0), 0);
+    expect(interiorSchoolRoomTypeTWC(0, 1), 4);
+    expect(interiorSchoolRoomTypeTWC(0, 4), 3);
+    expect(interiorSchoolRoomTypeTWC(1, 0), 1);
+    expect(interiorSchoolRoomTypeTWC(2, 0), 2);
+    SharedPreferences.setMockInitialValues({});
+    const locations = <String, double>{
+      '01_pasillo': 500,
+      '02_taquillas': 1350,
+      '03_biblioteca': 3880,
+      '04_aula_pupitres': 11000,
+      '05_informatica': 26000,
+      '06_paso_a_aula': 10525,
+      '07_paso_a_informatica': 25525,
+    };
+    await tester.binding.setSurfaceSize(const Size(1000, 450));
+    final boundaryKey = GlobalKey();
+    final gameKey = GlobalKey();
+    try {
+      var first = true;
+      for (final entry in locations.entries) {
+        print('SCHOOL_QA_SCENE_START ${entry.key} at ${entry.value}');
+        // Preserve the real game State/cache across room changes. The previous
+        // test unintentionally recreated the game after every screenshot.
+        await tester.pumpWidget(MaterialApp(home: RepaintBoundary(
+          key: boundaryKey,
+          child: HermanasGame(key: gameKey, qaStage: 6, qaWorldX: entry.value),
+        )));
+        if (first) {
+          await waitForSchoolAssets(tester);
+          first = false;
+        }
+        await tester.pump(const Duration(milliseconds: 150));
+        await captureSchool(tester, boundaryKey, entry.key);
+      }
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.binding.setSurfaceSize(null);
+    }
+  });
 }
