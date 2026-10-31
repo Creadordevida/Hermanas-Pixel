@@ -305,12 +305,15 @@ void main() async {
 }
 
 class HermanasGame extends StatefulWidget {
-  const HermanasGame({super.key, this.qaStage, this.qaMap = false, this.qaWorldX});
+  const HermanasGame({super.key, this.qaStage, this.qaMap = false, this.qaWorldX, this.qaSelected});
   /// Entradas de diagnóstico usadas solo por testWidgets; en Android son null/false.
   final int? qaStage;
   final bool qaMap;
   /// Posición del recorrido utilizada por capturas de QA, nunca por el juego Android.
   final double? qaWorldX;
+  /// Opcional exclusivo de capturas de test: 0 Miren, 1 Sara.
+  /// No se utiliza durante el juego normal.
+  final int? qaSelected;
   @override
   State<HermanasGame> createState() => _HermanasGameState();
 }
@@ -359,12 +362,13 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     if (!resourcesReady ||
         (oldWidget.qaStage == widget.qaStage &&
          oldWidget.qaMap == widget.qaMap &&
-         oldWidget.qaWorldX == widget.qaWorldX)) {
+         oldWidget.qaWorldX == widget.qaWorldX &&
+         oldWidget.qaSelected == widget.qaSelected)) {
       return;
     }
     if (widget.qaStage != null) {
       stage = widget.qaStage!.clamp(0, 6);
-      selected = level.forcedSara ? 1 : 0;
+      selected = widget.qaSelected == 1 ? 1 : (level.forcedSara ? 1 : 0);
       _layoutStage();
       if (widget.qaWorldX != null) {
         hero.x = widget.qaWorldX!.clamp(actorRadius, stageWidth - actorRadius).toDouble();
@@ -543,7 +547,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       }
       if (widget.qaStage != null) {
         stage = widget.qaStage!.clamp(0, 6);
-        selected = level.forcedSara ? 1 : 0;
+        selected = widget.qaSelected == 1 ? 1 : (level.forcedSara ? 1 : 0);
         _layoutStage();
         if(widget.qaWorldX != null) {
           hero.x=widget.qaWorldX!.clamp(actorRadius,stageWidth-actorRadius).toDouble();
