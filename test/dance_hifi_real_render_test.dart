@@ -106,11 +106,11 @@ void main() {
         print('DANCE_QA_SCENE_START ${entry.key} at ${entry.value}');
         // Preserve the real game State/cache across room changes. The previous
         // test unintentionally recreated the game after every screenshot.
-        final sara = entry.key.startsWith('10_') || entry.key.startsWith('11_');
+        // La fase danza obliga a Sara; no forzar a Miren contra reglas de juego.
         await tester.pumpWidget(MaterialApp(home: RepaintBoundary(
           key: boundaryKey,
           child: HermanasGame(key: gameKey, qaStage: 5,
-              qaWorldX: entry.value, qaSelected: sara ? 1 : 0),
+              qaWorldX: entry.value, qaSelected: 1),
         )));
         if (first) {
           await waitForDanceAssets(tester);
@@ -118,7 +118,7 @@ void main() {
         }
         await tester.pump(const Duration(milliseconds: 150));
         await captureDance(tester, boundaryKey, entry.key,
-            expectedCharacter: sara ? 1 : 0);
+            expectedCharacter: 1);
       }
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
