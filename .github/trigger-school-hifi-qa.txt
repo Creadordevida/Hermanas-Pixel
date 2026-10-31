@@ -11,3 +11,5 @@ Retry 4: exact assets already committed; QA-only decode of school sprites and di
 2026-10-31 retry calibrated real window motion; nine captures only, no APK
 
 2026-10-31 HIFI scene boundary uncluttered: remove generic 120px passage overlay; verify nine screenshots, no APK
+
+2026-10-31 dual protagonists Miren and Sara: 11 real Flutter screenshots, original arches removed, no enemy scripts, NO APK
