@@ -79,7 +79,7 @@ Future<void> waitForDanceAssets(WidgetTester tester) async {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('Approved dance: 5 rooms, 2 transitions, 2 parallax frames', (tester) async {
+  testWidgets('Approved dance: 5 rooms, 4 transitions, world coverage and camera', (tester) async {
     expect(danceFiveSceneArtworkEnabled, isTrue);
     expect(interiorDanceRoomsTWC.length, 5);
     expect(interiorDanceFiveSceneEdgesTWC.length, 6);
@@ -96,6 +96,16 @@ void main() {
       '09_estudio_camara_60': 22160,
       '10_sara_estudio': 22100,
       '11_sara_vestuario': 14600,
+      // Long-world visual audit: sample stretches between the unique murals.
+      '12_recepcion_medio': 3500,
+      '13_pasillo_medio': 10400,
+      '14_vestuario_medio': 18200,
+      '15_estudio_medio': 25400,
+      '16_escenario_medio': 33900,
+      '17_paso_pasillo_vestuario': 14000,
+      '18_paso_vestuario_estudio': 22000,
+      '19_recepcion_final': 6700,
+      '20_escenario_final': 35800,
     };
     await tester.binding.setSurfaceSize(const Size(1000, 450));
     final boundaryKey = GlobalKey();
