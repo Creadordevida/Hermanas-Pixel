@@ -64,6 +64,13 @@ def render(master,zone,variant):
  return wall,room,(left,y0,left+source_w,y1),scale
 
 def main():
+ # This historical generator must never overwrite the reviewed, alpha-fixed
+ # panel bytes. The immutable accepted ZIP remains the recovery source.
+ protected=QA/'SCHOOL_HIFI_MANIFEST.json'
+ if protected.is_file():
+  prior=json.loads(protected.read_text(encoding='utf-8'))
+  if prior.get('glass_alpha_method'):
+   raise RuntimeError('Protected approved school art: legacy rebuild forbidden')
  if not SRC.is_file():
   raise FileNotFoundError(
    'REQUIRED exact 5-scene source PNG missing: '+str(SRC)+
