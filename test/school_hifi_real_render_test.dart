@@ -9,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hermanas_aventura/main.dart';
 import 'package:hermanas_aventura/interiors_parallax_twc.dart';
 
-Future<void> captureSchool(WidgetTester tester, GlobalKey key, String name) async {
+Future<void> captureSchool(WidgetTester tester, GlobalKey key, String name,
+    {int expectedCharacter = 0}) async {
   // RepaintBoundary.toImage cannot be called while its current frame needs paint.
   await tester.pump(const Duration(milliseconds: 100));
   final render = key.currentContext?.findRenderObject();
@@ -23,6 +24,8 @@ Future<void> captureSchool(WidgetTester tester, GlobalKey key, String name) asyn
       .where((c) => c.painter is StagePainter &&
           (c.painter! as StagePainter).stage == 6);
   expect(activeSchool, isNotEmpty, reason: 'No real school StagePainter: $name');
+  expect((activeSchool.first.painter! as StagePainter).selected, expectedCharacter,
+      reason: 'Wrong protagonist rendered in $name');
 
   // Both rasterization and real filesystem operations need the real async
   // zone. Keep all of them inside runAsync (not just toImage/toByteData).
@@ -96,6 +99,9 @@ void main() {
       // only outside the windows moves at the approved .30/.56 speeds.
       '08_pasillo_movimiento_60': 560,
       '09_biblioteca_movimiento_60': 3940,
+      // Un segundo personaje real del juego; no previsualizaciones externas.
+      '10_sara_aula': 11000,
+      '11_sara_biblioteca': 3880,
     };
     await tester.binding.setSurfaceSize(const Size(1000, 450));
     final boundaryKey = GlobalKey();
@@ -106,16 +112,19 @@ void main() {
         print('SCHOOL_QA_SCENE_START ${entry.key} at ${entry.value}');
         // Preserve the real game State/cache across room changes. The previous
         // test unintentionally recreated the game after every screenshot.
+        final sara = entry.key.startsWith('10_') || entry.key.startsWith('11_');
         await tester.pumpWidget(MaterialApp(home: RepaintBoundary(
           key: boundaryKey,
-          child: HermanasGame(key: gameKey, qaStage: 6, qaWorldX: entry.value),
+          child: HermanasGame(key: gameKey, qaStage: 6,
+              qaWorldX: entry.value, qaSelected: sara ? 1 : 0),
         )));
         if (first) {
           await waitForSchoolAssets(tester);
           first = false;
         }
         await tester.pump(const Duration(milliseconds: 150));
-        await captureSchool(tester, boundaryKey, entry.key);
+        await captureSchool(tester, boundaryKey, entry.key,
+            expectedCharacter: sara ? 1 : 0);
       }
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
