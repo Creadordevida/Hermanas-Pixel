@@ -9,3 +9,5 @@ Retry 4: exact assets already committed; QA-only decode of school sprites and di
 2026-10-31 release candidate QA: preserve original RGB, alpha-only window correction, detailed landscapes; no APK
 2026-10-31 school final QA: nine real images, +60 camera parallax, legacy generator guards, no APK
 2026-10-31 retry calibrated real window motion; nine captures only, no APK
+
+2026-10-31 HIFI scene boundary uncluttered: remove generic 120px passage overlay; verify nine screenshots, no APK
