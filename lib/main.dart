@@ -2125,24 +2125,32 @@ class StagePainter extends CustomPainter {
       // beneath the approved single-shot HIFI compositions. Never expose
       // the outdoor placeholder sky across entire empty academy halls.
       // This is a QA candidate, not a declaration of artistic completion.
-      for (var oldZone=0;oldZone<3;oldZone++) {
-        final oldStart=interiorZoneEdgesTWC[oldZone];
-        final oldEnd=interiorZoneEdgesTWC[oldZone+1];
-        if(oldEnd<=cameraX || oldStart>=cameraX+viewW) continue;
+      // Historical architectural filler is grouped by the FIVE dance zones,
+      // not by the unrelated legacy 3-zone map. The approved 5 scenes remain
+      // unique physical landmarks and are never duplicated or mirrored.
+      const legacyZoneForDance = <int>[0,0,1,1,2];
+      for (var zone=0;zone<5;zone++) {
+        final start=interiorDanceFiveSceneEdgesTWC[zone];
+        final end=interiorDanceFiveSceneEdgesTWC[zone+1];
+        if (end<=cameraX || start>=cameraX+viewW) continue;
         canvas.save();
         canvas.clipRect(Rect.fromLTRB(
-          math.max(0.0,oldStart-cameraX),0,
-          math.min(viewW,oldEnd-cameraX),height));
-        for(final index in interiorVisibleModulesTWC(
-            oldZone,cameraX,viewportWidth:viewW)) {
-          final variant=interiorModuleVariantTWC(
-            oldZone,index,theme:'dance');
+          math.max(0.0,start-cameraX),0,
+          math.min(viewW,end-cameraX),height));
+        final first=(((cameraX-start)/interiorModuleWidthTWC).floor()-1)
+            .clamp(0,999999).toInt();
+        final last=(((cameraX+viewW-start)/interiorModuleWidthTWC).floor()+1)
+            .clamp(0,999999).toInt();
+        final oldZone=legacyZoneForDance[zone];
+        for(var index=first;index<=last;index++) {
+          final worldX=start+index*interiorModuleWidthTWC;
+          if(worldX>=end)break;
+          final variant=index%interiorVariantsPerRoomTWC;
           final panel=images['interior_dance_z${oldZone}_panel_$variant'];
           if(panel==null)continue;
-          final x=interiorModuleXWorldTWC(oldZone,index)-cameraX;
           canvas.drawImageRect(panel,
             Rect.fromLTWH(0,0,panel.width.toDouble(),panel.height.toDouble()),
-            Rect.fromLTWH(x,0,interiorModuleWidthTWC,height),
+            Rect.fromLTWH(worldX-cameraX,0,interiorModuleWidthTWC,height),
             Paint()..filterQuality=FilterQuality.none);
         }
         canvas.restore();
