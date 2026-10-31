@@ -9,7 +9,7 @@ import json
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-FOLDER = ROOT / "assets/images/dance_hifi"
+FOLDER = ROOT / "assets/images/interiors_parallax/dance/hifi"
 EXPECTED = {
     "01_recepcion.png": ((693, 338), "0376b7999defb2c1e615867f0537ccd971b18fe645f30f7f05e7e79d9de20817"),
     "02_estudio.png": ((701, 338), "0b59f11e8c4a6efc8e85663bd6991ac0941dd0997bcb2b99641608f7cee92534"),
