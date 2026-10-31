@@ -1,0 +1,1 @@
+2026-10-31 preview-only: preserve approved 27 PNGs and compare alpha blending in real StagePainter, no APK.
