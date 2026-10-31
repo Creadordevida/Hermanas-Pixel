@@ -89,7 +89,7 @@ void main() {
       '02_pasillo': 7500,
       '03_vestuario': 14600,
       '04_estudio': 22100,
-      '05_escenario': 30000,
+      '05_escenario': 29380,
       '06_transicion_recepcion_pasillo': 7000,
       '07_transicion_estudio_escenario': 29000,
       '08_pasillo_camara_60': 7560,
