@@ -16,7 +16,22 @@ const bool schoolHifiArtworkEnabled =
     bool.fromEnvironment('TWC_SCHOOL_HIFI_ART', defaultValue: true);
 
 const List<double> interiorZoneEdgesTWC = [0, 10500, 25500, 36500];
-const List<String> interiorDanceRoomsTWC = ['foyer','studio','stage'];
+// The approved PNG files must be committed before enabling this in the build.
+const bool danceFiveSceneArtworkEnabled =
+    bool.fromEnvironment('TWC_DANCE_HIFI_ART', defaultValue: false);
+const List<String> interiorDanceRoomsTWC =
+    ['reception','corridor','dressing','studio','stage'];
+const List<double> interiorDanceFiveSceneEdgesTWC =
+    [0, 7000, 14000, 22000, 29000, interiorStageWidthTWC];
+const List<String> interiorDanceFiveSceneFilesTWC = [
+  '01_recepcion.png','04_pasillo.png','05_vestuario.png',
+  '02_estudio.png','03_escenario.png',
+];
+String interiorDanceFiveSceneAssetTWC(int index) {
+  if (index < 0 || index >= 5) throw RangeError.index(index, interiorDanceFiveSceneFilesTWC);
+  return 'assets/images/interiors_parallax/dance/hifi/' +
+      interiorDanceFiveSceneFilesTWC[index];
+}
 const List<String> interiorSchoolRoomsTWC = ['hall','classroom','computers'];
 // Misma secuencia de ilustraciones ORIGINALES que el generador Python.
 // El paso a otro tipo de estancia se señala con una puerta física 1:1.
