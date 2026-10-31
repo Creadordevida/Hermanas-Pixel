@@ -1,0 +1,83 @@
+name: RC6 privada Android - revision integrada SIN merge
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - qa/rc6_inbox/TRIGGER_RC6.txt
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: twc-rc6-private-playtest
+  cancel-in-progress: false
+
+jobs:
+  rc6-android-private:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact commit under evaluation
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Register source SHA and source hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "RC6_SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "RC6_FROM_SHA=$(git rev-parse HEAD)"
+          git status --porcelain
+          test "$GITHUB_REF_NAME" = "work/revision-visual-20261028-continuidad"
+          test -s assets/images/school_hifi/school_five_scenes_master.png
+          python3 qa/check_dance_hifi_approved.py
+      - name: Install Flutter 3.47.8
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Prepare Android platform without overwriting assets or gameplay
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter create --no-overwrite --platforms=android --project-name hermanas_aventura .
+          cp -R launcher/res/. android/app/src/main/res/
+          test -s android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
+          sed -i 's/^version:.*/version: 0.9.1-rc.6+37/' pubspec.yaml
+          flutter pub get
+      - name: Analyze Flutter app
+        run: flutter analyze --no-pub lib
+      - name: Test Android smoke contracts
+        run: flutter test --no-pub test/adaptive_title_screen_test.dart test/school_interior_variety_test.dart test/hero_hearts_test.dart test/widget_test.dart
+      - name: Build private playtest APK
+        timeout-minutes: 19
+        run: flutter build apk --release --no-pub
+      - name: Verify candidate, source checksum and size
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          test -s "$APK"
+          cp "$APK" Miren-y-Sara-0.9.1-rc.6-private.apk
+          sha256sum Miren-y-Sara-0.9.1-rc.6-private.apk | tee RC6_SHA256.txt
+          ls -lh Miren-y-Sara-0.9.1-rc.6-private.apk
+          echo "Source: $RC6_SOURCE_SHA" | tee RC6_SOURCE.txt
+      - name: Publish private prerelease attached APK (repository is private)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/$GITHUB_REPOSITORY --jq .private)" = true
+          TAG="playtest-0.9.1-rc6-private"
+          NOTES="PRIVATE PLAYTEST RC6. Source SHA: $RC6_SOURCE_SHA. Gameplay preview, incomplete art may remain. No main merge or Google Play distribution."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" Miren-y-Sara-0.9.1-rc.6-private.apk RC6_SHA256.txt RC6_SOURCE.txt --clobber
+          else
+            gh release create "$TAG" Miren-y-Sara-0.9.1-rc.6-private.apk RC6_SHA256.txt RC6_SOURCE.txt --target "$RC6_SOURCE_SHA" --title "Miren y Sara 0.9.1 RC6 - prueba privada" --notes "$NOTES" --prerelease
+          fi
+          gh release view "$TAG" --json url,isPrerelease,assets --jq '{url,isPrerelease,assets:[.assets[]|{name,size,url}]}'
