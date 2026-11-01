@@ -57,3 +57,5 @@ En cada fase el proceso debe fallar cerrado: si no hay evidencia, el estado es *
 
 **No convertir documentación específica de este videojuego en una garantía genérica de calidad.**
 - [Transferencia binaria GitHub](TRANSFERENCIA_BINARIA_GITHUB.md): subida exacta de PNG grandes a la rama con SHA verificado, independiente de Actions.
+
+- [05 — Enemigos ilustrados y combate](05_ENEMIGOS_ILUSTRADOS_Y_COMBATE.md): escala opaca, relojes de animación, integridad, ticker real y evidencia visual.

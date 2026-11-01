@@ -1,1 +1,1 @@
-2026-11-01: complete bull launch frames; king actual locomotion range; timed QA animation samples; real combat evasion for both protagonists. Verification only. NO APK.
+2026-11-01: three anatomical breakdancer keyframes, common palette evidence compression; verify all ten enemies. No APK.
