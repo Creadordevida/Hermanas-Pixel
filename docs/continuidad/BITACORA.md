@@ -1,3 +1,9 @@
+## 2026-11-01 — Enemigos: combate real verificado, último ajuste visual en prueba
+
+Run 41209812141 SUCCESS sobre e3d503e: integridad de 18 PNG protegidos, análisis Flutter, pruebas puras y ticker real. Logs confirman REAL_GAMEPLAY_PASS para diez enemigos × Miren/Sara (20 casos): anticipación, daño, balón/peine, interrupción y derrota. Capturas y GIF reales de estados controlados en qa/enemy_verified_render; no son grabaciones Android. Se mantienen los diseños aprobados de robot y corredor, los otros cuatro nuevos son candidatos ilustrados integrados. Matón completo con impacto propio; árbitro completo; derrota del rival usa frame 5.
+
+Reanudación: HEAD base 938cc19d. Ajustes pendientes recuperados: secuenciar los cuatro fotogramas de arranque del toro, limitar marcha del rey al rango real de movimiento y muestrear los relojes de aviso/impacto en QA. Se añade evasión durante aviso a los veinte casos de combate y se repite QA-only. No APK, merge ni publicación en esta orden. Aprobación artística final pendiente; no cambiar enemyArtValidated automáticamente. Véase qa/enemy_art_20261031/REVIEW.md.
+
 ## 2026-10-31 — Cierre de verificación Flutter del colegio HIFI, versión 0.9.1
 
 Orden del usuario: terminar integración de cinco imágenes maestras aprobadas 30-10, mantener 27 paneles/suelo/ZIP y aportar 5 habitaciones + 2 transiciones verdaderas del motor Flutter, sin APK, sin merge, sin tocar enemigos, controles o físicas.

@@ -1,1 +1,1 @@
-2026-10-31 final batch: actual ticker interactions for 10 enemies x 2 protagonists; attack phase sync; 240 authentic engine frames; exact art hash protection. No APK.
+2026-11-01: complete bull launch frames; king actual locomotion range; timed QA animation samples; real combat evasion for both protagonists. Verification only. NO APK.

@@ -53,6 +53,13 @@ void main() {
           expect(game.hearts,lessThan(5),
             reason:'Real attack never reached protagonist: $kind/$selected');
 
+          // Escaping during warning must prevent delayed phantom damage.
+          reset(kind,selected);
+          await frames(5);
+          game.hero.x=2000.0;
+          await frames(105);
+          expect(game.hearts,5,reason:'Escaped warning still damaged: $kind');
+
           // Both real projectile types hit through the game's collision loop.
           final foe=reset(kind,selected);
           await frames(5);

@@ -1451,6 +1451,8 @@ class StagePainter extends CustomPainter {
               : foe.runnerImpactUntil>time ? 3
               : near<240 ? 2 : 0);
           final col=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : bull && foe.launched
+              ? (foe.t<.28 ? foe.t/.28*4 : (foe.t-.28)/.62*4).floor().clamp(0,3)
               : bull && foe.bullWarnedAt>=0
               ? ((time-foe.bullWarnedAt)/.55*4).floor().clamp(0,3)
               : !bull && foe.runnerWarningAt>=0
@@ -1478,8 +1480,10 @@ class StagePainter extends CustomPainter {
         if(art!=null) {
           final row=foe.defeated?5:foe.stunned>0?4:
             foe.kingAwakeAt<0?0:time-foe.kingAwakeAt<.85?1:
-            foe.kingAttackAt>=0?3:(hero.x-foe.x).abs()>100?2:0;
+            foe.kingAttackAt>=0?3:
+              (hero.x-foe.x).abs()>95 && (hero.x-foe.x).abs()<225?2:0;
           final col=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : row==1 ? ((time-foe.kingAwakeAt)/.85*4).floor().clamp(0,3)
               : foe.kingAttackAt>=0
               ? ((time-foe.kingAttackAt)/.9*4).floor().clamp(0,3)
               : (foe.t*6).floor()%4;

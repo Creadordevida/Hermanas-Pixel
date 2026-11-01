@@ -117,19 +117,19 @@ void main() {
          }
          if(kind=='navarre_king' && pose>=1 && pose<=3) {
            foe.kingAwakeAt=0;
-           if(pose==1)foe.kingAwakeAt=renderTime-.2;
-           if(pose==3)foe.kingAttackAt=renderTime-elapsed;
+           if(pose==1)foe.kingAwakeAt=renderTime-phase*.85/4;
+           if(pose==3)foe.kingAttackAt=renderTime-phase*.9/4;
          }
          if(kind=='estafeta_bull') {
-           if(pose==1)foe.bullWarnedAt=0;
+           if(pose==1)foe.bullWarnedAt=renderTime-phase*.55/4;
            if(pose==2 || pose==3) {
              foe.launched=true;
-             foe.t=pose==2 ? elapsed*.6 : .4+elapsed;
+             foe.t=pose==2 ? phase*.28/4 : .28+phase*.62/4;
            }
          }
          if(kind=='sanfermin_runner') {
-           if(pose==1)foe.runnerWarningAt=renderTime-.1;
-           if(pose==3)foe.runnerImpactUntil=renderTime+.2;
+           if(pose==1)foe.runnerWarningAt=renderTime-phase*.34/4;
+           if(pose==3)foe.runnerImpactUntil=renderTime+.24*(1-phase/4);
          }
          if(pose==4)foe.stunned=.6;
          if(pose==5)foe.deathAt=2.0;
@@ -138,7 +138,8 @@ void main() {
            images:images,stage:stage,cameraX:0,
            time:renderTime,
            lastAttackTime:-10,
-           hero:Character(kind=='sanfermin_runner'&&pose==3?320:140),
+           hero:Character(kind=='sanfermin_runner'&&pose==3?320:
+             (kind=='sanfermin_runner'||kind=='navarre_king')&&pose==2?200:140),
            otherSister:Character(195),
            father:Character(70),showFamily:true,selected:pose%2,
            obstacles:const <Obstacle>[],platforms:const <Rect>[],
