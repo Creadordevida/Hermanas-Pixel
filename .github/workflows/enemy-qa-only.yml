@@ -50,6 +50,7 @@ jobs:
           for kind,paths in groups.items():
               if kind.startswith(('nuevo_','classic_')):
                   frames=[Image.open(p).convert('RGB') for p in paths]
+                  frames[0].save(out/(kind+'.webp'),save_all=True,append_images=frames[1:],duration=145,loop=0,lossless=True,method=4)
                   palette=frames[0].quantize(colors=256)
                   # One fixed palette prevents full-background rewrites per frame.
                   indexed=[f.quantize(palette=palette,dither=Image.Dither.NONE) for f in frames]

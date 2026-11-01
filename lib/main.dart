@@ -1537,7 +1537,7 @@ class StagePainter extends CustomPainter {
               : ((foe.t*7).floor()%4);
           const cellW=144.0,cellH=192.0;
           final source=Rect.fromLTWH(frame*cellW,pose*cellH,cellW,cellH);
-          final visibleHeight=kind=='robot'?87.0:kind=='supporter'?135.0:132.0;
+          final visibleHeight=kind=='robot'?83.0:kind=='supporter'?135.0:132.0;
           final targetHeight=kind=='robot'?80.0:140.0;
           final h=targetHeight*cellH/visibleHeight;
           final w=h*cellW/cellH;
