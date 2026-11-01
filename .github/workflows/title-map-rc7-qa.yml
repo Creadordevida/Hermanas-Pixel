@@ -6,6 +6,7 @@ on:
       - .github/workflows/title-map-rc7-qa.yml
       - lib/adaptive_title_screen.dart
       - lib/main.dart
+      - test/title_map_rc7_real_render_test.dart
 permissions:
   contents: write
 jobs:
@@ -25,11 +26,11 @@ jobs:
       - run: flutter analyze --no-pub lib
       - run: flutter test --no-pub test/adaptive_title_screen_test.dart
       - name: Capturas portada y mapa autenticas - 16:9 19.5:9 20:9
-        run: flutter test --no-pub --reporter expanded test/fullscreen_real_render_rc5_test.dart
+        run: flutter test --no-pub --reporter expanded test/title_map_rc7_real_render_test.dart
       - name: Guardar muestras en Git
         if: success()
         run: |
           git config user.name 'twc-qa[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add qa/fullscreen_rc5_flutter/title_*.png qa/fullscreen_rc5_flutter/map_*.png
+          git add qa/title_map_rc7_flutter/title_*.png qa/title_map_rc7_flutter/map_*.png
           git diff --cached --quiet || { git commit -m 'qa(title-map): save authentic RC7 aspect screenshots'; git push; }
