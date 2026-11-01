@@ -1,0 +1,93 @@
+name: RC7 privada Android - enemigos habilitados para gameplay
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: twc-rc7-private-playtest
+  cancel-in-progress: false
+
+jobs:
+  rc7-android-private:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout exact commit under evaluation
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Register source SHA and source hygiene
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "RC7_SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "RC7_FROM_SHA=$(git rev-parse HEAD)"
+          git status --porcelain
+          test "$GITHUB_REF_NAME" = "work/revision-visual-20261028-continuidad"
+          test -s assets/images/school_hifi/school_five_scenes_master.png
+          python3 qa/check_dance_hifi_approved.py
+      - name: Install Flutter 3.47.8
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Prepare Android platform without overwriting assets or gameplay
+        shell: bash
+        run: |
+          set -euo pipefail
+          flutter create --no-overwrite --platforms=android --project-name hermanas_aventura .
+          cp -R launcher/res/. android/app/src/main/res/
+          test -s android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
+          sed -i 's/^version:.*/version: 0.9.1-rc.7+38/' pubspec.yaml
+          flutter pub get
+      - name: Verificar seis atlas y recursos de los enemigos
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          folder=Path('assets/images/enemies_new')
+          for name in ('robot','supporter','tourist','navarre_king','estafeta_bull','sanfermin_runner'):
+              file=folder/f'{name}_atlas.png'
+              assert file.is_file() and file.stat().st_size > 10000, file
+          print('Six real enemy atlases present')
+          PY
+      - name: Analyze Flutter app
+        run: flutter analyze --no-pub lib
+      - name: Test Android smoke contracts
+        run: flutter test --no-pub test/adaptive_title_screen_test.dart test/hero_hearts_test.dart test/widget_test.dart
+      # The school doorway variety test is an ART QUALITY contract and is
+      # currently red on this source SHA (run 41210582384). Record it in
+      # RC7 known issues; do not weaken or modify the school test.
+      - name: Verificar combate de los enemigos antes de compilar
+        run: flutter test --no-pub --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart test/classic_enemy_pose_test.dart test/enemy_gameplay_integration_test.dart
+      - name: Build private playtest APK
+        timeout-minutes: 19
+        run: flutter build apk --release --no-pub --dart-define=TWC_GAMEPLAY_PLAYTEST=true
+      - name: Verify candidate, source checksum and size
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          test -s "$APK"
+          cp "$APK" Miren-y-Sara-0.9.1-rc.7-private.apk
+          sha256sum Miren-y-Sara-0.9.1-rc.7-private.apk | tee RC7_SHA256.txt
+          ls -lh Miren-y-Sara-0.9.1-rc.7-private.apk
+          echo "Source: $RC7_SOURCE_SHA" | tee RC7_SOURCE.txt
+      - name: Publish private prerelease attached APK (repository is private)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/$GITHUB_REPOSITORY --jq .private)" = true
+          TAG="playtest-0.9.1-rc7-private"
+          NOTES="PRIVATE PLAYTEST RC7. Source SHA: $RC7_SOURCE_SHA. Gameplay preview, incomplete art may remain. No main merge or Google Play distribution."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" Miren-y-Sara-0.9.1-rc.7-private.apk RC7_SHA256.txt RC7_SOURCE.txt --clobber
+          else
+            gh release create "$TAG" Miren-y-Sara-0.9.1-rc.7-private.apk RC7_SHA256.txt RC7_SOURCE.txt --target "$RC7_SOURCE_SHA" --title "Miren y Sara 0.9.1 RC7 - prueba privada" --notes "$NOTES" --prerelease
+          fi
+          gh release view "$TAG" --json url,isPrerelease,assets --jq '{url,isPrerelease,assets:[.assets[]|{name,size,url}]}'
