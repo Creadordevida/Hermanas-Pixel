@@ -1231,8 +1231,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   Widget _map() => Stack(children:[
     // The original map stays at its genuine 800x450 ratio.
     // Fill peripheral screen space with matching art, no black bars.
-    Positioned.fill(child:Image.asset(
-      'assets/images/worldmap/pamplona_aprobado.png',fit:BoxFit.cover)),
+    const Positioned.fill(child:ColoredBox(color:Color(0xff08335c))),
     Center(child:SizedBox(width:800,height:viewH,child:Stack(children:[
     // Ajuste 1672/941 ≃ 800/450, sin estirar un fondo antiguo del Ayuntamiento.
     const Positioned.fill(child:Image(image:AssetImage(
