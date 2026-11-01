@@ -1,3 +1,7 @@
+# Actualización final — 2026-11-01
+
+QA 41317694621 SUCCESS sobre ab5a640; veinte encuentros reales, 21 PNG protegidos y 240 capturas. Revisión de los diez enemigos completada, incluidos recorte corregido del robot y nuevas transiciones apoyadas del bailarín. La inspección de segunda tanda mencionada abajo ya está realizada. Falta la aprobación artística final del usuario, no otra ejecución técnica programada. Véase [galería](../enemy_verified_render/README.md). Ninguna prueba Android/APK realizada en esta orden.
+
 # Revisión de enemigos — evidencia, no aprobación automática
 
 La ejecución 41209274884 pasó análisis Flutter, pruebas de comportamiento/colisión/poses y capturas reales. Las capturas se inspeccionaron: robot, corredor, aficionado, turista, rey y toro tienen escala visible corregida y mantienen el suelo. Matón tiene cabeza y pies completos; árbitro uniforme completo y tarjeta; rival usa su PNG de derrota tumbado. No se cambia la aprobación artística del usuario.

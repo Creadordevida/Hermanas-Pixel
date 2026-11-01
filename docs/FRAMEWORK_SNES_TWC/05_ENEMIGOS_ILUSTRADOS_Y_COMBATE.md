@@ -38,3 +38,12 @@ El movimiento debe activar marcha solo mientras la lógica realmente desplaza al
 - qa/enemy_verified_render/
 
 Los GIF de este expediente son secuencias de estados controlados renderizados por StagePainter; no son grabaciones de una partida ni imágenes conceptuales.
+
+## Precisión cromática de las evidencias
+La paleta GIF de 256 colores puede alterar el morado de un pantalón o el azul de una gorra aunque la animación sea auténtica. Para aprobación de color y sombreado, conservar PNG o WebP animado sin pérdida. No cambiar los sprites de producción para adaptarlos a la compresión de una demostración.
+
+## Separación de hojas no regulares
+Dos siluetas pueden solaparse en el eje X sin tocarse. Un corte rectangular entre columnas puede llevarse un tubo del vecino o cortar un cepillo. En la fila de ataque del robot se aislaron cuatro componentes alfa completas, conservando RGB, con escala global y altura canónica recalculadas. Inspeccionar las secuencias ampliadas: una prueba de 24 celdas no vacías no descubre este error.
+
+## Transferencia eficiente de pruebas
+Transferencia local eficiente comprobada: recuperar base64 con fetch_file; ejecutar Python en PTY con tty.setraw(0), leer exactamente N bytes de stdin y decodificar a archivo; enviar el contenido con write_stdin. Evita límites de argv y decenas de llamadas de fragmentos. No usar eco de terminal ni imprimir base64. Verificar tamaño/hash tras escribir. No usa credenciales de shell.
