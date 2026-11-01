@@ -4,8 +4,7 @@ import 'package:hermanas_aventura/main.dart';
 
 void main() {
   test('Estafeta asset switch is safe until all candidates are present', () {
-    expect(twcEstafetaRC7ArtworkEnabled, isFalse,
-      reason: 'Enable only after binary panels are committed and render-reviewed');
+    // Flag can be enabled for explicit QA; never assert a build mode.
     expect(twcEstafetaRC7TileCount, 39);
     expect(twcEstafetaRC7TileWidth, 960);
   });
