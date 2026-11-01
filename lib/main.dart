@@ -49,7 +49,7 @@ const double groundY = 390;
 // Candidate Estafeta 16-bit environment: enable ONLY with all 39 verified WebP
 // tiles committed. Default false prevents broken builds until binary transfer.
 const bool twcEstafetaRC7ArtworkEnabled =
-    bool.fromEnvironment('TWC_ESTAFETA_RC7_ART', defaultValue: false);
+    bool.fromEnvironment('TWC_ESTAFETA_RC7_ART', defaultValue: true);
 const int twcEstafetaRC7TileCount = 39;
 const double twcEstafetaRC7TileWidth = 960.0;
 const double stageWidth = 36500; // ~3.6 minutes walking, closer to 5 including obstacles and enemies.
