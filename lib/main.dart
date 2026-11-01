@@ -1277,8 +1277,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   ]);
 
   Widget _chooseScreen()=>Stack(children:[
-    Positioned.fill(child:Image.asset(stage<4?'assets/images/${chapterScenes[stage]}.png':
-      'assets/images/scenes/${chapterScenes[stage]}.png',fit:BoxFit.cover)),
+    Positioned.fill(child:Image.asset(stage==2
+      ? 'assets/images/estafeta_rc7/estafeta_00.webp'
+      : stage<4?'assets/images/${chapterScenes[stage]}.png'
+      : 'assets/images/scenes/${chapterScenes[stage]}.png',fit:BoxFit.cover)),
     Positioned.fill(child:ColoredBox(color:Colors.black.withValues(alpha:.60))),
     Positioned(left:0,right:0,top:18,child:Text('CAPÍTULO ${stage+1} · ${chapterNames[stage]}',
       textAlign:TextAlign.center,style:const TextStyle(color:Color(0xffffde88),fontSize:24,fontWeight:FontWeight.w900))),
