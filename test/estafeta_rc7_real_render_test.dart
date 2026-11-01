@@ -11,11 +11,12 @@ import 'package:hermanas_aventura/main.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('RC7 Estafeta: actual StagePainter in 16:9, 19.5:9 and 20:9',
+  testWidgets('RC7 Estafeta: 18 actual StagePainter captures with camera +60',
       (tester) async {
     SharedPreferences.setMockInitialValues({});
     const sizes = <Size>[Size(800,450), Size(975,450), Size(1000,450)];
-    const positions = <double>[400, 9200, 18700, 35700];
+    // Real camera +60 comparisons for the first and middle street sections.
+    const positions = <double>[400, 460, 9200, 18700, 18760, 35700];
     final key = GlobalKey();
     final game = GlobalKey();
     try {
