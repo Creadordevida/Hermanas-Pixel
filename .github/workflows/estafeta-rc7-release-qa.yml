@@ -1,0 +1,73 @@
+name: RC7 Estafeta - Release readiness checks NO APK
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - .github/workflows/estafeta-rc7-release-qa.yml
+      - lib/main.dart
+      - test/estafeta_rc7_contract_test.dart
+      - test/estafeta_rc7_real_render_test.dart
+      - assets/images/estafeta_rc7/**
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  estafeta-release-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Verify 39 image files and manifest
+        run: |
+          python3 -m pip install --user pillow
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json,hashlib
+          root=Path('assets/images/estafeta_rc7')
+          m=json.loads((root/'manifest.json').read_text())
+          entries=m['tiles']
+          assert len(entries)==39
+          assert m['tile_width']==960 and m['tile_height']==390
+          for i,e in enumerate(entries):
+              assert e['tile']==i and e['world_start']==960*i
+              p=root/f'estafeta_{i:02d}.webp'
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==e['sha256'],p
+              with Image.open(p) as im: assert im.size==(960,390)
+          print('39/39 RC7 art assets verified')
+          PY
+      - run: flutter pub get
+      - name: Dart analysis
+        run: flutter analyze --no-pub lib
+      - name: Release visibility contract
+        run: flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
+      - name: 12 authentic StagePainter captures
+        timeout-minutes: 17
+        run: flutter test --no-pub --reporter expanded test/estafeta_rc7_real_render_test.dart
+      - name: Validate screenshot set
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import hashlib
+          root=Path('qa/estafeta_rc7_flutter')
+          for w in (800,975,1000):
+              for x in (400,9200,18700,35700):
+                  p=root/f'{w}x450_{x}.png'
+                  assert p.is_file() and p.stat().st_size>10000,p
+                  with Image.open(p) as im: assert im.size==(w,450),p
+          print('12/12 real captures generated and readable')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: estafeta-rc7-stagepainter-captures
+          path: qa/estafeta_rc7_flutter/*.png
+          if-no-files-found: error
+      - name: Status
+        run: echo 'No APK, no merge; visual artistic approval remains separate.'
