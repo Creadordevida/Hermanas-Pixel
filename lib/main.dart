@@ -46,6 +46,12 @@ bool isEnemyPlayableInBuild(String kind) =>
 double viewW = 800;
 const double viewH = 450;
 const double groundY = 390;
+// Candidate Estafeta 16-bit environment: enable ONLY with all 39 verified WebP
+// tiles committed. Default false prevents broken builds until binary transfer.
+const bool twcEstafetaRC7ArtworkEnabled =
+    bool.fromEnvironment('TWC_ESTAFETA_RC7_ART', defaultValue: false);
+const int twcEstafetaRC7TileCount = 39;
+const double twcEstafetaRC7TileWidth = 960.0;
 const double stageWidth = 36500; // ~3.6 minutes walking, closer to 5 including obstacles and enemies.
 const double actorRadius = 14;
 const double actorHeight = 118;
@@ -417,6 +423,14 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         'assets/images/chapter1/ch1_parallax/montanas_ciudad_ciclo.png';
       paths['ch1_mid_woodland_loop'] =
         'assets/images/chapter1/ch1_parallax/arbolado_medio_ciclo.png';
+      // Estafeta RC7: 39 authored candidate facade panels. The optional
+      // flag keeps existing builds safe until all WebP bytes are committed.
+      if (twcEstafetaRC7ArtworkEnabled) {
+        for (var n = 0; n < twcEstafetaRC7TileCount; n++) {
+          paths['estafeta_rc7_$n'] =
+              'assets/images/estafeta_rc7/estafeta_${n.toString().padLeft(2,'0')}.webp';
+        }
+      }
       // FÚTBOL: mismo movimiento aprobado que el capítulo 1; arte propio.
       paths['football_far_twc'] = footballFarAssetTWC;
       paths['football_mid_twc'] = footballMidAssetTWC;
@@ -2261,12 +2275,37 @@ class StagePainter extends CustomPainter {
     }
   }
 
+  // RC7 ESTAFETA: buildings and storefronts are PHYSICAL world geometry,
+  // never almost-static panoramic scenery (the legacy factor was 0.014).
+  // Tile widths are native world units. Their source art contains the street
+  // frontage, not a second playable floor: ground_2 remains the floor layer.
+  void _estafetaBackgroundRC7(Canvas canvas) {
+    canvas.drawRect(Rect.fromLTWH(0,0,viewW,390),
+        Paint()..color=const Color(0xff64a9ed));
+    final first = math.max(0,(cameraX / twcEstafetaRC7TileWidth).floor());
+    final last = math.min(twcEstafetaRC7TileCount-1,
+        ((cameraX + viewW) / twcEstafetaRC7TileWidth).ceil());
+    for (var i = first; i <= last; i++) {
+      final art = images['estafeta_rc7_$i'];
+      if (art == null) {
+        throw StateError('Missing required Estafeta RC7 image $i');
+      }
+      final x = i*twcEstafetaRC7TileWidth-cameraX;
+      canvas.drawImageRect(art,
+          Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+          Rect.fromLTWH(x,0,twcEstafetaRC7TileWidth,390),
+          Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
   void _background(Canvas canvas) {
     // The approved detailed backdrop is a DISTANT vista. Its limited camera
     // pan cannot wrap the same clock, cathedral, car or kiosk indefinitely.
     // Foreground structures scroll at full world speed, just like sprites.
     if(stage == 0) {
       _neighborhoodBackground(canvas);
+    } else if (stage == 2 && twcEstafetaRC7ArtworkEnabled) {
+      _estafetaBackgroundRC7(canvas);
     } else if(stage == 4) {
       _footballBackgroundTWC(canvas);
     } else if(stage == 5 || stage == 6) {
