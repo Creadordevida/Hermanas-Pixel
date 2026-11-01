@@ -25,7 +25,7 @@ jobs:
           cache: true
       - name: Verify 39 image files and manifest
         run: |
-          python3 -m pip install --user pillow
+          python3 -m pip install --user pillow numpy
           python3 - <<'PY'
           from pathlib import Path
           from PIL import Image
@@ -47,7 +47,7 @@ jobs:
         run: flutter analyze --no-pub lib
       - name: Release visibility contract
         run: flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
-      - name: 12 authentic StagePainter captures
+      - name: 18 authentic StagePainter captures
         timeout-minutes: 17
         run: flutter test --no-pub --reporter expanded test/estafeta_rc7_real_render_test.dart
       - name: Validate screenshot set
@@ -58,11 +58,23 @@ jobs:
           import hashlib
           root=Path('qa/estafeta_rc7_flutter')
           for w in (800,975,1000):
-              for x in (400,9200,18700,35700):
+              for x in (400,460,9200,18700,18760,35700):
                   p=root/f'{w}x450_{x}.png'
                   assert p.is_file() and p.stat().st_size>10000,p
                   with Image.open(p) as im: assert im.size==(w,450),p
-          print('12/12 real captures generated and readable')
+          # Static facades MUST move exactly 60 screen pixels when camera does.
+          import numpy as np
+          for w in (800,975,1000):
+              for a,b in ((400,460),(18700,18760)):
+                  first=np.asarray(Image.open(root/f'{w}x450_{a}.png').convert('RGB'),dtype=np.int16)
+                  moved=np.asarray(Image.open(root/f'{w}x450_{b}.png').convert('RGB'),dtype=np.int16)
+                  x0,x1=180,w-100
+                  wall=float(np.abs(first[95:245,x0+60:x1]-moved[95:245,x0:x1-60]).mean())
+                  unchanged=float(np.abs(first[95:245,x0:x1]-moved[95:245,x0:x1]).mean())
+                  print('ESTAFETA_CAMERA_60',w,a,round(wall,2),round(unchanged,2))
+                  if wall>=unchanged or wall>20:
+                      raise AssertionError(f'Facade motion is not 1:1 at {w}, {a}: {wall}')
+          print('18 real captures and six camera-motion checks passed')
           PY
       - uses: actions/upload-artifact@v4
         with:
