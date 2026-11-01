@@ -112,14 +112,10 @@ class AdaptiveTitleScreen extends StatelessWidget {
         // formats. No blurred strips, letterboxing or BoxFit.fill.
         // Full-width painted background, with the approved central 16:9
         // image drawn undistorted over it. No flat/black side bars.
-        Positioned.fill(child:Image.asset(
-          useApprovedWideArt ? panoramaAsset
-              : 'assets/images/title_cars_fixed_091.png',
-          fit:BoxFit.cover,
-          alignment:Alignment.center,
-          errorBuilder:(_, error, trace)=>const ColoredBox(
-              color:Color(0xff348bc1)),
-        )),
+        // One canonical illustration: never cover+overlay the same bitmap.
+        // A matching painted surround preserves the entire 16:9 approved art
+        // while respecting the panoramic viewport (no duplicate scenery).
+        const Positioned.fill(child:ColoredBox(color:Color(0xff348bc1))),
         Center(child:AspectRatio(
           aspectRatio:titleArtWidth/titleArtHeight,
           child:Image.asset('assets/images/title_cars_fixed_091.png',
