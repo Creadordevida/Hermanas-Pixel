@@ -1,0 +1,98 @@
+name: Estafeta RC7 - importar arte candidato y capturar Flutter SIN APK
+
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - qa/estafeta_inbox/ESTAFETA_RC7_RECONSTRUCCION_CORREGIDA.zip
+
+permissions:
+  contents: write
+
+concurrency:
+  group: estafeta-rc7-import
+  cancel-in-progress: false
+
+jobs:
+  estafeta-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Checkout PR5
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Flutter estable
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Dependencies for exact candidate check
+        run: python3 -m pip install --user pillow
+      - name: Verify archive and import EXACT 39 candidate images
+        run: |
+          set -euo pipefail
+          python3 tools/import_estafeta_rc7_zip.py . qa/estafeta_inbox/ESTAFETA_RC7_RECONSTRUCCION_CORREGIDA.zip
+      - name: Declare ONLY the verified Estafeta assets in Flutter
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('pubspec.yaml')
+          s=p.read_text()
+          entry='    - assets/images/estafeta_rc7/\n'
+          if entry not in s:
+              needle='    - assets/images/worldmap/\n'
+              if needle not in s:
+                  raise ValueError('Unexpected pubspec assets structure')
+              s=s.replace(needle,needle+entry)
+              p.write_text(s)
+          PY
+      - name: Resolve Flutter packages
+        run: flutter pub get
+      - name: Analyze Dart without Android
+        run: flutter analyze --no-pub lib
+      - name: Unit contracts
+        run: flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
+      - name: Capture 12 genuine Estafeta frames
+        timeout-minutes: 16
+        run: flutter test --no-pub --reporter expanded --dart-define=TWC_ESTAFETA_RC7_ART=true test/estafeta_rc7_real_render_test.dart
+      - name: Ensure 12 genuine captures exist and are different
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import hashlib
+          root=Path('qa/estafeta_rc7_flutter')
+          paths=sorted(root.glob('*.png'))
+          if len(paths)!=12:
+              raise ValueError(f'Expected 12 actual renders, got {len(paths)}')
+          hashes=set()
+          for p in paths:
+              with Image.open(p) as im:
+                  w,h=im.size
+                  if h!=450 or w not in (800,975,1000):
+                      raise ValueError(f'Wrong viewport {p}: {im.size}')
+              if p.stat().st_size<10000:
+                  raise ValueError(f'Empty image {p}')
+              hashes.add(hashlib.sha256(p.read_bytes()).hexdigest())
+          if len(hashes)!=12:
+              raise ValueError('Duplicate renders: check stage/camera state')
+          print('12 REAL FLUTTER RENDERS verified as different files; artistic review still needed')
+          PY
+      - name: Persist candidate images and QA screenshots on PR5, NO APK
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "work/revision-visual-20261028-continuidad"
+          git config user.name "twc-estafeta-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/estafeta_rc7/ pubspec.yaml qa/estafeta_rc7_flutter/
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m "art(estafeta): import 39 candidate WebP and 12 authentic Flutter QA captures"
+            git push origin HEAD:"$GITHUB_REF_NAME"
+          fi
+      - name: Review status
+        run: echo "CANDIDATE rendered; not artistically approved; NO Android APK, merge or publication."
