@@ -5,7 +5,7 @@ on:
     branches:
       - work/revision-visual-20261028-continuidad
     paths:
-      - qa/estafeta_inbox/ESTAFETA_RC7_RECONSTRUCCION_CORREGIDA.zip
+      - qa/estafeta_inbox/ESTAFETA_RC7_SUBIR_GITHUB.zip
 
 permissions:
   contents: write
@@ -34,7 +34,7 @@ jobs:
       - name: Verify archive and import EXACT 39 candidate images
         run: |
           set -euo pipefail
-          python3 tools/import_estafeta_rc7_zip.py . qa/estafeta_inbox/ESTAFETA_RC7_RECONSTRUCCION_CORREGIDA.zip
+          python3 tools/import_estafeta_rc7_zip.py . qa/estafeta_inbox/ESTAFETA_RC7_SUBIR_GITHUB.zip
       - name: Declare ONLY the verified Estafeta assets in Flutter
         run: |
           set -euo pipefail
