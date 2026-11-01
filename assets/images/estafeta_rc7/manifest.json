@@ -1,0 +1,1681 @@
+{
+  "tile_width": 960,
+  "tile_height": 390,
+  "tiles": [
+    {
+      "tile": 0,
+      "filename": "estafeta_00.webp",
+      "world_start": 0,
+      "sha256": "9282ea210329622fd0fcd381d671e332329f2e2aef942d3eecdc33590c29da52"
+    },
+    {
+      "tile": 1,
+      "filename": "estafeta_01.webp",
+      "world_start": 960,
+      "sha256": "e2fdd40c22ff7b2e2fe97c860a0090f20c2212557bd6db5594546d1b272c46eb"
+    },
+    {
+      "tile": 2,
+      "filename": "estafeta_02.webp",
+      "world_start": 1920,
+      "sha256": "320b4f9a0524deab56dd750ea158422387de30c17cfcfef7754d119e81aacb6f"
+    },
+    {
+      "tile": 3,
+      "filename": "estafeta_03.webp",
+      "world_start": 2880,
+      "sha256": "0e4d831ddd4f46f6da55a3b6312d03517dab23bec16f4ae89bb0e999e823c5ff"
+    },
+    {
+      "tile": 4,
+      "filename": "estafeta_04.webp",
+      "world_start": 3840,
+      "sha256": "6159289b329c4b878858b541493d992a401957c908ab910b557ba8307ba96784"
+    },
+    {
+      "tile": 5,
+      "filename": "estafeta_05.webp",
+      "world_start": 4800,
+      "sha256": "54ac033b4c58db6899ff1bd8929c9e390ed9301eadab5b19067b762526b608ce"
+    },
+    {
+      "tile": 6,
+      "filename": "estafeta_06.webp",
+      "world_start": 5760,
+      "sha256": "1bc6f2852dec9f49ad8de35f492f3b308ce7646eb56e6a5366dc2c52f2930d51"
+    },
+    {
+      "tile": 7,
+      "filename": "estafeta_07.webp",
+      "world_start": 6720,
+      "sha256": "ddde9ebcd3c687e261ce432f5add6558699cbf08b8ff02142e82ff658de558d5"
+    },
+    {
+      "tile": 8,
+      "filename": "estafeta_08.webp",
+      "world_start": 7680,
+      "sha256": "7a82186ed95651f87a41aa185a8b124dc68832147ae3ec94445a810fefaa6873"
+    },
+    {
+      "tile": 9,
+      "filename": "estafeta_09.webp",
+      "world_start": 8640,
+      "sha256": "8a72f0ff49014bd9bbdbf484c66107279ccbb6bc82f8174ec9aee120514c7736"
+    },
+    {
+      "tile": 10,
+      "filename": "estafeta_10.webp",
+      "world_start": 9600,
+      "sha256": "be2f37f710ebd6f85c086be52a032eda76875b0b4d134ae541dbee5ffacde02a"
+    },
+    {
+      "tile": 11,
+      "filename": "estafeta_11.webp",
+      "world_start": 10560,
+      "sha256": "0c475250e8cdf92534aa4e792ef45424bb543caf0d2bc531afd27cd845f9d609"
+    },
+    {
+      "tile": 12,
+      "filename": "estafeta_12.webp",
+      "world_start": 11520,
+      "sha256": "2b1d91c734b3b9bd32723002c64a401e94164a4843d2b4094477b8450e24c24b"
+    },
+    {
+      "tile": 13,
+      "filename": "estafeta_13.webp",
+      "world_start": 12480,
+      "sha256": "62a5bc6c061a26ac5e3710b7a98d1b588288869c6e6339620f8ac905a1ce3605"
+    },
+    {
+      "tile": 14,
+      "filename": "estafeta_14.webp",
+      "world_start": 13440,
+      "sha256": "409b2987e08136806a413b561c5e28e0ef933f4bd64f324d9ac004b354334eae"
+    },
+    {
+      "tile": 15,
+      "filename": "estafeta_15.webp",
+      "world_start": 14400,
+      "sha256": "f7f99006c6284c422715e2f13be05c926668a3ced3f1d54b42588f9900b13829"
+    },
+    {
+      "tile": 16,
+      "filename": "estafeta_16.webp",
+      "world_start": 15360,
+      "sha256": "96e777a82bbb566a40a5a26eb0f54daceb448fd5db3d2809843b94b870759236"
+    },
+    {
+      "tile": 17,
+      "filename": "estafeta_17.webp",
+      "world_start": 16320,
+      "sha256": "5bc7ad36046059c94beb3477869699a5d01894b7d90eb0c3de332cf998014f49"
+    },
+    {
+      "tile": 18,
+      "filename": "estafeta_18.webp",
+      "world_start": 17280,
+      "sha256": "182841eb7340fd88b18d985dd5678c6039da37f29996128301c18a17aef866b5"
+    },
+    {
+      "tile": 19,
+      "filename": "estafeta_19.webp",
+      "world_start": 18240,
+      "sha256": "aad293d88be7987c8817add4eec04f1681569d68a0e98e8a2da6f0dcd4933794"
+    },
+    {
+      "tile": 20,
+      "filename": "estafeta_20.webp",
+      "world_start": 19200,
+      "sha256": "5005ed2dba499dde27f5b57fde4ed2d6aa5de35319b3e84e3bdcac312dd0c0c2"
+    },
+    {
+      "tile": 21,
+      "filename": "estafeta_21.webp",
+      "world_start": 20160,
+      "sha256": "67b49ecebb9afffbccd6d03f96d23d417e008ec9423abfc11d8e634067951304"
+    },
+    {
+      "tile": 22,
+      "filename": "estafeta_22.webp",
+      "world_start": 21120,
+      "sha256": "b42adf49b27d525f626282e45ed06446e3c9643ca41ff72b7da27d8a65810d91"
+    },
+    {
+      "tile": 23,
+      "filename": "estafeta_23.webp",
+      "world_start": 22080,
+      "sha256": "d839e2e59ebe852470896a500e56662b9c1a3dcdbc0307331be48a8a8e7c4e00"
+    },
+    {
+      "tile": 24,
+      "filename": "estafeta_24.webp",
+      "world_start": 23040,
+      "sha256": "67480b2671e684dbdaaadda9465355346c15dd9b12b160173ac7e22dfba6cd2f"
+    },
+    {
+      "tile": 25,
+      "filename": "estafeta_25.webp",
+      "world_start": 24000,
+      "sha256": "4015d6d2b6612437bd0d461aa23587faddfcff5cc904866171b4663331f19d6b"
+    },
+    {
+      "tile": 26,
+      "filename": "estafeta_26.webp",
+      "world_start": 24960,
+      "sha256": "f2e417634d1f31828d5433c2beff1700cfaaa8c3a9cfdf170783728d73e388db"
+    },
+    {
+      "tile": 27,
+      "filename": "estafeta_27.webp",
+      "world_start": 25920,
+      "sha256": "5ed23a495d1e0a17eda362e69b14d69e408a2d7030466534c1bf406437a45ab2"
+    },
+    {
+      "tile": 28,
+      "filename": "estafeta_28.webp",
+      "world_start": 26880,
+      "sha256": "573cd9d26a9eacb346f44572a8a29bb08a2b96bd6d4671813670e01761d9f932"
+    },
+    {
+      "tile": 29,
+      "filename": "estafeta_29.webp",
+      "world_start": 27840,
+      "sha256": "66f43360cafe5c00c0020f230f6b923f6ee2987b8499367a03eb9994f4a98495"
+    },
+    {
+      "tile": 30,
+      "filename": "estafeta_30.webp",
+      "world_start": 28800,
+      "sha256": "a4bacc86423bc0777fefae9838b20bd14a9b73f3c8a18e9a596a0ad011906934"
+    },
+    {
+      "tile": 31,
+      "filename": "estafeta_31.webp",
+      "world_start": 29760,
+      "sha256": "e5c8f6a8bc00a3a6f02cb238d5492cbfce33266cb4c5e5d7b07ca92ec4b8ed69"
+    },
+    {
+      "tile": 32,
+      "filename": "estafeta_32.webp",
+      "world_start": 30720,
+      "sha256": "7ad296a916f52233c09bc85df3cd31bf6bd223cc6caaf9942350720903722113"
+    },
+    {
+      "tile": 33,
+      "filename": "estafeta_33.webp",
+      "world_start": 31680,
+      "sha256": "249a49a77010c2a0e107d05ebc54b0107324565d9a1ecab0da76eaf025f70b14"
+    },
+    {
+      "tile": 34,
+      "filename": "estafeta_34.webp",
+      "world_start": 32640,
+      "sha256": "cc9fb1a4c2dd5ba0dfe768b2f99e2fd299011119f9e9350318f5ae0be4a40efe"
+    },
+    {
+      "tile": 35,
+      "filename": "estafeta_35.webp",
+      "world_start": 33600,
+      "sha256": "e83ac62999c17441ee3301d44362eaf317930bfc0151bc10f8389d7ada9a724f"
+    },
+    {
+      "tile": 36,
+      "filename": "estafeta_36.webp",
+      "world_start": 34560,
+      "sha256": "6c9900e8da909a4bbca7b066e4b98032da00de62cb4466af1ae81e10355ed17c"
+    },
+    {
+      "tile": 37,
+      "filename": "estafeta_37.webp",
+      "world_start": 35520,
+      "sha256": "09de8c1360ae5d1ec54a464ff16ff85883015317cfefc5cdd0cbd0530cdec847"
+    },
+    {
+      "tile": 38,
+      "filename": "estafeta_38.webp",
+      "world_start": 36480,
+      "sha256": "37c60a491067f494f4909011db50d54e9cb15b1aabaab344c6e1fc352a3a6408"
+    }
+  ],
+  "facade_sequence": [
+    {
+      "world_x": 0,
+      "world_width": 148,
+      "master": 0,
+      "facade": 5
+    },
+    {
+      "world_x": 148,
+      "world_width": 183,
+      "master": 0,
+      "facade": 3
+    },
+    {
+      "world_x": 331,
+      "world_width": 167,
+      "master": 3,
+      "facade": 7
+    },
+    {
+      "world_x": 498,
+      "world_width": 148,
+      "master": 1,
+      "facade": 4
+    },
+    {
+      "world_x": 646,
+      "world_width": 142,
+      "master": 0,
+      "facade": 1
+    },
+    {
+      "world_x": 788,
+      "world_width": 155,
+      "master": 2,
+      "facade": 7
+    },
+    {
+      "world_x": 943,
+      "world_width": 142,
+      "master": 0,
+      "facade": 1
+    },
+    {
+      "world_x": 1085,
+      "world_width": 154,
+      "master": 0,
+      "facade": 2
+    },
+    {
+      "world_x": 1239,
+      "world_width": 169,
+      "master": 2,
+      "facade": 5
+    },
+    {
+      "world_x": 1408,
+      "world_width": 155,
+      "master": 0,
+      "facade": 7
+    },
+    {
+      "world_x": 1563,
+      "world_width": 151,
+      "master": 1,
+      "facade": 1
+    },
+    {
+      "world_x": 1714,
+      "world_width": 160,
+      "master": 1,
+      "facade": 3
+    },
+    {
+      "world_x": 1874,
+      "world_width": 165,
+      "master": 0,
+      "facade": 4
+    },
+    {
+      "world_x": 2039,
+      "world_width": 148,
+      "master": 0,
+      "facade": 5
+    },
+    {
+      "world_x": 2187,
+      "world_width": 181,
+      "master": 1,
+      "facade": 7
+    },
+    {
+      "world_x": 2368,
+      "world_width": 167,
+      "master": 3,
+      "facade": 7
+    },
+    {
+      "world_x": 2535,
+      "world_width": 163,
+      "master": 2,
+      "facade": 1
+    },
+    {
+      "world_x": 2698,
+      "world_width": 157,
+      "master": 3,
+      "facade": 3
+    },
+    {
+      "world_x": 2855,
+      "world_width": 144,
+      "master": 3,
+      "facade": 2
+    },
+    {
+      "world_x": 2999,
+      "world_width": 157,
+      "master": 3,
+      "facade": 3
+    },
+    {
+      "world_x": 3156,
+      "world_width": 181,
+      "master": 1,
+      "facade": 7
+    },
+    {
+      "world_x": 3337,
+      "world_width": 154,
+      "master": 0,
+      "facade": 2
+    },
+    {
+      "world_x": 3491,
+      "world_width": 148,
+      "master": 0,
+      "facade": 5
+    },
+    {
+      "world_x": 3639,
+      "world_width": 171,
+      "master": 3,
+      "facade": 6
+    },
+    {
+      "world_x": 3810,
+      "world_width": 156,
+      "master": 2,
+      "facade": 4
+    },
+    {
+      "world_x": 3966,
+      "world_width": 177,
+      "master": 0,
+      "facade": 0
+    },
+    {
+      "world_x": 4143,
+      "world_width": 150,
+      "master": 1,
+      "facade": 5
+    },
+    {
+      "world_x": 4293,
+      "world_width": 177,
+      "master": 0,
+      "facade": 0
+    },
+    {
+      "world_x": 4470,
+      "world_width": 163,
+      "master": 2,
+      "facade": 1
+    },
+    {
+      "world_x": 4633,
+      "world_width": 150,
+      "master": 1,
+      "facade": 5
+    },
+    {
+      "world_x": 4783,
+      "world_width": 183,
+      "master": 0,
+      "facade": 3
+    },
+    {
+      "world_x": 4966,
+      "world_width": 163,
+      "master": 2,
+      "facade": 1
+    },
+    {
+      "world_x": 5129,
+      "world_width": 177,
+      "master": 0,
+      "facade": 0
+    },
+    {
+      "world_x": 5306,
+      "world_width": 155,
+      "master": 0,
+      "facade": 7
+    },
+    {
+      "world_x": 5461,
+      "world_width": 151,
+      "master": 3,
+      "facade": 1
+    },
+    {
+      "world_x": 5612,
+      "world_width": 159,
+      "master": 3,
+      "facade": 5
+    },
+    {
+      "world_x": 5771,
+      "world_width": 167,
+      "master": 3,
+      "facade": 7
+    },
+    {
+      "world_x": 5938,
+      "world_width": 165,
+      "master": 0,
+      "facade": 4
+    },
+    {
+      "world_x": 6103,
+      "world_width": 183,
+      "master": 3,
+      "facade": 0
+    },
+    {
+      "world_x": 6286,
+      "world_width": 148,
+      "master": 1,
+      "facade": 4
+    },
+    {
+      "world_x": 6434,
+      "world_width": 151,
+      "master": 1,
+      "facade": 1
+    },
+    {
+      "world_x": 6585,
+      "world_width": 155,
+      "master": 0,
+      "facade": 7
+    },
+    {
+      "world_x": 6740,
+      "world_width": 148,
+      "master": 1,
+      "facade": 4
+    },
+    {
+      "world_x": 6888,
+      "world_width": 163,
+      "master": 1,
+      "facade": 6
+    },
+    {
+      "world_x": 7051,
+      "world_width": 171,
+      "master": 3,
+      "facade": 6
+    },
+    {
+      "world_x": 7222,
+      "world_width": 142,
+      "master": 0,
+      "facade": 1
+    },
+    {
+      "world_x": 7364,
+      "world_width": 151,
+      "master": 1,
+      "facade": 1
+    },
+    {
+      "world_x": 7515,
+      "world_width": 150,
+      "master": 1,
+      "facade": 5
+    },
+    {
+      "world_x": 7665,
+      "world_width": 169,
+      "master": 2,
+      "facade": 5
+    },
+    {
+      "world_x": 7834,
+      "world_width": 162,
+      "master": 2,
+      "facade": 0
+    },
+    {
+      "world_x": 7996,
+      "world_width": 163,
+      "master": 2,
+      "facade": 3
+    },
+    {
+      "world_x": 8159,
+      "world_width": 163,
+      "master": 1,
+      "facade": 6
+    },
+    {
+      "world_x": 8322,
+      "world_width": 155,
+      "master": 2,
+      "facade": 7
+    },
+    {
+      "world_x": 8477,
+      "world_width": 169,
+      "master": 2,
+      "facade": 5
+    },
+    {
+      "world_x": 8646,
+      "world_width": 151,
+      "master": 3,
+      "facade": 1
+    },
+    {
+      "world_x": 8797,
+      "world_width": 183,
+      "master": 0,
+      "facade": 3
+    },
+    {
+      "world_x": 8980,
+      "world_width": 159,
+      "master": 3,
+      "facade": 5
+    },
+    {
+      "world_x": 9139,
+      "world_width": 165,
+      "master": 0,
+      "facade": 4
+    },
+    {
+      "world_x": 9304,
+      "world_width": 151,
+      "master": 3,
+      "facade": 1
+    },
+    {
+      "world_x": 9455,
+      "world_width": 144,
+      "master": 3,
+      "facade": 2
+    },
+    {
+      "world_x": 9599,
+      "world_width": 163,
+      "master": 1,
+      "facade": 6
+    },
+    {
+      "world_x": 9762,
+      "world_width": 159,
+      "master": 2,
+      "facade": 6
+    },
+    {
+      "world_x": 9921,
+      "world_width": 159,
+      "master": 3,
+      "facade": 5
+    },
+    {
+      "world_x": 10080,
+      "world_width": 181,
+      "master": 1,
+      "facade": 7
+    },
+    {
+      "world_x": 10261,
+      "world_width": 171,
+      "master": 3,
+      "facade": 6
+    },
+    {
+      "world_x": 10432,
+      "world_width": 183,
+      "master": 3,
+      "facade": 0
+    },
+    {
+      "world_x": 10615,
+      "world_width": 163,
+      "master": 2,
+      "facade": 3
+    },
+    {
+      "world_x": 10778,
+      "world_width": 159,
+      "master": 0,
+      "facade": 6
+    },
+    {
+      "world_x": 10937,
+      "world_width": 163,
+      "master": 2,
+      "facade": 3
+    },
+    {
+      "world_x": 11100,
+      "world_width": 151,
+      "master": 3,
+      "facade": 4
+    },
+    {
+      "world_x": 11251,
+      "world_width": 171,
+      "master": 1,
+      "facade": 0
+    },
+    {
+      "world_x": 11422,
+      "world_width": 144,
+      "master": 3,
+      "facade": 2
+    },
+    {
+      "world_x": 11566,
+      "world_width": 159,
+      "master": 2,
+      "facade": 6
+    },
+    {
+      "world_x": 11725,
+      "world_width": 156,
+      "master": 2,
+      "facade": 4
+    },
+    {
+      "world_x": 11881,
+      "world_width": 159,
+      "master": 2,
+      "facade": 6
+    },
+    {
+      "world_x": 12040,
+      "world_width": 183,
+      "master": 3,
+      "facade": 0
+    },
+    {
+      "world_x": 12223,
+      "world_width": 151,
+      "master": 3,
+      "facade": 4
+    },
+    {
+      "world_x": 12374,
+      "world_width": 154,
+      "master": 0,
+      "facade": 2
+    },
+    {
+      "world_x": 12528,
+      "world_width": 171,
+      "master": 1,
+      "facade": 0
+    },
+    {
+      "world_x": 12699,
+      "world_width": 160,
+      "master": 1,
+      "facade": 3
+    },
+    {
+      "world_x": 12859,
+      "world_width": 151,
+      "master": 3,
+      "facade": 4
+    },
+    {
+      "world_x": 13010,
+      "world_width": 159,
+      "master": 1,
+      "facade": 2
+    },
+    {
+      "world_x": 13169,
+      "world_width": 157,
+      "master": 3,
+      "facade": 3
+    },
+    {
+      "world_x": 13326,
+      "world_width": 160,
+      "master": 1,
+      "facade": 3
+    },
+    {
+      "world_x": 13486,
+      "world_width": 162,
+      "master": 2,
+      "facade": 0
+    },
+    {
+      "world_x": 13648,
+      "world_width": 156,
+      "master": 2,
+      "facade": 2
+    },
+    {
+      "world_x": 13804,
+      "world_width": 171,
+      "master": 1,
+      "facade": 0
+    },
+    {
+      "world_x": 13975,
+      "world_width": 159,
+      "master": 1,
+      "facade": 2
+    },
+    {
+      "world_x": 14134,
+      "world_width": 155,
+      "master": 2,
+      "facade": 7
+    },
+    {
+      "world_x": 14289,
+      "world_width": 159,
+      "master": 0,
+      "facade": 6
+    },
+    {
+      "world_x": 14448,
+      "world_width": 162,
+      "master": 2,
+      "facade": 0
+    },
+    {
+      "world_x": 14610,
+      "world_width": 156,
+      "master": 2,
+      "facade": 2
+    },
+    {
+      "world_x": 14766,
+      "world_width": 148,
+      "master": 1,
+      "facade": 4
+    },
+    {
+      "world_x": 14914,
+      "world_width": 163,
+      "master": 2,
+      "facade": 1
+    },
+    {
+      "world_x": 15077,
+      "world_width": 183,
+      "master": 3,
+      "facade": 0
+    },
+    {
+      "world_x": 15260,
+      "world_width": 163,
+      "master": 1,
+      "facade": 6
+    },
+    {
+      "world_x": 15423,
+      "world_width": 144,
+      "master": 3,
+      "facade": 2
+    },
+    {
+      "world_x": 15567,
+      "world_width": 159,
+      "master": 3,
+      "facade": 5
+    },
+    {
+      "world_x": 15726,
+      "world_width": 155,
+      "master": 2,
+      "facade": 7
+    },
+    {
+      "world_x": 15881,
+      "world_width": 159,
+      "master": 1,
+      "facade": 2
+    },
+    {
+      "world_x": 16040,
+      "world_width": 142,
+      "master": 0,
+      "facade": 1
+    },
+    {
+      "world_x": 16182,
+      "world_width": 165,
+      "master": 0,
+      "facade": 4
+    },
+    {
+      "world_x": 16347,
+      "world_width": 155,
+      "master": 0,
+      "facade": 7
+    },
+    {
+      "world_x": 16502,
+      "world_width": 160,
+      "master": 1,
+      "facade": 3
+    },
+    {
+      "world_x": 16662,
+      "world_width": 181,
+      "master": 1,
+      "facade": 7
+    },
+    {
+      "world_x": 16843,
+      "world_width": 156,
+      "master": 2,
+      "facade": 2
+    },
+    {
+      "world_x": 16999,
+      "world_width": 177,
+      "master": 0,
+      "facade": 0
+    },
+    {
+      "world_x": 17176,
+      "world_width": 167,
+      "master": 3,
+      "facade": 7
+    },
+    {
+      "world_x": 17343,
+      "world_width": 156,
+      "master": 2,
+      "facade": 2
+    },
+    {
+      "world_x": 17499,
+      "world_width": 169,
+      "master": 2,
+      "facade": 5
+    },
+    {
+      "world_x": 17668,
+      "world_width": 159,
+      "master": 2,
+      "facade": 6
+    },
+    {
+      "world_x": 17827,
+      "world_width": 150,
+      "master": 1,
+      "facade": 5
+    },
+    {
+      "world_x": 17977,
+      "world_width": 171,
+      "master": 3,
+      "facade": 6
+    },
+    {
+      "world_x": 18148,
+      "world_width": 159,
+      "master": 1,
+      "facade": 2
+    },
+    {
+      "world_x": 18307,
+      "world_width": 148,
+      "master": 0,
+      "facade": 5
+    },
+    {
+      "world_x": 18455,
+      "world_width": 154,
+      "master": 0,
+      "facade": 2
+    },
+    {
+      "world_x": 18609,
+      "world_width": 156,
+      "master": 2,
+      "facade": 4
+    },
+    {
+      "world_x": 18765,
+      "world_width": 163,
+      "master": 2,
+      "facade": 3
+    },
+    {
+      "world_x": 18928,
+      "world_width": 151,
+      "master": 1,
+      "facade": 1
+    },
+    {
+      "world_x": 19079,
+      "world_width": 157,
+      "master": 3,
+      "facade": 3
+    },
+    {
+      "world_x": 19236,
+      "world_width": 159,
+      "master": 0,
+      "facade": 6
+    },
+    {
+      "world_x": 19395,
+      "world_width": 181,
+      "master": 1,
+      "facade": 7
+    },
+    {
+      "world_x": 19576,
+      "world_width": 167,
+      "master": 3,
+      "facade": 7
+    },
+    {
+      "world_x": 19743,
+      "world_width": 169,
+      "master": 2,
+      "facade": 5
+    },
+    {
+      "world_x": 19912,
+      "world_width": 183,
+      "master": 0,
+      "facade": 3
+    },
+    {
+      "world_x": 20095,
+      "world_width": 156,
+      "master": 2,
+      "facade": 2
+    },
+    {
+      "world_x": 20251,
+      "world_width": 163,
+      "master": 2,
+      "facade": 1
+    },
+    {
+      "world_x": 20414,
+      "world_width": 171,
+      "master": 3,
+      "facade": 6
+    },
+    {
+      "world_x": 20585,
+      "world_width": 163,
+      "master": 2,
+      "facade": 3
+    },
+    {
+      "world_x": 20748,
+      "world_width": 151,
+      "master": 3,
+      "facade": 4
+    },
+    {
+      "world_x": 20899,
+      "world_width": 156,
+      "master": 2,
+      "facade": 4
+    },
+    {
+      "world_x": 21055,
+      "world_width": 142,
+      "master": 0,
+      "facade": 1
+    },
+    {
+      "world_x": 21197,
+      "world_width": 159,
+      "master": 0,
+      "facade": 6
+    },
+    {
+      "world_x": 21356,
+      "world_width": 155,
+      "master": 2,
+      "facade": 7
+    },
+    {
+      "world_x": 21511,
+      "world_width": 151,
+      "master": 3,
+      "facade": 4
+    },
+    {
+      "world_x": 21662,
+      "world_width": 183,
+      "master": 0,
+      "facade": 3
+    },
+    {
+      "world_x": 21845,
+      "world_width": 159,
+      "master": 3,
+      "facade": 5
+    },
+    {
+      "world_x": 22004,
+      "world_width": 159,
+      "master": 2,
+      "facade": 6
+    },
+    {
+      "world_x": 22163,
+      "world_width": 151,
+      "master": 3,
+      "facade": 1
+    },
+    {
+      "world_x": 22314,
+      "world_width": 155,
+      "master": 0,
+      "facade": 7
+    },
+    {
+      "world_x": 22469,
+      "world_width": 165,
+      "master": 0,
+      "facade": 4
+    },
+    {
+      "world_x": 22634,
+      "world_width": 150,
+      "master": 1,
+      "facade": 5
+    },
+    {
+      "world_x": 22784,
+      "world_width": 148,
+      "master": 1,
+      "facade": 4
+    },
+    {
+      "world_x": 22932,
+      "world_width": 151,
+      "master": 1,
+      "facade": 1
+    },
+    {
+      "world_x": 23083,
+      "world_width": 154,
+      "master": 0,
+      "facade": 2
+    },
+    {
+      "world_x": 23237,
+      "world_width": 162,
+      "master": 2,
+      "facade": 0
+    },
+    {
+      "world_x": 23399,
+      "world_width": 151,
+      "master": 3,
+      "facade": 1
+    },
+    {
+      "world_x": 23550,
+      "world_width": 157,
+      "master": 3,
+      "facade": 3
+    },
+    {
+      "world_x": 23707,
+      "world_width": 159,
+      "master": 0,
+      "facade": 6
+    },
+    {
+      "world_x": 23866,
+      "world_width": 144,
+      "master": 3,
+      "facade": 2
+    },
+    {
+      "world_x": 24010,
+      "world_width": 171,
+      "master": 1,
+      "facade": 0
+    },
+    {
+      "world_x": 24181,
+      "world_width": 156,
+      "master": 2,
+      "facade": 4
+    },
+    {
+      "world_x": 24337,
+      "world_width": 177,
+      "master": 0,
+      "facade": 0
+    },
+    {
+      "world_x": 24514,
+      "world_width": 171,
+      "master": 3,
+      "facade": 6
+    },
+    {
+      "world_x": 24685,
+      "world_width": 183,
+      "master": 3,
+      "facade": 0
+    },
+    {
+      "world_x": 24868,
+      "world_width": 148,
+      "master": 1,
+      "facade": 4
+    },
+    {
+      "world_x": 25016,
+      "world_width": 159,
+      "master": 1,
+      "facade": 2
+    },
+    {
+      "world_x": 25175,
+      "world_width": 148,
+      "master": 0,
+      "facade": 5
+    },
+    {
+      "world_x": 25323,
+      "world_width": 142,
+      "master": 0,
+      "facade": 1
+    },
+    {
+      "world_x": 25465,
+      "world_width": 156,
+      "master": 2,
+      "facade": 4
+    },
+    {
+      "world_x": 25621,
+      "world_width": 156,
+      "master": 2,
+      "facade": 2
+    },
+    {
+      "world_x": 25777,
+      "world_width": 159,
+      "master": 3,
+      "facade": 5
+    },
+    {
+      "world_x": 25936,
+      "world_width": 157,
+      "master": 3,
+      "facade": 3
+    },
+    {
+      "world_x": 26093,
+      "world_width": 169,
+      "master": 2,
+      "facade": 5
+    },
+    {
+      "world_x": 26262,
+      "world_width": 162,
+      "master": 2,
+      "facade": 0
+    },
+    {
+      "world_x": 26424,
+      "world_width": 151,
+      "master": 3,
+      "facade": 1
+    },
+    {
+      "world_x": 26575,
+      "world_width": 163,
+      "master": 2,
+      "facade": 1
+    },
+    {
+      "world_x": 26738,
+      "world_width": 151,
+      "master": 1,
+      "facade": 1
+    },
+    {
+      "world_x": 26889,
+      "world_width": 162,
+      "master": 2,
+      "facade": 0
+    },
+    {
+      "world_x": 27051,
+      "world_width": 159,
+      "master": 2,
+      "facade": 6
+    },
+    {
+      "world_x": 27210,
+      "world_width": 155,
+      "master": 2,
+      "facade": 7
+    },
+    {
+      "world_x": 27365,
+      "world_width": 144,
+      "master": 3,
+      "facade": 2
+    },
+    {
+      "world_x": 27509,
+      "world_width": 167,
+      "master": 3,
+      "facade": 7
+    },
+    {
+      "world_x": 27676,
+      "world_width": 148,
+      "master": 0,
+      "facade": 5
+    },
+    {
+      "world_x": 27824,
+      "world_width": 183,
+      "master": 0,
+      "facade": 3
+    },
+    {
+      "world_x": 28007,
+      "world_width": 154,
+      "master": 0,
+      "facade": 2
+    },
+    {
+      "world_x": 28161,
+      "world_width": 163,
+      "master": 2,
+      "facade": 3
+    },
+    {
+      "world_x": 28324,
+      "world_width": 177,
+      "master": 0,
+      "facade": 0
+    },
+    {
+      "world_x": 28501,
+      "world_width": 165,
+      "master": 0,
+      "facade": 4
+    },
+    {
+      "world_x": 28666,
+      "world_width": 163,
+      "master": 1,
+      "facade": 6
+    },
+    {
+      "world_x": 28829,
+      "world_width": 159,
+      "master": 1,
+      "facade": 2
+    },
+    {
+      "world_x": 28988,
+      "world_width": 159,
+      "master": 0,
+      "facade": 6
+    },
+    {
+      "world_x": 29147,
+      "world_width": 183,
+      "master": 3,
+      "facade": 0
+    },
+    {
+      "world_x": 29330,
+      "world_width": 155,
+      "master": 0,
+      "facade": 7
+    },
+    {
+      "world_x": 29485,
+      "world_width": 171,
+      "master": 1,
+      "facade": 0
+    },
+    {
+      "world_x": 29656,
+      "world_width": 151,
+      "master": 3,
+      "facade": 4
+    },
+    {
+      "world_x": 29807,
+      "world_width": 163,
+      "master": 1,
+      "facade": 6
+    },
+    {
+      "world_x": 29970,
+      "world_width": 171,
+      "master": 1,
+      "facade": 0
+    },
+    {
+      "world_x": 30141,
+      "world_width": 160,
+      "master": 1,
+      "facade": 3
+    },
+    {
+      "world_x": 30301,
+      "world_width": 169,
+      "master": 2,
+      "facade": 5
+    },
+    {
+      "world_x": 30470,
+      "world_width": 157,
+      "master": 3,
+      "facade": 3
+    },
+    {
+      "world_x": 30627,
+      "world_width": 181,
+      "master": 1,
+      "facade": 7
+    },
+    {
+      "world_x": 30808,
+      "world_width": 156,
+      "master": 2,
+      "facade": 2
+    },
+    {
+      "world_x": 30964,
+      "world_width": 159,
+      "master": 3,
+      "facade": 5
+    },
+    {
+      "world_x": 31123,
+      "world_width": 160,
+      "master": 1,
+      "facade": 3
+    },
+    {
+      "world_x": 31283,
+      "world_width": 155,
+      "master": 2,
+      "facade": 7
+    },
+    {
+      "world_x": 31438,
+      "world_width": 159,
+      "master": 2,
+      "facade": 6
+    },
+    {
+      "world_x": 31597,
+      "world_width": 163,
+      "master": 2,
+      "facade": 1
+    },
+    {
+      "world_x": 31760,
+      "world_width": 151,
+      "master": 3,
+      "facade": 1
+    },
+    {
+      "world_x": 31911,
+      "world_width": 171,
+      "master": 3,
+      "facade": 6
+    },
+    {
+      "world_x": 32082,
+      "world_width": 171,
+      "master": 1,
+      "facade": 0
+    },
+    {
+      "world_x": 32253,
+      "world_width": 183,
+      "master": 0,
+      "facade": 3
+    },
+    {
+      "world_x": 32436,
+      "world_width": 183,
+      "master": 3,
+      "facade": 0
+    },
+    {
+      "world_x": 32619,
+      "world_width": 165,
+      "master": 0,
+      "facade": 4
+    },
+    {
+      "world_x": 32784,
+      "world_width": 181,
+      "master": 1,
+      "facade": 7
+    },
+    {
+      "world_x": 32965,
+      "world_width": 159,
+      "master": 1,
+      "facade": 2
+    },
+    {
+      "world_x": 33124,
+      "world_width": 154,
+      "master": 0,
+      "facade": 2
+    },
+    {
+      "world_x": 33278,
+      "world_width": 148,
+      "master": 1,
+      "facade": 4
+    },
+    {
+      "world_x": 33426,
+      "world_width": 155,
+      "master": 0,
+      "facade": 7
+    },
+    {
+      "world_x": 33581,
+      "world_width": 167,
+      "master": 3,
+      "facade": 7
+    },
+    {
+      "world_x": 33748,
+      "world_width": 163,
+      "master": 2,
+      "facade": 3
+    },
+    {
+      "world_x": 33911,
+      "world_width": 163,
+      "master": 1,
+      "facade": 6
+    },
+    {
+      "world_x": 34074,
+      "world_width": 151,
+      "master": 3,
+      "facade": 4
+    },
+    {
+      "world_x": 34225,
+      "world_width": 177,
+      "master": 0,
+      "facade": 0
+    },
+    {
+      "world_x": 34402,
+      "world_width": 159,
+      "master": 0,
+      "facade": 6
+    },
+    {
+      "world_x": 34561,
+      "world_width": 160,
+      "master": 1,
+      "facade": 3
+    },
+    {
+      "world_x": 34721,
+      "world_width": 142,
+      "master": 0,
+      "facade": 1
+    },
+    {
+      "world_x": 34863,
+      "world_width": 151,
+      "master": 1,
+      "facade": 1
+    },
+    {
+      "world_x": 35014,
+      "world_width": 148,
+      "master": 0,
+      "facade": 5
+    },
+    {
+      "world_x": 35162,
+      "world_width": 144,
+      "master": 3,
+      "facade": 2
+    },
+    {
+      "world_x": 35306,
+      "world_width": 162,
+      "master": 2,
+      "facade": 0
+    },
+    {
+      "world_x": 35468,
+      "world_width": 156,
+      "master": 2,
+      "facade": 4
+    },
+    {
+      "world_x": 35624,
+      "world_width": 150,
+      "master": 1,
+      "facade": 5
+    },
+    {
+      "world_x": 35774,
+      "world_width": 142,
+      "master": 0,
+      "facade": 1
+    },
+    {
+      "world_x": 35916,
+      "world_width": 162,
+      "master": 2,
+      "facade": 0
+    },
+    {
+      "world_x": 36078,
+      "world_width": 151,
+      "master": 1,
+      "facade": 1
+    },
+    {
+      "world_x": 36229,
+      "world_width": 171,
+      "master": 3,
+      "facade": 6
+    },
+    {
+      "world_x": 36400,
+      "world_width": 163,
+      "master": 1,
+      "facade": 6
+    },
+    {
+      "world_x": 36563,
+      "world_width": 159,
+      "master": 3,
+      "facade": 5
+    },
+    {
+      "world_x": 36722,
+      "world_width": 163,
+      "master": 2,
+      "facade": 1
+    },
+    {
+      "world_x": 36885,
+      "world_width": 177,
+      "master": 0,
+      "facade": 0
+    },
+    {
+      "world_x": 37062,
+      "world_width": 160,
+      "master": 1,
+      "facade": 3
+    },
+    {
+      "world_x": 37222,
+      "world_width": 155,
+      "master": 2,
+      "facade": 7
+    },
+    {
+      "world_x": 37377,
+      "world_width": 183,
+      "master": 0,
+      "facade": 3
+    }
+  ],
+  "source_reuse_count": {
+    "5": 7,
+    "3": 8,
+    "31": 7,
+    "12": 7,
+    "1": 8,
+    "23": 8,
+    "2": 7,
+    "21": 7,
+    "7": 7,
+    "9": 8,
+    "11": 8,
+    "4": 7,
+    "15": 7,
+    "17": 8,
+    "27": 7,
+    "26": 7,
+    "30": 8,
+    "20": 7,
+    "0": 8,
+    "13": 6,
+    "25": 7,
+    "29": 8,
+    "24": 7,
+    "14": 8,
+    "16": 8,
+    "19": 7,
+    "22": 7,
+    "6": 7,
+    "28": 7,
+    "8": 7,
+    "10": 7,
+    "18": 7
+  },
+  "note": "Architectural-boundary-cropped continuous source-pixel world; unverified real-world geography, motif reuse, and seams require artistic review"
+}
