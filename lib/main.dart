@@ -51,7 +51,7 @@ const double groundY = 390;
 // Ayuntamiento candidate remains off until the ZIP has passed real Flutter QA.
 // Release importer promotes the default only AFTER validated binary transfer.
 const bool twcAyuntamientoRC7ArtworkEnabled =
-    bool.fromEnvironment('TWC_AYUNTAMIENTO_RC7_ART', defaultValue:false);
+    bool.fromEnvironment('TWC_AYUNTAMIENTO_RC7_ART', defaultValue:true);
 const int twcAyuntamientoRC7TileCount = 39;
 const double twcAyuntamientoRC7TileWidth = 960.0;
 const bool twcEstafetaRC7ArtworkEnabled = true;
