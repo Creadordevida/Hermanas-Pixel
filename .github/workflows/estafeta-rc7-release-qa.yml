@@ -20,7 +20,10 @@ on:
       - test/estafeta_rc7_*.dart
       - assets/images/estafeta_rc7/**
 permissions:
-  contents: read
+  contents: write
+concurrency:
+  group: estafeta-release-qa
+  cancel-in-progress: true
 jobs:
   estafeta-release-qa:
     runs-on: ubuntu-24.04
@@ -103,17 +106,21 @@ jobs:
               with Image.open(f) as im: assert im.size==(1000,450),f
           print('All 38 real Flutter seam captures exist; artistic review is separate')
           PY
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: estafeta-rc7-all-38-seams
-          path: qa/estafeta_rc7_joins/*.png
-          if-no-files-found: warn
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: estafeta-rc7-stagepainter-captures
-          path: qa/estafeta_rc7_flutter/*.png
-          if-no-files-found: warn
+      # Actions artifact storage quota is exhausted. Persist the genuine PNGs
+      # in the PR working branch instead, without creating an APK or merge.
+      - name: Commit only verified real captures to PR branch
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "work/revision-visual-20261028-continuidad"
+          git config user.name "twc-estafeta-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa/estafeta_rc7_joins/*.png qa/estafeta_rc7_flutter/*.png
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m "qa(estafeta): retain 56 genuine Flutter images for RC7 review"
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin HEAD:"$GITHUB_REF_NAME"
+          fi
       - name: Status
         run: echo 'No APK, no merge; visual artistic approval remains separate.'
