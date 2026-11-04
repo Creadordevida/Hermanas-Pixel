@@ -402,12 +402,17 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         'comb':'assets/images/comb.png',
       };
       for (int i=0;i<7;i++) {
-        paths['scene_$i'] = i<4 ? 'assets/images/${chapterScenes[i]}.png'
-          : 'assets/images/scenes/${i==5 ? 'ballet_refined' : chapterScenes[i]}.png';
+        // Estafeta RC7 has its own verified facade tiles; do not decode the
+        // discarded level_estafeta panorama a second time at app startup.
+        if (i != 2) {
+          paths['scene_$i'] = i<4 ? 'assets/images/${chapterScenes[i]}.png'
+            : 'assets/images/scenes/${i==5 ? 'ballet_refined' : chapterScenes[i]}.png';
+        }
         paths['ground_$i'] = i==6 && schoolHifiArtworkEnabled
           ? 'assets/images/ground/stage_6_hifi.png'
           : 'assets/images/ground/stage_$i.png';
-        paths['mid_$i'] = 'assets/images/mid/stage_$i.png';
+        // The legacy repeating Estafeta midstrip is not used by RC7.
+        if (i != 2) paths['mid_$i'] = 'assets/images/mid/stage_$i.png';
         if (i == 4) paths['mid_4_plain'] = 'assets/images/mid/stage_4_plain.png';
       }
       // El nuevo capítulo 1 carga recursos que el juego realmente dibuja.
