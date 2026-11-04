@@ -4,7 +4,7 @@ on:
     branches:
       - work/revision-visual-20261028-continuidad
     paths:
-      - qa/ayuntamiento_inbox/AYUNTAMIENTO_RC7_PANELES_PARA_GITHUB.zip
+      - qa/ayuntamiento_inbox/AYUNTAMIENTO_RC7_SUBIR_GITHUB_2.zip
 permissions:
   contents: write
 concurrency:
@@ -31,7 +31,7 @@ jobs:
       - name: Validate every candidate image before writing files
         run: |
           set -euo pipefail
-          python3 tools/import_ayuntamiento_rc7_zip.py . qa/ayuntamiento_inbox/AYUNTAMIENTO_RC7_PANELES_PARA_GITHUB.zip
+          python3 tools/import_ayuntamiento_rc7_zip.py . qa/ayuntamiento_inbox/AYUNTAMIENTO_RC7_SUBIR_GITHUB_2.zip
       - name: Register candidate artwork only for chapter 2 in pubspec
         run: |
           python3 - <<'PY'
