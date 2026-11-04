@@ -5,7 +5,8 @@ import 'package:hermanas_aventura/main.dart';
 void main() {
   test('Estafeta asset switch is safe until all candidates are present', () {
     // Flag can be enabled for explicit QA; never assert a build mode.
-    expect(twcEstafetaRC7ArtworkEnabled, isTrue,\n      reason: 'Standard preview APK must display Estafeta RC7');
+    expect(twcEstafetaRC7ArtworkEnabled, isTrue,
+      reason: 'Standard preview APK must display Estafeta RC7');
     expect(twcEstafetaRC7TileCount, 39);
     expect(twcEstafetaRC7TileWidth, 960);
   });
