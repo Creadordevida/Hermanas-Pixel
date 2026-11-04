@@ -1,6 +1,6 @@
 # Ayuntamiento RC7: handoff folder, identical to the successful Colegio/Estafeta process
 
-Subir **sin descomprimir** el archivo `AYUNTAMIENTO_RC7_PANELES_PARA_GITHUB.zip`
+Subir **sin descomprimir** el archivo `AYUNTAMIENTO_RC7_SUBIR_GITHUB_2.zip`
 a esta carpeta **en la rama `work/revision-visual-20261028-continuidad`**.
 
 El flujo `.github/workflows/ayuntamiento-rc7-only.yml` verifica el SHA256 exacto,
