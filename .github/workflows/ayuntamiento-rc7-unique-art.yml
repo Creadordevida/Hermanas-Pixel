@@ -1,0 +1,49 @@
+name: Ayuntamiento RC7 - importar fachada singular SIN APK
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - qa/ayuntamiento_inbox/AYUNTAMIENTO_RC7_PRIMER_RECURSO_Y_TRANSFERENCIA.zip
+permissions:
+  contents: write
+concurrency:
+  group: ayuntamiento-unique-landmark
+  cancel-in-progress: false
+jobs:
+  import-townhall:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Checkout PR 5
+        uses: actions/checkout@v4
+      - name: Install pixel art image validator
+        run: python3 -m pip install --user pillow
+      - name: Verify EXACT bytes, geometry and provenance before import
+        run: |
+          set -euo pipefail
+          python3 tools/import_ayuntamiento_rc7.py . qa/ayuntamiento_inbox/AYUNTAMIENTO_RC7_PRIMER_RECURSO_Y_TRANSFERENCIA.zip
+      - name: Update Flutter asset directory without touching other chapters
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('pubspec.yaml')
+          txt=p.read_text()
+          entry='    - assets/images/ayuntamiento_rc7/\n'
+          if entry not in txt:
+              needle='    - assets/images/estafeta_rc7/\n'
+              assert needle in txt,'Unexpected Flutter asset list'
+              p.write_text(txt.replace(needle,needle+entry))
+          PY
+      - name: Commit only the imported UNIQUE landmark, never enable unfinished chapter
+        run: |
+          set -euo pipefail
+          git config user.name "twc-ayuntamiento-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/ayuntamiento_rc7/consistorial_unico.webp qa/ayuntamiento_rc7/landmark_candidate_manifest.json pubspec.yaml
+          git diff --cached --check
+          git commit -m "art(ayuntamiento): preserve unique referenced townhall candidate bytes"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin HEAD:"$GITHUB_REF_NAME"
+      - name: Strict status
+        run: echo "LANDMARK CANDIDATE ONLY; no full street, no claim of release readiness; no APK, no PR merge."
