@@ -5,7 +5,7 @@ from PIL import Image
 from io import BytesIO
 import hashlib,json,sys,zipfile
 
-EXPECTED_ZIP_SHA256='8bf9d728dd6b1a8df5d5b208646144cb259e4008384bd90ba0e81a12d6ff0046'
+EXPECTED_ZIP_SHA256='e93b3e0c400fe5d9268299f665eecbca6f5e087255fe5989c00b2d3690a74d1a'
 PREFIX='assets/images/ayuntamiento_rc7/'
 def sha(b):return hashlib.sha256(b).hexdigest()
 
