@@ -1,0 +1,107 @@
+name: Ayuntamiento RC7 - validacion final Flutter SIN APK
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - .github/workflows/ayuntamiento-rc7-release-qa.yml
+      - lib/main.dart
+      - test/ayuntamiento_rc7_*.dart
+      - assets/images/ayuntamiento_rc7/**
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/ayuntamiento-rc7-release-qa.yml
+      - lib/main.dart
+      - test/ayuntamiento_rc7_*.dart
+      - assets/images/ayuntamiento_rc7/**
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ayuntamiento-rc7-final-qa-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  flutter-rc7:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Verify imported assets including sole unique landmark
+        run: |
+          python3 -m pip install --user pillow numpy
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          from PIL import Image
+          root=Path('assets/images/ayuntamiento_rc7')
+          m=json.loads((root/'manifest.json').read_text())
+          assert (m['tile_width'],m['tile_height'],m['tile_count'],m['world_width'])==(960,390,39,37440)
+          assert (m['town_hall']['count'],m['town_hall']['world_x'])==(1,17920)
+          assert len(m['tiles'])==39
+          for i,info in enumerate(m['tiles']):
+              p=root/f'ayuntamiento_{i:02d}.webp'
+              assert (info['tile'],info['world_start'])==(i,i*960)
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==info['sha256']
+              with Image.open(p) as im:assert im.size==(960,390)
+          hall=root/'consistorial_unico.webp'
+          assert hashlib.sha256(hall.read_bytes()).hexdigest()==m['town_hall']['sha256']
+          with Image.open(hall) as im:assert im.size==(1170,390)
+          print('39/39 assets + unique town hall verified')
+          PY
+      - run: flutter pub get
+      - name: Dart analyze
+        run: flutter analyze --no-pub lib
+      - name: Standard build must reveal Ayuntamiento by default
+        run: flutter test --no-pub --reporter expanded test/ayuntamiento_rc7_contract_test.dart
+      - name: Existing chapter and title regression
+        run: |
+          flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
+          flutter test --no-pub --reporter expanded test/adaptive_title_screen_test.dart
+      - name: 18 ACTUAL StagePainter renders, no dart-define
+        timeout-minutes: 18
+        run: flutter test --no-pub --reporter expanded test/ayuntamiento_rc7_real_render_test.dart
+      - name: Verify camera at three ratios and 18 images
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import numpy as np
+          root=Path('qa/ayuntamiento_rc7_flutter')
+          for w in (800,975,1000):
+              for x in (1200,1260,9200,18200,18260,35700):
+                  p=root/f'{w}x450_{x}.png'
+                  assert p.exists() and p.stat().st_size>10000,p
+                  with Image.open(p) as im:assert im.size==(w,450)
+              for a,b in ((1200,1260),(18200,18260)):
+                  first=np.asarray(Image.open(root/f'{w}x450_{a}.png').convert('RGB'),dtype=np.int16)
+                  moved=np.asarray(Image.open(root/f'{w}x450_{b}.png').convert('RGB'),dtype=np.int16)
+                  x0,x1=180,w-100
+                  aligned=float(np.abs(first[95:245,x0+60:x1]-moved[95:245,x0:x1-60]).mean())
+                  raw=float(np.abs(first[95:245,x0:x1]-moved[95:245,x0:x1]).mean())
+                  print('WORLD_MOTION',w,a,aligned,raw)
+                  assert aligned<raw and aligned<25
+          print('18 images and 6 camera checks passed')
+          PY
+      - name: 38 ACTUAL StagePainter joins, no dart-define
+        timeout-minutes: 18
+        run: flutter test --no-pub --reporter expanded test/ayuntamiento_rc7_all_joins_render_test.dart
+      - name: Verify 38 joint screenshots
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          root=Path('qa/ayuntamiento_rc7_joins')
+          for edge in range(1,39):
+              f=root/f'join_{edge:02d}.png'
+              assert f.exists() and f.stat().st_size>10000,f
+              with Image.open(f) as im:assert im.size==(1000,450)
+          print('38 rendered joins passed; visual review is a separate gate')
+          PY
+      - name: Ready for preview, not device tested
+        run: echo 'Flutter QA passed. No APK, no merge, no device proof; art review separately.'
