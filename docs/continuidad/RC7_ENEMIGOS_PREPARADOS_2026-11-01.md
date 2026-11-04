@@ -1,3 +1,11 @@
+## 2026-11-04 — Enemigos preparados para la RC7 conjunta; recortes de producción corregidos
+
+Auditado HEAD 886a4af259241efd3e68129a6c85e84f6ca848bf, PR #5 abierta sin merge. Los 21 PNG protegidos son idénticos por SHA Git a la entrega verificada del 1/11. El workflow manual rc7-enemies-private-playtest.yml ya habilita TWC_GAMEPLAY_PLAYTEST=true: los seis nuevos aparecerán en la prueba privada sin declarar aprobación artística.
+
+Detectado y corregido un desajuste de entrega: la QA regeneraba sprite_bounds.g.dart, pero la compilación RC7 no lo hacía y el archivo comprometido tenía recortes antiguos. Exportadas localmente 59 poses desde los PNG REALES recuperados del HEAD actual; comprobados límites dentro de cada imagen. Añadido bully_5 al exportador. Guardados Dart/JSON regenerados y paso obligatorio de integridad de arte + exportación antes del análisis/tests/APK. Validada sintaxis Python/YAML, orden del pipeline y define de habilitación. No se modifican sprites, capítulos ni comportamientos.
+
+Para que la siguiente versión muestre TODO: compilar el HEAD actualizado de la rama compartida después de integrar los capítulos de otros chats, conservar este paso de preparación y el define; ejecutar las pruebas conjuntas y revisar en Redmi Note 14. Las pruebas anteriores de enemigos siguen documentadas en 41317694621; esta revisión no equivale a una nueva prueba Flutter/Android de todos los capítulos actuales. Aprobación artística final pendiente. No se ha lanzado Actions ni generado APK en esta revisión.
+
 # RC7 — preparación de enemigos para pruebas privadas (2026-11-01)
 
 **Preparado, NO compilado y NO publicado.** Workflow manual: `.github/workflows/rc7-enemies-private-playtest.yml` (`workflow_dispatch` exclusivamente).

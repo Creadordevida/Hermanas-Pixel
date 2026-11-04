@@ -44,6 +44,11 @@ jobs:
           sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
           sed -i 's/^version:.*/version: 0.9.1-rc.7+38/' pubspec.yaml
           flutter pub get
+      - name: Prepare verified enemy art and exact sprite bounds
+        run: |
+          python3 -m pip install --user pillow
+          python3 tools/verify_enemy_art.py
+          python3 tools/export_sprite_bounds.py
       - name: Verificar seis atlas y recursos de los enemigos
         run: |
           python3 - <<'PY'
