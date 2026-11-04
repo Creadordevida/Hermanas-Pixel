@@ -1,0 +1,31 @@
+name: Ayuntamiento RC7 - codigo y regresiones SIN APK
+on:
+  push:
+    branches: [work/revision-visual-20261028-continuidad]
+    paths:
+      - .github/workflows/ayuntamiento-rc7-code-qa.yml
+      - lib/main.dart
+      - test/ayuntamiento_rc7_*.dart
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  code-test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Dart analyze (Ayuntamiento art gated until import)
+        run: flutter analyze --no-pub lib
+      - name: Existing title regression
+        run: flutter test --no-pub --reporter expanded test/adaptive_title_screen_test.dart
+      - name: Existing Estafeta release contract
+        run: flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
+      - name: Report
+        run: echo 'Code checks only. Ayuntamiento binary artwork not yet integrated; no APK.'
