@@ -5,6 +5,8 @@ on:
       - work/revision-visual-20261028-continuidad
     paths:
       - qa/ayuntamiento_inbox/AYUNTAMIENTO_RC7_SUBIR_GITHUB_2.zip
+      - tools/import_ayuntamiento_rc7_zip.py
+      - .github/workflows/ayuntamiento-rc7-only.yml
 permissions:
   contents: write
 concurrency:
