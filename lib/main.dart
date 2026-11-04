@@ -48,6 +48,12 @@ const double viewH = 450;
 const double groundY = 390;
 // Candidate Estafeta 16-bit environment: enable ONLY with all 39 verified WebP
 // tiles committed. Default false prevents broken builds until binary transfer.
+// Ayuntamiento candidate remains off until the ZIP has passed real Flutter QA.
+// Release importer promotes the default only AFTER validated binary transfer.
+const bool twcAyuntamientoRC7ArtworkEnabled =
+    bool.fromEnvironment('TWC_AYUNTAMIENTO_RC7_ART', defaultValue:false);
+const int twcAyuntamientoRC7TileCount = 39;
+const double twcAyuntamientoRC7TileWidth = 960.0;
 const bool twcEstafetaRC7ArtworkEnabled = true;
 const int twcEstafetaRC7TileCount = 39;
 const double twcEstafetaRC7TileWidth = 960.0;
@@ -433,6 +439,14 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         for (var n = 0; n < twcEstafetaRC7TileCount; n++) {
           paths['estafeta_rc7_$n'] =
               'assets/images/estafeta_rc7/estafeta_${n.toString().padLeft(2,'0')}.webp';
+        }
+      }
+      // Ayuntamiento: separate 1:1 world panels, with the town hall only once.
+      // Do not fetch until the full 39-tile asset set has been imported.
+      if (twcAyuntamientoRC7ArtworkEnabled) {
+        for (var n=0;n<twcAyuntamientoRC7TileCount;n++) {
+          paths['ayuntamiento_rc7_$n'] =
+              'assets/images/ayuntamiento_rc7/ayuntamiento_${n.toString().padLeft(2,'0')}.webp';
         }
       }
       // FÚTBOL: mismo movimiento aprobado que el capítulo 1; arte propio.
@@ -1281,7 +1295,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   ]);
 
   Widget _chooseScreen()=>Stack(children:[
-    Positioned.fill(child:Image.asset(stage==2
+    Positioned.fill(child:Image.asset(stage==1 && twcAyuntamientoRC7ArtworkEnabled
+      ? 'assets/images/ayuntamiento_rc7/consistorial_unico.webp'
+      : stage==2
       ? 'assets/images/estafeta_rc7/estafeta_00.webp'
       : stage<4?'assets/images/${chapterScenes[stage]}.png'
       : 'assets/images/scenes/${chapterScenes[stage]}.png',fit:BoxFit.cover)),
@@ -2285,6 +2301,26 @@ class StagePainter extends CustomPainter {
   // never almost-static panoramic scenery (the legacy factor was 0.014).
   // Tile widths are native world units. Their source art contains the street
   // frontage, not a second playable floor: ground_2 remains the floor layer.
+  // Chapter 2 (Ayuntamiento) has no infinitely repeated static buildings.
+  // The complete candidate world is sliced after continuous composition.
+  // The landmark is included ONCE in its panel source (world x=17920).
+  void _ayuntamientoBackgroundRC7(Canvas canvas) {
+    canvas.drawRect(Rect.fromLTWH(0,0,viewW,groundY),
+        Paint()..color=const Color(0xff6eadee));
+    final first=math.max(0,(cameraX/twcAyuntamientoRC7TileWidth).floor());
+    final last=math.min(twcAyuntamientoRC7TileCount-1,
+        ((cameraX+viewW)/twcAyuntamientoRC7TileWidth).ceil());
+    for (var i=first;i<=last;i++) {
+      final art=images['ayuntamiento_rc7_$i'];
+      if (art==null) throw StateError('Missing Ayuntamiento RC7 tile $i');
+      final x=i*twcAyuntamientoRC7TileWidth-cameraX;
+      canvas.drawImageRect(art,
+          Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+          Rect.fromLTWH(x,0,twcAyuntamientoRC7TileWidth,groundY),
+          Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
   void _estafetaBackgroundRC7(Canvas canvas) {
     canvas.drawRect(Rect.fromLTWH(0,0,viewW,390),
         Paint()..color=const Color(0xff64a9ed));
@@ -2310,6 +2346,8 @@ class StagePainter extends CustomPainter {
     // Foreground structures scroll at full world speed, just like sprites.
     if(stage == 0) {
       _neighborhoodBackground(canvas);
+    } else if (stage == 1 && twcAyuntamientoRC7ArtworkEnabled) {
+      _ayuntamientoBackgroundRC7(canvas);
     } else if (stage == 2 && twcEstafetaRC7ArtworkEnabled) {
       _estafetaBackgroundRC7(canvas);
     } else if(stage == 4) {
