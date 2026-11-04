@@ -15,8 +15,8 @@ void main() {
       (tester) async {
     SharedPreferences.setMockInitialValues({});
     const sizes = <Size>[Size(800,450), Size(975,450), Size(1000,450)];
-    // Real camera +60 comparisons for the first and middle street sections.
-    const positions = <double>[400, 460, 9200, 18700, 18760, 35700];
+    // Cameras must be away from level edges: at worldX=400 and a 1000px\n    // viewport cameraX clamps to zero and moves only 50px, not 60px.\n    // Use x=1200/1260 for a true 60px move in all three ratios.
+    const positions = <double>[1200, 1260, 9200, 18700, 18760, 35700];
     final key = GlobalKey();
     final game = GlobalKey();
     try {
