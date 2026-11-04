@@ -22,6 +22,13 @@ void main() {
     try {
       for (final size in sizes) {
         await tester.binding.setSurfaceSize(size);
+        // The game uses a shared viewW written by LayoutBuilder. Prime the
+        // actual viewport BEFORE didUpdateWidget computes cameraX for a new
+        // world position, otherwise the first frame of a new aspect ratio
+        // uses the previous screen width and camera-motion QA is misleading.
+        await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
+          key:key,child:HermanasGame(key:game,qaStage:2,qaWorldX:1100))));
+        await tester.pump(const Duration(milliseconds:120));
         for (final x in positions) {
           await tester.pumpWidget(MaterialApp(home: RepaintBoundary(key:key,
             child:HermanasGame(key:game,qaStage:2,qaWorldX:x))));
