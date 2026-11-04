@@ -8,6 +8,7 @@ on:
       - lib/main.dart
       - test/estafeta_rc7_contract_test.dart
       - test/estafeta_rc7_real_render_test.dart
+      - test/estafeta_rc7_all_joins_render_test.dart
       - assets/images/estafeta_rc7/**
   workflow_dispatch:
 permissions:
@@ -58,14 +59,14 @@ jobs:
           import hashlib
           root=Path('qa/estafeta_rc7_flutter')
           for w in (800,975,1000):
-              for x in (400,460,9200,18700,18760,35700):
+              for x in (1200,1260,9200,18700,18760,35700):
                   p=root/f'{w}x450_{x}.png'
                   assert p.is_file() and p.stat().st_size>10000,p
                   with Image.open(p) as im: assert im.size==(w,450),p
           # Static facades MUST move exactly 60 screen pixels when camera does.
           import numpy as np
           for w in (800,975,1000):
-              for a,b in ((400,460),(18700,18760)):
+              for a,b in ((1200,1260),(18700,18760)):
                   first=np.asarray(Image.open(root/f'{w}x450_{a}.png').convert('RGB'),dtype=np.int16)
                   moved=np.asarray(Image.open(root/f'{w}x450_{b}.png').convert('RGB'),dtype=np.int16)
                   x0,x1=180,w-100
@@ -76,6 +77,27 @@ jobs:
                       raise AssertionError(f'Facade motion is not 1:1 at {w}, {a}: {wall}')
           print('18 real captures and six camera-motion checks passed')
           PY
+      - name: Capture all playable facade joints in real Flutter
+        timeout-minutes: 17
+        run: flutter test --no-pub --reporter expanded test/estafeta_rc7_all_joins_render_test.dart
+      - name: Verify all seam captures
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          root=Path('qa/estafeta_rc7_joins')
+          files=sorted(root.glob('join_*.png'))
+          assert len(files)==38, f'Expected 38 seam screenshots; found {len(files)}'
+          for f in files:
+              assert f.stat().st_size>10000,f
+              with Image.open(f) as im: assert im.size==(1000,450),f
+          print('All 38 real Flutter seam captures exist; artistic review is separate')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: estafeta-rc7-all-38-seams
+          path: qa/estafeta_rc7_joins/*.png
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: estafeta-rc7-stagepainter-captures
