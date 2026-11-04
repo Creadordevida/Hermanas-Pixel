@@ -1,10 +1,10 @@
-// Ayuntamiento RC7 release contract: QA mode must show the actual new art.
+// Ayuntamiento RC7 release contract: NORMAL builds must show the new art.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hermanas_aventura/main.dart';
 void main() {
   test('Ayuntamiento new art is visible and covers whole existing chapter', () {
     expect(twcAyuntamientoRC7ArtworkEnabled,isTrue,
-      reason:'QA and later standard RC7 builds must render the new city hall art');
+      reason:'Standard RC7 must display the new city hall art without dart-define');
     expect(twcAyuntamientoRC7TileCount,39);
     expect(twcAyuntamientoRC7TileWidth,960.0);
     expect(twcAyuntamientoRC7TileCount*twcAyuntamientoRC7TileWidth,
