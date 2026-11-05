@@ -30,7 +30,7 @@ class FourEnemyMotion {
   double phase=0, cooldown=0;
   bool delivered=false;
   bool get ranged => kind=='slipper_neighbor';
-  double get warningDuration => ranged?.75:kind=='guitar_musician'?.62:.52;
+  double get warningDuration => ranged ? 0.75 : kind=='guitar_musician' ? 0.62 : 0.52;
   double get reach => ranged?390:kind=='dance_cleaner'?83:kind=='guitar_musician'?78:65;
   double get recovery => ranged?3.6:2.4;
   double get jumpClearance => kind=='dance_cleaner'?44:60;
