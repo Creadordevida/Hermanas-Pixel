@@ -37,7 +37,7 @@ const Map<String,bool> enemyArtValidated = {
   'sanfermin_runner': false,
   'dance_cleaner': true, // RC7: gameplay y seis capturas StagePainter QA verificadas
   'guitar_musician': true, // RC7: seis capturas StagePainter y gameplay QA verificados
-  'slipper_neighbor': false, // solo visible tras capturas y QA
+  'slipper_neighbor': true, // RC7: chancla, gameplay y seis capturas StagePainter verificados
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
