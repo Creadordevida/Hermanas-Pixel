@@ -123,3 +123,15 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - El workflow se ajustó para que las ejecuciones `pull_request` validen sin hacer push binario; solo los eventos `push` conservan los PNG. Commit **`d95948b92288c0e35b49120a936e5ff587b974df`**, pendiente resultado de su nueva ejecución.
 - **Estado:** pruebas automatizadas y seis capturas reales examinadas, con ataque y caída visibles. Sigue pendiente fuente artística maestra 404 y revisión definitiva de escalado/movimiento en dispositivo; mantener flag de publicación del limpiador desactivada y no afirmar que RC7 normal ya lo muestre.
 - **Siguiente acción concreta:** verificar el nuevo workflow sin conflictos, recuperar la referencia maestra aprobada si es posible, decidir ajustes visuales y habilitación final solo con evidencia suficiente. Luego pasar al músico.
+
+## Cierre técnico del limpiador para integrar en RC7 — 2026-11-05
+
+**Estado actualizado prevalente sobre notas anteriores:** el limpiador `dance_cleaner` está **HABILITADO EN LA COMPILACIÓN NORMAL** de la rama de preparación RC7. No implica APK publicada ni ensayo en teléfono.
+
+- `lib/main.dart`: `enemyArtValidated['dance_cleaner']=true`, commit **`b928be9691588e97768dea0599009a4caeeedf91`**. Se mantienen `guitar_musician` y `slipper_neighbor` desactivados.
+- `test/dance_cleaner_rc7_release_test.dart`, commit **`44694b4927d25e9951aac980eed1e5cc4a5d8be3`**: sin `TWC_GAMEPLAY_PLAYTEST`, comprueba puerta de activación, etapa 5, tres posiciones 6570/19710/30295 y ausencia en otras etapas.
+- Workflow amplió análisis y prueba de configuración normal, commit **`f3e919ba978dd09d5881f1ebff55d15ee502e7db`**.
+- **GitHub Actions run `42018586860` (#36): SUCCESS completo**. Confirmados `flutter pub get`, análisis Dart, modelo de comportamiento, test de activación normal, gameplay con Miren/Sara, seis capturas reales `StagePainter` y verificación/guardado PNG. Job `127215350198`.
+- Inspección artística: seis PNG reales en `qa/dance_cleaner_flutter/`, barrido y derrota visibles; sin recortes evidentes. La referencia maestra original sigue sin encontrarse en la ruta indicada, por lo que no se afirma comparación pixel a pixel con aquella. La versión RC7 requiere aún compilación APK y prueba física en Redmi Note 14 para verificar encuadre, rendimiento y controles reales.
+- **Resultado:** limpiador **LISTO TÉCNICAMENTE PARA SER INCLUIDO EN RC7**, no para afirmar aceptación en dispositivo ni lanzamiento publicado. No hacer merge ni APK en esta microfase.
+- **Siguiente enemigo:** músico `guitar_musician`: revisar CI y capturas reales antes de activar su bandera. Mantener metodología de microfases y puntos de recuperación.
