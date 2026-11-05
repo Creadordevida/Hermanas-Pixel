@@ -51,6 +51,8 @@ jobs:
               assert len(b)>10000,str(p)
           print('CLEANER_REAL_STAGEPAINTER_PNG_PASS',len(files))
           PY
+          # PR merge refs are for validation only; never push generated binaries from them.
+          if [ "$GITHUB_EVENT_NAME" != "push" ]; then exit 0; fi
           git config user.name 'twc-cleaner-qa[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qa/dance_cleaner_flutter/*.png
