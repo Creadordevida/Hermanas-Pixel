@@ -4,7 +4,7 @@ on:
     branches:
       - work/revision-visual-20261028-continuidad
     paths:
-      - qa/quiosco_inbox/QUIOSCO_RC7_PANELES_CANDIDATOS.zip
+      - qa/quiosco_inbox/QUIOSCO_RC7_SUBIR_GITHUB_2.zip
 permissions:
   contents: write
 concurrency:
@@ -31,8 +31,8 @@ jobs:
       - name: Validate every candidate image before writing files
         run: |
           set -euo pipefail
-          python3 tools/import_quiosco_rc7_zip.py . qa/quiosco_inbox/QUIOSCO_RC7_PANELES_CANDIDATOS.zip
-      - name: Register candidate artwork only for chapter 2 in pubspec
+          python3 tools/import_quiosco_rc7_zip.py . qa/quiosco_inbox/QUIOSCO_RC7_SUBIR_GITHUB_2.zip
+      - name: Register candidate artwork only for Plaza del Castillo (stage 3) in pubspec
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -100,6 +100,7 @@ jobs:
       - name: Chapter regressions (no Android)
         run: |
           flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
+          flutter test --no-pub --reporter expanded test/ayuntamiento_rc7_contract_test.dart
           flutter test --no-pub --reporter expanded test/adaptive_title_screen_test.dart
       - name: Persist exactly candidates + QA on working PR branch
         run: |
