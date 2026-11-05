@@ -20,6 +20,7 @@ import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
 import 'new_enemy_behaviors.dart';
+import 'four_enemy_behaviors.dart';
 import 'new_enemy_hitboxes.dart';
 import 'classic_enemy_pose.dart';
 import 'adaptive_title_screen.dart';
@@ -34,6 +35,7 @@ const Map<String,bool> enemyArtValidated = {
   'navarre_king': false,
   'estafeta_bull': false,
   'sanfermin_runner': false,
+  'dance_cleaner': false, // candidato conservado hasta QA real
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
@@ -131,6 +133,8 @@ class Enemy {
   // Visible melee warning for bully and rival soccer player.
   double meleeWarning = 0;
   NewEnemyMotion? newMotion;
+  FourEnemyMotion? cleanerMotion;
+  bool get danceCleaner => kind == 'dance_cleaner';
   double kingAwakeAt = -1;
   double kingAttackAt = -1;
   bool kingImpactDelivered = false;
@@ -140,7 +144,7 @@ class Enemy {
   bool get ranged => ['referee','breakdancer','teacher'].contains(kind);
   bool get dog => kind.startsWith('dog_');
   bool get aerial => kind == 'pigeon';
-  int get hp => kind == 'dog_doberman' || kind == 'cleaning_robot' ||
+  int get hp => danceCleaner || kind == 'dog_doberman' || kind == 'cleaning_robot' ||
     kind == 'rival_supporter' || kind == 'estafeta_bull' ? 2 :
     (ranged || kind == 'navarre_king') ? 3 : 1;
   double get speed => switch(kind) {
@@ -564,6 +568,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       for (final kind in ['robot','supporter','tourist']) {
         paths['enemy_new_$kind'] = 'assets/images/enemies_new/${kind}_atlas.png';
       }
+      paths['enemy_four_dance_cleaner'] = 'assets/images/enemies_new/dance_cleaner_atlas.png';
       paths['enemy_navarre_king_atlas'] = 'assets/images/enemies_new/navarre_king_atlas.png';
       for (final kind in ['estafeta_bull','sanfermin_runner']) {
         paths['enemy_$kind'] = 'assets/images/enemies_new/${kind}_atlas.png';
@@ -691,6 +696,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       };
       for (final wx in plannedNewEnemySpawns(typ, stage, stageWidth)) {
         enemies.add(Enemy(enemies.length,newKind,wx));
+      }
+    }
+    if (stage == 5 && isEnemyPlayableInBuild('dance_cleaner')) {
+      for (final x in fourEnemySpawns('dance_cleaner',stage,stageWidth)) {
+        enemies.add(Enemy(enemies.length,'dance_cleaner',x));
       }
     }
     // The chapter's strong thematic opponent always appears near its last segment.
@@ -946,6 +956,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
               foe.attackCooldown=math.max(foe.attackCooldown,1.0);
             }
             particlesUntil=time+.4;
+            if(foe.danceCleaner) {
+              final motion=foe.cleanerMotion ??= FourEnemyMotion('dance_cleaner',foe.home);
+              if(foe.hits>=foe.hp) {motion.defeat();} else {motion.hit();}
+            }
             if(foe.hits>=foe.hp){foe.deathAt=time;foe.newMotion?.defeat();}
             else if(foe.newArchetype){foe.newMotion?.hit();}
             if(foe.dog || foe.aerial) foe.animalHit();
@@ -1046,6 +1060,14 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           }
         }
         foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
+        continue;
+      }
+      if(foe.danceCleaner) {
+        final motion=foe.cleanerMotion ??= FourEnemyMotion('dance_cleaner',foe.home);
+        motion.x=foe.x;
+        final impact=motion.update(dt,hero.x,hero.y,groundY);
+        if(impact==FourEnemyImpact.melee) _receiveDamage(motion.facing);
+        foe.x=motion.x;foe.facing=motion.facing;
         continue;
       }
       if(foe.newArchetype) {
@@ -1565,6 +1587,26 @@ class StagePainter extends CustomPainter {
                 width:radius*2+28,height:8+radius*.07),p);
             }
           }
+        }
+        continue;
+      }
+      if(foe.danceCleaner) {
+        final img=images['enemy_four_dance_cleaner'];
+        if(img!=null) {
+          final motion=foe.cleanerMotion;
+          final pose=foe.defeated?5:foe.stunned>0?4:motion?.pose.index??0;
+          final frame=foe.defeated?((time-foe.deathAt)/.48*4).floor().clamp(0,3)
+            :foe.stunned>0?((.66-foe.stunned)/.66*4).floor().clamp(0,3)
+            :motion?.frame??0;
+          final scale=138.0/151.0;
+          final side=192.0*scale;
+          canvas.save();
+          if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(img,Rect.fromLTWH(frame*192.0,pose*192.0,192,192),
+            Rect.fromLTWH(x-side/2,groundY-side,side,side),
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
+          canvas.restore();
         }
         continue;
       }
