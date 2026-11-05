@@ -105,5 +105,7 @@ jobs:
               with Image.open(f) as im:assert im.size==(1000,450)
           print('38 rendered joins passed; visual review is a separate gate')
           PY
+      - name: Audit architectural repetition - nonblocking for gameplay preview
+        run: python3 tools/audit_quiosco_visual_repetition.py
       - name: Ready for preview, not device tested
         run: echo 'Flutter QA passed. No APK, no merge, no device proof; art review separately.'
