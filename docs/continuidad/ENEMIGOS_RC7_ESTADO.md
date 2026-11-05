@@ -111,3 +111,15 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - Se abrió e inspeccionó el atlas `assets/images/enemies_new/dance_cleaner_atlas.png` (blob `be233dce6dcd673f4a03bb6e98b7a085787fad0d`). La hoja muestra seis filas de poses. La referencia maestra `qa/enemy_art_20261104/approved_reference.png` todavía devuelve 404 en la rama, por lo que la comparación exacta con el arte aprobado sigue pendiente.
 - **Estado:** primera evidencia visual real disponible y revisada; no hay secuencia en movimiento ni validación de todas las poses, no activar `enemyArtValidated['dance_cleaner']` aún.
 - **Siguiente microfase:** capturar secuencia de barrido, golpe y derrota (StagePainter real), comparar escala/silueta/animaciones, confirmar fuente aprobada y decidir habilitación únicamente tras pasar revisión.
+
+## Microfase seis fotogramas del limpiador — revisión 2026-11-05
+
+- `test/dance_cleaner_rc7_render_test.dart` amplió la toma real `StagePainter` de 1 a 6 PNG 1000×450, commit **`64d5136aa010de8b6edcc2205b467ce62f50ac00`**; el workflow guarda/verifica las seis, commit **`01e9ea4bf6030cf11a55557efb69a5f5861a859f`**.
+- Run **`42017125668`** (#24): **SUCCESS** en análisis, modelos, gameplay real, seis capturas, comprobación de dimensión/firma y guardado.
+- Inspección visual de las seis capturas de rama: `02_ataque_t20.png` y `03_ataque_t45.png` muestran barrido de escoba conectado, sin recorte evidente; `04_ataque_t70.png` regresa a posición de reposo/marcha. La primera simulación de derrota `cleaner.hits=cleaner.hp` no mostraba caída, por lo que NO se dio por válida.
+- Corregido test para disparar la **derrota auténtica** con el peine de Sara y exigir `cleaner.defeated==true`, commit **`64fe130388a1f0b69793aecab75abbb18d9ff925`**.
+- Run **`42017646510`** (#27): análisis, modelos, gameplay, render y verificación de seis PNG **SUCCESS**. El job general falló en `git rebase` del paso final de guardado, por conflicto de imágenes binarias de ejecución PR, **no por Flutter ni por las poses**.
+- Se recuperaron de la rama y se examinaron las nuevas `05_derrota_t08.png` (arrodillado) y `06_derrota_t28.png` (caído horizontalmente con escoba), blobs Git `76fa36f6fb90f4f8cd84e4d09e550f1ab98e6877` y `e2a2284c2a4627fbc87f2afc038b51034304cde5`. Ambas evidencias son imágenes auténticas de juego y no se observan amputaciones evidentes.
+- El workflow se ajustó para que las ejecuciones `pull_request` validen sin hacer push binario; solo los eventos `push` conservan los PNG. Commit **`d95948b92288c0e35b49120a936e5ff587b974df`**, pendiente resultado de su nueva ejecución.
+- **Estado:** pruebas automatizadas y seis capturas reales examinadas, con ataque y caída visibles. Sigue pendiente fuente artística maestra 404 y revisión definitiva de escalado/movimiento en dispositivo; mantener flag de publicación del limpiador desactivada y no afirmar que RC7 normal ya lo muestre.
+- **Siguiente acción concreta:** verificar el nuevo workflow sin conflictos, recuperar la referencia maestra aprobada si es posible, decidir ajustes visuales y habilitación final solo con evidencia suficiente. Luego pasar al músico.
