@@ -1,6 +1,6 @@
 # Bandeja de importación del Quiosco RC7 — Plaza del Castillo
 
-Subir aquí el fichero **QUIOSCO_RC7_PANELES_CANDIDATOS.zip**, sin extraer, en la rama
+Subir aquí el fichero **QUIOSCO_RC7_SUBIR_GITHUB_2.zip**, sin extraer, en la rama
 `work/revision-visual-20261028-continuidad` del PR #5.
 
 El workflow `.github/workflows/quiosco-rc7-only.yml` valida el SHA256 fijo,
