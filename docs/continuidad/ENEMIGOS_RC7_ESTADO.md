@@ -45,3 +45,11 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - Referencia aprobada y hojas fuente siguen recuperadas localmente; su respaldo íntegro remoto no está confirmado. Los otros tres atlas no se han confirmado en la ruta examinada.
 
 **Próxima acción exacta:** adaptar solo las rutas de carga/render y entidades del limpiador a la versión actual de `main.dart`, añadir test de juego real y ejecutar Flutter CI antes de habilitarlo en versión normal. No confundir dos commits preparatorios con integración terminada.
+
+## Integración limpiador — segunda fase 2026-11-05
+
+- Código motor actualizado en `lib/main.dart`: import del modelo, vida (2 impactos), carga de atlas, tres apariciones en Danza (18/54/83% del recorrido), animación por seis estados, golpe de escoba con aviso, reacción a pelota/peine y derrota. Commit `69f465c782801d7aa4ee1b8681b6efbe1381e0cc`.
+- La bandera `enemyArtValidated['dance_cleaner']` sigue **false**: no aparece en la RC7 normal hasta que se valide el juego. El test usa `TWC_GAMEPLAY_PLAYTEST=true`.
+- Prueba real en `test/dance_cleaner_rc7_gameplay_test.dart` para Miren y Sara (golpe, escape, interrupción y derrota), commit `19e37e68fd887f3b200086cb15711747c7e50c4d`.
+- Workflow `.github/workflows/dance-cleaner-rc7-qa.yml` creado, commit `c8b02c7e22f56a0d7aa3434be9a44e5e97ba6948`. **Resultado Flutter y capturas todavía no verificados**. El listado de runs asociado al commit mostró otras tres ejecuciones pendientes, sin confirmar ejecución de este workflow.
+- Siguiente acción: obtener resultado del workflow, corregir fallos, producir captura real StagePainter en Danza con el limpiador y habilitar la bandera únicamente si la comparación visual y ambas protagonistas pasan. El personaje sigue **pendiente de validación final**.
