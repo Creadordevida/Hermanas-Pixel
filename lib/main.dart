@@ -52,6 +52,12 @@ const double groundY = 390;
 // Release importer promotes the default only AFTER validated binary transfer.
 // The Ayuntamiento art is bundled and validated: no CLI flag may hide it in RC7.
 const bool twcAyuntamientoRC7ArtworkEnabled = true;
+// Plaza del Castillo / Quiosco RC7: protected until complete verified artwork.
+const bool twcQuioscoRC7ArtworkEnabled =
+    bool.fromEnvironment('TWC_QUIOSCO_RC7_ART', defaultValue: false);
+const int twcQuioscoRC7TileCount = 39;
+const double twcQuioscoRC7TileWidth = 960.0;
+
 const int twcAyuntamientoRC7TileCount = 39;
 const double twcAyuntamientoRC7TileWidth = 960.0;
 const bool twcEstafetaRC7ArtworkEnabled = true;
@@ -449,6 +455,13 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         for (var n=0;n<twcAyuntamientoRC7TileCount;n++) {
           paths['ayuntamiento_rc7_$n'] =
               'assets/images/ayuntamiento_rc7/ayuntamiento_${n.toString().padLeft(2,'0')}.webp';
+        }
+      }
+      // Quiosco stage 3: independent assets; do not load before ZIP verified.
+      if (twcQuioscoRC7ArtworkEnabled) {
+        for (var n=0;n<twcQuioscoRC7TileCount;n++) {
+          paths['quiosco_rc7_$n'] =
+            'assets/images/quiosco_rc7/quiosco_${n.toString().padLeft(2,'0')}.webp';
         }
       }
       // FÚTBOL: mismo movimiento aprobado que el capítulo 1; arte propio.
@@ -2323,6 +2336,25 @@ class StagePainter extends CustomPainter {
     }
   }
 
+  // Plaza del Castillo: physically anchored facades and a SINGLE quiosco.
+  // The candidate remains gated until all 39 images are uploaded and QA passes.
+  void _quioscoBackgroundRC7(Canvas canvas) {
+    canvas.drawRect(Rect.fromLTWH(0,0,viewW,groundY),
+        Paint()..color=const Color(0xff78b4ed));
+    final first=math.max(0,(cameraX/twcQuioscoRC7TileWidth).floor());
+    final last=math.min(twcQuioscoRC7TileCount-1,
+        ((cameraX+viewW)/twcQuioscoRC7TileWidth).ceil());
+    for (var i=first;i<=last;i++) {
+      final tile=images['quiosco_rc7_$i'];
+      if (tile==null) throw StateError('Missing Quiosco RC7 tile $i');
+      final x=i*twcQuioscoRC7TileWidth-cameraX;
+      canvas.drawImageRect(tile,
+          Rect.fromLTWH(0,0,tile.width.toDouble(),tile.height.toDouble()),
+          Rect.fromLTWH(x,0,twcQuioscoRC7TileWidth,groundY),
+          Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
   void _estafetaBackgroundRC7(Canvas canvas) {
     canvas.drawRect(Rect.fromLTWH(0,0,viewW,390),
         Paint()..color=const Color(0xff64a9ed));
@@ -2350,6 +2382,8 @@ class StagePainter extends CustomPainter {
       _neighborhoodBackground(canvas);
     } else if (stage == 1 && twcAyuntamientoRC7ArtworkEnabled) {
       _ayuntamientoBackgroundRC7(canvas);
+    } else if (stage == 3 && twcQuioscoRC7ArtworkEnabled) {
+      _quioscoBackgroundRC7(canvas);
     } else if (stage == 2 && twcEstafetaRC7ArtworkEnabled) {
       _estafetaBackgroundRC7(canvas);
     } else if(stage == 4) {
