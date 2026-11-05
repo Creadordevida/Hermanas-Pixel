@@ -39,37 +39,56 @@ void main() {
       game.leftHeld = false;
       game.rightHeld = false;
       game.exitTime = -1.0;
-      game.enemies.add(Enemy(0, 'dance_cleaner', 510)..attackCooldown = 0);
+      final cleaner = Enemy(0, 'dance_cleaner', 510)..attackCooldown = 0;
+      game.enemies.add(cleaner);
       await tester.pump(const Duration(milliseconds: 150));
       final active = tester.widgetList<CustomPaint>(find.byType(CustomPaint))
         .where((w) => w.painter is StagePainter &&
           (w.painter! as StagePainter).stage == 5);
       expect(active, isNotEmpty);
       expect((active.first.painter! as StagePainter).selected, 1);
-      final boundary = boundaryKey.currentContext!.findRenderObject()!
-        as RenderRepaintBoundary;
-      expect(boundary.size, const Size(1000, 450));
-      expect(boundary.debugNeedsPaint, false);
-      final bytes = await tester.runAsync<List<int>>(() async {
-        final ui.Image image = await boundary.toImage(pixelRatio: 1)
-          .timeout(const Duration(seconds: 30));
-        try {
-          final data = await image.toByteData(format: ui.ImageByteFormat.png)
+      Future<void> capture(String name) async {
+        await tester.pump(const Duration(milliseconds: 16));
+        final boundary = boundaryKey.currentContext!.findRenderObject()!
+          as RenderRepaintBoundary;
+        expect(boundary.size, const Size(1000, 450));
+        expect(boundary.debugNeedsPaint, false);
+        final size = await tester.runAsync<int>(() async {
+          final ui.Image image = await boundary.toImage(pixelRatio: 1)
             .timeout(const Duration(seconds: 30));
-          if (data == null) throw StateError('PNG encoding returned null');
-          final file = File('qa/dance_cleaner_flutter/01_sara_limpiador.png');
-          await file.parent.create(recursive: true);
-          final png = data.buffer.asUint8List(
-            data.offsetInBytes, data.lengthInBytes);
-          await file.writeAsBytes(png, flush: true);
-          return png;
-        } finally {
-          image.dispose();
+          try {
+            final data = await image.toByteData(format: ui.ImageByteFormat.png)
+              .timeout(const Duration(seconds: 30));
+            if (data == null) throw StateError('No PNG for $name');
+            final file = File('qa/dance_cleaner_flutter/$name.png');
+            await file.parent.create(recursive: true);
+            await file.writeAsBytes(data.buffer.asUint8List(
+              data.offsetInBytes, data.lengthInBytes), flush: true);
+            return file.length();
+          } finally {
+            image.dispose();
+          }
+        });
+        expect(size, greaterThan(10000));
+        print('REAL_CLEANER_STAGEPAINTER_CAPTURE $name 1000x450 $size');
+      }
+      Future<void> frames(int count) async {
+        for (var i=0; i<count; i++) {
+          await tester.pump(const Duration(milliseconds: 16));
         }
-      });
-      expect(bytes, isNotNull);
-      expect(bytes!.length, greaterThan(10000));
-      print('REAL_CLEANER_STAGEPAINTER_CAPTURE 1000x450 bytes=${bytes.length}');
+      }
+      await capture('01_sara_limpiador');
+      await frames(20);
+      await capture('02_ataque_t20');
+      await frames(25);
+      await capture('03_ataque_t45');
+      await frames(25);
+      await capture('04_ataque_t70');
+      cleaner.hits = cleaner.hp;
+      await frames(8);
+      await capture('05_derrota_t08');
+      await frames(20);
+      await capture('06_derrota_t28');
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.binding.setSurfaceSize(null);
