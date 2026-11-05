@@ -53,3 +53,12 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - Prueba real en `test/dance_cleaner_rc7_gameplay_test.dart` para Miren y Sara (golpe, escape, interrupción y derrota), commit `19e37e68fd887f3b200086cb15711747c7e50c4d`.
 - Workflow `.github/workflows/dance-cleaner-rc7-qa.yml` creado, commit `c8b02c7e22f56a0d7aa3434be9a44e5e97ba6948`. **Resultado Flutter y capturas todavía no verificados**. El listado de runs asociado al commit mostró otras tres ejecuciones pendientes, sin confirmar ejecución de este workflow.
 - Siguiente acción: obtener resultado del workflow, corregir fallos, producir captura real StagePainter en Danza con el limpiador y habilitar la bandera únicamente si la comparación visual y ambas protagonistas pasan. El personaje sigue **pendiente de validación final**.
+
+## Integración músico — 2026-11-05
+
+- Atlas aprobado en GitHub sin modificación de contenido: `assets/images/enemies_new/guitar_musician_atlas.png`, blob SHA `a305e203b44e9ef8bd960039ccd9c926a4cc1000`, commit `e873f4308022c9da02b21b19ed8ea0467ff309ad`.
+- Hoja original conservada en `qa/enemy_art_20261104/guitar_musician_source.png`, blob SHA `9eeb0e39c1e25aa539a981dc443d1b5127ceeb9a`, commit `e8b21da33d40e5ca2d6ae306a75bc3f2c84570be`.
+- Integración `lib/main.dart`: carga atlas, dos golpes de vida, tres apariciones en Danza, ataque cuerpo a cuerpo con guitarra y aviso, daño/interrupción, seis filas de animación y caída, escala 138/159. Commit `1ecdc69872a8a14db73dba3bded208ffc1f3b732`.
+- `test/guitar_musician_rc7_gameplay_test.dart` comprueba ambos personajes, ataque, huida, impacto, interrupción y derrota. Commit `fb52aaa54f92fd9cf09e0b287840915e439b0244`.
+- Workflow `.github/workflows/guitar-musician-rc7-qa.yml`, commit `062b8cfd69ba1ec77a83f702e20503030c5c6045`. **Sin resultado de ejecución Flutter verificable**; tampoco hay capturas StagePainter. El arte está protegido con `enemyArtValidated['guitar_musician'] = false`, no visible en RC7 normal.
+- Siguiente acción: ejecutar y revisar CI Flutter, comprobar visualmente el músico en Danza (Miren y Sara), iterar y solo entonces habilitarlo en la compilación normal. No declarar finalizado.
