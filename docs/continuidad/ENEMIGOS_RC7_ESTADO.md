@@ -34,3 +34,14 @@ HEAD observado en PR #5: `e1a4919251d13f395f26fbeca902f63ca6566718`. El director
 ## Restricciones
 
 No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `qa/enemy_art_20261104/approved_reference.png`. Conservar originales. Avances pequeños, commit verificable y actualización de esta nota. Los seis enemigos anteriores NO son esta tanda.
+
+## Avance incremental comprobado — limpiador, 5 noviembre 2026
+
+- Atlas del limpiador **ya presente** en GitHub: `assets/images/enemies_new/dance_cleaner_atlas.png`, blob SHA `be233dce6dcd673f4a03bb6e98b7a085787fad0d`, idéntico (git hash-object) al PNG local recuperado. Inspección visual del atlas 4×6: 24 celdas con reposo, marcha, aviso, barrido, impacto y caída; esto no sustituye animación real.
+- Modelo de comportamiento conservado en `lib/four_enemy_behaviors.dart`, commit `11d58ac4983ca4654530480ccf807c1125d26872`.
+- Pruebas unitarias del modelo conservadas en `test/four_enemy_behaviors_test.dart`, commit `fa41d8997e04c853f1467fe18a2206c1f151d538`.
+- Verificador de arte local: `FOUR_ENEMY_ART_PASS`. No hay Flutter/Dart en este entorno: pruebas Dart y jugabilidad real **sin ejecutar**.
+- Bloqueo pendiente de cierre: falta integrar el limpiador en el `lib/main.dart` **actual** sin pisar los escenarios de otros trabajos; comprobar registro del atlas y animaciones en pantalla, físicas de golpe, Miren y Sara, derrota y capturas reales `StagePainter`. Mantener bandera artística desactivada hasta validación. No está listo para RC7 aún.
+- Referencia aprobada y hojas fuente siguen recuperadas localmente; su respaldo íntegro remoto no está confirmado. Los otros tres atlas no se han confirmado en la ruta examinada.
+
+**Próxima acción exacta:** adaptar solo las rutas de carga/render y entidades del limpiador a la versión actual de `main.dart`, añadir test de juego real y ejecutar Flutter CI antes de habilitarlo en versión normal. No confundir dos commits preparatorios con integración terminada.
