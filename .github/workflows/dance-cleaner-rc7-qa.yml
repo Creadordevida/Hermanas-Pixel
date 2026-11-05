@@ -7,6 +7,7 @@ on:
       - lib/main.dart
       - lib/four_enemy_behaviors.dart
       - test/dance_cleaner_rc7_gameplay_test.dart
+      - test/dance_cleaner_rc7_render_test.dart
       - .github/workflows/dance-cleaner-rc7-qa.yml
   pull_request:
     paths:
@@ -16,7 +17,7 @@ on:
       - .github/workflows/dance-cleaner-rc7-qa.yml
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 concurrency:
   group: dance-cleaner-rc7-qa
   cancel-in-progress: false
@@ -34,3 +35,24 @@ jobs:
       - run: flutter analyze lib/main.dart lib/four_enemy_behaviors.dart test/four_enemy_behaviors_test.dart test/dance_cleaner_rc7_gameplay_test.dart
       - run: flutter test test/four_enemy_behaviors_test.dart
       - run: flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/dance_cleaner_rc7_gameplay_test.dart
+      - name: Capture genuine cleaner StagePainter 20:9
+        run: flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/dance_cleaner_rc7_render_test.dart
+      - name: Verify and preserve exact Flutter PNG
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from struct import unpack
+          p=Path('qa/dance_cleaner_flutter/01_sara_limpiador.png')
+          b=p.read_bytes()
+          assert b[:8]==b'\\x89PNG\\r\\n\\x1a\\n'
+          assert unpack('>II',b[16:24])==(1000,450)
+          assert len(b)>10000
+          print('CLEANER_REAL_STAGEPAINTER_PNG_PASS',len(b))
+          PY
+          git config user.name 'twc-cleaner-qa[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa/dance_cleaner_flutter/01_sara_limpiador.png
+          if ! git diff --cached --quiet; then
+            git commit -m 'qa(rc7): preserve real cleaner StagePainter screenshot'
+            git push origin HEAD:work/revision-visual-20261028-continuidad
+          fi
