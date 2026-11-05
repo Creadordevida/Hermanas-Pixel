@@ -163,3 +163,13 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - **VALIDACIÓN FINAL:** GitHub Actions **`42022195350`** (#15), job `127227436264`, **SUCCESS** en `flutter pub get`, análisis de código, prueba de configuración normal, gameplay Miren/Sara, seis capturas reales y verificación PNG.
 - **Resultado:** vecina **LISTA TÉCNICAMENTE PARA RC7** junto con limpiador y músico. Pendiente compilación APK y ensayo físico en Redmi Note 14; el original maestro grupal de diseños no se ha contrastado desde la ruta documentada. No se ha publicado APK ni fusionado PR.
 - **Siguiente enemigo:** entrenador rival `rival_coach` del capítulo de fútbol: revisar arte, código, pruebas y capturas; mantener microfases y punto de recuperación antes de activarlo.
+
+
+## Entrenador rival — cierre técnico incremental, 2026-11-05
+
+- Atlas aprobado incorporado SIN sustituir su diseño: `assets/images/enemies_new/rival_coach_atlas.png`, blob SHA `a4b42c71e2fc404692205fff84a74bddf29dd5fa`, commit `d60eb8741d222618af82a04e11e12b7854f18293`. Hoja original recuperada localmente; respaldo remoto pendiente de confirmar.
+- Integración de `lib/main.dart` en campo de fútbol (stage 4): tres posiciones 24/58/86%, 3 puntos de vida, alerta, movimiento, ataque, interrupción, impacto y caída, atlas 4×6; commit `8a2b9ece8c82d71a60d66ad9b2ba66e5686137f2`.
+- `test/rival_coach_rc7_gameplay_test.dart` comprueba enfrentamiento con Miren y Sara, aviso, golpe/esquiva, interrupción y derrota; commit `04525900e7ba6e956435cc49c82eb8924dfcd8b0`. GitHub Actions `42023759763` verde.
+- `test/rival_coach_rc7_render_test.dart` captura seis imágenes reales de `StagePainter` 1000×450 (20:9), almacenadas en `qa/rival_coach_flutter/`: reposo, fases de ataque con pizarra, e inicio/final de derrota. CI `42024197907` verde; imágenes abiertas y revisadas, escala y apoyos coherentes, sin amputación visual del enemigo.
+- Bandera `enemyArtValidated['rival_coach']` habilitada en la compilación normal, commit `6f639bfd44f843d70a2d17ab6cbad584fbbe3904`. Test de humo sin `TWC_GAMEPLAY_PLAYTEST` en `test/rival_coach_rc7_release_test.dart` (commit `cf8a12cf5548cf90813218de42767eb183bde24f`) y CI ampliada (commit `2d84e5f1ce9a0efb53bd697a67dbe664b682b8d0`). **Resultado de nueva ejecución aún pendiente al redactar esta nota**.
+- Pendiente común a los cuatro: compilación APK RC7 privada y prueba manual real en Redmi Note 14; ni merge ni publicación realizados. No confundir QA automatizada en Flutter con aceptación en dispositivo.
