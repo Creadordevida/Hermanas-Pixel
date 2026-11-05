@@ -78,3 +78,11 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - Consulta posterior de runs asociados a ese commit: **lista vacía**. Esto NO demuestra éxito ni fallo de Flutter. No hay captura auténtica nueva ni validación de jugabilidad. La bandera del limpiador debe permanecer desactivada.
 - **Próximo paso único:** comprobar si GitHub Actions ejecutó el workflow y, si no lo hizo, diagnosticar la activación sin modificar al mismo tiempo el juego; después examinar logs y reparar cualquier fallo concreto. Solo después revisar capturas StagePainter y habilitar el enemigo.
 - **Estado:** limpiador integrado pero NO validado; músico integrado pero NO validado; vecina solo recursos; entrenador pendiente. No se ha generado APK ni realizado merge.
+
+## Microfase CI limpiador — diagnóstico y reparación, 2026-11-05
+
+- El workflow **sí se ejecutó**: run `42011710170`, job `127192711307`, resultado **failure** al analizar código. `flutter pub get` y la instalación de Flutter terminaron correctamente, pero las pruebas se saltaron por el error del analizador.
+- Los logs localizaron el error raíz en `lib/four_enemy_behaviors.dart:33`: ternario mal formado `ranged?.75:kind=='guitar_musician'?.62:.52`, que generaba numerosos errores sintácticos.
+- Corrección mínima de esa expresión a `ranged ? 0.75 : kind=='guitar_musician' ? 0.62 : 0.52`, commit **`54ec6571c2dabb1d8a765955700ba1a8561e3070`**. Sin tocar sprites, escenarios, `main.dart` ni banderas de publicación.
+- Consulta inmediata de runs del nuevo commit: **todavía vacía**. La corrección se guardó, pero su resultado Flutter NO está validado. No hay captura StagePainter ni prueba jugable aprobada.
+- **Siguiente acción única:** consultar GitHub Actions para el commit `54ec6571`; si falla, inspeccionar el log y reparar solo el fallo concreto. Si pasa, revisar capturas reales en Danza y comportamiento para Miren y Sara antes de habilitar el limpiador.
