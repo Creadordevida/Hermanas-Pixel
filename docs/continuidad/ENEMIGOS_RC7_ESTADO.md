@@ -70,3 +70,11 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - Atlas y proyectil guardados y comprobados en la rama: `assets/images/enemies_new/slipper_neighbor_atlas.png` (blob `6358bddcd61280667ce5899be551bb221cb48101`) y `assets/images/enemies_new/green_slipper.png` (blob `188391abf76adf593fbbab2c9b4bb86a0a93a62d`). Commit `7aa2b2a9287f3d500e47be2fd33f003c58a7c865`.
 - La hoja fuente `qa/enemy_art_20261104/slipper_neighbor_source.png` aún **no está respaldada en la rama** (archivo local grande); conservarla sin sustituirla. No se ha modificado `lib/main.dart` ni habilitado bandera visual en esta fase.
 - **Siguiente acción:** integrar la vecina en el `main.dart` actual con aparición, render, animaciones, lanzamiento y colisión de la chancla, interrupción y derrota; añadir pruebas Miren/Sara, ejecutar Flutter CI y capturas auténticas StagePainter antes de habilitarla. **No terminada ni visible aún en RC7 normal.**
+
+## Punto de recuperación incremental — CI limpiador, 2026-11-05
+
+- Se revisó la configuración real de `.github/workflows/dance-cleaner-rc7-qa.yml` y el test `test/dance_cleaner_rc7_gameplay_test.dart`.
+- Se añadió disparador `pull_request` para ejecutar el control al modificar código/test/workflow, conservando `push` y `workflow_dispatch`. Commit de código **`0bb6bfd4ad9d40fe79c9439b9e83c0aad5149d56`**, comprobado mediante lectura remota del archivo actualizado.
+- Consulta posterior de runs asociados a ese commit: **lista vacía**. Esto NO demuestra éxito ni fallo de Flutter. No hay captura auténtica nueva ni validación de jugabilidad. La bandera del limpiador debe permanecer desactivada.
+- **Próximo paso único:** comprobar si GitHub Actions ejecutó el workflow y, si no lo hizo, diagnosticar la activación sin modificar al mismo tiempo el juego; después examinar logs y reparar cualquier fallo concreto. Solo después revisar capturas StagePainter y habilitar el enemigo.
+- **Estado:** limpiador integrado pero NO validado; músico integrado pero NO validado; vecina solo recursos; entrenador pendiente. No se ha generado APK ni realizado merge.
