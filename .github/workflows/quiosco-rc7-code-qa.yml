@@ -1,0 +1,35 @@
+name: Quiosco RC7 - code safety and regression (NO APK)
+on:
+  push:
+    branches: [work/revision-visual-20261028-continuidad]
+    paths:
+      - .github/workflows/quiosco-rc7-code-qa.yml
+      - lib/main.dart
+      - test/quiosco_rc7_contract_test.dart
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  protected-quiosco:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Dart analysis
+        run: flutter analyze --no-pub lib
+      - name: Quiosco stage 3 and world geometry
+        run: flutter test --no-pub --reporter expanded test/quiosco_rc7_contract_test.dart
+      - name: Ayuntamiento release regression
+        run: flutter test --no-pub --reporter expanded test/ayuntamiento_rc7_contract_test.dart
+      - name: Estafeta release regression
+        run: flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
+      - name: Title regression
+        run: flutter test --no-pub --reporter expanded test/adaptive_title_screen_test.dart
+      - name: QA scope
+        run: echo 'No kiosk images imported yet. Stage 3 old art remains until true render QA, no APK or merge.'
