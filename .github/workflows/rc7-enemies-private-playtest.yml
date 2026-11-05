@@ -6,6 +6,8 @@ on:
       - work/revision-visual-20261028-continuidad
     paths:
       - .github/workflows/rc7-enemies-private-playtest.yml
+      - test/dance_cleaner_rc7_release_test.dart
+      - test/guitar_musician_rc7_release_test.dart
 
 permissions:
   contents: write
