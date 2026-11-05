@@ -35,7 +35,7 @@ const Map<String,bool> enemyArtValidated = {
   'navarre_king': false,
   'estafeta_bull': false,
   'sanfermin_runner': false,
-  'dance_cleaner': false, // candidato conservado hasta QA real
+  'dance_cleaner': true, // RC7: gameplay y seis capturas StagePainter QA verificadas
   'guitar_musician': false, // candidato conservado hasta QA real
   'slipper_neighbor': false, // solo visible tras capturas y QA
 };
