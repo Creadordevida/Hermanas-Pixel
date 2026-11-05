@@ -1,0 +1,120 @@
+name: Quiosco RC7 - importación y QA Flutter SIN APK
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - qa/quiosco_inbox/QUIOSCO_RC7_PANELES_CANDIDATOS.zip
+      - tools/import_quiosco_rc7_zip.py
+      - .github/workflows/quiosco-rc7-only.yml
+permissions:
+  contents: write
+concurrency:
+  group: quiosco-rc7-zip-import
+  cancel-in-progress: false
+
+jobs:
+  import-and-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - name: Checkout PR5
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Flutter version used for Estafeta
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: PIL and numpy
+        run: python3 -m pip install --user pillow numpy
+      - name: Validate every candidate image before writing files
+        run: |
+          set -euo pipefail
+          python3 tools/import_quiosco_rc7_zip.py . qa/quiosco_inbox/QUIOSCO_RC7_PANELES_CANDIDATOS.zip
+      - name: Register candidate artwork only for chapter 2 in pubspec
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('pubspec.yaml')
+          s=p.read_text()
+          entry='    - assets/images/quiosco_rc7/\n'
+          if entry not in s:
+              marker='    - assets/images/estafeta_rc7/\n'
+              if marker not in s:raise ValueError('Unexpected pubspec.yaml: no Estafeta assets')
+              s=s.replace(marker,marker+entry)
+              p.write_text(s)
+          PY
+      - name: Flutter dependencies, no Android build
+        run: flutter pub get
+      - name: Code analysis including new painter
+        run: flutter analyze --no-pub lib
+      - name: Candidate remains protected until review
+        run: flutter test --no-pub --reporter expanded test/quiosco_rc7_contract_test.dart
+      - name: 18 authentic StagePainter captures, Android ratios
+        timeout-minutes: 18
+        run: flutter test --no-pub --reporter expanded --dart-define=TWC_QUIOSCO_RC7_ART=true test/quiosco_rc7_real_render_test.dart
+      - name: Verify 18 images and camera 1:1
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import numpy as np,hashlib
+          root=Path('qa/quiosco_rc7_flutter')
+          hashes=set()
+          for w in (800,975,1000):
+              for x in (1200,1260,9200,18200,18260,35700):
+                  p=root/f'{w}x450_{x}.png'
+                  assert p.exists() and p.stat().st_size>10000,p
+                  with Image.open(p) as img:assert img.size==(w,450),p
+                  hashes.add(hashlib.sha256(p.read_bytes()).hexdigest())
+          assert len(hashes)==18,'Duplicate or wrong captures'
+          for w in (800,975,1000):
+              for a,b in ((1200,1260),(18200,18260)):
+                  first=np.asarray(Image.open(root/f'{w}x450_{a}.png').convert('RGB'),dtype=np.int16)
+                  moved=np.asarray(Image.open(root/f'{w}x450_{b}.png').convert('RGB'),dtype=np.int16)
+                  x0,x1=180,w-100
+                  aligned=float(np.abs(first[95:245,x0+60:x1]-moved[95:245,x0:x1-60]).mean())
+                  unaligned=float(np.abs(first[95:245,x0:x1]-moved[95:245,x0:x1]).mean())
+                  print('CAMERA_60',w,a,round(aligned,2),round(unaligned,2))
+                  if aligned>=unaligned or aligned>25:
+                      raise AssertionError(f'Background moves incorrectly: {w}, {a}')
+          print('QUIOSCO_CANDIDATE: 18 Flutter captures and 6 camera checks passed')
+          PY
+      - name: 38 genuine 20:9 seam screenshots
+        timeout-minutes: 18
+        run: flutter test --no-pub --reporter expanded --dart-define=TWC_QUIOSCO_RC7_ART=true test/quiosco_rc7_all_joins_render_test.dart
+      - name: Verify all 38 seam screenshots
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          root=Path('qa/quiosco_rc7_joins')
+          files=sorted(root.glob('join_*.png'))
+          assert len(files)==38,len(files)
+          for f in files:
+              assert f.stat().st_size>10000,f
+              with Image.open(f) as im:assert im.size==(1000,450),f
+          print('38 authentic Flutter seam captures produced; ARTISTIC APPROVAL NOT IMPLIED')
+          PY
+      - name: Chapter regressions (no Android)
+        run: |
+          flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
+          flutter test --no-pub --reporter expanded test/adaptive_title_screen_test.dart
+      - name: Persist exactly candidates + QA on working PR branch
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "work/revision-visual-20261028-continuidad"
+          git config user.name "twc-quiosco-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/images/quiosco_rc7/ pubspec.yaml qa/quiosco_rc7_flutter/ qa/quiosco_rc7_joins/
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m "art(quiosco): candidate scene and authentic Flutter QA, pending art review"
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin HEAD:"$GITHUB_REF_NAME"
+          fi
+      - name: Integrity statement
+        run: echo 'Candidate art remains disabled in normal builds pending visual authenticity review. NO APK, merge or publishing.'
