@@ -64,7 +64,7 @@ void main() {
             await file.parent.create(recursive: true);
             await file.writeAsBytes(data.buffer.asUint8List(
               data.offsetInBytes, data.lengthInBytes), flush: true);
-            return file.length();
+            return await file.length();
           } finally {
             image.dispose();
           }
