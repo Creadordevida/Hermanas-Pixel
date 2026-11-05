@@ -9,6 +9,7 @@ on:
       - assets/images/enemies_new/rival_coach_atlas.png
       - test/rival_coach_rc7_gameplay_test.dart
       - test/rival_coach_rc7_render_test.dart
+      - test/rival_coach_rc7_release_test.dart
       - .github/workflows/rival-coach-rc7-qa.yml
   pull_request:
     paths:
@@ -16,6 +17,7 @@ on:
       - lib/four_enemy_behaviors.dart
       - test/rival_coach_rc7_gameplay_test.dart
       - test/rival_coach_rc7_render_test.dart
+      - test/rival_coach_rc7_release_test.dart
       - .github/workflows/rival-coach-rc7-qa.yml
   workflow_dispatch:
 permissions:
@@ -31,8 +33,9 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter analyze lib/main.dart lib/four_enemy_behaviors.dart test/rival_coach_rc7_gameplay_test.dart test/rival_coach_rc7_render_test.dart
+      - run: flutter analyze lib/main.dart lib/four_enemy_behaviors.dart test/rival_coach_rc7_gameplay_test.dart test/rival_coach_rc7_render_test.dart test/rival_coach_rc7_release_test.dart
       - run: flutter test test/four_enemy_behaviors_test.dart
+      - run: flutter test test/rival_coach_rc7_release_test.dart
       - run: flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/rival_coach_rc7_gameplay_test.dart
       - name: Capture real football coach StagePainter 20:9
         run: flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/rival_coach_rc7_render_test.dart
