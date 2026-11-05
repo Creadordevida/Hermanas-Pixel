@@ -135,3 +135,17 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - Inspección artística: seis PNG reales en `qa/dance_cleaner_flutter/`, barrido y derrota visibles; sin recortes evidentes. La referencia maestra original sigue sin encontrarse en la ruta indicada, por lo que no se afirma comparación pixel a pixel con aquella. La versión RC7 requiere aún compilación APK y prueba física en Redmi Note 14 para verificar encuadre, rendimiento y controles reales.
 - **Resultado:** limpiador **LISTO TÉCNICAMENTE PARA SER INCLUIDO EN RC7**, no para afirmar aceptación en dispositivo ni lanzamiento publicado. No hacer merge ni APK en esta microfase.
 - **Siguiente enemigo:** músico `guitar_musician`: revisar CI y capturas reales antes de activar su bandera. Mantener metodología de microfases y puntos de recuperación.
+
+## Cierre técnico del músico de guitarra para RC7 — 2026-11-05
+
+**Estado prevalente:** `guitar_musician` **HABILITADO EN COMPILACIÓN NORMAL**, listo técnicamente para incluir en futura APK RC7. No implica aprobación física del dispositivo ni publicación.
+
+- Atlas preservado `assets/images/enemies_new/guitar_musician_atlas.png` (blob `a305e203b44e9ef8bd960039ccd9c926a4cc1000`), hoja fuente conservada previamente en `qa/enemy_art_20261104/guitar_musician_source.png`. La referencia grupal maestra aprobada no ha podido contrastarse en su ruta documentada (404); no afirmar identidad pixel a pixel.
+- Creado `test/guitar_musician_rc7_render_test.dart`, commit **`e00c0a5ef8a8bc8c4140346156087c494317d618`**: seis capturas auténticas de `StagePainter` (1000×450), ataque de guitarra y derrota provocada por peine de Sara; la prueba exige `musician.defeated==true` antes de fotografiar caída.
+- Workflow de músico ampliado para seis capturas y guardado PNG, commit **`5d49898c2644c2ca738dec3c1063a927d1e625f8`**. Run **`42019154923`** (#6) SUCCESS en modelo, gameplay, render y archivos. Se inspeccionaron en la rama `01_sara_musico.png`, `02_guitarra_t20.png`, `03_guitarra_t45.png`, `05_derrota_t08.png`, `06_derrota_t28.png`: guitarra visible y sin cortes evidentes, pose de golpe y caída real al suelo.
+- `lib/main.dart` habilitado: `enemyArtValidated['guitar_musician']=true`, commit **`1ab588473b62d7fdc082b650791e95f63dea490a`**; `dance_cleaner` sigue `true`, `slipper_neighbor` sigue `false`.
+- Test específico `test/guitar_musician_rc7_release_test.dart`, commit **`f318d32d15d7a1d89b48fc480a577ccec2c60c1a`**: verifica sin `TWC_GAMEPLAY_PLAYTEST` activación normal y tres apariciones en Danza (12045/24455/33215 de ancho 36500). Workflow con `flutter analyze` añadido, commit **`af4574974d81f0f8da1e19588d1c5a7269763cfb`**.
+- Run #12 **`42019862485`** falló solo por advertencia de prueba `unawaited_return_in_try_block`; corregida con `return await file.length()` en commit **`9c011fb153d2ffbde829d64bee41243b2e5a524e`**.
+- **Validación FINAL:** GitHub Actions **`42020318892`** (#14), job `127222041473`, **SUCCESS completo**: `flutter pub get`, análisis Dart, test de versión normal, modelo, gameplay con Miren/Sara, seis capturas reales y verificación de seis PNG.
+- **Resultado:** músico técnicamente **LISTO PARA RC7** junto con limpiador. Pendiente prueba de la APK futura en Redmi Note 14 y contraste con referencia grupal original si se recupera; no confundir con versión publicada. PR #5 continúa abierta, sin merge.
+- **Siguiente enemigo recomendado:** vecina `slipper_neighbor`; integrar su lanzamiento de chancla verde, prueba y capturas antes de activarla. Trabajar en microfases y guardar evidencias.
