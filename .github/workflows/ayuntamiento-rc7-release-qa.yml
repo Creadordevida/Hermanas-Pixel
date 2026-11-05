@@ -59,6 +59,8 @@ jobs:
         run: flutter analyze --no-pub lib
       - name: Standard build must reveal Ayuntamiento by default
         run: flutter test --no-pub --reporter expanded test/ayuntamiento_rc7_contract_test.dart
+      - name: Prevent release flag from hiding Ayuntamiento artwork
+        run: flutter test --no-pub --reporter expanded --dart-define=TWC_AYUNTAMIENTO_RC7_ART=false test/ayuntamiento_rc7_contract_test.dart
       - name: Existing chapter and title regression
         run: |
           flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
