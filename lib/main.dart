@@ -36,7 +36,7 @@ const Map<String,bool> enemyArtValidated = {
   'estafeta_bull': false,
   'sanfermin_runner': false,
   'dance_cleaner': true, // RC7: gameplay y seis capturas StagePainter QA verificadas
-  'guitar_musician': false, // candidato conservado hasta QA real
+  'guitar_musician': true, // RC7: seis capturas StagePainter y gameplay QA verificados
   'slipper_neighbor': false, // solo visible tras capturas y QA
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
