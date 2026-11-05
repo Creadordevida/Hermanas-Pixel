@@ -50,8 +50,8 @@ const double groundY = 390;
 // tiles committed. Default false prevents broken builds until binary transfer.
 // Ayuntamiento candidate remains off until the ZIP has passed real Flutter QA.
 // Release importer promotes the default only AFTER validated binary transfer.
-const bool twcAyuntamientoRC7ArtworkEnabled =
-    bool.fromEnvironment('TWC_AYUNTAMIENTO_RC7_ART', defaultValue:true);
+// The Ayuntamiento art is bundled and validated: no CLI flag may hide it in RC7.
+const bool twcAyuntamientoRC7ArtworkEnabled = true;
 const int twcAyuntamientoRC7TileCount = 39;
 const double twcAyuntamientoRC7TileWidth = 960.0;
 const bool twcEstafetaRC7ArtworkEnabled = true;
