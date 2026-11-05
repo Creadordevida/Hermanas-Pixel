@@ -5,8 +5,6 @@ on:
       - work/revision-visual-20261028-continuidad
     paths:
       - qa/quiosco_inbox/QUIOSCO_RC7_PANELES_CANDIDATOS.zip
-      - tools/import_quiosco_rc7_zip.py
-      - .github/workflows/quiosco-rc7-only.yml
 permissions:
   contents: write
 concurrency:
