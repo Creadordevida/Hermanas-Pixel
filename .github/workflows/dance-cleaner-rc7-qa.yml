@@ -8,6 +8,12 @@ on:
       - lib/four_enemy_behaviors.dart
       - test/dance_cleaner_rc7_gameplay_test.dart
       - .github/workflows/dance-cleaner-rc7-qa.yml
+  pull_request:
+    paths:
+      - lib/main.dart
+      - lib/four_enemy_behaviors.dart
+      - test/dance_cleaner_rc7_gameplay_test.dart
+      - .github/workflows/dance-cleaner-rc7-qa.yml
   workflow_dispatch:
 permissions:
   contents: read
