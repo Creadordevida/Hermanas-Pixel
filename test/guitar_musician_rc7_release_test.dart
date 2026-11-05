@@ -13,8 +13,9 @@ void main() {
     expect(positions, hasLength(3));
     expect(positions, orderedEquals([12045.0, 24455.0, 33215.0]));
     expect(fourEnemySpawns('guitar_musician', 4, 36500), isEmpty);
-    // Other new enemies are deliberately not released by this change.
+    // The complete four-enemy RC7 set is enabled in the normal build.
     expect(hasApprovedEnemyArtwork('dance_cleaner'), isTrue);
-    expect(hasApprovedEnemyArtwork('slipper_neighbor'), isFalse);
+    expect(hasApprovedEnemyArtwork('slipper_neighbor'), isTrue);
+    expect(hasApprovedEnemyArtwork('rival_coach'), isTrue);
   });
 }
