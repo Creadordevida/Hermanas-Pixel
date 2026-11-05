@@ -8,6 +8,7 @@ on:
       - lib/four_enemy_behaviors.dart
       - test/dance_cleaner_rc7_gameplay_test.dart
       - test/dance_cleaner_rc7_render_test.dart
+      - test/dance_cleaner_rc7_release_test.dart
       - .github/workflows/dance-cleaner-rc7-qa.yml
   pull_request:
     paths:
@@ -32,8 +33,9 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
-      - run: flutter analyze lib/main.dart lib/four_enemy_behaviors.dart test/four_enemy_behaviors_test.dart test/dance_cleaner_rc7_gameplay_test.dart
+      - run: flutter analyze lib/main.dart lib/four_enemy_behaviors.dart test/four_enemy_behaviors_test.dart test/dance_cleaner_rc7_gameplay_test.dart test/dance_cleaner_rc7_release_test.dart
       - run: flutter test test/four_enemy_behaviors_test.dart
+      - run: flutter test test/dance_cleaner_rc7_release_test.dart
       - run: flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/dance_cleaner_rc7_gameplay_test.dart
       - name: Capture genuine cleaner StagePainter 20:9
         run: flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/dance_cleaner_rc7_render_test.dart
