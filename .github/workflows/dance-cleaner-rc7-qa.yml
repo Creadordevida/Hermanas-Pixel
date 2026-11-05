@@ -44,7 +44,7 @@ jobs:
           from struct import unpack
           p=Path('qa/dance_cleaner_flutter/01_sara_limpiador.png')
           b=p.read_bytes()
-          assert b[:8]==b'\\x89PNG\\r\\n\\x1a\\n'
+          assert b[:8]==bytes.fromhex('89504e470d0a1a0a')
           assert unpack('>II',b[16:24])==(1000,450)
           assert len(b)>10000
           print('CLEANER_REAL_STAGEPAINTER_PNG_PASS',len(b))
