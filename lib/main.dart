@@ -862,7 +862,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
 
   void _introNext() {
     introLine++;
-    if(introLine>=4) {
+    if(introLine>=6) {
       introPlayed=true;exitTime=time;screen=Screen.playing;
       hero.x=205;otherSister.x=95;father.x=75;
       _save();
@@ -1458,16 +1458,21 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         screen=Screen.paused;_save();setState((){});},
         icon:const Icon(Icons.pause_circle_filled,color:Colors.white,size:29))),
     ],
-    if(screen==Screen.introduction)Positioned(left:310,right:13,top:245,height:142,
+    if(screen==Screen.introduction)Positioned(left:255,right:13,top:199,height:190,
       child:GestureDetector(onTap:_introNext,child:Container(padding:const EdgeInsets.all(14),
         decoration:BoxDecoration(color:const Color(0xf00b2948),border:Border.all(color:const Color(0xffffd875),width:3),
           borderRadius:BorderRadius.circular(9)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Text(['PAPÁ','MIREN','SARA','PAPÁ'][introLine],
-          style:TextStyle(color:[Colors.lightBlueAccent,Colors.yellowAccent,Colors.purpleAccent,Colors.lightBlueAccent][introLine],
+        Text(['PAPÁ','MIREN','SARA','PAPÁ','MIREN','SARA'][introLine],
+          style:TextStyle(color:[Colors.lightBlueAccent,Colors.yellowAccent,Colors.purpleAccent,Colors.lightBlueAccent,Colors.yellowAccent,Colors.purpleAccent][introLine],
             fontSize:19,fontWeight:FontWeight.w900)),
-        const SizedBox(height:6),Text(['¡Venga, chicas! ¿Estáis listas?','¡Yo sí! ¡Vamos!',
-          '¡Espérame, que voy!','¡Pues en marcha!'][introLine],
-          style:const TextStyle(color:Colors.white,fontSize:17)),
+        const SizedBox(height:6),Expanded(child:SingleChildScrollView(child:Text([
+          'Chicas, tengo una tarea para vosotras. Se me ha caído la cartera y he perdido todo el dinero que tenía dentro. Necesito que lo busquéis por toda la ciudad.',
+          'Yo me iba a ir al parque...',
+          'Yo quería escuchar a KATSEYE...',
+          'Venga, chicas, echadme una mano con algunas tareas y luego nos iremos a merendar. Repartíos las zonas por donde he pasado para buscar el dinero perdido.',
+          '¡Vamos allá!',
+          '¡Adelante!'
+        ][introLine],style:const TextStyle(color:Colors.white,fontSize:16)))),
         const Spacer(),const Align(alignment:Alignment.bottomRight,child:Text('TOCA PARA SEGUIR  ▶',
           style:TextStyle(color:Color(0xffffdd83),fontSize:11))),
       ])))),
