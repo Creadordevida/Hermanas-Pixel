@@ -94,3 +94,11 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - Pasos confirmados con resultado **success**: `flutter pub get`, `flutter analyze lib/main.dart lib/four_enemy_behaviors.dart test/four_enemy_behaviors_test.dart test/dance_cleaner_rc7_gameplay_test.dart`, `flutter test test/four_enemy_behaviors_test.dart` y `flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/dance_cleaner_rc7_gameplay_test.dart`.
 - **Estado del limpiador:** integración y test automatizado de motor superados; **validación visual auténtica y compilación RC7 normal todavía pendientes**. Mantener `enemyArtValidated['dance_cleaner']=false`. No dar por terminado.
 - **Próxima microfase única:** generar y examinar capturas reales StagePainter 20:9 de Danza con limpiador, verificar escala/pies/animación frente a referencia aprobada, y registrar evidencia. Después decidir si se habilita; no tocar otros enemigos durante esa revisión.
+
+## Microfase visual del limpiador — prueba preparada, 2026-11-05
+
+- Reutilizada la técnica auténtica de `test/dance_hifi_real_render_test.dart`: `HermanasGame` real, `StagePainter`, `RepaintBoundary.toImage` y PNG 1000×450 (20:9). En Danza se respeta la selección obligatoria de Sara.
+- Creado `test/dance_cleaner_rc7_render_test.dart`, commit **`48bbe15eb56e5fead372f5c4e8350ba43052d2a9`**. Con `TWC_GAMEPLAY_PLAYTEST=true`, sitúa un limpiador en escena y solicita `qa/dance_cleaner_flutter/01_sara_limpiador.png`.
+- Actualizado `.github/workflows/dance-cleaner-rc7-qa.yml`, commit **`a9dd61640dfd71fbc20e7b834813339007a9239d`**, para ejecutar el test, verificar firma PNG/dimensiones y conservar la captura en la rama solo si supera QA. No se genera APK.
+- Consulta inmediata de runs del commit del workflow: **ninguno devuelto aún**. No hay prueba ejecutada, PNG confirmado ni revisión visual en este punto. Evitar dar por finalizado o activar el limpiador.
+- **Próxima acción exacta:** consultar el run de `a9dd61640`; si falla, leer el job y reparar el test de captura. Si pasa, recuperar `qa/dance_cleaner_flutter/01_sara_limpiador.png`, inspeccionarla visualmente y comparar diseño, escala, pies y sombreado con referencia aprobada.
