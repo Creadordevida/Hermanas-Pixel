@@ -8,6 +8,7 @@ on:
       - lib/four_enemy_behaviors.dart
       - test/guitar_musician_rc7_gameplay_test.dart
       - test/guitar_musician_rc7_render_test.dart
+      - test/guitar_musician_rc7_release_test.dart
       - .github/workflows/guitar-musician-rc7-qa.yml
   pull_request:
     paths:
@@ -32,6 +33,8 @@ jobs:
           channel: stable
           cache: true
       - run: flutter pub get
+      - run: flutter analyze lib/main.dart lib/four_enemy_behaviors.dart test/four_enemy_behaviors_test.dart test/guitar_musician_rc7_gameplay_test.dart test/guitar_musician_rc7_render_test.dart test/guitar_musician_rc7_release_test.dart
+      - run: flutter test test/guitar_musician_rc7_release_test.dart
       - run: flutter test test/four_enemy_behaviors_test.dart
       - run: flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/guitar_musician_rc7_gameplay_test.dart
       - name: Capture genuine musician StagePainter 20:9
