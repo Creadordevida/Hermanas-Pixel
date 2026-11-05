@@ -38,7 +38,7 @@ const Map<String,bool> enemyArtValidated = {
   'dance_cleaner': true, // RC7: gameplay y seis capturas StagePainter QA verificadas
   'guitar_musician': true, // RC7: seis capturas StagePainter y gameplay QA verificados
   'slipper_neighbor': true, // RC7: chancla, gameplay y seis capturas StagePainter verificados
-  'rival_coach': false, // atlas integrado, pendiente QA real
+  'rival_coach': true, // atlas, jugabilidad y capturas StagePainter validados para RC7
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
