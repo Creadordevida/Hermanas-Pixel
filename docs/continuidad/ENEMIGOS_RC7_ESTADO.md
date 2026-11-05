@@ -86,3 +86,11 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - Corrección mínima de esa expresión a `ranged ? 0.75 : kind=='guitar_musician' ? 0.62 : 0.52`, commit **`54ec6571c2dabb1d8a765955700ba1a8561e3070`**. Sin tocar sprites, escenarios, `main.dart` ni banderas de publicación.
 - Consulta inmediata de runs del nuevo commit: **todavía vacía**. La corrección se guardó, pero su resultado Flutter NO está validado. No hay captura StagePainter ni prueba jugable aprobada.
 - **Siguiente acción única:** consultar GitHub Actions para el commit `54ec6571`; si falla, inspeccionar el log y reparar solo el fallo concreto. Si pasa, revisar capturas reales en Danza y comportamiento para Miren y Sara antes de habilitar el limpiador.
+
+## Microfase verificada — limpiador CI verde, 2026-11-05
+
+- La ejecución de la corrección `54ec6571` (#8, run `42012364991`) acabó **cancelled**, no constituye resultado válido.
+- La siguiente ejecución sobre el commit documental `fb4556e98a58a2c2efb57e9a10541b72a6833a7d` **sí finalizó en success**: workflow **Dance cleaner RC7 real Flutter gameplay QA**, run **`42012417834`**, job **`127195558724`**.
+- Pasos confirmados con resultado **success**: `flutter pub get`, `flutter analyze lib/main.dart lib/four_enemy_behaviors.dart test/four_enemy_behaviors_test.dart test/dance_cleaner_rc7_gameplay_test.dart`, `flutter test test/four_enemy_behaviors_test.dart` y `flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/dance_cleaner_rc7_gameplay_test.dart`.
+- **Estado del limpiador:** integración y test automatizado de motor superados; **validación visual auténtica y compilación RC7 normal todavía pendientes**. Mantener `enemyArtValidated['dance_cleaner']=false`. No dar por terminado.
+- **Próxima microfase única:** generar y examinar capturas reales StagePainter 20:9 de Danza con limpiador, verificar escala/pies/animación frente a referencia aprobada, y registrar evidencia. Después decidir si se habilita; no tocar otros enemigos durante esa revisión.
