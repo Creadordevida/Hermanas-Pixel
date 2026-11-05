@@ -37,6 +37,7 @@ const Map<String,bool> enemyArtValidated = {
   'sanfermin_runner': false,
   'dance_cleaner': false, // candidato conservado hasta QA real
   'guitar_musician': false, // candidato conservado hasta QA real
+  'slipper_neighbor': false, // solo visible tras capturas y QA
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
@@ -138,6 +139,8 @@ class Enemy {
   bool get danceCleaner => kind == 'dance_cleaner';
   FourEnemyMotion? musicianMotion;
   bool get guitarMusician => kind == 'guitar_musician';
+  FourEnemyMotion? neighborMotion;
+  bool get slipperNeighbor => kind == 'slipper_neighbor';
   double kingAwakeAt = -1;
   double kingAttackAt = -1;
   bool kingImpactDelivered = false;
@@ -149,7 +152,7 @@ class Enemy {
   bool get aerial => kind == 'pigeon';
   int get hp => (danceCleaner || guitarMusician) || kind == 'dog_doberman' || kind == 'cleaning_robot' ||
     kind == 'rival_supporter' || kind == 'estafeta_bull' ? 2 :
-    (ranged || kind == 'navarre_king') ? 3 : 1;
+    (ranged || slipperNeighbor || kind == 'navarre_king') ? 3 : 1;
   double get speed => switch(kind) {
     'dog_dalmatian' => 56, 'dog_doberman' => 112,
     'rat' => 118, 'cat' => 92, 'pigeon' => 84,
@@ -573,6 +576,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       }
       paths['enemy_four_dance_cleaner'] = 'assets/images/enemies_new/dance_cleaner_atlas.png';
       paths['enemy_four_guitar_musician'] = 'assets/images/enemies_new/guitar_musician_atlas.png';
+      paths['enemy_four_slipper_neighbor'] = 'assets/images/enemies_new/slipper_neighbor_atlas.png';
+      paths['slipper'] = 'assets/images/enemies_new/green_slipper.png';
       paths['enemy_navarre_king_atlas'] = 'assets/images/enemies_new/navarre_king_atlas.png';
       for (final kind in ['estafeta_bull','sanfermin_runner']) {
         paths['enemy_$kind'] = 'assets/images/enemies_new/${kind}_atlas.png';
@@ -650,6 +655,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     collected.clear(); shots.clear();
     if (stage == 0) {
       _layoutNeighborhood();
+      if(isEnemyPlayableInBuild('slipper_neighbor')) {
+        for(final x in fourEnemySpawns('slipper_neighbor',stage,stageWidth)) {
+          enemies.add(Enemy(enemies.length,'slipper_neighbor',x));
+        }
+      }
       hero=Character(145);otherSister=Character(230);father=Character(67);
       cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
       levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
@@ -965,6 +975,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
               foe.attackCooldown=math.max(foe.attackCooldown,1.0);
             }
             particlesUntil=time+.4;
+            if(foe.slipperNeighbor) {
+              final motion=foe.neighborMotion ??= FourEnemyMotion('slipper_neighbor',foe.home);
+              if(foe.hits>=foe.hp) {motion.defeat();} else {motion.hit();}
+            }
             if(foe.guitarMusician) {
               final motion=foe.musicianMotion ??= FourEnemyMotion('guitar_musician',foe.home);
               if(foe.hits>=foe.hp) {motion.defeat();} else {motion.hit();}
@@ -1073,6 +1087,17 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           }
         }
         foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
+        continue;
+      }
+      if(foe.slipperNeighbor) {
+        final motion=foe.neighborMotion ??= FourEnemyMotion('slipper_neighbor',foe.home);
+        motion.x=foe.x;
+        final impact=motion.update(dt,hero.x,hero.y,groundY);
+        if(impact==FourEnemyImpact.slipper) {
+          shots.add(Projectile(x:foe.x+motion.facing*30,y:groundY-86,
+            vx:motion.facing*215.0,kind:'slipper',fromEnemy:true));
+        }
+        foe.x=motion.x;foe.facing=motion.facing;
         continue;
       }
       if(foe.guitarMusician) {
@@ -1608,6 +1633,25 @@ class StagePainter extends CustomPainter {
                 width:radius*2+28,height:8+radius*.07),p);
             }
           }
+        }
+        continue;
+      }
+      if(foe.slipperNeighbor) {
+        final img=images['enemy_four_slipper_neighbor'];
+        if(img!=null) {
+          final motion=foe.neighborMotion;
+          final pose=foe.defeated?5:foe.stunned>0?4:motion?.pose.index??0;
+          final frame=foe.defeated?((time-foe.deathAt)/.48*4).floor().clamp(0,3)
+            :foe.stunned>0?((.66-foe.stunned)/.66*4).floor().clamp(0,3)
+            :motion?.frame??0;
+          final side=192.0*(143.0/166.0);
+          canvas.save();
+          if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(img,Rect.fromLTWH(frame*192.0,pose*192.0,192,192),
+            Rect.fromLTWH(x-side/2,groundY-side,side,side),
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
+          canvas.restore();
         }
         continue;
       }
