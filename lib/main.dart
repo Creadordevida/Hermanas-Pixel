@@ -53,8 +53,8 @@ const double groundY = 390;
 // The Ayuntamiento art is bundled and validated: no CLI flag may hide it in RC7.
 const bool twcAyuntamientoRC7ArtworkEnabled = true;
 // Plaza del Castillo / Quiosco RC7: protected until complete verified artwork.
-const bool twcQuioscoRC7ArtworkEnabled =
-    bool.fromEnvironment('TWC_QUIOSCO_RC7_ART', defaultValue: false);
+// RC7 plaza art verified in StagePainter, always displayed in normal builds.
+const bool twcQuioscoRC7ArtworkEnabled = true;
 const int twcQuioscoRC7TileCount = 39;
 const double twcQuioscoRC7TileWidth = 960.0;
 
@@ -416,7 +416,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       for (int i=0;i<7;i++) {
         // Estafeta RC7 has its own verified facade tiles; do not decode the
         // discarded level_estafeta panorama a second time at app startup.
-        if (i != 2 && !(i == 1 && twcAyuntamientoRC7ArtworkEnabled)) {
+        if (i != 2 && !(i == 1 && twcAyuntamientoRC7ArtworkEnabled) &&
+            !(i == 3 && twcQuioscoRC7ArtworkEnabled)) {
           paths['scene_$i'] = i<4 ? 'assets/images/${chapterScenes[i]}.png'
             : 'assets/images/scenes/${i==5 ? 'ballet_refined' : chapterScenes[i]}.png';
         }
@@ -424,7 +425,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           ? 'assets/images/ground/stage_6_hifi.png'
           : 'assets/images/ground/stage_$i.png';
         // The legacy repeating Estafeta midstrip is not used by RC7.
-        if (i != 2 && !(i == 1 && twcAyuntamientoRC7ArtworkEnabled)) {
+        if (i != 2 && !(i == 1 && twcAyuntamientoRC7ArtworkEnabled) &&
+            !(i == 3 && twcQuioscoRC7ArtworkEnabled)) {
           paths['mid_$i'] = 'assets/images/mid/stage_$i.png';
         }
         if (i == 4) paths['mid_4_plain'] = 'assets/images/mid/stage_4_plain.png';
@@ -1310,7 +1312,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   ]);
 
   Widget _chooseScreen()=>Stack(children:[
-    Positioned.fill(child:Image.asset(stage==1 && twcAyuntamientoRC7ArtworkEnabled
+    Positioned.fill(child:Image.asset(stage==3 && twcQuioscoRC7ArtworkEnabled
+      ? 'assets/images/quiosco_rc7/quiosco_unico.webp'
+      : stage==1 && twcAyuntamientoRC7ArtworkEnabled
       ? 'assets/images/ayuntamiento_rc7/consistorial_unico.webp'
       : stage==2
       ? 'assets/images/estafeta_rc7/estafeta_00.webp'
