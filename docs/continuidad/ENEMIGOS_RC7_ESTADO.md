@@ -62,3 +62,11 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - `test/guitar_musician_rc7_gameplay_test.dart` comprueba ambos personajes, ataque, huida, impacto, interrupción y derrota. Commit `fb52aaa54f92fd9cf09e0b287840915e439b0244`.
 - Workflow `.github/workflows/guitar-musician-rc7-qa.yml`, commit `062b8cfd69ba1ec77a83f702e20503030c5c6045`. **Sin resultado de ejecución Flutter verificable**; tampoco hay capturas StagePainter. El arte está protegido con `enemyArtValidated['guitar_musician'] = false`, no visible en RC7 normal.
 - Siguiente acción: ejecutar y revisar CI Flutter, comprobar visualmente el músico en Danza (Miren y Sara), iterar y solo entonces habilitarlo en la compilación normal. No declarar finalizado.
+
+## Vecina — fase de recursos, 2026-11-05
+
+- Siguiente personaje seleccionado: `slipper_neighbor`, salida de casa (stage 0), ataque con chancla verde. Modelo preparatorio ya existente en `lib/four_enemy_behaviors.dart` (alerta 0,75 s, alcance 390, impacto de tipo `slipper`, tres posiciones 16/48/78%).
+- Recuperados del respaldo local anterior `slipper_neighbor_atlas.png`, `green_slipper.png` y `slipper_neighbor_source.png`; `tools/verify_four_enemy_art.py` devolvió `FOUR_ENEMY_ART_PASS` (verificación estática, no jugabilidad).
+- Atlas y proyectil guardados y comprobados en la rama: `assets/images/enemies_new/slipper_neighbor_atlas.png` (blob `6358bddcd61280667ce5899be551bb221cb48101`) y `assets/images/enemies_new/green_slipper.png` (blob `188391abf76adf593fbbab2c9b4bb86a0a93a62d`). Commit `7aa2b2a9287f3d500e47be2fd33f003c58a7c865`.
+- La hoja fuente `qa/enemy_art_20261104/slipper_neighbor_source.png` aún **no está respaldada en la rama** (archivo local grande); conservarla sin sustituirla. No se ha modificado `lib/main.dart` ni habilitado bandera visual en esta fase.
+- **Siguiente acción:** integrar la vecina en el `main.dart` actual con aparición, render, animaciones, lanzamiento y colisión de la chancla, interrupción y derrota; añadir pruebas Miren/Sara, ejecutar Flutter CI y capturas auténticas StagePainter antes de habilitarla. **No terminada ni visible aún en RC7 normal.**
