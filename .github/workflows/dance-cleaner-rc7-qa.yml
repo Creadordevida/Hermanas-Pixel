@@ -54,5 +54,7 @@ jobs:
           git add qa/dance_cleaner_flutter/01_sara_limpiador.png
           if ! git diff --cached --quiet; then
             git commit -m 'qa(rc7): preserve real cleaner StagePainter screenshot'
+            git fetch origin work/revision-visual-20261028-continuidad
+            git rebase origin/work/revision-visual-20261028-continuidad
             git push origin HEAD:work/revision-visual-20261028-continuidad
           fi
