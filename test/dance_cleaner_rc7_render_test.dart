@@ -84,7 +84,12 @@ void main() {
       await capture('03_ataque_t45');
       await frames(25);
       await capture('04_ataque_t70');
-      cleaner.hits = cleaner.hp;
+      cleaner.hits = cleaner.hp - 1;
+      game.shots.add(Projectile(x: cleaner.x, y: groundY - 48,
+        vx: 0, kind: 'comb'));
+      await frames(1);
+      expect(cleaner.defeated, isTrue,
+        reason: 'Cleaner must enter real defeat state before screenshots');
       await frames(8);
       await capture('05_derrota_t08');
       await frames(20);
