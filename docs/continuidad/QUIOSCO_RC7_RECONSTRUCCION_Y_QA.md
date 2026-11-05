@@ -41,3 +41,10 @@ La primera versión del mundo emplea solo **11 ventanas de recorte de una única
 Las ilustraciones, paneles infográficos o simulaciones generadas por IA durante la conversación **no son capturas StagePainter y no deben utilizarse como prueba de un juego terminado**. La única evidencia de render Flutter son las imágenes de las carpetas `qa/quiosco_rc7_flutter/` y `qa/quiosco_rc7_joins/`.
 
 **Sin APK, sin publicar, sin fusionar PR #5.**
+
+### Última verificación y criterio de salida (05/11/2026)
+
+- [GitHub Actions 42000563223](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42000563223): **SUCCESS**, ya con la activación normal del quiosco, las 56 capturas y la auditoría de repetición independiente. 
+- [GitHub Actions Estafeta 42000563217](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42000563217): **SUCCESS** en la misma rama.
+- Herramienta de bloqueo artístico: `python3 tools/audit_quiosco_visual_repetition.py --strict`. Con el material actual registra 163 segmentos, 11 recortes únicos (6,75 %), hasta 22 repeticiones de un mismo recorte, y **falla intencionadamente** para impedir aprobar falsamente el arte definitivo. El modo sin `--strict` genera diagnóstico y permite QA técnica para una RC de pruebas.
+- El capítulo es **utilizable en RC7 de prueba**, pero **NO cumple aún el requisito inicial de evitar repeticiones y cortes evidentes**. No hay aprobación artística final.
