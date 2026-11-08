@@ -56,6 +56,11 @@ void main() {
      backdrops['football_near_tile_$index']=
          'assets/images/chapter45/football_parallax/near_world_tiles/near_$index.png';
    }
+   // Rival clásico nuevo: el QA debe pintar el atlas realmente integrado,
+   // nunca aprobar accidentalmente una captura de los seis PNG antiguos.
+   art['enemy_rival_player_atlas']=await tester.runAsync(
+      () => _load('assets/images/enemies_new/rival_player_atlas.png'))
+      ?? (throw StateError('Falta el atlas definitivo del jugador rival'));
    for(var room=0;room<3;room++) {
      for(var variant=0;variant<9;variant++) {
        backdrops['interior_school_z${room}_panel_$variant']=

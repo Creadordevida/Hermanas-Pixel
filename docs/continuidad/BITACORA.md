@@ -256,3 +256,12 @@ QA pública gratuita en runner Ubuntu. Run `42504613482` falló por test que omi
 
 - **08/11 cierre de preparación para próxima versión:** CI `42518369464` **SUCCESS** (analizador Dart, 96 fotogramas pintados por Flutter, ataques 4 enemigos × Miren/Sara, muerte/reaparición, mapa octavo capítulo). La captura real `qa/arga_rc7_flutter/arga_next_version_map.png` versionada en QA commit `f2856df` se inspeccionó: botón nuevo sobre el río visible y separado del contador, sin segundo fondo; reposicionado en `fa35ccd` y protegido por test de no solapamiento `347149c`. Los textos de capturas widget aparecen como bloques Ahem, no es evidencia de fallo del texto Android. 
   **Estado preciso:** código del Río Arga, escenarios y cuatro enemigos **integrados y preparados en rama de próxima versión**, con pruebas Flutter satisfactorias. Falta verificación real de APK Android (rendimiento, continuidad percibida, controles y texto en dispositivo) y aprobación artística final; no se compiló APK ni fusionó PR #5. Los WebP originales están preservados. No prometer publicación definitiva hasta esa comprobación.
+# 2026-11-08 — Rehacer jugador rival clásico del campo de entrenamiento
+
+- Se confirmó que el objetivo era `rival`, no `rival_coach` ni `rival_supporter`.
+- Originales `rival_0..5.png` preservados. Imagen de referencia antigua comparada con atlas aprobado del limpiador.
+- Atlas nuevo 4×6/24 poses de equipación rojiblanca, transparencia RGBA; comprobados visualmente los 24 fotogramas y los límites de cada celda, optimizado a 237 colores sin añadir fondos.
+- Carga, selección de acciones y dibujo en `StagePainter` integrados. Prueba unitaria de las 24 celdas y prueba de capturas reales preparadas. La selección de imagen mantiene un anclaje por pies, escala constante, física y daño existentes.
+- Primer commit de integración remoto: `beedf40e8b29fd552e805ce274b75e016999866f`. Verificado el SHA exacto del PNG en la rama pública.
+- Pendiente Flutter real: análisis, ejecución de pruebas, capturas 20:9 y revisión de escala/pies/ataque/derrota antes de marcar entrega aprobada. No se ejecutaron Actions ni APK.
+
