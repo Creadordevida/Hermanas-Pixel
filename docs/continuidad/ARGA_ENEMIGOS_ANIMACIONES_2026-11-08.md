@@ -171,3 +171,8 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 | Trucha lossless | 1.211.019 | 361.845 | 140.543 | 192.941 | 254 |
 
 **Consecuencia:** los atlas pasan render y animación de cuatro fotogramas por enemigo, pero todavía no pasan una aprobación de transparencia. No aplicar umbral destructivo global ni modificar los originales: primero comparar siluetas/halos con las referencias en fondos claros y oscuros, crear variantes derivadas y volver a validar cada fotograma. La pérdida de alfa 255 puede ser del proceso de creación/exportación; la tabla, por sí sola, no implica que todos los bordes se vean mal.
+
+### Ronda 2: auditoría visual de las seis filas del cangrejo
+
+- Commit `39d5e66`: se amplía la prueba real de `StagePainter` para forzar y guardar una imagen de cada valor de `ArgaCrabPose`: reposo, caminar, alerta, pinzazo, impacto y derrota. Archivos `qa/arga_rc7_flutter/crab_pose_*.png`, 1000×450; no son partida Android. Los cuatro fotogramas temporales de pinzazo y ROI siguen incluidos.
+- Workflow conserva las seis capturas en commit `b9388dc`; ejecución `42508439366` lanzada desde `8a0943d`. Pendiente de resultado e inspección visual de las seis imágenes antes de aprobar alineación/identidad. Originales sin modificar.
