@@ -49,6 +49,7 @@ void main() {
         expect(game.images['arga_art'],isNull,
           reason:'Superseded single panorama must not be decoded');
         expect(game.images['arga_supports'],isNotNull);
+        expect(game.images['arga_supports_v2'],isNotNull);
         await tester.pump(const Duration(milliseconds:16));
         final boundary=boundaryKey.currentContext!.findRenderObject()!
           as RenderRepaintBoundary;
