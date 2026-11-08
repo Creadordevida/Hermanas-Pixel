@@ -2746,11 +2746,16 @@ class StagePainter extends CustomPainter {
         final width=footing.width;
         final x=sx;
         if(x>viewW+20 || x+width< -20)continue;
+        // Alpha diagnostics of the approved candidate atlas (threshold 20%):
+        // rock y=257, log y=280, timber y=296 in the 724px source.
+        // Align the first visible pixel with the actual collision top.
+        final opaqueTop=switch(index) {1=>257.0,2=>280.0,3=>296.0,_=>271.0};
+        final top=footing.topAt(time,
+            identical(argaSupport,footing)?time-argaSupportSince:0);
+        final visualOffset=(opaqueTop-240)/290*100;
         canvas.drawImageRect(atlas,
           Rect.fromLTWH(index*slice,240,slice,290),
-          Rect.fromLTWH(x,footing.topAt(time,
-              identical(argaSupport,footing)?time-argaSupportSince:0)-8,
-              width,100),
+          Rect.fromLTWH(x,top-visualOffset,width,100),
           Paint()..filterQuality=FilterQuality.none);
       }
     }
