@@ -367,6 +367,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   final ArgaCourse argaCourse = const ArgaCourse();
   ArgaSurface? argaSupport;
   ArgaCrabMotion? argaCrab;
+  int argaCrabHits = 0;
   double argaSupportSince = 0;
   final List<Offset> coins = [];
   final List<Enemy> enemies = [];
@@ -703,6 +704,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     collected.clear(); shots.clear();
     argaSupport=null;
     argaCrab=null;
+    argaCrabHits=0;
     if (stage == 7) {
       // Independent playable collision prototype; release remains art-gated.
       hero=Character(ArgaCourse.startX,y:ArgaCourse.surfaces.first.top);
@@ -1063,6 +1065,17 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     for(final shot in shots) {
       if(!shot.active)continue;
       shot.x+=shot.vx*dt;shot.y+=shot.vy*dt;shot.life+=dt;
+      if(stage==7 && !shot.fromEnemy && argaCrab!=null &&
+          argaCrab!.pose!=ArgaCrabPose.defeated &&
+          (shot.x-argaCrab!.x).abs()<47 &&
+          (shot.y-(ArgaCourse.surfaces[1].top-35)).abs()<42) {
+        shot.active=false;
+        argaCrabHits++;
+        if(argaCrabHits>=2) {argaCrab!.defeat();}
+        else {argaCrab!.hit();}
+        particlesUntil=time+.35;
+        continue;
+      }
       if(shot.fromEnemy) {
         shot.vy+=210*dt;
         if((shot.x-hero.x).abs()<24 && (shot.y-(hero.y-46)).abs()<48) {
