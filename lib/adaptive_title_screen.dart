@@ -115,11 +115,11 @@ class AdaptiveTitleScreen extends StatelessWidget {
         // One canonical illustration: never cover+overlay the same bitmap.
         // A matching painted surround preserves the entire 16:9 approved art
         // while respecting the panoramic viewport (no duplicate scenery).
-        const Positioned.fill(child:ColoredBox(color:Color(0xff348bc1))),
-        Center(child:AspectRatio(
-          aspectRatio:titleArtWidth/titleArtHeight,
-          child:Image.asset('assets/images/title_cars_fixed_091.png',
-            fit:BoxFit.contain,alignment:Alignment.center),
+        const Positioned.fill(child:Image(
+          image:AssetImage('assets/images/title_wide_20x9_approved.webp'),
+          fit:BoxFit.cover,
+          alignment:Alignment.center,
+          filterQuality:FilterQuality.high,
         )),
         if(g.canShowCentralUncropped) ...[
           button(g.newGame,'Nueva partida',onNewGame),
