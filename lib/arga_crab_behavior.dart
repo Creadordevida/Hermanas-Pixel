@@ -52,7 +52,7 @@ class ArgaCrabMotion {
       return ArgaCrabImpact.none;
     }
     elapsed += dt;
-    cooldown = math.max(0, cooldown - dt);
+    cooldown = math.max(0.0, cooldown - dt);
     final distance = (heroX - x).abs();
 
     if (pose == ArgaCrabPose.hurt) {
