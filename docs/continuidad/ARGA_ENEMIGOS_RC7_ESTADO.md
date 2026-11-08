@@ -68,3 +68,20 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   referencia, reducir al tamaño real sin suavizar píxeles, alinear los pies
   y crear los otros cinco estados limpios. No registrar este fotograma como
   aprobado ni usarlo en `StagePainter` aún.
+
+## Microtarea 4 — poses aisladas de movimiento y ataque (2026-11-08)
+- Dos candidatos **sin sustituir originales** guardados en commit `f06a479`:
+  - `assets/images/arga_rc7/enemies_candidates/cangrejo_caminar_aislado_candidate.webp`
+    — Git blob `5ba0830c536218156829477796a3bdffff9bfc13`.
+  - `assets/images/arga_rc7/enemies_candidates/cangrejo_ataque_aislado_candidate.webp`
+    — Git blob `edfc77fd5cdd9dabd3899fb0373c24f78f4a3113`.
+- Ambos archivos son **1254×1254 RGBA con alpha** y la máscara opaca visible
+  queda dentro del lienzo: caminar bbox (181,399)-(1067,930);
+  ataque bbox (164,398)-(1089,899). Reposo previo también 1254×1254,
+  bbox (188,374)-(1066,914). SHA Git local y remoto coincide en ambos.
+- Comparación artística visual preliminar: postura lateral y pinzas claras,
+  mismo cangrejo rojizo de referencia; no hay ratificación final de
+  proporcionalidad ni escala en StagePainter. Los tres siguen **CANDIDATOS**.
+- Faltan estados de alerta, impacto y derrota, así como los intermedios;
+  el objetivo siguiente es completar estos tres conservando imagen original,
+  limpiar efectos ajenos al cuerpo y después definir atlas homogéneo sin cortes.
