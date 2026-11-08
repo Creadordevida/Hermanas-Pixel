@@ -223,3 +223,8 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 - Workflow actualizado en `96a31c2`, ejecución `42511743624` disparada en `ded23f1`; resultado pendiente. Si falla, diagnosticar test vs lógica y no activar capítulo.
 
 - Decimoctava ejecución `42511743624` **SUCCESS**. Nuevo `test/arga_crab_gameplay_hit_test.dart` (commit `c2bbf87`) ejecuta contacto de pinzas con Miren x=350 en segunda roca mediante `AnimationController` real: un ataque tras aviso descuenta cinco→cuatro corazones, y 20 fotogramas posteriores conservan cuatro (invulnerabilidad/impacto único). Captura real `qa/arga_rc7_flutter/arga_crab_after_hit.png` guardada por QA bot en `2117ad3`; HUD 4 corazones, protagonista parpadea/invisible durante hurtUntil. No se llamó directamente a `_receiveDamage`; escenario sigue QA-only. Próximas integraciones: anzuelo, piedra, contacto de trucha, dos protagonistas y muerte por pérdida de todos los corazones.
+
+### Integración jugable: anzuelo natural del pescador
+
+- `test/arga_fisher_gameplay_hook_test.dart` creado en `0734714`: Miren en la roca del pescador, x=1260; permite al bucle Flutter completar alerta (.75s), lanzamiento (.19s), vuelo parabólico del anzuelo y contacto natural, sin colocar artificialmente el proyectil. Espera primer impacto 5→4 corazones y ningún segundo daño durante invulnerabilidad; captura `arga_fisher_after_hook.png` si supera prueba.
+- Workflow modificado en `5efdc6e`, ejecución `42512247059` disparada en `32a5f44`, pendiente de resultado y corrección de trayectoria/colisión si falla. No se declara listo el pescador aún.
