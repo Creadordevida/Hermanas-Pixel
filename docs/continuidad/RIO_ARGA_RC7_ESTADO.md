@@ -33,11 +33,14 @@ se conservan temporalmente, sin referencias en `main.dart`, hasta cerrar QA.
    raster de cinco posiciones y guardado de evidencia en
    `qa/arga_rc7_flutter/` **solo si el job finaliza bien**. Commit `ba585c7`.
 
+7. `lib/main.dart`: mecánica efectiva del tronco móvil (arrastra al personaje), roca hundible (desciende tras el aviso) y reaparición correcta sobre checkpoints, commit `740bde1`.
+8. `test/arga_rc7_real_render_test.dart`: pruebas de movimiento del tronco y hundimiento dentro del ticker Flutter, commit `2cf7972`.
+
 ## Estado: NO validado
-- La prueba automatizada específica del Arga aún no tiene resultado confirmado.
+- La prueba automatizada específica del Arga aún no tiene resultado confirmado. El nuevo workflow no figura entre los runs asociados al commit; otros siete workflows del repositorio aparecen fallidos pero sus jobs no devuelven pasos ni logs (no hay base para atribuirlo al código).
 - No hay capturas reales revisadas visualmente del Arga.
 - Fondo y soportes son una prueba auxiliar, no recursos finales aprobados.
-- Faltan movimiento/hundimiento físico completo, agua animada, capas reales
+- Movimiento y hundimiento ya codificados, pero aún no verificados en Flutter; faltan agua animada, capas reales
   con parallax, nivel largo y revisión de ambos personajes.
 - No activar el capítulo normalmente ni declararlo listo para RC7.
 
