@@ -1703,7 +1703,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   }
 
   Widget _chooseScreen()=>Stack(children:[
-    Positioned.fill(child:Image.asset(stage==3 && twcQuioscoRC7ArtworkEnabled
+    Positioned.fill(child:Image.asset(stage==7 && twcArgaNextVersionEnabled
+      ? 'assets/images/arga_rc7/arga_far_rc7_candidate.webp'
+      : stage==3 && twcQuioscoRC7ArtworkEnabled
       ? 'assets/images/quiosco_rc7/quiosco_unico.webp'
       : stage==1 && twcAyuntamientoRC7ArtworkEnabled
       ? 'assets/images/ayuntamiento_rc7/consistorial_unico.webp'
