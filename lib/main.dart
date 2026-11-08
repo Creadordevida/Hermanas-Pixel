@@ -2302,8 +2302,25 @@ class StagePainter extends CustomPainter {
       ArgaFisherPose.hurt => 'impacto',
       ArgaFisherPose.defeated => 'derrota',
     };
-    final art=images['arga_fisher_$pose'];
+    final atlas=images['arga_fisher_atlas'];
+    final art=atlas ?? images['arga_fisher_$pose'];
     if(art==null) return;
+    final row=switch(fisher.pose) {
+      ArgaFisherPose.idle => 0,
+      ArgaFisherPose.walk => 1,
+      ArgaFisherPose.warning => 2,
+      ArgaFisherPose.cast => 3,
+      ArgaFisherPose.hurt => 4,
+      ArgaFisherPose.defeated => 5,
+    };
+    final source=atlas==null
+      ? Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble())
+      : Rect.fromLTWH(
+          ArgaSpriteAtlas.frame(poseRow:row,elapsed:fisher.elapsed) *
+              atlas.width / ArgaSpriteAtlas.columns,
+          row * atlas.height / ArgaSpriteAtlas.rows,
+          atlas.width / ArgaSpriteAtlas.columns,
+          atlas.height / ArgaSpriteAtlas.rows);
     final bottom=switch(fisher.pose) {
       ArgaFisherPose.idle => 1093.0,
       ArgaFisherPose.walk => 1094.0,
@@ -2319,7 +2336,7 @@ class StagePainter extends CustomPainter {
       ArgaCourse.surfaces[5].top-size*bottom/1254.0,size,size);
     canvas.save();
     if(fisher.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
-    canvas.drawImageRect(art,Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+    canvas.drawImageRect(art,source,
       dest,Paint()..filterQuality=FilterQuality.none);
     canvas.restore();
     final hook=argaHook;
@@ -2345,15 +2362,32 @@ class StagePainter extends CustomPainter {
       ArgaBoyPose.hurt=>'impacto',
       ArgaBoyPose.defeated=>'derrota',
     };
-    final art=images['arga_boy_$pose'];
+    final atlas=images['arga_boy_atlas'];
+    final art=atlas ?? images['arga_boy_$pose'];
     if(art==null)return;
+    final row=switch(boy.pose) {
+      ArgaBoyPose.idle => 0,
+      ArgaBoyPose.run => 1,
+      ArgaBoyPose.warning => 2,
+      ArgaBoyPose.throwStone => 3,
+      ArgaBoyPose.hurt => 4,
+      ArgaBoyPose.defeated => 5,
+    };
+    final source=atlas==null
+      ? Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble())
+      : Rect.fromLTWH(
+          ArgaSpriteAtlas.frame(poseRow:row,elapsed:boy.elapsed) *
+              atlas.width / ArgaSpriteAtlas.columns,
+          row * atlas.height / ArgaSpriteAtlas.rows,
+          atlas.width / ArgaSpriteAtlas.columns,
+          atlas.height / ArgaSpriteAtlas.rows);
     final x=boy.x-cameraX;
     if(x < -160 || x > viewW+160)return;
     const size=144.0;
     final dest=Rect.fromLTWH(x-size/2,ArgaCourse.surfaces[8].top-123,size,size);
     canvas.save();
     if(boy.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
-    canvas.drawImageRect(art,Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+    canvas.drawImageRect(art,source,
       dest,Paint()..filterQuality=FilterQuality.none);
     canvas.restore();
     final stone=argaStone;
@@ -2376,8 +2410,25 @@ class StagePainter extends CustomPainter {
       ArgaTroutPose.hurt=>'impacto',
       ArgaTroutPose.defeated=>'derrota',
     };
-    final art=images['arga_trout_$pose'];
+    final atlas=images['arga_trout_atlas'];
+    final art=atlas ?? images['arga_trout_$pose'];
     if(art==null)return;
+    final row=switch(trout.pose) {
+      ArgaTroutPose.swim => 0,
+      ArgaTroutPose.accelerate => 1,
+      ArgaTroutPose.warning => 2,
+      ArgaTroutPose.leap => 3,
+      ArgaTroutPose.hurt => 4,
+      ArgaTroutPose.defeated => 5,
+    };
+    final source=atlas==null
+      ? Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble())
+      : Rect.fromLTWH(
+          ArgaSpriteAtlas.frame(poseRow:row,elapsed:trout.elapsed) *
+              atlas.width / ArgaSpriteAtlas.columns,
+          row * atlas.height / ArgaSpriteAtlas.rows,
+          atlas.width / ArgaSpriteAtlas.columns,
+          atlas.height / ArgaSpriteAtlas.rows);
     final x=trout.x-cameraX;
     if(x < -140 || x > viewW+140)return;
     // Keep more of the approved trout silhouette above the waterline;
@@ -2386,7 +2437,7 @@ class StagePainter extends CustomPainter {
     final dest=Rect.fromLTWH(x-size/2,trout.y-size*.78,size,size);
     canvas.save();
     if(trout.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
-    canvas.drawImageRect(art,Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+    canvas.drawImageRect(art,source,
       dest,Paint()..filterQuality=FilterQuality.none);
     canvas.restore();
   }
