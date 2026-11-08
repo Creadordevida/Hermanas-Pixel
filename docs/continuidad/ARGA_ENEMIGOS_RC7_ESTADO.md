@@ -13,8 +13,8 @@ La estética, identidad facial/anatómica, silueta, paleta, ropa, complementos y
 Los originales de evaluación, convertidos a WebP **sin pérdida** y con transparencia, están en:
 - `docs/continuidad/referencias/arga_enemigos_aprobados_20261108/cangrejo_seis_poses_aprobadas.webp` — Git blob `2ceb16c7c0ee435ee5860a1a2c233f32cd87793d`
 - `docs/continuidad/referencias/arga_enemigos_aprobados_20261108/pescador_seis_poses_aprobadas.webp` — Git blob `e33247cc3c56e08760ff404de87ebc087922575a`
-- `docs/continuidad/referencias/arga_enemigos_aprobados_20261108/gamberro_seis_poses_aprobadas.webp` — Git blob `6a3837cbcadbc8dc8aa1012f23bcdc6e4138cf77`
-- `docs/continuidad/referencias/arga_enemigos_aprobados_20261108/trucha_seis_poses_aprobadas.webp` — Git blob `15697c4bd9bb24cdf64268500fba6a1536fc907e`
+- `docs/continuidad/referencias/arga_enemigos_aprobados_20261108/gamberro_seis_poses_aprobadas.webp` — Git blob `15697c4bd9bb24cdf64268500fba6a1536fc907e`
+- `docs/continuidad/referencias/arga_enemigos_aprobados_20261108/trucha_seis_poses_aprobadas.webp` — Git blob `6a3837cbcadbc8dc8aa1012f23bcdc6e4138cf77`
 
 Todas son 2172×724 px y representan **conceptos para aprobación**, no atlas de producción. La transferencia binaria se verificó con `git hash-object` local contra los SHA devueltos por GitHub. No sobrescribir originales, tampoco reemplazar imágenes anteriores de otros enemigos.
 
@@ -248,3 +248,13 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   **Aún no** tienen poses aisladas, efectos ni proyectiles integrados.
 - Las pruebas Dart no se han ejecutado por las restricciones acordadas;
   NO confundir lógica de prototipo con enemigo terminado.
+
+## Corrección de identidad obligatoria (2026-11-08)
+- Inspección visual de los PNG de origen detectó que **gamberro y trucha
+  estaban intercambiados** de nombre en el primer commit de referencias.
+  Reparados los dos caminos aprobados mediante intercambio de blobs,
+  **sin alterar los píxeles** ni modificar la aprobación artística, en
+  commit `65c2ce1`: gamberro = `15697c4bd9bb24cdf64268500fba6a1536fc907e`,
+  trucha = `6a3837cbcadbc8dc8aa1012f23bcdc6e4138cf77`.
+- Esta corrección precede cualquier extracción de los dos personajes.
+  Las cuatro referencias artísticas quedan correctamente identificadas.
