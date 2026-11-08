@@ -43,3 +43,10 @@ No confundir `BoxFit.contain` sobre un fondo plano con soporte panorámico. Los 
 - Se observó todavía una banda de baldosas claras bajo la figura del padre, aunque las antiguas manchas habían desaparecido. El WebP panorámico local en esa región presenta pavimento continuo; se identificó la última capa superpuesta de marca `g.logo` como fuente residual.
 - Se retiró la totalidad del sello/texto TWC overlay de la portada (no se elimina de ningún otro lugar del juego). La marca volverá solo con un recurso de transparencia verificada. La imagen panorámica, el mapa y las zonas táctiles no se han modificado.
 - Ejecución QA `42463692214`: pruebas y guardado de capturas auténticas **SUCCESS**. Nueva `qa/title_map_rc7_flutter/title_20_9.png` disponible para aceptación visual del usuario.
+
+## Reparación localizada del muro derecho (solicitud 08-11-2026)
+- El usuario identificó un corte artificial en el muro de piedra inferior derecho de la portada. Confirmado al ampliar el recurso `title_wide_20x9_approved.png`, no es un fallo de escalado Flutter.
+- Se generó una propuesta de muro único con capuchón superior continuo, perspectiva pendiente suave y juntas escalonadas. Para evitar reinterpretaciones del resto, solo se transfirió una máscara poligonal de la zona derecha (aprox. x>=1310 sobre 1870×841), con transición suave.
+- Verificación local: todo el bloque x=0..1309 permaneció idéntico píxel a píxel en el PNG compuesto. Original WebP intacto; nuevo `assets/images/title_wide_20x9_wall_continuity_v2.webp` (blob `fa1e902c9f684118831cc8588cc04a11badd7552`).
+- Flutter apunta al nuevo archivo; pubspec y espera de imagen del test actualizados. La ejecución QA **42465025511** pasó analyze, pruebas de controles, seis capturas reales y commit de las capturas en GitHub.
+- Falta aprobación visual final de la captura `qa/title_map_rc7_flutter/title_20_9.png` y prueba en teléfono. No generar APK todavía.
