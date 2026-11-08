@@ -464,6 +464,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       if (widget.qaStage == 7) {
         paths['arga_far'] = 'assets/images/arga_rc7/arga_far_rc7_candidate.webp';
         paths['arga_mid'] = 'assets/images/arga_rc7/arga_mid_rc7_candidate.webp';
+        paths['arga_far_wild'] = 'assets/images/arga_rc7/arga_far_wild_candidate.webp';
+        paths['arga_mid_wild'] = 'assets/images/arga_rc7/arga_mid_wild_candidate.webp';
         paths['arga_supports'] = 'assets/images/arga_rc7/arga_supports_rc7_v1.webp';
       }
       // El nuevo capítulo 1 carga recursos que el juego realmente dibuja.
@@ -618,7 +620,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       bool neededForSchoolQA(String key) {
         if (widget.qaStage == 7) {
           return key == 'arga_far' ||
-            key == 'arga_mid' || key == 'arga_supports' ||
+            key == 'arga_mid' || key == 'arga_far_wild' ||
+            key == 'arga_mid_wild' || key == 'arga_supports' ||
             ['coin','ball','comb'].contains(key) ||
             key.startsWith('futbolista_') || key.startsWith('bailarina_') ||
             key.startsWith('costume_') || key.startsWith('padre_');
@@ -2678,15 +2681,20 @@ class StagePainter extends CustomPainter {
   void _argaPrototypeBackground(Canvas canvas) {
     // Three independent speeds: far skyline, middle vegetation, world props.
     // QA candidate art only; the user-approved concept remains the reference.
-    final far=images['arga_far'];
-    if(far!=null) {
-      // Keep the full authored vertical composition: the river is below
-      // the skyline, and cropping its bottom would remove the water entirely.
-      canvas.drawImageRect(far,
-        Rect.fromLTWH(0,0,far.width.toDouble(),far.height.toDouble()),
+    // Crossfade between the original urban candidate and the wild river
+    // candidate over 1,200 world units; no abrupt skyline teleport.
+    final wildAlpha=((cameraX-10800)/1200).clamp(0.0,1.0).toDouble();
+    void farLayer(String key,double opacity) {
+      final source=images[key];
+      if(source==null || opacity<=0)return;
+      canvas.drawImageRect(source,
+        Rect.fromLTWH(0,0,source.width.toDouble(),source.height.toDouble()),
         Rect.fromLTWH(-math.min(cameraX*.035,viewW*.35),0,viewW*1.35,viewH),
-        Paint()..filterQuality=FilterQuality.none);
+        Paint()..filterQuality=FilterQuality.none
+          ..color=Colors.white.withValues(alpha:opacity));
     }
+    farLayer('arga_far',1);
+    farLayer('arga_far_wild',wildAlpha);
     // Small moving glints over the authored blue-green river texture.
     // Decorative only: cannot affect platform collision or obscure holes.
     for(var row=0;row<5;row++) {
@@ -2700,14 +2708,18 @@ class StagePainter extends CustomPainter {
         ..color=const Color(0x35d6f9fa)
         ..style=PaintingStyle.stroke..strokeWidth=1.15);
     }
-    final mid=images['arga_mid'];
-    if(mid!=null) {
+    void middleLayer(String key,double opacity) {
+      final source=images[key];
+      if(source==null || opacity<=0)return;
       final width=viewW*1.8;
-      canvas.drawImageRect(mid,
-        Rect.fromLTWH(0,0,mid.width.toDouble(),mid.height.toDouble()),
+      canvas.drawImageRect(source,
+        Rect.fromLTWH(0,0,source.width.toDouble(),source.height.toDouble()),
         Rect.fromLTWH(-math.min(cameraX*.20,width-viewW),0,width,viewH),
-        Paint()..filterQuality=FilterQuality.none);
+        Paint()..filterQuality=FilterQuality.none
+          ..color=Colors.white.withValues(alpha:opacity));
     }
+    middleLayer('arga_mid',1-wildAlpha);
+    middleLayer('arga_mid_wild',wildAlpha);
     final atlas=images['arga_supports'];
     if(atlas==null)return;
     final slice=atlas.width/4.0;
