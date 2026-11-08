@@ -209,3 +209,26 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
 - Falta caminar, alerta, impacto y derrota; preservar longitud completa
   de caña y línea, escala igual entre seis estados y separar anzuelo
   como proyectil. No integrados en StagePainter todavía.
+
+## Microtarea 11 — pescador, seis poses clave aisladas (2026-11-08)
+- Se han aislado y guardado sin sobrescribir originales los seis estados
+  gráficos del pescador: `reposo, caminar, alerta, lanzamiento, impacto,
+  derrota` (prefijo `pescador_`, sufijo `_aislado_candidate.webp`).
+- Cuatro imágenes añadidas en `43cd781`; sus Git blobs son:
+  caminar `54e467b0a92b6e67eb1b543b02bb2639c2c3ec98`,
+  alerta `1cfe2df1f3c3c5d8e73a4c3c57c06d83f5664eb9`,
+  impacto `d2a0634229785065269ff52992cf3a5722a3bf5a`,
+  derrota `60cb2bab458eedf1dfd51906e3872e56906cfa72`.
+- Todos se decodificaron localmente como WebP 1254×1254, sin recortes en
+  bordes. Bboxes opacas (alpha >= 64):
+  reposo (319,134)-(922,1093);
+  caminar (305,160)-(952,1094);
+  alerta (356,71)-(885,1141);
+  lanzamiento (94,284)-(1163,1076);
+  impacto (315,124)-(993,1130);
+  derrota (166,283)-(1107,1018).
+  Integridad de cada subida verificada por SHA Git.
+- **CANDIDATAS**: aún falta homogeneizar escala y apoyos de pies, obtener
+  fotogramas intermedios, desacoplar hilo/anzuelo de la caña al lanzar y
+  comprobar fotograma real en StagePainter. No inventar proyectil sustituto
+  sin preservar el aspecto aprobado; no activar al pescador en el mapa.
