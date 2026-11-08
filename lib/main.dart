@@ -2674,14 +2674,25 @@ class StagePainter extends CustomPainter {
     // QA candidate art only; the user-approved concept remains the reference.
     final far=images['arga_far'];
     if(far!=null) {
-      final sourceW=math.min(far.width.toDouble(),viewW*1.25);
-      final sourceH=math.min(far.height.toDouble(),sourceW*viewH/viewW);
-      final scroll=(cameraX*.035).clamp(0.0,
-        math.max(0.0,far.width-sourceW)).toDouble();
+      // Keep the full authored vertical composition: the river is below
+      // the skyline, and cropping its bottom would remove the water entirely.
       canvas.drawImageRect(far,
-        Rect.fromLTWH(scroll,0,sourceW,sourceH),
-        Rect.fromLTWH(0,0,viewW,viewH),
+        Rect.fromLTWH(0,0,far.width.toDouble(),far.height.toDouble()),
+        Rect.fromLTWH(-cameraX*.035,0,viewW*1.35,viewH),
         Paint()..filterQuality=FilterQuality.none);
+    }
+    // Small moving glints over the authored blue-green river texture.
+    // Decorative only: cannot affect platform collision or obscure holes.
+    for(var row=0;row<5;row++) {
+      final baseY=340.0+row*23;
+      final line=Path();
+      for(var x=0.0;x<=viewW;x+=8) {
+        final y=baseY+1.4*math.sin(x*.035+time*1.65+row*.8);
+        if(x==0) {line.moveTo(x,y);} else {line.lineTo(x,y);}
+      }
+      canvas.drawPath(line,Paint()
+        ..color=const Color(0x35d6f9fa)
+        ..style=PaintingStyle.stroke..strokeWidth=1.15);
     }
     final mid=images['arga_mid'];
     if(mid!=null) {
