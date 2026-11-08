@@ -18,7 +18,7 @@ Future<void> waitReady(WidgetTester tester) async {
 Future<void> waitBitmaps(WidgetTester tester,bool isMap) async {
  final asset=isMap
    ? 'assets/images/worldmap/pamplona_wide_20x9_approved.webp'
-   : 'assets/images/title_wide_20x9_approved.webp';
+   : 'assets/images/title_wide_20x9_wall_continuity_v2.webp';
  final background=find.byWidgetPredicate((w)=>
    w is Image && w.image is AssetImage &&
    (w.image as AssetImage).assetName==asset);
