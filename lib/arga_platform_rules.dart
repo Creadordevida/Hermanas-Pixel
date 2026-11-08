@@ -121,7 +121,9 @@ class ArgaCourse {
   double checkpointBefore(double x) {
     var result = startX;
     for (final s in allSurfaces) {
-      if (s.checkpoint && s.x + 30 <= x) result = s.x + 55;
+      if (s.checkpoint && s.x + 30 <= x) {
+        result = math.max(startX, s.x + 55);
+      }
     }
     return result;
   }
