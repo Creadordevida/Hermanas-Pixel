@@ -181,3 +181,6 @@ Run `42490249834` (job `128760844026`) de Arga inicia gratis en runner estándar
 
 ### 2026-11-08 — Segundo QA público Arga: hallazgo físico concreto
 Ejecución [42490644673](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42490644673): `flutter analyze` limpio, 10 tests correctos y 1 fallo en reaparición desde checkpoint (110 esperado, 55 recibido). Corregido piso `startX` en `ArgaCourse.checkpointBefore`, commit `1b2c739` y contenido remoto confirmado. **Sin nueva ejecución sobre la corrección**, sin capturas 20:9, APK ni merge. GitHub Actions Arga otra vez exclusivamente manual desde `87899db`. No declarar cerrado hasta pasar tests, obtener ocho capturas reales y revisarlas visualmente.
+
+### 2026-11-08 — Arga: once pruebas físicas correctas, render aún en revisión
+Run #56 `42490992815`: `flutter analyze` y once tests físicos PASS. Falló primer test `StagePainter` al exigir reposo pescador no cargado; archivos WebP comprobados en GitHub, error aislado en filtro QA, solución `9752f46` de `main.dart`. Run #57 `42491177824` solicitada una sola vez para comprobar la corrección; no afirmar éxito antes de logs. Trigger restaurado a `workflow_dispatch` (`636b1c1`), sin APK ni merge.
