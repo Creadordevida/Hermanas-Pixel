@@ -186,3 +186,5 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 
 - `test/arga_fisher_cast_frames_render_test.dart` extendido en `d101eec`: además de cuatro fotogramas de lanzamiento, fuerza y guarda las seis filas de `ArgaFisherPose` (reposo, caminar, alerta, lanzamiento, impacto y derrota). Para la derrota utiliza la última celda del atlas. Son capturas auténticas de `StagePainter` (`qa/arga_rc7_flutter/fisher_pose_*.png`), no de Android.
 - Workflow actualizado en `d9fd62f`; ejecución `42509388954` lanzada en `a68023a`, pendiente de comprobar resultado y pies/silueta/caña por imagen. Original aprobado no sobrescrito.
+
+- Duodécima ejecución `42509388954` **SUCCESS**, las seis capturas `fisher_pose_*.png` fueron guardadas por QA bot en `52e1631`. Inspección visual de `fisher_pose_defeated.png`: sentado con caña sobre roca, terminal legible y sin amputaciones visibles. `fisher_pose_hurt.png` conserva apoyo e identidad, pero se diferencia poco de `fisher_pose_warning.png` a escala 1000×450; revisar contraste/lectura de impacto antes de producción. No equivale a verificar su anzuelo ni daño en partida.
