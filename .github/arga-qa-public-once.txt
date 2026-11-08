@@ -5,3 +5,4 @@ Cuarta QA controlada: comprobar inclusión de seis poses del pescador en el carg
 Quinta QA aislada: prueba de niño gamberro, piedra, seis poses y dos impactos en StagePainter. Sin APK.
 Sexta QA controlada: revalidar test de derrota del niño tras corrección de enum y preservar ocho PNG. Sin APK.
 Séptima QA controlada: trucha en agua, salto y seis poses auténticas Flutter. Sin APK.
+QA trout leap frame 2026-11-08 #61
