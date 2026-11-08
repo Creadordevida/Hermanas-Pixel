@@ -33,6 +33,7 @@ jobs:
       - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_boy_throw_frames_render_test.dart
       - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_trout_leap_frames_render_test.dart
       - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_drowning_gameplay_test.dart
+      - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_crab_gameplay_hit_test.dart
       - name: Verify eight authentic 20:9 frames
         run: |
           python3 - <<'PY'
@@ -50,7 +51,7 @@ jobs:
         run: |
           git config user.name "twc-arga-qa[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add qa/arga_rc7_flutter/qa_*.png qa/arga_rc7_flutter/trout_leap_810.png qa/arga_rc7_flutter/crab_pinch_frame_*.png qa/arga_rc7_flutter/crab_pose_*.png qa/arga_rc7_flutter/fisher_cast_frame_*.png qa/arga_rc7_flutter/fisher_pose_*.png qa/arga_rc7_flutter/boy_throw_frame_*.png qa/arga_rc7_flutter/boy_pose_*.png qa/arga_rc7_flutter/trout_pose_frame_*.png qa/arga_rc7_flutter/trout_state_*.png qa/arga_rc7_flutter/arga_respawn_after_fall.png
+          git add qa/arga_rc7_flutter/qa_*.png qa/arga_rc7_flutter/trout_leap_810.png qa/arga_rc7_flutter/crab_pinch_frame_*.png qa/arga_rc7_flutter/crab_pose_*.png qa/arga_rc7_flutter/fisher_cast_frame_*.png qa/arga_rc7_flutter/fisher_pose_*.png qa/arga_rc7_flutter/boy_throw_frame_*.png qa/arga_rc7_flutter/boy_pose_*.png qa/arga_rc7_flutter/trout_pose_frame_*.png qa/arga_rc7_flutter/trout_state_*.png qa/arga_rc7_flutter/arga_respawn_after_fall.png qa/arga_rc7_flutter/arga_crab_after_hit.png
           if ! git diff --cached --quiet; then
             git commit -m "qa(arga): preserve genuine Arga Flutter panoramas and trout leap"
             git pull --rebase origin "$GITHUB_REF_NAME"
