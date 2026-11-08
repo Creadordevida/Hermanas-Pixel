@@ -25,3 +25,5 @@ Decimotercera ejecución: seis poses del niño gamberro.
 Decimocuarta ejecución: seis estados del atlas de trucha.
 
 Decimoquinta ejecución: batería ampliada de daño y proyectiles.
+
+Decimosexta ejecución: caída letal en agua y reaparición mediante bucle Flutter.
