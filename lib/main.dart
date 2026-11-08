@@ -692,7 +692,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       hero=Character(ArgaCourse.startX,y:ArgaCourse.surfaces.first.top);
       argaSupport=ArgaCourse.surfaces.first;
       argaSupportSince=time;otherSister=Character(230);father=Character(67);
-      cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
+      cameraX=0;checkpointX=ArgaCourse.startX;hearts=maxHeroHearts;lastAttackTime=-10;
       levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
       return;
     }
@@ -1323,7 +1323,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
     }
     cameraX=_ease(cameraX,(hero.x - viewW*.41).clamp(0.0,stageWidth-viewW).toDouble(),dt*600);
-    if(hero.x>checkpointX+2800){checkpointX=hero.x;_save();}
+    if(stage!=7 && hero.x>checkpointX+2800){checkpointX=hero.x;_save();}
     if(time>lastSaveTime+12){lastSaveTime=time;_save();}
     if(hero.x>=stageWidth-90)_finishChapter();
     if(mounted)setState((){});
