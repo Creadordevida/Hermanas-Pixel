@@ -198,3 +198,5 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 ### Segunda ronda de seis poses de trucha
 
 - `test/arga_trout_leap_frames_render_test.dart` ampliado en `3338e33`: además del ciclo de cuatro poses de salto, captura una pose por cada uno de los seis estados de `ArgaTroutPose`, con posición física en agua `y=417` salvo salto `y=340`. Derrota en última columna. PNG auténticos `trout_state_*.png` conservados por workflow `4a326cc`; ejecución `42510057067` lanzada en `4525f2b`, pendiente de resultado e inspección de agua/caída/identidad.
+
+- Decimocuarta ejecución `42510057067` **SUCCESS**, las seis capturas de trucha persistidas por QA bot en `aace806`. Inspección real de `trout_state_hurt.png`: pez arqueado próximo al agua; `trout_state_defeated.png`: pez horizontal sobre la lámina del río cerca del tronco. Las poses se distinguen, sin amputación evidente en estas capturas. **Se completa la primera auditoría de seis filas por cuatro enemigos**, pero no equivale a validar los 96 fotogramas completos ni colisiones y daños en partida; alfa parcial sigue pendiente. Mantener acceso a atlas condicionado a `TWC_ARGA_ATLAS_QA=true`.
