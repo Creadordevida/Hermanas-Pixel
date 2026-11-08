@@ -178,3 +178,6 @@ Commits `39ea03b` y `c0aaa2d`: modelo aislado de proyectil de pesca y cinco prue
 
 ### 2026-11-08 — Primer runner público de Arga y corrección estática
 Run `42490249834` (job `128760844026`) de Arga inicia gratis en runner estándar, pasa checkout/Flutter/pub get, falla en warning de análisis línea 2905. Los tests/capturas quedan sin ejecutar. Corrección mínima `9021548` aún no reprobada. Workflow devuelto a manual (`d5d72af`); sin APK ni merges.
+
+### 2026-11-08 — Segundo QA público Arga: hallazgo físico concreto
+Ejecución [42490644673](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42490644673): `flutter analyze` limpio, 10 tests correctos y 1 fallo en reaparición desde checkpoint (110 esperado, 55 recibido). Corregido piso `startX` en `ArgaCourse.checkpointBefore`, commit `1b2c739` y contenido remoto confirmado. **Sin nueva ejecución sobre la corrección**, sin capturas 20:9, APK ni merge. GitHub Actions Arga otra vez exclusivamente manual desde `87899db`. No declarar cerrado hasta pasar tests, obtener ocho capturas reales y revisarlas visualmente.
