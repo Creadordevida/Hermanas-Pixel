@@ -40,7 +40,10 @@ void main() {
           .where((p)=>p.painter is StagePainter &&
             (p.painter! as StagePainter).stage==7);
         expect(painters,isNotEmpty,reason:'No real Arga StagePainter');
-        expect(game.images['arga_art'],isNotNull);
+        expect(game.images['arga_far'],isNotNull);
+        expect(game.images['arga_mid'],isNotNull);
+        expect(game.images['arga_art'],isNull,
+          reason:'Superseded single panorama must not be decoded');
         expect(game.images['arga_supports'],isNotNull);
         await tester.pump(const Duration(milliseconds:16));
         final boundary=boundaryKey.currentContext!.findRenderObject()!
