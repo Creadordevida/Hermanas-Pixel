@@ -73,3 +73,18 @@ Actualmente `StagePainter` selecciona **una imagen aislada por estado**. No exis
 - Auditoría automatizada de la imagen generada: 24/24 celdas con contenido alfa ≥128; todas las cajas delimitadoras quedan dentro de su celda de 256×256 con margen ≥16 px. Se detectaron 323147 píxeles de alfa parcial bajo 128, por lo que el contorno requiere limpieza. No se ha comprobado todavía igualdad de paleta, anclaje exacto de pies ni diversidad de fotogramas en escala real del juego.
 - **No habilitar** `arga_crab_atlas` todavía: no hay PNG definitivo integrado, ni Flutter / StagePainter 20:9, ni aprobación artística; originales aprobados y demás capítulos intactos.
 - Próxima microfase: revisar diversidad y alineación de las 24 celdas, limpiar alfa y generar atlas de producción sin pérdida. Después integrar únicamente en QA stage 7 y ejecutar pruebas cuando se autorice Flutter. Continuar atlas de pescador, niño y trucha con idéntico proceso.
+
+## Microfases cuatro atlas de prueba — 8 noviembre 2026
+
+Se generaron **cuatro atlas candidatos de 24 fotogramas (4×6)** basados en las referencias aprobadas, preservando todas las láminas originales. No se debe confundir la existencia del atlas con calidad final o integración.
+
+| Enemigo | Candidato QA en `assets/images/arga_rc7/enemies_candidates/` | Commit | Auditoría de cajas alfa (umbral 128) |
+|---|---|---|---|
+| Cangrejo | `cangrejo_atlas_4x6_v1_candidate_q95.webp` | `76741f1` | 24/24 celdas no vacías; márgenes ≥16 px; exceso de píxeles semitransparentes, falta revisar diversidad y apoyo |
+| Pescador | `pescador_atlas_4x6_v2_candidate_q95.webp` | `4834077` | Segunda iteración: 24/24 celdas; sin cajas alfa tocando margen de 10 px. Caña y anzuelo requieren inspección visual frame a frame |
+| Niño gamberro | `gamberro_atlas_4x6_v1_candidate_q95.webp` | `7d8ee8a` | 24/24 celdas; varias de impacto/lanzamiento con margen inferior de solo 8–9 px; ajustar apoyo/aire |
+| Trucha | `trucha_atlas_4x6_v1_candidate_q95.webp` | `db5261f` | 24/24 celdas, pero varias poses altas cruzan o tocan borde superior/inferior; RECHAZADO para integración |
+
+Los cuatro WebP subidos son **previsualizaciones Q95 con pérdida**, no PNG definitivos. Los PNG generados están locales; los atlas no se cargan en `StagePainter`. La segunda tentativa de trucha redujo siluetas pero introdujo fondo blanco semitransparente y fue descartada, no subida.
+
+**Pendiente de máxima prioridad:** revisión visual comparativa con cada hoja aprobada; verificar 24 fotogramas realmente distintos por acción, limpiar halo alfa, alinear escala y pies, resolver recortes de trucha y márgenes del niño, exportar PNG final sin pérdida, cargar solo QA stage 7, ejecutar Dart/Flutter y capturas auténticas 20:9, comprobar daño/proyectiles y ambos personajes. Hasta entonces **ningún enemigo del Arga está terminado ni habilitado**. No se han lanzado Actions ni compilado APK.
