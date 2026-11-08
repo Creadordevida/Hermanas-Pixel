@@ -2360,8 +2360,10 @@ class StagePainter extends CustomPainter {
     if(art==null)return;
     final x=trout.x-cameraX;
     if(x < -140 || x > viewW+140)return;
+    // Keep more of the approved trout silhouette above the waterline;
+    // the physical collision center remains at trout.y (unchanged).
     const size=105.0;
-    final dest=Rect.fromLTWH(x-size/2,trout.y-size*.58,size,size);
+    final dest=Rect.fromLTWH(x-size/2,trout.y-size*.78,size,size);
     canvas.save();
     if(trout.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
     canvas.drawImageRect(art,Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
