@@ -2346,7 +2346,7 @@ class StagePainter extends CustomPainter {
     final x=fisher.x-cameraX;
     if(x< -160 || x>viewW+160) return;
     final dest=Rect.fromLTWH(x-size/2,
-      ArgaCourse.surfaces[5].top-size*(atlas==null ? bottom/1254.0 : .90),size,size);
+      ArgaCourse.surfaces[5].top-size*(atlas==null ? bottom/1254.0 : .72),size,size);
     canvas.save();
     if(fisher.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
     canvas.drawImageRect(art,source,
