@@ -6,6 +6,9 @@ on:
       - .github/workflows/title-map-rc7-qa.yml
       - lib/adaptive_title_screen.dart
       - lib/main.dart
+      - pubspec.yaml
+      - assets/images/title_wide_20x9_approved.webp
+      - assets/images/worldmap/pamplona_wide_20x9_approved.webp
       - test/title_map_rc7_real_render_test.dart
 permissions:
   contents: write
@@ -33,4 +36,4 @@ jobs:
           git config user.name 'twc-qa[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add qa/title_map_rc7_flutter/title_*.png qa/title_map_rc7_flutter/map_*.png
-          git diff --cached --quiet || { git commit -m 'qa(title-map): save authentic RC7 aspect screenshots'; git push; }
+          git diff --cached --quiet || { git commit -m 'qa(title-map): save authentic 20:9 aspect screenshots'; git pull --rebase origin work/revision-visual-20261028-continuidad; git push; }
