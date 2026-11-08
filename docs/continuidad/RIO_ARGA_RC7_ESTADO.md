@@ -105,3 +105,15 @@ Commits: `00bfd9f`, `1726ca4`.
 **Próximo paso:** ejecutar uno de los scripts en una máquina con Flutter,
 inspeccionar las ocho imágenes y corregir lo observado antes de activar el
 capítulo. Puede realizarse sin suscripción adicional a GitHub.
+
+## Avances adicionales sin coste (2026-11-08)
+- QA local Windows: `scripts/run_arga_qa.ps1`, commit `00bfd9f`.
+- QA local Unix: `scripts/run_arga_qa.sh`, commit `1726ca4`.
+- Seguridad al caer: detener el tick tras muerte/reaparición para evitar recoger
+  monedas o completar el capítulo en el mismo fotograma, commit `e9015de`.
+- Reaparición al **alto real del checkpoint** (no siempre y=365), commit
+  `a02e5be`.
+- Casos de QA Flutter: una caída consume un corazón y reaparece; checkpoint
+  avanzado a distinta altura, commits `659a24f`, `e37fdb5`, `83a2069`.
+- Todo queda preparado, **no probado en Flutter** por ausencia de SDK local y
+  bloqueo de GitHub Actions por presupuesto de 0 USD.
