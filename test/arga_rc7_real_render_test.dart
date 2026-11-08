@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hermanas_aventura/main.dart';
 import 'package:hermanas_aventura/arga_platform_rules.dart';
+import 'package:hermanas_aventura/arga_crab_behavior.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -76,6 +77,15 @@ void main() {
           } finally {image.dispose();}
         });
         if(x==positions.last) {
+          // QA crab must take two legitimate shots and enter its defeat pose.
+          expect(game.argaCrabHits,0);
+          for(var hit=1;hit<=2;hit++) {
+            game.shots.add(Projectile(x:game.argaCrab.x,y:330,vx:0,kind:'ball'));
+            await tester.pump(const Duration(milliseconds:33));
+            expect(game.argaCrabHits,hit);
+          }
+          expect(game.argaCrab.pose,ArgaCrabPose.defeated);
+
           // Actual game ticker: moving log carries the hero while grounded.
           game.hero=Character(1060,y:365);
           game.argaSupport=ArgaCourse.surfaces[4];
