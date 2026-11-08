@@ -12,6 +12,7 @@ class ArgaTroutMotion {
   ArgaTroutPose pose=ArgaTroutPose.swim;
   bool touchDelivered=false;
   static const double detection=190;
+  static const double accelerationDuration=.22;
   static const double warningDuration=.55;
   static const double jumpSpeed=330;
   static const double gravity=900;
@@ -58,6 +59,11 @@ class ArgaTroutMotion {
       }
       return;
     }
+    if(pose==ArgaTroutPose.accelerate) {
+      if(!playerVisible) {_set(ArgaTroutPose.swim);return;}
+      if(elapsed>=accelerationDuration) _set(ArgaTroutPose.warning);
+      return;
+    }
     if(pose==ArgaTroutPose.warning) {
       if(!playerVisible) {_set(ArgaTroutPose.swim);return;}
       if(elapsed>=warningDuration) {
@@ -70,7 +76,7 @@ class ArgaTroutMotion {
     }
     if(playerVisible && cooldown<=0 && (heroX-x).abs()<detection) {
       facing=heroX>=x?1:-1;
-      _set(ArgaTroutPose.warning);
+      _set(ArgaTroutPose.accelerate);
     } else {
       _set(ArgaTroutPose.swim);
     }
