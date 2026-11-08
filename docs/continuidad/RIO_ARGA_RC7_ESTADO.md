@@ -29,8 +29,10 @@ composición. Los enemigos se trabajarán con el método de sprites aprobado.
    apoyos y contacto mortal con el agua. Commit
    `da2a1629a00ecf05ad17c67749827ebbd84c3c2c`.
 
+3. `lib/main.dart` — puente de integración en el motor: en una futura fase `stage == 7`, el suelo continuo se sustituye por apoyos de Arga y el agua resta una vida con reaparición o `gameOver`. Los capítulos 0–6 mantienen su física. El índice 7 sigue sin estar expuesto en el mapa ni declarado en las listas hasta integrar el arte. Commit `31460bb8d46d587c84367da9c2161bbe98c601fd`.
+
 ## Estado real
-**Fase 1 iniciada; NO integrada aún en la partida ni validada visualmente.**
+**Fase 1 del modelo y puente de física guardados; NO es todavía un capítulo seleccionable ni validado visualmente.**
 Los archivos fueron guardados mediante GitHub; no se ha ejecutado Flutter
 sobre el nuevo módulo y no hay capturas `StagePainter` del Arga.
 No afirmar que el capítulo está listo para RC7.
@@ -39,11 +41,11 @@ No afirmar que el capítulo está listo para RC7.
 1. Obtener/guardar los recursos pixel-art definitivos del Arga inspirados en
    la referencia aprobada, con capas lejanas, medias, río y apoyos físicos
    distintos, protegidos de generadores antiguos.
-2. Integrar un índice 7 en selección, carga de assets y `StagePainter`
+2. Completar la integración del índice 7 en selección, carga de assets y `StagePainter`
    **solo cuando todos los recursos estén presentes**, sin cambiar índices
    0–6 ni el comportamiento de los capítulos anteriores.
-3. Sustituir exclusivamente para ese índice la colisión con `groundY` por
-   colisión con apoyos y caída mortal al agua. Definir reaparición y vidas.
+3. Verificar en Flutter la colisión de apoyos y caída mortal ya conectadas; ajustar
+   tolerancias, la reaparición y las vidas después de pruebas jugables.
 4. Ampliar el recorrido por secciones progresivas y checkpoints, enemigos
    aprobados posteriormente, monedas y salida.
 5. Ejecutar análisis/test Flutter y capturas auténticas 20:9: ambas hermanas,
