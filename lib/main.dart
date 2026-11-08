@@ -1018,6 +1018,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           hero.hurtUntil=time+1.0;
         }
         _save();
+        // Do not apply another frame of pickups, combat or chapter completion
+        // after a lethal fall and teleport to a checkpoint.
+        if(mounted)setState((){});
+        return;
       }
     } else if(hero.y>=groundY){hero.y=groundY;hero.vy=0;hero.grounded=true;}
     if(!wasGrounded && hero.grounded && speedBeforeLanding > 65) {
