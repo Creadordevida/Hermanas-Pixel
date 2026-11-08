@@ -235,3 +235,5 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 
 - `test/arga_boy_gameplay_stone_test.dart` añadido en `e76fb23`: sitúa a Miren x=1980 sobre la roca del niño y deja avanzar el bucle Flutter para aviso (.7s), lanzamiento (.2s), trayectoria real de piedra con comprobación de colisión y corazones 5→4, sin daño repetido. No reposiciona artificialmente la piedra. Imagen `arga_boy_after_stone.png` si pasa.
 - CI `15350a9`, ejecución `42512610207` lanzada desde `02fa32e`, resultado pendiente. Si falla, revisar x/y de trayecto y hitbox antes de aprobar.
+
+- 08/11/2026, microfase Arga: CI `42512610207` **SUCCESS** para `arga_boy_gameplay_stone_test.dart`, piedra natural del niño con corazones 5→4, sin daño duplicado; captura auténtica `qa/arga_rc7_flutter/arga_boy_after_stone.png` persistida por QA `a76ae7a`. CI siguiente activada en `394cf18`: `arga_trout_gameplay_leap_hit_test.dart` (`054645d`) para comprobar salto y contacto de trucha sin manipulación de trayectoria. Resultado pendiente; aún no declarar capítulo listo para nueva APK.
