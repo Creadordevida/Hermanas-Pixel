@@ -194,3 +194,7 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 - `test/arga_boy_throw_frames_render_test.dart` ampliado en `f9aecc8` para guardar `boy_pose_*.png` de los seis valores de `ArgaBoyPose`; derrota terminal en fotograma 3. El test de cuatro fotogramas de lanzamiento y comparación ROI sigue activo. Workflow `ae54dfd` conserva imágenes, ejecución `42509731578` lanzada en `38270f7`, resultado e inspección pendientes. No se altera arte ni física.
 
 - Decimotercera ejecución `42509731578` **SUCCESS**, seis capturas del niño preservadas por QA bot en `81c9106`. Inspección de `boy_pose_hurt.png`: retroceso y expresión de impacto claramente reconocibles. `boy_pose_defeated.png`: personaje sentado sobre roca, silueta y ropa intactas; validar contacto y continuidad de la caída. No prueba daño/proyectil en partida.
+
+### Segunda ronda de seis poses de trucha
+
+- `test/arga_trout_leap_frames_render_test.dart` ampliado en `3338e33`: además del ciclo de cuatro poses de salto, captura una pose por cada uno de los seis estados de `ArgaTroutPose`, con posición física en agua `y=417` salvo salto `y=340`. Derrota en última columna. PNG auténticos `trout_state_*.png` conservados por workflow `4a326cc`; ejecución `42510057067` lanzada en `4525f2b`, pendiente de resultado e inspección de agua/caída/identidad.
