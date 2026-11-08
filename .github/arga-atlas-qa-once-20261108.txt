@@ -51,3 +51,5 @@ Validate eighth Arga chapter next-version map entry.
 Repeat Arga next-version selection after real panorama asset fix.
 
 Capture genuine next release map with eighth chapter access.
+
+Verify map screenshot only after bitmap has decoded.
