@@ -131,8 +131,9 @@ class AdaptiveTitleScreen extends StatelessWidget {
         // transparently; there is no dark rectangular backing.
         Positioned.fromRect(rect:g.logo,child:IgnorePointer(
           child:Column(mainAxisAlignment:MainAxisAlignment.end,children:[
-            Expanded(child:Image.asset(cleanLogoAsset,fit:BoxFit.contain,
-              errorBuilder:(_, error, trace) => const SizedBox.shrink())),
+            // The previous TWC PNG contains visible background pixels that
+            // cover the approved pavement. Keep the transparent typography
+            // only until an alpha-verified emblem is available.
             Text('THE WOLF COMPANY',
               textAlign:TextAlign.center,
               style:TextStyle(color:const Color(0xffffe2a1),
