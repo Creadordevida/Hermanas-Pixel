@@ -36,10 +36,14 @@ se conservan temporalmente, sin referencias en `main.dart`, hasta cerrar QA.
 7. `lib/main.dart`: mecánica efectiva del tronco móvil (arrastra al personaje), roca hundible (desciende tras el aviso) y reaparición correcta sobre checkpoints, commit `740bde1`.
 8. `test/arga_rc7_real_render_test.dart`: pruebas de movimiento del tronco y hundimiento dentro del ticker Flutter, commit `2cf7972`.
 
+9. `assets/images/arga_rc7/arga_far_rc7_candidate.webp` y `arga_mid_rc7_candidate.webp`: planos **candidatos** separados, skyline/puente y vegetación con alpha; commit `d3a8f61`. Se protegen y se compararán con la imagen original aprobada.
+10. `lib/main.dart`: QA `stage==7` carga/dibuja planos lejanos y medios con velocidades distintas y apoyos a velocidad 1:1. Se eliminó la decodificación superpuesta del panorama descartado. Agua visible con pequeños brillos animados; commits `230fc64`, `47eee5e`, `c5ade03`.
+11. `test/arga_rc7_real_render_test.dart`: comprueba ambas capas y ausencia del panorama antiguo duplicado, commit `3b26d23`.
+
 ## Estado: NO validado
 - La prueba automatizada específica del Arga aún no tiene resultado confirmado. El nuevo workflow no figura entre los runs asociados al commit; otros siete workflows del repositorio aparecen fallidos pero sus jobs no devuelven pasos ni logs (no hay base para atribuirlo al código).
 - No hay capturas reales revisadas visualmente del Arga.
-- Fondo y soportes son una prueba auxiliar, no recursos finales aprobados.
+- Fondo, vegetación y soportes son una prueba auxiliar, no recursos finales aprobados. El agua tiene brillos dinámicos pero necesita validar su movimiento y continuidad real.
 - Movimiento y hundimiento ya codificados, pero aún no verificados en Flutter; faltan agua animada, capas reales
   con parallax, nivel largo y revisión de ambos personajes.
 - No activar el capítulo normalmente ni declararlo listo para RC7.
@@ -47,9 +51,9 @@ se conservan temporalmente, sin referencias en `main.dart`, hasta cerrar QA.
 ## Siguiente acción precisa
 1. Ejecutar y consultar el workflow específico Arga. Corregir cualquier fallo
    del análisis, decoding, StagePainter o test, y revisar las cinco imágenes.
-2. Comparar las capturas con la referencia original *aprobada* y construir
-   fondos lejano/medio, agua móvil y elementos físicos independientes a partir
-   de ella, sin personajes duplicados en el fondo.
+2. Comparar las capturas con la referencia original *aprobada* y corregir
+   las capas candidatas de fondo lejano, vegetación media y agua móvil, sin
+   personajes duplicados ni artefactos en los límites del panorama.
 3. Completar cinemática de tronco móvil, hundimiento de roca y checkpoints;
    validar aterrizajes de Miren y Sara y muerte real en cada hueco.
 4. Ampliar por secciones y verificar una partida completa antes de habilitar
