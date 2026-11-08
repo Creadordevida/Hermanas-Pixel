@@ -1,10 +1,7 @@
 name: Colegio - importar SOLO arte exacto a Git (SIN APK)
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
 on:
-  push:
-    branches:
-      - work/revision-visual-20261028-continuidad
-    paths:
-      - .github/trigger-school-import-only.txt
   workflow_dispatch:
 permissions:
   contents: write
