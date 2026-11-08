@@ -1,1 +1,2 @@
 Disparador único autorizado por el propietario, 2026-11-08. QA del Arga con cuatro atlas 4x6; sin APK ni merge.
+Segunda ejecución: corregido test de transición swim -> accelerate -> warning -> leap.
