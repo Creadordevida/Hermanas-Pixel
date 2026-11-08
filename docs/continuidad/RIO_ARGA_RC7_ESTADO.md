@@ -81,3 +81,27 @@ Después de resolverlo, reejecutar `arga-rc7-qa.yml`, revisar ocho PNG
    (las capas actuales se fijan al agotar su recorrido para evitar huecos, pero
    no constituyen fondos definitivos de 36.500 px). Verificar una partida
    completa antes de habilitar capítulo 8 en el mapa.
+
+## Alternativa gratuita acordada con el propietario (2026-11-08)
+El propietario ha decidido **no asumir gasto adicional** para GitHub Actions.
+Los presupuestos existentes de GitHub quedan **sin modificar**. El bloqueo
+mostrado en Billing & licensing > Budgets and alerts incluye un presupuesto
+Actions de 0 USD y estado `Usage blocked`. No recomendar eliminar presupuestos
+ni ampliar límites sin autorización nueva.
+
+Se han incorporado dos ejecutores locales:
+- `scripts/run_arga_qa.ps1`: Windows/PowerShell, apropiado para un Lenovo con
+  Flutter SDK instalado. Desde la raíz del repositorio ejecutar
+  `powershell -ExecutionPolicy Bypass -File scripts/run_arga_qa.ps1`.
+- `scripts/run_arga_qa.sh`: Linux/macOS con Flutter SDK en PATH. Ejecutar
+  `bash scripts/run_arga_qa.sh`.
+
+Ambos ejecutan `flutter pub get`, análisis de `lib`, pruebas de física y
+capturas Flutter del Arga. Exigen ocho PNG reales de 1000x450 en
+`qa/arga_rc7_flutter/`. No generan APK ni hacen push/merge; QA **aún no
+se ha ejecutado** en ninguna máquina con Flutter.
+Commits: `00bfd9f`, `1726ca4`.
+
+**Próximo paso:** ejecutar uno de los scripts en una máquina con Flutter,
+inspeccionar las ocho imágenes y corregir lo observado antes de activar el
+capítulo. Puede realizarse sin suscripción adicional a GitHub.
