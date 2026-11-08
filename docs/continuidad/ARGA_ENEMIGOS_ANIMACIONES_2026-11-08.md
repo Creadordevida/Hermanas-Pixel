@@ -51,3 +51,10 @@ Actualmente `StagePainter` selecciona **una imagen aislada por estado**. No exis
 - Se generó una corrección exploratoria de la pose reposo con fondo alfa y sin bandas largas: `assets/images/arga_rc7/enemies_candidates/cangrejo_reposo_limpieza_v2_candidate.png` (1536×1024, bbox alfa >=128: 249,198 a 1288,836). La imagen mantiene diseño aproximado, pero el alfa tiene numerosas zonas semitransparentes y aún exige limpieza de contorno y revisión pixel-art; **NO aprobada ni conectada al motor**.
 - Commit **solo local** `fa8f83d` (tras rebase). La subida Git HTTPS falló por ausencia de credenciales (`could not read Username`); **este PNG no está confirmado en GitHub**. Original y seis candidatos anteriores intactos. No confundir documento remoto con entrega del PNG.
 - Siguiente microfase: limpiar alfa duro y comparar contorno/paleta con la referencia; guardar el PNG mediante transferencia binaria autorizada; después crear intermedios reales. No ejecutar Flutter/Actions ni habilitar Arga hasta QA completo.
+
+## Microfase de transferencia recuperada — 2026-11-08
+
+- Resuelto el bloqueo de autenticación Git HTTPS mediante la integración GitHub y transferencia binaria lossless WebP. El candidato `assets/images/arga_rc7/enemies_candidates/cangrejo_reposo_limpieza_v2_candidate.webp` está **en GitHub**: commit `34e018c`, blob `00dd63db0b682bc0cb8656e8324563ac3073bd20`, confirmado por lectura remota. No confundir con el PNG de ensayo local, que no fue subido.
+- El WebP es una versión sin pérdida del PNG candidato. **No sustituye la pose original aprobada ni entra en el atlas cargado por el motor.** Sigue pendiente limpieza del borde semitransparente, correspondencia de paleta/silueta, línea de apoyo y aprobación visual.
+- No se ejecutaron pruebas Flutter, Actions, APK ni render real.
+- Siguiente microfase precisa: corregir borde alfa de esta pose, comparar a igual escala con la original y solo después construir los fotogramas intermedios; repetir las verificaciones con las otras cinco poses.
