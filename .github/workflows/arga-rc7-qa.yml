@@ -31,18 +31,18 @@ jobs:
       - run: flutter analyze --no-pub lib
       - run: flutter test --no-pub --reporter expanded test/arga_platform_rules_test.dart test/arga_crossing_test.dart
       - run: flutter test --no-pub --reporter expanded test/arga_rc7_real_render_test.dart
-      - name: Verify five authentic 20:9 frames
+      - name: Verify eight authentic 20:9 frames
         run: |
           python3 - <<'PY'
           import struct
           from pathlib import Path
           frames=sorted(Path('qa/arga_rc7_flutter').glob('qa_*.png'))
-          assert len(frames)==5, frames
+          assert len(frames)==8, frames
           for frame in frames:
               blob=frame.read_bytes()
               assert len(blob)>10000 and blob[:8]==b'\x89PNG\r\n\x1a\n'
               assert struct.unpack('>II',blob[16:24])==(1000,450), frame
-          print('Verified five Arga StagePainter screenshots 1000x450')
+          print('Verified eight Arga StagePainter screenshots 1000x450')
           PY
       - name: Preserve real QA images (no APK)
         run: |
