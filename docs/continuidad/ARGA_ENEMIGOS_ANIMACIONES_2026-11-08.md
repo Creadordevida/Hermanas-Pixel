@@ -133,4 +133,4 @@ Próxima acción: obtener recortes de pixel art con alfa duro auténtico y borde
 ### Microfase de encuadre sin oclusión y región del cangrejo
 
 - Commit `58d16d6`: `test/arga_crab_attack_frames_render_test.dart` mueve a Miren de `qaWorldX=340` a `230` y extrae RGBA solo del rectángulo de pantalla `(310,250)-(450,395)` para comprobar cuatro ataques `pinch`; excluye monedas e interfaz del criterio de diferencia. Conserva cuatro capturas auténticas. No cambia arte, físicas ni entrada al capítulo.
-- Ejecución automatizada `42506624338` disparada en `1c054804`; estado pendiente de comprobar y documentar tras inspección de las nuevas imágenes.
+- Ejecución automatizada `42506624338` disparada en `1c054804`; **SUCCESS**. Los cuatro fotogramas tienen cambios reales en la región RGBA del cangrejo; el análisis Flutter y el resto de pruebas también pasan. Captura `crab_pinch_frame_1.png` inspeccionada tras sincronizar commit QA `4e9b88b`: Miren a la izquierda, pinzas y rostro del cangrejo visibles en la segunda roca, sin oclusión. El tamaño es llamativo y aún requiere validación de proporciones con referencia, hitbox, transparencia y contacto durante el juego.
