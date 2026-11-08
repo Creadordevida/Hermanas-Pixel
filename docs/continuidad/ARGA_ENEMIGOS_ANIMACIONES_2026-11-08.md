@@ -212,3 +212,5 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 
 - `test/arga_drowning_gameplay_test.dart` creado en `e49d29f`: carga `HermanasGame(qaStage:7)` y recursos reales; sitúa a Miren sobre hueco en x=730 con pies cerca de `waterDeathY`, deja avanzar el `AnimationController` real y comprueba que pasa de cinco a cuatro corazones, reaparece sobre el primer checkpoint y no queda bajo agua. Captura `arga_respawn_after_fall.png`, únicamente si pasa. No simula el resultado con llamadas a la clase de reglas aislada.
 - Workflow ampliado en `cc29c0c`, ejecución `42511022596` lanzada en `cddb05f`. Resultado pendiente, corregir sin tocar otros capítulos si se detecta fallo.
+
+- Decimosexta ejecución `42511022596` **FAIL** solo en test nuevo de caída: `TypeError type int is not a subtype of double` en `test/arga_drowning_gameplay_test.dart:40`, durante asignación `game.hero.vy=160` antes de ejecutar la física. Los 46 tests unitarios y renders previos sí pasaron. Corregido el dato del test a `160.0` en `53303e1`, sin modificar juego; decimoséptima ejecución `42511312779` lanzada en `75733d9`, resultado pendiente.
