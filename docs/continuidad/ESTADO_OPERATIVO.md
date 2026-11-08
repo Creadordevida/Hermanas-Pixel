@@ -192,3 +192,6 @@ Run `42490992815`: análisis Flutter limpio, 11/11 tests de física superados; r
 
 ### 2026-11-08 — Arga QA #57 ÉXITO técnico con ocho PNG Flutter
 Run `42491177824`, job `128763684253`: SUCCESS, análisis Flutter limpio, 11/11 tests físicos, test gráfico StagePainter y ocho PNG de 1000×450 reales preservados en `qa/arga_rc7_flutter/` (commit bot `d5c3f69`). Abiertos visualmente `qa_130`, `qa_1250`, `qa_35900`: arte Arga visible, cangrejo/pescador en QA; glifos HUD/controles aparecen como cuadrados en capturas runner, pendiente diagnóstico. Otras cinco no inspeccionadas visualmente. Workflow otra vez manual `636b1c1`. Sin APK, merge ni aprobación Android. Véase `RIO_ARGA_RC7_ESTADO.md`.
+
+### 2026-11-08 — Niño gamberro: mecánica QA y pruebas en GitHub
+Archivos `lib/arga_boy_behavior.dart` c55dd4c, `lib/arga_stone_projectile.dart` 49c63b2, cuatro tests de comportamiento cdaa77e y cuatro de piedra 9eda931; stage 7 en `main.dart` df4c264, test real c7ecca8. Run `42492213266` pasó `flutter analyze` y nuevas pruebas de física, pero falló al leer extensión `.name` de enum desde `dynamic` en test gráfico; corregido `15ea687`, revalidación `42492359121` pendiente. Trigger workflow devuelto a manual `5be03b1`. No APK ni merge; referirse a ARGA_ENEMIGOS_RC7_ESTADO.md.
