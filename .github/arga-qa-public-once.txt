@@ -1,1 +1,2 @@
 Ejecución única autorizada el 2026-11-08: comprobar si QA Flutter de Río Arga puede iniciar en GitHub Actions público, sin APK.
+Segunda ejecución controlada: revalidar corrección Flutter analyze commit 9021548 y capturas reales del Arga. Sin APK.
