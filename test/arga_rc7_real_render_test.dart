@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hermanas_aventura/main.dart';
 import 'package:hermanas_aventura/arga_platform_rules.dart';
 import 'package:hermanas_aventura/arga_crab_behavior.dart';
+import 'package:hermanas_aventura/arga_fisher_behavior.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +59,12 @@ void main() {
             reason:'Missing independent crab pose $pose');
         }
         expect(game.argaCrab,isNotNull);
+        // The approved fisherman candidates are loaded only in Arga QA.
+        for (final pose in ['reposo','caminar','alerta','lanzamiento','impacto','derrota']) {
+          expect(game.images['arga_fisher_$pose'],isNotNull,
+            reason:'Missing independent fisherman pose $pose');
+        }
+        expect(game.argaFisher,isNotNull);
 
         await tester.pump(const Duration(milliseconds:16));
         final boundary=boundaryKey.currentContext!.findRenderObject()!
@@ -85,6 +92,15 @@ void main() {
             expect(game.argaCrabHits,hit);
           }
           expect(game.argaCrab.pose,ArgaCrabPose.defeated);
+
+          // Real player shots interrupt fisherman and defeat after two hits.
+          expect(game.argaFisherHits,0);
+          for (var hit=1;hit<=2;hit++) {
+            game.shots.add(Projectile(x:game.argaFisher.x,y:307,vx:0,kind:'ball'));
+            await tester.pump(const Duration(milliseconds:33));
+            expect(game.argaFisherHits,hit);
+          }
+          expect(game.argaFisher.pose,ArgaFisherPose.defeated);
 
           // Actual game ticker: moving log carries the hero while grounded.
           game.hero=Character(1060,y:365);
