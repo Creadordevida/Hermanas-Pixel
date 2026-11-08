@@ -160,3 +160,21 @@ capítulo. Puede realizarse sin suscripción adicional a GitHub.
 - Rocas hundibles: aviso visual de temblor entre 0,30 y 0,60 s de ocupación;
   corrección a desplazamiento entero para preservar pixel art. Commits
   `4986a28`, `8192748`.
+
+## Preflight estático gratuito (2026-11-08)
+- Nuevo `scripts/arga_static_preflight.py` (commit `9c22da3`) para revisar
+  sin Flutter, GitHub Actions ni pagos: geometría y margen de saltos,
+  progresión de dificultad, checkpoints seguros, orilla de salida, presencia
+  de ocho WebP activos, firmas RIFF/WEBP, referencias del pintor y declaración
+  de assets en `pubspec.yaml`.
+- Revisión numérica **ejecutada independientemente** con los arrays recuperados
+  del archivo real: 135 apoyos, 19 checkpoints, orilla final x=36.004–36.620,
+  0 huecos inválidos, máximo salto requerido con deriva 118 px respecto a
+  148,93 px de alcance plano, medias 65,125 / 75,5 / 83,844 px.
+- Se comprobó que las ocho rutas de imágenes aparecen referenciadas en
+  `lib/main.dart`. El preflight Python **se ha guardado pero todavía no se
+  ha ejecutado sobre un checkout completo**; sus comprobaciones de cabecera
+  WebP quedan pendientes. Ejecutarlo gratis con
+  `python3 scripts/arga_static_preflight.py` desde una copia del repositorio.
+- Sigue **sin** prueba Flutter, capturas reales, APK ni habilitación del
+  capítulo en el mapa. Se mantienen intactos los límites de gasto de GitHub.
