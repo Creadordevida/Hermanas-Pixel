@@ -195,3 +195,6 @@ Run `42491177824`, job `128763684253`: SUCCESS, análisis Flutter limpio, 11/11 
 
 ### 2026-11-08 — Niño gamberro: mecánica QA y pruebas en GitHub
 Archivos `lib/arga_boy_behavior.dart` c55dd4c, `lib/arga_stone_projectile.dart` 49c63b2, cuatro tests de comportamiento cdaa77e y cuatro de piedra 9eda931; stage 7 en `main.dart` df4c264, test real c7ecca8. Run `42492213266` pasó `flutter analyze` y nuevas pruebas de física, pero falló al leer extensión `.name` de enum desde `dynamic` en test gráfico; corregido `15ea687`, revalidación `42492359121` pendiente. Trigger workflow devuelto a manual `5be03b1`. No APK ni merge; referirse a ARGA_ENEMIGOS_RC7_ESTADO.md.
+
+### 2026-11-08 — Río Arga: cuatro enemigos en QA real; falta animación final
+Runs #59 `42492359121` y #60 `42492684662` **SUCCESS** en Flutter: analizador, comportamiento y render real 20:9. Niño visible en `qa_1950.png`; trucha en `qa_810.png`, demasiado baja en agua. Trucha lógica `01e82c3`, test `c779029`, integración `64b5323`, render test `28ea1389`, workflow `b7983e5`. Ocho PNG de #60 commit bot `8c66cc2`. Cuatro enemigos conectados solo stage 7, sin atlas animado definitivo, Android ni juego completo. Todos los workflows manuales tras `4d12bd4`.
