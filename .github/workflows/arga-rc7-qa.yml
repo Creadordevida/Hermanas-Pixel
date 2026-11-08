@@ -49,7 +49,7 @@ jobs:
         run: |
           git config user.name "twc-arga-qa[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add qa/arga_rc7_flutter/qa_*.png qa/arga_rc7_flutter/trout_leap_810.png qa/arga_rc7_flutter/crab_pinch_frame_*.png qa/arga_rc7_flutter/crab_pose_*.png qa/arga_rc7_flutter/fisher_cast_frame_*.png qa/arga_rc7_flutter/boy_throw_frame_*.png qa/arga_rc7_flutter/trout_pose_frame_*.png
+          git add qa/arga_rc7_flutter/qa_*.png qa/arga_rc7_flutter/trout_leap_810.png qa/arga_rc7_flutter/crab_pinch_frame_*.png qa/arga_rc7_flutter/crab_pose_*.png qa/arga_rc7_flutter/fisher_cast_frame_*.png qa/arga_rc7_flutter/fisher_pose_*.png qa/arga_rc7_flutter/boy_throw_frame_*.png qa/arga_rc7_flutter/trout_pose_frame_*.png
           if ! git diff --cached --quiet; then
             git commit -m "qa(arga): preserve genuine Arga Flutter panoramas and trout leap"
             git pull --rebase origin "$GITHUB_REF_NAME"
