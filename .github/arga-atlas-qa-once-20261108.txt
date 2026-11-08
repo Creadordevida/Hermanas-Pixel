@@ -41,3 +41,5 @@ Run natural trout gameplay contact test and screenshot.
 Run alternate heroine Sara trout contact check.
 
 Run Sara against crab, fisher and boy in full game loop.
+
+Run all 96 StagePainter atlas frame continuity test.
