@@ -193,3 +193,7 @@ Niño gamberro conectado a QA-only: seis poses, alerta, piedra con subpasos, col
 
 ### 2026-11-08 — QA de los cuatro enemigos del Arga
 Run #59 `42492359121` validó niño y piedra; captura real x1950 inspeccionada. Run #60 `42492684662` validó integración de trucha (lógica `01e82c3`, pruebas `c779029`, conexión `64b5323`, render `28ea1389`) y preservó ocho PNG auténticos (`8c66cc2`). Captura x810 muestra la trucha baja sobre el agua: ajuste pendiente. Falta secuencia completa de seis poses, escalas, HUD y partida en Android; **prototipo, no final**. Workflow solo manual commit `4d12bd4`, sin APK ni merge.
+
+## 2026-11-08 — Río Arga, microfase incremental de animación
+
+Rama `work/revision-visual-20261028-continuidad`. Selector de fotogramas ajustado para admitir filas de 1–4 dibujos reales sin acceder a celdas vacías (`lib/arga_sprite_atlas.dart`, commit `e4c197b`) y pruebas adicionales versionadas (`test/arga_sprite_atlas_test.dart`, commit `4f02cd2`). Evidencia: commits y lectura de código en GitHub; NO se ejecutó Flutter/Dart, NO se generaron atlas definitivos ni capturas StagePainter. Restricciones intactas: no Actions de pago, APK, merge, activación del Arga ni cambios en capítulos 0–6. Pendiente: inspección artística y fotogramas intermedios del cangrejo, después pescador, niño y trucha.
