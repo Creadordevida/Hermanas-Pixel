@@ -1,57 +1,53 @@
-# Río Arga — continuidad de implementación (8 noviembre 2026)
+# Río Arga — estado comprobado RC7 (2026-11-08)
 
-## Orden aprobada
-Nuevo capítulo de **Las aventuras de Miren y Sara** en el río Arga de Pamplona.
-Referencia artística vinculante: propuesta SNES 16-bit aprobada en la conversación
-«solucionar entrenador rival»: río ancho y agua animada, puente, vegetación y
-árboles frondosos, edificios/montañas al fondo, rocas, troncos y tablones para
-saltar. La imagen aprobada no debe sustituirse por geometría plana.
-Reutilizar el método gráfico de exteriores del capítulo 1, variando su
-composición. Los enemigos se trabajarán con el método de sprites aprobado.
+## Referencias vinculantes
+- Referencia **aprobada por el usuario**: `docs/continuidad/referencias/rio_arga_concepto_aprobado_20261108.png` (SHA Git blob `7f10b75bc1bbe8c633ecb61ac157515df4bfa24e`). No sustituirla por ninguna propuesta posterior.
+- Orden y metodología original: `docs/continuidad/RIO_ARGA_DESARROLLO.md`.
+- Siete capítulos existentes 0–6 intactos. No APK, merge a main ni publicación.
 
-## Comprobación del repositorio
-- Rama: `work/revision-visual-20261028-continuidad`, PR #5.
-- Antes de este trabajo había siete capítulos (índices 0–6).
-- No existía módulo Río Arga, entrada en `chapterNames` ni assets declarados.
-- El motor usa `groundY = 390` como suelo continuo en `_tick`; añadir
-  simples sprites de rocas NO genera huecos jugables.
-- Salto existente: impulso -423, gravedad 960, velocidad horizontal 169.
-  Tiempo de vuelo teórico al mismo nivel 0,881 s; alcance ~149 px.
-  Los huecos iniciales de 55–92 px dejan margen para acelerar y saltar.
-- Los siete capítulos anteriores deben quedar intactos, sin cambiar la
-  selección ni activar una escena incompleta.
+## Hallazgo al reanudar
+La inspección inicial fue incompleta: **ya existían** `lib/arga_platform_rules.dart`,
+`test/arga_platform_rules_test.dart`, el documento de desarrollo y la imagen
+aprobada. El modelo inicial añadido en esta conversación
+(`lib/arga_crossing.dart` y `test/arga_crossing_test.dart`, commits
+`a80108b` y `da2a162`) es redundante. **La fuente de verdad para el motor
+se ha unificado en el modelo original `ArgaCourse`**. Los archivos redundantes
+se conservan temporalmente, sin referencias en `main.dart`, hasta cerrar QA.
 
-## Avances persistidos
-1. `lib/arga_crossing.dart` — modelo independiente y determinista de banco,
-   rocas, troncos y tablones; primer tramo 0–2575, apoyos y detección de caída.
-   Commit `a80108b8c0c533089b018187cb67db2721119ac4`.
-2. `test/arga_crossing_test.dart` — contratos de huecos reales, longitudes,
-   apoyos y contacto mortal con el agua. Commit
-   `da2a1629a00ecf05ad17c67749827ebbd84c3c2c`.
+## Cambios comprobados y guardados
+1. `lib/main.dart`: el índice QA 7, no seleccionable en el mapa normal, usa
+   `ArgaCourse.landing` y `ArgaCourse.drowned`. Caída al río resta vida,
+   checkpoint y reaparición; índices 0–6 usan el comportamiento previo.
+   Integración física inicial `31460bb8`; unificación `e94e39b`.
+2. `assets/images/arga_rc7/arga_concept_rc7_v1.webp`: **candidata no
+   aprobada**, ilustración auxiliar, commit `0b026e7`. No reemplaza al concepto
+   aprobado y **todavía no es parallax de tres capas**.
+3. `assets/images/arga_rc7/arga_supports_rc7_v1.webp`: atlas candidato
+   de orilla, roca, tronco y tablón con alpha, commit `2f72c45`.
+4. `lib/main.dart` y `pubspec.yaml`: carga y dibujo de dos imágenes **solo
+   cuando `qaStage:7`**; el mapa normal permanece con siete accesos. Commits
+   `42f856d`, `59ed5f3` y refactor `e94e39b`.
+5. `test/arga_rc7_real_render_test.dart`: solicita cinco capturas auténticas
+   Flutter StagePainter 20:9 del tramo inicial. Commit `cc6db29`.
+6. `.github/workflows/arga-rc7-qa.yml`: análisis, tests de plataforma,
+   raster de cinco posiciones y guardado de evidencia en
+   `qa/arga_rc7_flutter/` **solo si el job finaliza bien**. Commit `ba585c7`.
 
-3. `lib/main.dart` — puente de integración en el motor: en una futura fase `stage == 7`, el suelo continuo se sustituye por apoyos de Arga y el agua resta una vida con reaparición o `gameOver`. Los capítulos 0–6 mantienen su física. El índice 7 sigue sin estar expuesto en el mapa ni declarado en las listas hasta integrar el arte. Commit `31460bb8d46d587c84367da9c2161bbe98c601fd`.
+## Estado: NO validado
+- La prueba automatizada específica del Arga aún no tiene resultado confirmado.
+- No hay capturas reales revisadas visualmente del Arga.
+- Fondo y soportes son una prueba auxiliar, no recursos finales aprobados.
+- Faltan movimiento/hundimiento físico completo, agua animada, capas reales
+  con parallax, nivel largo y revisión de ambos personajes.
+- No activar el capítulo normalmente ni declararlo listo para RC7.
 
-4. `assets/images/arga_rc7/arga_concept_rc7_v1.webp` — primera escena ilustrada 16-bit como **candidata visual**, con puente, orillas arboladas y secuencia de rocas/troncos/tablones. Se conserva aparte: NO es todavía un atlas de capas ni está declarada en `pubspec.yaml` o dibujada por `StagePainter`. Blob verificado en GitHub, commit `0b026e7b6547e65ca4cd114e6f02bd598024bc1d`.
-
-## Estado real
-**Fase 1 del modelo y puente de física guardados; NO es todavía un capítulo seleccionable ni validado visualmente.**
-Los archivos fueron guardados mediante GitHub; no se ha ejecutado Flutter
-sobre el nuevo módulo y no hay capturas `StagePainter` del Arga.
-No afirmar que el capítulo está listo para RC7.
-
-## Siguiente acción concreta
-1. Evaluar la imagen candidata contra la referencia aprobada y descomponer/rediseñar
-   los recursos pixel-art definitivos en capas lejanas, medias, río animable y
-   apoyos físicos distintos, protegidos de generadores antiguos.
-2. Completar la integración del índice 7 en selección, carga de assets y `StagePainter`
-   **solo cuando todos los recursos estén presentes**, sin cambiar índices
-   0–6 ni el comportamiento de los capítulos anteriores.
-3. Verificar en Flutter la colisión de apoyos y caída mortal ya conectadas; ajustar
-   tolerancias, la reaparición y las vidas después de pruebas jugables.
-4. Ampliar el recorrido por secciones progresivas y checkpoints, enemigos
-   aprobados posteriormente, monedas y salida.
-5. Ejecutar análisis/test Flutter y capturas auténticas 20:9: ambas hermanas,
-   saltos acertados/fallidos, muerte, reaparición, scroll, parallax, inicio y
-   final. Revisar capturas, corregir y solo entonces habilitar RC7.
-
-No hacer APK, merge a main ni publicar sin orden específica.
+## Siguiente acción precisa
+1. Ejecutar y consultar el workflow específico Arga. Corregir cualquier fallo
+   del análisis, decoding, StagePainter o test, y revisar las cinco imágenes.
+2. Comparar las capturas con la referencia original *aprobada* y construir
+   fondos lejano/medio, agua móvil y elementos físicos independientes a partir
+   de ella, sin personajes duplicados en el fondo.
+3. Completar cinemática de tronco móvil, hundimiento de roca y checkpoints;
+   validar aterrizajes de Miren y Sara y muerte real en cada hueco.
+4. Ampliar por secciones y verificar una partida completa antes de habilitar
+   capítulo 8 en el mapa.
