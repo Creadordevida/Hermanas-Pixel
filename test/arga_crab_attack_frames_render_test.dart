@@ -22,7 +22,7 @@ void main() {
     try {
       await tester.pumpWidget(MaterialApp(home: RepaintBoundary(
         key: boundaryKey,
-        child: HermanasGame(key: key, qaStage: 7, qaWorldX: 340),
+        child: HermanasGame(key: key, qaStage: 7, qaWorldX: 230),
       )));
       final dynamic game = key.currentState;
       var ready = false;
@@ -35,7 +35,7 @@ void main() {
       }
       expect(ready, isTrue);
       expect(game.images['arga_crab_atlas'], isNotNull);
-      final List<List<int>> samples = [];
+      final List<List<int>> crabPixels = [];
       for (var frame = 0; frame < 4; frame++) {
         game.setState(() {
           game.argaCrab.pose = ArgaCrabPose.pinch;
@@ -48,10 +48,21 @@ void main() {
         await tester.runAsync(() async {
           final picture = await boundary.toImage(pixelRatio: 1);
           try {
+            // Compare only crab's screen area, excluding animated HUD/coins.
+            final raw = await picture.toByteData(format: ui.ImageByteFormat.rawRgba);
+            expect(raw, isNotNull);
+            final rgba = raw!.buffer.asUint8List();
+            final region = <int>[];
+            for (var y = 250; y < 395; y++) {
+              for (var x = 310; x < 450; x++) {
+                final offset = (y * 1000 + x) * 4;
+                region.addAll(rgba.sublist(offset, offset + 4));
+              }
+            }
+            crabPixels.add(region);
             final data = await picture.toByteData(format: ui.ImageByteFormat.png);
             expect(data, isNotNull);
             final bytes = data!.buffer.asUint8List().toList();
-            samples.add(bytes);
             final file = File('qa/arga_rc7_flutter/crab_pinch_frame_$frame.png');
             await file.parent.create(recursive: true);
             await file.writeAsBytes(bytes, flush: true);
@@ -59,9 +70,9 @@ void main() {
           } finally { picture.dispose(); }
         });
       }
-      for (var frame = 1; frame < samples.length; frame++) {
-        expect(listEquals(samples[frame], samples[frame - 1]), isFalse,
-            reason: 'Consecutive real pinch renders must differ');
+      for (var frame = 1; frame < crabPixels.length; frame++) {
+        expect(listEquals(crabPixels[frame], crabPixels[frame - 1]), isFalse,
+            reason: 'Consecutive real pinch poses must differ inside crab bounds');
       }
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
