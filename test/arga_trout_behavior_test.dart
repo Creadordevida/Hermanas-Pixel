@@ -50,4 +50,15 @@ void main() {
     trout.update(5,650,playerVisible:true);
     expect(trout.pose,ArgaTroutPose.defeated);
   });
+  test('Acceleration cancels if the player leaves, without jumping',() {
+    final trout=ArgaTroutMotion(600);
+    trout.update(.1,650,playerVisible:true);
+    expect(trout.pose,ArgaTroutPose.accelerate);
+    trout.update(.1,900,playerVisible:false);
+    expect(trout.pose,ArgaTroutPose.swim);
+    expect(trout.airborne,isFalse);
+    expect(trout.touchesHero(centerX:600,halfWidth:20,
+        top:300,bottom:430),isFalse);
+  });
+
 }
