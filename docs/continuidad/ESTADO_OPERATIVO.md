@@ -189,3 +189,6 @@ Run [42490644673](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/4
 
 ### 2026-11-08 — QA Arga #56: física validada y cargador pescador corregido
 Run `42490992815`: análisis Flutter limpio, 11/11 tests de física superados; render falló por clave `arga_fisher_reposo` no decodificada. Los seis WebP existen; filtro QA stage 7 omitía `arga_fisher_*`. Corregido en `lib/main.dart` (`9752f46`) y lanzado un solo QA #57 `42491177824` para verificar, pendiente resultado. Workflow de nuevo solo manual (`636b1c1`). Ocho PNG y revisión visual aún pendientes; no APK. Véase `RIO_ARGA_RC7_ESTADO.md`.
+
+### 2026-11-08 — Arga QA #57 ÉXITO técnico con ocho PNG Flutter
+Run `42491177824`, job `128763684253`: SUCCESS, análisis Flutter limpio, 11/11 tests físicos, test gráfico StagePainter y ocho PNG de 1000×450 reales preservados en `qa/arga_rc7_flutter/` (commit bot `d5c3f69`). Abiertos visualmente `qa_130`, `qa_1250`, `qa_35900`: arte Arga visible, cangrejo/pescador en QA; glifos HUD/controles aparecen como cuadrados en capturas runner, pendiente diagnóstico. Otras cinco no inspeccionadas visualmente. Workflow otra vez manual `636b1c1`. Sin APK, merge ni aprobación Android. Véase `RIO_ARGA_RC7_ESTADO.md`.
