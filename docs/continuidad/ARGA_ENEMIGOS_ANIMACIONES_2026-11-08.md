@@ -44,3 +44,10 @@ Actualmente `StagePainter` selecciona **una imagen aislada por estado**. No exis
 - `test/arga_sprite_atlas_test.dart` añade escenarios con dos y un fotograma, bucle, retención del último y rangos inválidos. Commit `4f02cd2`.
 - Verificada persistencia remota mediante consulta a GitHub. **Pruebas Dart/Flutter no ejecutadas** (aplazadas por acuerdo), no existe atlas artístico nuevo ni captura real.
 - Siguiente microfase: auditar visualmente las seis poses aprobadas del cangrejo, alinear apoyos y producir intermedios auténticos antes de cargar un atlas. El parámetro opcional no sustituye esa tarea; no habilitar el capítulo normal.
+
+## Microfase visual — inspección real del cangrejo (2026-11-08)
+
+- Abiertas la lámina original aprobada y la pose candidata de reposo local. Se observan bandas horizontales de píxeles rojizos, manchas y prolongaciones externas al cuerpo, visibles incluso sobre transparencia; por tanto **no corresponde certificar esos archivos como atlas limpios**.
+- Se generó una corrección exploratoria de la pose reposo con fondo alfa y sin bandas largas: `assets/images/arga_rc7/enemies_candidates/cangrejo_reposo_limpieza_v2_candidate.png` (1536×1024, bbox alfa >=128: 249,198 a 1288,836). La imagen mantiene diseño aproximado, pero el alfa tiene numerosas zonas semitransparentes y aún exige limpieza de contorno y revisión pixel-art; **NO aprobada ni conectada al motor**.
+- Commit **solo local** `fa8f83d` (tras rebase). La subida Git HTTPS falló por ausencia de credenciales (`could not read Username`); **este PNG no está confirmado en GitHub**. Original y seis candidatos anteriores intactos. No confundir documento remoto con entrega del PNG.
+- Siguiente microfase: limpiar alfa duro y comparar contorno/paleta con la referencia; guardar el PNG mediante transferencia binaria autorizada; después crear intermedios reales. No ejecutar Flutter/Actions ni habilitar Arga hasta QA completo.
