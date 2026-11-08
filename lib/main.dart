@@ -463,6 +463,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // El prototipo Arga se carga solo en QA, nunca en el juego Android normal.
       if (widget.qaStage == 7) {
         paths['arga_art'] = 'assets/images/arga_rc7/arga_concept_rc7_v1.webp';
+        paths['arga_far'] = 'assets/images/arga_rc7/arga_far_rc7_candidate.webp';
+        paths['arga_mid'] = 'assets/images/arga_rc7/arga_mid_rc7_candidate.webp';
         paths['arga_supports'] = 'assets/images/arga_rc7/arga_supports_rc7_v1.webp';
       }
       // El nuevo capítulo 1 carga recursos que el juego realmente dibuja.
@@ -616,7 +618,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // so the complete original asset loading and gameplay are untouched.
       bool neededForSchoolQA(String key) {
         if (widget.qaStage == 7) {
-          return key == 'arga_art' || key == 'arga_supports' ||
+          return key == 'arga_art' || key == 'arga_far' ||
+            key == 'arga_mid' || key == 'arga_supports' ||
             ['coin','ball','comb'].contains(key) ||
             key.startsWith('futbolista_') || key.startsWith('bailarina_') ||
             key.startsWith('costume_') || key.startsWith('padre_');
@@ -2668,15 +2671,26 @@ class StagePainter extends CustomPainter {
   /// QA-only prototype. Visual supports share the existing ArgaCourse world coordinates.
   /// The flattened river concept remains a candidate, not final parallax.
   void _argaPrototypeBackground(Canvas canvas) {
-    final background=images['arga_art'];
-    if(background!=null) {
-      final sourceW=math.min(1200.0,background.width.toDouble());
-      final sourceH=math.min(675.0,background.height.toDouble());
-      final scroll=(cameraX*.12).clamp(0.0,
-          math.max(0.0,background.width-sourceW)).toDouble();
-      canvas.drawImageRect(background,
-          Rect.fromLTWH(scroll,0,sourceW,sourceH),
-          Rect.fromLTWH(0,0,viewW,viewH),Paint()..filterQuality=FilterQuality.none);
+    // Three independent speeds: far skyline, middle vegetation, world props.
+    // QA candidate art only; the user-approved concept remains the reference.
+    final far=images['arga_far'];
+    if(far!=null) {
+      final sourceW=math.min(far.width.toDouble(),viewW*1.25);
+      final sourceH=math.min(far.height.toDouble(),sourceW*viewH/viewW);
+      final scroll=(cameraX*.035).clamp(0.0,
+        math.max(0.0,far.width-sourceW)).toDouble();
+      canvas.drawImageRect(far,
+        Rect.fromLTWH(scroll,0,sourceW,sourceH),
+        Rect.fromLTWH(0,0,viewW,viewH),
+        Paint()..filterQuality=FilterQuality.none);
+    }
+    final mid=images['arga_mid'];
+    if(mid!=null) {
+      final width=viewW*1.8;
+      canvas.drawImageRect(mid,
+        Rect.fromLTWH(0,0,mid.width.toDouble(),mid.height.toDouble()),
+        Rect.fromLTWH(-cameraX*.20,0,width,viewH),
+        Paint()..filterQuality=FilterQuality.none);
     }
     final atlas=images['arga_supports'];
     if(atlas==null)return;
