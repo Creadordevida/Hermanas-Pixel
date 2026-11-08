@@ -178,3 +178,15 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   activo en juego.
 - Restricciones sin cambios: no Flutter local, Actions bloqueado sin gasto,
   ningún capítulo normal afectado.
+
+## Microtarea 9 — daño y derrota del cangrejo (2026-11-08)
+- Conexión QA en `lib/main.dart`: disparos de Miren o Sara que alcancen
+  la silueta física del cangrejo interrumpen su ataque; tras **dos impactos**
+  pasa a pose de derrota y deja de atacar. Las balas impactadas se desactivan
+  para evitar doble daño. Commit `3cbffdb`.
+- Test de juego programado en `test/arga_rc7_real_render_test.dart`:
+  lanza dos proyectiles de jugador al cangrejo de QA y comprueba
+  `argaCrabHits==2` y `ArgaCrabPose.defeated`. Commit `67cad7d`.
+- **SIN VERIFICAR EN FLUTTER**: el test está añadido, pero no ejecutado
+  y no hay captura real. Imagen, animación y hitbox requieren ajuste a
+  tamaño definitivo antes de declarar completado.
