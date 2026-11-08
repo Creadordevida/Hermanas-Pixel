@@ -96,6 +96,18 @@ void main() {
           expect(game.hero.x,const ArgaCourse().checkpointBefore(260));
           expect(game.hero.y,ArgaCourse.surfaces.first.top);
           expect(game.screen,Screen.playing);
+
+          // Later checkpoints can have different heights from the first bank.
+          final varied=ArgaCourse.allSurfaces.firstWhere(
+            (s)=>s.checkpoint && s.top!=ArgaCourse.surfaces.first.top);
+          game.hero=Character(varied.x+varied.width+20,y:440);
+          game.hero.grounded=false;
+          game.argaSupport=null;
+          game.hearts=5;
+          await tester.pump(const Duration(milliseconds:33));
+          expect(game.hero.x,varied.x+55);
+          expect(game.hero.y,varied.top,
+              reason:'Checkpoint respawn must use its own height');
         }
       }
     } finally {
