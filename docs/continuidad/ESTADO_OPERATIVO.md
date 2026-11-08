@@ -177,3 +177,6 @@ Tras comprobar 25 workflows con triggers push/pull_request en PR #5, se sustituy
 
 ### 2026-11-08 — Arga pescador: anzuelo balístico aislado
 Archivos `lib/arga_hook_projectile.dart` (`39ea03b`) y `test/arga_hook_projectile_test.dart` (`c0aaa2d`) escritos y confirmados con fetch remoto. Código para arco, colisión muestreada de impacto único, desactivación en agua/cancelación; cinco tests programados **no ejecutados** por falta de SDK Dart/Flutter. No conectado a `main.dart` ni renderizado; workflows manuales y sin APK. Próxima tarea en `ARGA_ENEMIGOS_RC7_ESTADO.md` microtarea 17.
+
+### 2026-11-08 — Pescador Arga integrado en prototipo QA, no validado
+`lib/main.dart` commit `37388cc`: seis poses, instancia en quinta roca numerada desde cero, lanzamiento de anzuelo con marcador provisional, interrupción y derrota en dos impactos, todo bajo `stage 7` de QA no accesible por mapa. Test `test/arga_rc7_real_render_test.dart` ampliado en `f04079d`, solo escrito y no ejecutado. Archivo remoto confirmado. Pendientes Flutter, barrido de colisión, escala real, atlas final y captura StagePainter. GitHub Actions permanecen manuales y no se generó APK. Véase `ARGA_ENEMIGOS_RC7_ESTADO.md` microtarea 18.
