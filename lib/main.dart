@@ -335,10 +335,12 @@ void main() async {
 }
 
 class HermanasGame extends StatefulWidget {
-  const HermanasGame({super.key, this.qaStage, this.qaMap = false, this.qaWorldX, this.qaSelected});
+  const HermanasGame({super.key, this.qaStage, this.qaMap = false, this.qaTitle = false, this.qaWorldX, this.qaSelected});
   /// Entradas de diagnóstico usadas solo por testWidgets; en Android son null/false.
   final int? qaStage;
   final bool qaMap;
+  /// Lightweight title QA: same production UI, skips unrelated stage assets.
+  final bool qaTitle;
   /// Posición del recorrido utilizada por capturas de QA, nunca por el juego Android.
   final double? qaWorldX;
   /// Opcional exclusivo de capturas de test: 0 Miren, 1 Sara.
@@ -417,6 +419,16 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     try {
       storage = await SharedPreferences.getInstance();
       savedAvailable = storage?.getString(saveKey) != null || storage?.getString(oldSaveKey) != null;
+      // This path is reachable only through explicit test-only constructor
+      // arguments. Render the genuine app title/map without loading hundreds
+      // of irrelevant stage tiles, which timed out the 20:9 QA runner.
+      if (widget.qaTitle || widget.qaMap) {
+        if (mounted) setState(() {
+          screen = widget.qaMap ? Screen.map : Screen.title;
+          resourcesReady = true;
+        });
+        return;
+      }
       final paths = <String,String>{
         'title':'assets/images/title_cars_fixed_091.png',
         'logo':'assets/images/twc_corporate_verified_091.png',
