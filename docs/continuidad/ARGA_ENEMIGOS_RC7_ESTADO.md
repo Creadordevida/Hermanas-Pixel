@@ -258,3 +258,20 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   trucha = `6a3837cbcadbc8dc8aa1012f23bcdc6e4138cf77`.
 - Esta corrección precede cualquier extracción de los dos personajes.
   Las cuatro referencias artísticas quedan correctamente identificadas.
+
+## Microtarea 13 — niño y trucha, primeros recursos candidatos (2026-11-08)
+- Cuatro poses aisladas en transparencias individuales, verificadas visualmente
+  contra sus fuentes **correctamente identificadas** y guardadas en commit
+  `292a59f`, sin sobrescribir originales:
+  - `gamberro_reposo_aislado_candidate.webp` — Git blob `6972ed933d87df5e36ecb36cf465d9ea78324723`
+  - `gamberro_lanzamiento_aislado_candidate.webp` — Git blob `fc171a6bb4b3a66b9c9fdf40187b0a1cd8441264`
+  - `trucha_nado_aislado_candidate.webp` — Git blob `293379c1fdc372ad7b28210ecf96e794a84d3170`
+  - `trucha_salto_aislado_candidate.webp` — Git blob `3e94c4976dd06bf48f2a7338499b4a11c2aee585`
+- Ruta para los cuatro: `assets/images/arga_rc7/enemies_candidates/`.
+  Formato 1254×1254 WebP **sin pérdida**, máscaras de transparencia y
+  SHA Git remoto idéntico al local. Las figuras y los efectos quedan
+  dentro del lienzo sin amputaciones visibles.
+- **No definitivas**: restan carrera/alerta/impacto/derrota del niño y
+  acelerar/preparar salto/impacto/derrota de la trucha; armonizar escala,
+  pivotes y efectos independientes; después integrar colisiones en QA stage 7.
+  Todavía no se han compilado ni probado en el motor.
