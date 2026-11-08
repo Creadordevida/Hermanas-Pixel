@@ -113,3 +113,12 @@ Próxima acción: obtener recortes de pixel art con alfa duro auténtico y borde
 - `.github/workflows/arga-rc7-qa.yml`, commit `5e97814`: preparado para ejecutar pruebas Flutter y `StagePainter` 20:9 con los atlas mediante disparador manual en runner estándar Ubuntu, sin APK. **No ejecutado aún** porque la integración GitHub de esta sesión no expone disparo de workflows y no hay CLI autenticado.
 - La auditoría alfa de los cuatro sigue BLOQUEANDO producción: esta integración opt-in es para poder observar y corregir errores reales, no para aprobar ni habilitar enemigos.
 - Próximo paso: ejecutar manualmente el workflow `Río Arga RC7 - QA Flutter 20:9 sin APK` sobre la rama actual; inspeccionar logs y PNG reales, corregir iterativamente. No fusionar PR.
+
+## QA Flutter auténtica con cuatro atlas — 2026-11-08
+
+- Repositorio público; ejecución `42504613482` (commit `f1c6aa0`) falló **únicamente** en `test/arga_rc7_real_render_test.dart`: esperaba salto de trucha tras dos updates cuando el modelo exige swim→accelerate→warning→leap. Análisis Flutter y 29 tests puros superados.
+- Test corregido **sin alterar físicas** en commit `90abd6d`; segundo disparo `285bb50`.
+- Ejecución `42504800762` **SUCCESS**: instalación Flutter 3.47.8, `pub get`, `flutter analyze --no-pub lib`, 29 pruebas unitarias, prueba real `StagePainter` con `TWC_ARGA_ATLAS_QA=true`, ocho capturas 1000×450 y salto de trucha. Imágenes conservadas por CI en commit `e9b2eef`, carpeta `qa/arga_rc7_flutter/`.
+- Inspección visual efectuada sobre `qa_340.png` (cangrejo en roca), `qa_810.png` (pescador + trucha en cauce), `qa_1250.png` (pescador junto a Miren), `qa_1950.png` (niño), `trout_leap_810.png` (salto real). Se distinguen las siluetas y se mantienen dentro del escenario, sin bandas horizontales largas visibles en esas tomas. La trucha aparece relativamente pequeña; escala y hitbox requieren comparación durante movimiento. No hay aprobación final.
+- **Limitaciones:** imágenes puntuales no equivalen a revisar los 96 fotogramas ni a partida Android. Alfa parcial detectado previamente continúa sin corregir; ataques, transiciones y pies deben evaluarse secuencialmente en cámara. No activar atlas por defecto ni habilitar mapa Arga.
+- **Próxima microfase:** captura controlada de varias fases temporales por enemigo en el render real (al menos alerta/ataque/impacto/derrota) y contraste con referencia; luego corrección de alfa y apoyo.
