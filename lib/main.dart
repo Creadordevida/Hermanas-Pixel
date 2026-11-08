@@ -1001,7 +1001,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           screen=Screen.gameOver;leftHeld=false;rightHeld=false;
         } else {
           hero=Character(checkpointX,y:ArgaCourse.surfaces.first.top);
-          argaSupport=ArgaCourse.surfaces.firstWhere(
+          argaSupport=ArgaCourse.allSurfaces.firstWhere(
             (s)=>s.checkpoint && (s.x+55-checkpointX).abs()<.01,
             orElse:()=>ArgaCourse.surfaces.first);
           argaSupportSince=time;
@@ -1362,7 +1362,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     _layoutStage();hero.x=cp;hearts=maxHeroHearts;
     if(stage==7) {
       hero.y=ArgaCourse.surfaces.first.top;
-      argaSupport=ArgaCourse.surfaces.firstWhere(
+      argaSupport=ArgaCourse.allSurfaces.firstWhere(
         (s)=>s.checkpoint && (s.x+55-cp).abs()<.01,
         orElse:()=>ArgaCourse.surfaces.first);
       argaSupportSince=time;
@@ -2705,7 +2705,7 @@ class StagePainter extends CustomPainter {
     final atlas=images['arga_supports'];
     if(atlas==null)return;
     final slice=atlas.width/4.0;
-    for(final footing in ArgaCourse.surfaces) {
+    for(final footing in ArgaCourse.allSurfaces) {
       final sx=footing.leftAt(time)-cameraX;
       if(sx>viewW+30 || sx+footing.width< -30)continue;
       final index=switch(footing.kind) {
