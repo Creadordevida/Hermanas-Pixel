@@ -36,3 +36,7 @@
 4. Ejecutar Flutter QA tras cualquier cambio; no activar los atlas en versión jugable, no APK ni merge sin cierre formal.
 
 `qa/audit_arga_atlas_frames.py --summary <cuatro rutas>` reproduce métricas; `qa/audit_arga_atlas_frames.py <rutas>` imprime los 96 registros detallados.
+
+## Contraste con capturas verdaderas de Flutter
+
+Se han abierto y examinado las capturas ya existentes `qa/arga_rc7_flutter/crab_pinch_frame_2.png`, `fisher_cast_frame_3.png`, `boy_throw_frame_2.png` y `trout_pose_frame_3.png` (1000×450, motor `StagePainter`, no imágenes conceptuales). Las cuatro siluetas conservan detalle visible a escala de partida y los fotogramas examinados no muestran grandes rectángulos de fondo incrustados ni amputación obvia. El niño aparece lanzando piedra con Miren cerca; el pescador extiende la caña desde la roca; el cangrejo pinza frente a Miren; la trucha se arquea sobre la plataforma del río. **Limitación:** son cuatro fotogramas representativos, no una reproducción completa ni revisión de los píxeles con contraste amplificado. Los bloques blancos del HUD corresponden presumiblemente al texto Ahem del test y requieren verificación específica si se van a usar estas capturas como aceptación de UI.
