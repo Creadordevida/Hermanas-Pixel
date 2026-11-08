@@ -104,3 +104,12 @@ Sobre los PNG generados de los cuatro atlas seleccionados (1024×1536 píxeles),
 Esto **bloquea los atlas como producción definitiva** aunque la geometría y diversidad básica pasen. A escala de juego pueden aparecer bordes suavizados/halos y la paleta mezclarse con el fondo. No pasar estas versiones a `assets/images/enemies_new/` ni al mapa normal; los WebP sin pérdida conservan fielmente esta limitación y los Q95 son solo previsualizaciones.
 
 Próxima acción: obtener recortes de pixel art con alfa duro auténtico y bordes estables, revisar 24 celdas de cada uno frente a la referencia aprobada, luego integrar con `FilterQuality.none` y capturas StagePainter 20:9 antes de habilitar. Ninguna prueba Flutter ejecutada.
+
+## Microfase: cuatro atlas conectados a QA Flutter (2026-11-08)
+
+- Repositorio verificado como **público**; GitHub Actions Ubuntu estándar no consume minutos facturables en repositorios públicos (no se presupone gratuidad de runners grandes o almacenamiento ilimitado).
+- `lib/main.dart`, commit `61d7b70`: `TWC_ARGA_ATLAS_QA=true` carga 4 atlas **candidatos** solo si `qaStage==7`; por defecto sigue dibujando las poses aisladas anteriores. Cangrejo/pescador usan WebP Q95 de revisión; gamberro v2/trucha v3 usan WebP sin pérdida. Se ajusta el anclaje visual del cangrejo y pescador para celdas 256×256; pendiente revisión en captura real.
+- `test/arga_rc7_real_render_test.dart`, commit `ee82040`: con define QA exige decodificar los 4 atlas en dimensiones 1024×1536; conserva capturas reales y pruebas de físicas del Arga.
+- `.github/workflows/arga-rc7-qa.yml`, commit `5e97814`: preparado para ejecutar pruebas Flutter y `StagePainter` 20:9 con los atlas mediante disparador manual en runner estándar Ubuntu, sin APK. **No ejecutado aún** porque la integración GitHub de esta sesión no expone disparo de workflows y no hay CLI autenticado.
+- La auditoría alfa de los cuatro sigue BLOQUEANDO producción: esta integración opt-in es para poder observar y corregir errores reales, no para aprobar ni habilitar enemigos.
+- Próximo paso: ejecutar manualmente el workflow `Río Arga RC7 - QA Flutter 20:9 sin APK` sobre la rama actual; inspeccionar logs y PNG reales, corregir iterativamente. No fusionar PR.
