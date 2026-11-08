@@ -9,3 +9,5 @@ Quinta ejecución: cuatro poses del cangrejo sin oclusión y comparación ROI.
 Sexta ejecución: cuatro fotogramas reales de lanzamiento del pescador.
 
 Séptima ejecución: recolocación vertical del pescador para apoyar pies.
+
+Octava ejecución: secuencia de cuatro fotogramas del niño gamberro.
