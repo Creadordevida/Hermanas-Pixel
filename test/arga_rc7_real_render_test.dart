@@ -18,7 +18,7 @@ void main() {
     final gameKey=GlobalKey();
     final boundaryKey=GlobalKey();
     try {
-      const positions=<double>[130,340,810,1250,1950];
+      const positions=<double>[130,340,810,1250,1950,12000,25000,35900];
       for(final x in positions) {
         await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
           key:boundaryKey,
