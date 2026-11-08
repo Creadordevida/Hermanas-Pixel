@@ -3,6 +3,11 @@ name: Río Arga RC7 - QA Flutter 20:9 sin APK
 # Repositorio público: runner Ubuntu estándar; usar con autorización del propietario.
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - .github/arga-atlas-qa-once-20261108.txt
 permissions:
   contents: write
 concurrency:
