@@ -190,3 +190,6 @@ QA #57 `42491177824` terminó SUCCESS (11 pruebas físicas, `flutter analyze`, r
 
 ### 2026-11-08 — Integración provisional del tercer enemigo Arga
 Niño gamberro conectado a QA-only: seis poses, alerta, piedra con subpasos, colisión y dos impactos de derrota. Commits `c55dd4c`, `49c63b2`, `df4c264`, tests `cdaa77e`, `9eda931`, `c7ecca8`. QA #58 `42492213266` superó análisis y física, pero test gráfico falló por `.name` dinámico; corregido `15ea687`; QA #59 `42492359121` en curso. Sin declaración visual ni APK; workflows manuales.
+
+### 2026-11-08 — QA de los cuatro enemigos del Arga
+Run #59 `42492359121` validó niño y piedra; captura real x1950 inspeccionada. Run #60 `42492684662` validó integración de trucha (lógica `01e82c3`, pruebas `c779029`, conexión `64b5323`, render `28ea1389`) y preservó ocho PNG auténticos (`8c66cc2`). Captura x810 muestra la trucha baja sobre el agua: ajuste pendiente. Falta secuencia completa de seis poses, escalas, HUD y partida en Android; **prototipo, no final**. Workflow solo manual commit `4d12bd4`, sin APK ni merge.
