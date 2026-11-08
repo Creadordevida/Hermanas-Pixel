@@ -38,7 +38,7 @@ void main(){
      await tester.binding.setSurfaceSize(pair.value);
      final key=GlobalKey();
      await tester.pumpWidget(MaterialApp(home:RepaintBoundary(key:key,
-      child:HermanasGame(key:ValueKey('${pair.key}-$isMap'),qaMap:isMap))));
+      child:HermanasGame(key:ValueKey('${pair.key}-$isMap'),qaMap:isMap,qaTitle:!isMap))));
      await waitReady(tester);
      await waitBitmaps(tester);
      await tester.pump(const Duration(milliseconds:120));
