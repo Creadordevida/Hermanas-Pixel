@@ -288,3 +288,22 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   aprobada; ningún capítulo 0–6 afectado.
 - **PENDIENTE**: fotogramas intermedios, trayectoria y colisión de piedra,
   regularizar escala y pivote, conexión al prototipo QA y pruebas ejecutadas.
+
+## Microtarea 15 — trucha, seis poses aisladas (2026-11-08)
+- Cuatro poses adicionales guardadas en commit `8386cb5`:
+  - `trucha_acelerar_aislado_candidate.webp` — `b225a6a488c240c9f35001a607496dda616ba82d`
+  - `trucha_alerta_aislado_candidate.webp` — `47ed321241891499baf264f6c5d9f1021db28705`
+  - `trucha_impacto_aislado_candidate.webp` — `3f29b05a85ed096f7f5547e7eb8af8194e508575`
+  - `trucha_derrota_aislado_candidate.webp` — `f9aa612a6fc8fb945a7627607825890976866690`
+- Con nado y salto (microtarea 13), la trucha tiene seis estados
+  individuales CANDIDATOS, comprobados por inspección visual,
+  WebP 1254×1254 sin pérdida, transparencias y SHA íntegros.
+  La lámina aprobada original no ha cambiado.
+- **ESTADO GLOBAL**: los cuatro enemigos del Arga (cangrejo, pescador,
+  gamberro y trucha) tienen seis poses clave candidatas cada uno (**24**).
+  Los cuatro requieren homogeneizar escala/pivotes, animación intermedia,
+  efectos y juego real; solo el cangrejo tiene integración inicial
+  exclusiva QA stage 7, NO validada. Los otros tres no se han integrado.
+- **SIGUIENTE**: unificar criterios de pivote/escala respecto a Miren y
+  Sara; preparar proyectil de piedra, anzuelo y salpicadura; continuar
+  conexiones de QA por separado y pruebas sin iniciar Actions.
