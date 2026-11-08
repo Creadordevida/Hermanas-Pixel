@@ -172,3 +172,6 @@ Por petición expresa del propietario, pausados triggers de `push`/`pull_request
 
 ### 2026-11-08 — Río Arga: preparación anzuelo pescador
 Commits `39ea03b` y `c0aaa2d`: modelo aislado de proyectil de pesca y cinco pruebas de contrato, integridad de archivos comprobada en rama PR5. Dart/Flutter no ejecutados, no render real, no cambio en otras etapas ni GitHub Actions. Pendiente conectar únicamente a QA stage 7 y revisar colisión durante frames lentos.
+
+### 2026-11-08 — Pescador Arga, conexión exclusiva QA
+`37388cc` conecta pescador y anzuelo al stage 7 de `main.dart`; `f04079d` añade pruebas de carga de seis poses y derrota por dos disparos. Marcador de anzuelo provisional, originales artísticos intactos. Guardado verificado en GitHub, sin ejecución Flutter/Actions ni APK. Aún no aprobado para el juego normal.
