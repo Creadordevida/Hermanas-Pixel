@@ -275,3 +275,16 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   acelerar/preparar salto/impacto/derrota de la trucha; armonizar escala,
   pivotes y efectos independientes; después integrar colisiones en QA stage 7.
   Todavía no se han compilado ni probado en el motor.
+
+## Microtarea 14 — niño gamberro, seis poses aisladas (2026-11-08)
+- Cuatro poses adicionales añadidas en commit `54d569e`:
+  - `gamberro_correr_aislado_candidate.webp` — `77cda45f7d4f9066fbe852ba3a78fc62af14f051`
+  - `gamberro_alerta_aislado_candidate.webp` — `0221548ec5ec03e1fb6975842b00da6561e5355d`
+  - `gamberro_impacto_aislado_candidate.webp` — `e68d2b7cd550bf4e14d6ac8392e58a2c58ea5a0f`
+  - `gamberro_derrota_aislado_candidate.webp` — `157818305a6e2b9dbd834716b56d807904dab68b`
+- Junto a reposo y lanzamiento (microtarea 13), son **seis imágenes
+  candidatas sin recortes visibles**, WebP lossless 1254×1254,
+  comprobadas visualmente y con identidad coherente. Conservada la lámina
+  aprobada; ningún capítulo 0–6 afectado.
+- **PENDIENTE**: fotogramas intermedios, trayectoria y colisión de piedra,
+  regularizar escala y pivote, conexión al prototipo QA y pruebas ejecutadas.
