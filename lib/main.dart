@@ -644,6 +644,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
             key == 'arga_mid_mill' || key == 'arga_supports' ||
             key == 'arga_supports_v2' ||
             key.startsWith('arga_crab_') ||
+            key.startsWith('arga_fisher_') ||
             ['coin','ball','comb'].contains(key) ||
             key.startsWith('futbolista_') || key.startsWith('bailarina_') ||
             key.startsWith('costume_') || key.startsWith('padre_');
