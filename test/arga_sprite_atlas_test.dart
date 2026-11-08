@@ -18,15 +18,30 @@ void main() {
     }
   });
 
+  test('rows with fewer verified frames never select empty atlas cells', () {
+    expect([for (var i = 0; i < 6; i++)
+      ArgaSpriteAtlas.frame(poseRow: 1, elapsed: i / 9, activeFrames: 2)],
+      [0, 1, 0, 1, 0, 1]);
+    expect([for (var i = 0; i < 6; i++)
+      ArgaSpriteAtlas.frame(poseRow: 3, elapsed: i / 9, activeFrames: 2)],
+      [0, 1, 1, 1, 1, 1]);
+    expect(ArgaSpriteAtlas.frame(poseRow: 5, elapsed: 100,
+      activeFrames: 1), 0);
+  });
+
   test('new pose restarts its animation from the first frame', () {
     expect(ArgaSpriteAtlas.frame(poseRow: 3, elapsed: 0), 0);
     expect(ArgaSpriteAtlas.frame(poseRow: 0, elapsed: 0), 0);
   });
 
-  test('invalid row and time are rejected', () {
+  test('invalid row, frame count and time are rejected', () {
     expect(() => ArgaSpriteAtlas.frame(poseRow: 6, elapsed: 0),
         throwsRangeError);
     expect(() => ArgaSpriteAtlas.frame(poseRow: 0, elapsed: -1),
         throwsArgumentError);
+    expect(() => ArgaSpriteAtlas.frame(poseRow: 0, elapsed: 0,
+        activeFrames: 0), throwsRangeError);
+    expect(() => ArgaSpriteAtlas.frame(poseRow: 0, elapsed: 0,
+        activeFrames: 5), throwsRangeError);
   });
 }
