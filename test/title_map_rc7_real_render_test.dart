@@ -49,6 +49,25 @@ void main(){
       try {
        final data=await img.toByteData(format:ui.ImageByteFormat.png);
        if(data==null)throw StateError('No pixels');
+       // Evidence comes from Flutter's REAL composited frame, never a
+       // manually opened background or a newly generated illustration.
+       if(pair.key=='20_9'){
+        final rgba=await img.toByteData(format:ui.ImageByteFormat.rawRgba);
+        if(rgba==null)throw StateError('No raw pixels');
+        final bytes=rgba.buffer.asUint8List();
+        int pixel(int x,int y){
+         final o=(y*img.width+x)*4;
+         return (bytes[o]<<16)|(bytes[o+1]<<8)|bytes[o+2];
+        }
+        final left=<int>{},right=<int>{};
+        for(final y in [55,120,225,330,420]){
+         left.add(pixel(7,y));
+         right.add(pixel(img.width-8,y));
+        }
+        if(left.length<4||right.length<4){
+         throw StateError('20:9 edge still painted as a flat letterbox: $isMap');
+        }
+       }
        final out=File('qa/title_map_rc7_flutter/${isMap?'map':'title'}_${pair.key}.png');
        await out.parent.create(recursive:true);
        await out.writeAsBytes(data.buffer.asUint8List(),flush:true);
