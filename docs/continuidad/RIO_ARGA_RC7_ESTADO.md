@@ -145,3 +145,18 @@ capítulo. Puede realizarse sin suscripción adicional a GitHub.
 
 - Banco final ancho: dibujo por piezas de ~190 unidades para mantener escala
   pixel art coherente sin estirar una roca a 500 px; commit `1af79d4`.
+
+## Progresión de dificultad — sin Flutter (2026-11-08)
+- Curso por tres escalones: 24 apoyos ampliados fáciles (hueco medio aprox.
+  65 px), 56 intermedios (75,5 px) y tramo final exigente (aprox. 84 px).
+  Los checkpoints ampliados son rocas grandes y estables, sin hundirse ni
+  desplazarse. Commit `05d40ee`.
+- Simulación de las mismas reglas de generación: **135 apoyos totales**,
+  final x=36.620, hueco máximo con deriva de troncos 118 px, sin saltos
+  fuera del alcance plano calculado de ~148,9 px. Esto es comprobación
+  numérica, no una prueba Flutter.
+- Tests Dart para progresión ascendente y seguridad de checkpoints,
+  commit `766af11` (sin ejecutar).
+- Rocas hundibles: aviso visual de temblor entre 0,30 y 0,60 s de ocupación;
+  corrección a desplazamiento entero para preservar pixel art. Commits
+  `4986a28`, `8192748`.
