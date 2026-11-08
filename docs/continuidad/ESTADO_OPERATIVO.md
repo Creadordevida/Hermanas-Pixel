@@ -198,3 +198,7 @@ Archivos `lib/arga_boy_behavior.dart` c55dd4c, `lib/arga_stone_projectile.dart` 
 
 ### 2026-11-08 — Río Arga: cuatro enemigos en QA real; falta animación final
 Runs #59 `42492359121` y #60 `42492684662` **SUCCESS** en Flutter: analizador, comportamiento y render real 20:9. Niño visible en `qa_1950.png`; trucha en `qa_810.png`, demasiado baja en agua. Trucha lógica `01e82c3`, test `c779029`, integración `64b5323`, render test `28ea1389`, workflow `b7983e5`. Ocho PNG de #60 commit bot `8c66cc2`. Cuatro enemigos conectados solo stage 7, sin atlas animado definitivo, Android ni juego completo. Todos los workflows manuales tras `4d12bd4`.
+
+## 2026-11-08 — Río Arga, microfase incremental de animación
+
+Rama `work/revision-visual-20261028-continuidad`. Selector de fotogramas ajustado para admitir filas de 1–4 dibujos reales sin acceder a celdas vacías (`lib/arga_sprite_atlas.dart`, commit `e4c197b`) y pruebas adicionales versionadas (`test/arga_sprite_atlas_test.dart`, commit `4f02cd2`). Evidencia: commits y lectura de código en GitHub; NO se ejecutó Flutter/Dart, NO se generaron atlas definitivos ni capturas StagePainter. Restricciones intactas: no Actions de pago, APK, merge, activación del Arga ni cambios en capítulos 0–6. Pendiente: inspección artística y fotogramas intermedios del cangrejo, después pescador, niño y trucha.
