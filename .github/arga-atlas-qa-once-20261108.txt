@@ -19,3 +19,5 @@ Décima ejecución: seis poses del cangrejo en capturas reales.
 Undécima ejecución: último fotograma de derrota del cangrejo.
 
 Duodécima ejecución: las seis poses del pescador.
+
+Decimotercera ejecución: seis poses del niño gamberro.
