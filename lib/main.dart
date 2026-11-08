@@ -1672,17 +1672,6 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       for(int i=0;i<mapHitboxesOriginal.length;i++)
         transparentTap(mapHitboxesOriginal[i],()=>_selectChapter(i),
           'Capítulo ${i+1}: ${chapterNames[i]}'),
-      if (twcArgaNextVersionEnabled)
-        Positioned(right:16,bottom:14,child:OutlinedButton(
-          onPressed:()=>_selectChapter(7),
-          style:OutlinedButton.styleFrom(
-            backgroundColor:const Color(0xee08335c),
-            foregroundColor:Colors.white,
-            side:const BorderSide(color:Color(0xffffdb72),width:2),
-            padding:const EdgeInsets.symmetric(horizontal:16,vertical:10)),
-          child:const Text('8 · RÍO ARGA',
-            style:TextStyle(fontWeight:FontWeight.w900,fontSize:13)),
-        )),
       // MENU is already part of the original image, not another overlay.
       transparentTap(const Rect.fromLTWH(45,790,255,145),_returnTitle,'Menú'),
       // Replace only the baked-in example counter; position relative to the
@@ -1699,6 +1688,20 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
               fontWeight:FontWeight.w900)),
         ),
       ),
+      // New stage entry sits over the river, clear of the baked-in menu
+      // and the dynamic completion counter. It is painted last so it cannot
+      // be hidden behind either overlay.
+      if (twcArgaNextVersionEnabled)
+        Positioned(left:viewW*.48,bottom:12,child:OutlinedButton(
+          onPressed:()=>_selectChapter(7),
+          style:OutlinedButton.styleFrom(
+            backgroundColor:const Color(0xee08335c),
+            foregroundColor:Colors.white,
+            side:const BorderSide(color:Color(0xffffdb72),width:2),
+            padding:const EdgeInsets.symmetric(horizontal:16,vertical:10)),
+          child:const Text('8 · RÍO ARGA',
+            style:TextStyle(fontWeight:FontWeight.w900,fontSize:13)),
+        )),
     ]);
   }
 
