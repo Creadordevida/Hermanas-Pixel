@@ -183,3 +183,6 @@ Archivos `lib/arga_hook_projectile.dart` (`39ea03b`) y `test/arga_hook_projectil
 
 ### 2026-11-08 — GitHub Actions pública operativa; primer QA Arga falla en warning
 Una ejecución aislada `42490249834` de `arga-rc7-qa.yml` arrancó runner Ubuntu, configuró Flutter y resolvió dependencias. Falló en `flutter analyze` por `unnecessary_non_null_assertion` línea 2905, por lo que los tests y ocho capturas no se ejecutaron. Corregido en commit `9021548`, pendiente verificar en ejecución posterior. Trigger temporal revertido en `d5d72af`, todos los workflows manuales; no APK. Ver `RIO_ARGA_RC7_ESTADO.md`.
+
+### 2026-11-08 — Segundo QA Arga: análisis correcto, test checkpoint fallido y corregido sin reejecución
+Run [42490644673](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42490644673), job `128762027854`: análisis Flutter superado; tests `10 passed / 1 failed`, `checkpointBefore` esperaba x=110 y devolvía 55 por el checkpoint inicial. `lib/arga_platform_rules.dart` corregido con `math.max(startX, s.x + 55)` commit `1b2c739`, verificado en repo, **aún no probado en Flutter**. Capturas auténticas no generadas; workflow Arga restaurado a solo manual (`87899db`); sin APK ni merge. Próxima acción: QA controlado con permiso y luego inspección de ocho PNG. Véase `RIO_ARGA_RC7_ESTADO.md`.
