@@ -230,3 +230,8 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 - Workflow modificado en `5efdc6e`, ejecución `42512247059` disparada en `32a5f44`, pendiente de resultado y corrección de trayectoria/colisión si falla. No se declara listo el pescador aún.
 
 - Decimonovena ejecución `42512247059` **SUCCESS**. `test/arga_fisher_gameplay_hook_test.dart` probó el ciclo **natural** del pescador en bucle Flutter: alerta, lanzamiento de anzuelo real con parábola, contacto sobre Miren en la roca, corazones 5→4 y ausencia de daños repetidos en 18 fotogramas. No se reposicionó artificialmente el anzuelo. Captura auténtica `qa/arga_rc7_flutter/arga_fisher_after_hook.png` guardada por QA bot en `24669e8`, HUD con cuatro corazones y Miren oculta transitoriamente por parpadeo de daño; la posición se comprueba por el motor y no solo la imagen. Pendientes: piedra del niño, contacto de trucha, ambos personajes y alfa.
+
+### Integración jugable: piedra natural del niño gamberro
+
+- `test/arga_boy_gameplay_stone_test.dart` añadido en `e76fb23`: sitúa a Miren x=1980 sobre la roca del niño y deja avanzar el bucle Flutter para aviso (.7s), lanzamiento (.2s), trayectoria real de piedra con comprobación de colisión y corazones 5→4, sin daño repetido. No reposiciona artificialmente la piedra. Imagen `arga_boy_after_stone.png` si pasa.
+- CI `15350a9`, ejecución `42512610207` lanzada desde `02fa32e`, resultado pendiente. Si falla, revisar x/y de trayecto y hitbox antes de aprobar.
