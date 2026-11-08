@@ -10,6 +10,7 @@ import 'package:hermanas_aventura/main.dart';
 import 'package:hermanas_aventura/arga_platform_rules.dart';
 import 'package:hermanas_aventura/arga_crab_behavior.dart';
 import 'package:hermanas_aventura/arga_fisher_behavior.dart';
+import 'package:hermanas_aventura/arga_boy_behavior.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -114,7 +115,7 @@ void main() {
             await tester.pump(const Duration(milliseconds:33));
             expect(game.argaBoyHits,hit);
           }
-          expect(game.argaBoy.pose.name,'defeated');
+          expect(game.argaBoy.pose,ArgaBoyPose.defeated);
 
           // Actual game ticker: moving log carries the hero while grounded.
           game.hero=Character(1060,y:365);
