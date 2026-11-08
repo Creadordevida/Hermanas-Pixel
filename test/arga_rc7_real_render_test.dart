@@ -33,6 +33,8 @@ void main() {
           if(game.resourcesReady==true) {ready=true;break;}
         }
         expect(ready,isTrue,reason:'Arga WebP decode failed');
+        expect(game.stage,7);
+        expect(game.argaCourse.allGapsReachable,isTrue);
         final painters=tester.widgetList<CustomPaint>(find.byType(CustomPaint))
           .where((p)=>p.painter is StagePainter &&
             (p.painter! as StagePainter).stage==7);
