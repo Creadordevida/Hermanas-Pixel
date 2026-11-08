@@ -27,3 +27,8 @@ En RC7, la portada se pintaba centrada con `AspectRatio(800/450)` y fondo latera
 
 ## Aprendizaje reutilizable
 No confundir `BoxFit.contain` sobre un fondo plano con soporte panorámico. Los menús exigen arte perimetral extra, un único bitmap canónico, transformación de controles en el mismo sistema de coordenadas y captura del widget **real** como evidencia.
+## Resultado de QA real (08-11-2026)
+- Ejecución `42462533678`: **SUCCESS**. Flutter analyze, pruebas de geometría y botones, y seis capturas auténticas de Flutter superadas. Ver https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42462533678.
+- Capturas guardadas bajo `qa/title_map_rc7_flutter/` (title/map en 16:9, 19.5:9 y 20:9), con prueba cromática de ambos extremos a 20:9.
+- Los seis recursos PNG de QA se han verificado por su SHA en la rama tras el push del propio workflow.
+- **Falta aceptación visual humana y prueba en Redmi Note 14.** No sustituye la inspección de la siguiente APK.
