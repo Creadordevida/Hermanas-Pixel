@@ -16,6 +16,7 @@ import 'chapter_one_camera_v3.dart';
 import 'creature_sheet_bounds.dart';
 import 'animal_sprite_bounds.dart';
 import 'jump_visuals.dart';
+import 'arga_crossing.dart';
 import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
@@ -362,6 +363,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   Character otherSister = Character(190);
   final List<Obstacle> obstacles = [];
   final List<Rect> platforms = [];
+  List<ArgaFooting> argaFootings = const [];
   final List<Offset> coins = [];
   final List<Enemy> enemies = [];
   final List<Projectile> shots = [];
@@ -669,6 +671,15 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _layoutStage() {
     obstacles.clear(); platforms.clear(); coins.clear(); enemies.clear();
     collected.clear(); shots.clear();
+    argaFootings = const [];
+    if (stage == 7) {
+      // Independent playable collision prototype; release remains art-gated.
+      argaFootings = ArgaCrossing.firstSection();
+      hero=Character(145);otherSister=Character(230);father=Character(67);
+      cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
+      levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
+      return;
+    }
     if (stage == 0) {
       _layoutNeighborhood();
       if(isEnemyPlayableInBuild('slipper_neighbor')) {
@@ -929,7 +940,26 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         hero.y=box.bottom+actorHeight;hero.vy=0;
       }
     }
-    if(hero.y>=groundY){hero.y=groundY;hero.vy=0;hero.grounded=true;}
+    if(stage == 7) {
+      // Solid footing exists only over the authored rocks, wood and banks.
+      if(hero.vy>=0 && prevY<=ArgaCrossing.landingY &&
+          hero.y>=ArgaCrossing.landingY &&
+          ArgaCrossing.supported(hero.x, argaFootings)) {
+        hero.y=ArgaCrossing.landingY;hero.vy=0;hero.grounded=true;
+      }
+      if(ArgaCrossing.fellInWater(footX:hero.x,footY:hero.y,
+          verticalVelocity:hero.vy,footings:argaFootings)) {
+        hearts=heartsAfterDamage(hearts);
+        if(hearts==0) {
+          screen=Screen.gameOver;leftHeld=false;rightHeld=false;
+        } else {
+          hero=Character(checkpointX);
+          cameraX=(checkpointX-viewW*.375).clamp(0.0,stageWidth-viewW).toDouble();
+          hero.hurtUntil=time+1.0;
+        }
+        _save();
+      }
+    } else if(hero.y>=groundY){hero.y=groundY;hero.vy=0;hero.grounded=true;}
     if(!wasGrounded && hero.grounded && speedBeforeLanding > 65) {
       hero.landedAt=time;
       hero.landingStrength=(speedBeforeLanding/440).clamp(.45,1.0).toDouble();
