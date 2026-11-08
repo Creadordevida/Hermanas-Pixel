@@ -1,13 +1,9 @@
 name: Miren Sara RC5 - SOLUCION pantalla completa 16a9 20a9
 # One-shot authorized trigger file; all other pushes do NOT build.
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - work/revision-visual-20261028-continuidad
-    paths:
-      - .github/trigger-fullscreen-rc5.txt
-
 permissions:
   contents: write
 
