@@ -65,3 +65,11 @@ Actualmente `StagePainter` selecciona **una imagen aislada por estado**. No exis
 - Creada versión separada `assets/images/arga_rc7/enemies_candidates/cangrejo_caminar_limpieza_v2_candidate.webp`, WebP sin pérdida de la prueba de limpieza; mantiene la orientación lateral y elimina las bandas largas. Commit remoto `1484786`, blob `0f59ec2c27e14fc07a9a02416d8c5e983903c23c`.
 - Ambos archivos son **candidatos**, no sprites finales; requieren comparar paleta, contorno duro, alfa, escala y pies con referencias, y después crear ciclos de varios fotogramas distintos. No hay integración StagePainter, pruebas Flutter ni aprobación final.
 - Siguiente microfase: revisar y limpiar alerta, pinzazo, impacto y derrota; inspección conjunta de seis siluetas antes de normalizar celda y producir animación de locomoción. Mantener originales intactos.
+
+## Microfase atlas de cangrejo — primer atlas 24 fotogramas (2026-11-08)
+
+- Creado un **atlas candidato real** de seis filas de cuatro fotogramas: reposo, desplazamiento, alerta, ataque de pinzas, impacto y derrota. No es un atlas definitivo ni sustituto de referencia original.
+- Archivo de revisión en GitHub: `assets/images/arga_rc7/enemies_candidates/cangrejo_atlas_4x6_v1_candidate_q95.webp`, commit `76741f1`, blob `0f7dfe8bf4aa56c3c52f36d7ee9b11b5bc6e6230`. Es una copia WebP Q95 con pérdida **solo para QA**; PNG generado 1024×1536 y versión WebP sin pérdida quedan locales, no incorporados al motor.
+- Auditoría automatizada de la imagen generada: 24/24 celdas con contenido alfa ≥128; todas las cajas delimitadoras quedan dentro de su celda de 256×256 con margen ≥16 px. Se detectaron 323147 píxeles de alfa parcial bajo 128, por lo que el contorno requiere limpieza. No se ha comprobado todavía igualdad de paleta, anclaje exacto de pies ni diversidad de fotogramas en escala real del juego.
+- **No habilitar** `arga_crab_atlas` todavía: no hay PNG definitivo integrado, ni Flutter / StagePainter 20:9, ni aprobación artística; originales aprobados y demás capítulos intactos.
+- Próxima microfase: revisar diversidad y alineación de las 24 celdas, limpiar alfa y generar atlas de producción sin pérdida. Después integrar únicamente en QA stage 7 y ejecutar pruebas cuando se autorice Flutter. Continuar atlas de pescador, niño y trucha con idéntico proceso.
