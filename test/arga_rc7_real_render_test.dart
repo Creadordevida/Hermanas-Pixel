@@ -65,6 +65,11 @@ void main() {
             reason:'Missing independent fisherman pose $pose');
         }
         expect(game.argaFisher,isNotNull);
+        for(final pose in ['reposo','correr','alerta','lanzamiento','impacto','derrota']) {
+          expect(game.images['arga_boy_$pose'],isNotNull,
+            reason:'Missing independent stone thrower pose $pose');
+        }
+        expect(game.argaBoy,isNotNull);
 
         await tester.pump(const Duration(milliseconds:16));
         final boundary=boundaryKey.currentContext!.findRenderObject()!
@@ -101,6 +106,15 @@ void main() {
             expect(game.argaFisherHits,hit);
           }
           expect(game.argaFisher.pose,ArgaFisherPose.defeated);
+
+          // Player projectiles interrupt and defeat the QA stone-thrower.
+          expect(game.argaBoyHits,0);
+          for(var hit=1;hit<=2;hit++) {
+            game.shots.add(Projectile(x:game.argaBoy.x,y:310,vx:0,kind:'ball'));
+            await tester.pump(const Duration(milliseconds:33));
+            expect(game.argaBoyHits,hit);
+          }
+          expect(game.argaBoy.pose.name,'defeated');
 
           // Actual game ticker: moving log carries the hero while grounded.
           game.hero=Character(1060,y:365);
