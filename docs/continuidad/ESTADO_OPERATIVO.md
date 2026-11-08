@@ -214,3 +214,7 @@ En GitHub: WebP sin pérdida 4×6 de trucha v3 y gamberro v2, commit `55fb52a`; 
 ## 2026-11-08 — Arga: conexión experimental de atlas a Flutter
 
 Commits `61d7b70` (`main.dart` carga de cuatro atlas solo con `TWC_ARGA_ATLAS_QA` y `qaStage:7`), `ee82040` (test de decodificación), `5e97814` (workflow de QA 20:9 preparado con define). Repositorio público confirmado. No se han ejecutado Flutter/Actions ni generado APK; la integración conserva el fallback original. Bloqueo: falta lanzar manualmente el workflow, revisar render auténtico y reparar alfa/escala/fluidez. Referencia ampliada en `docs/continuidad/ARGA_ENEMIGOS_ANIMACIONES_2026-11-08.md`.
+
+## 2026-11-08 — Arga: Flutter real con atlas 4×6 verificado
+
+QA pública gratuita en runner Ubuntu. Run `42504613482` falló por test que omitía la transición accelerate→warning de trucha, no por error de carga del atlas. Corrección mínima de test `90abd6d`. Run `42504800762` **SUCCESS**: Flutter analyze, 29 pruebas unitarias, `StagePainter` con los cuatro atlas, 8 capturas 1000×450 y salto real de trucha. PNG versionados en `qa/arga_rc7_flutter/` commit `e9b2eef`; revisión visual de cinco capturas registrada en `docs/continuidad/ARGA_ENEMIGOS_ANIMACIONES_2026-11-08.md` commit `4375ea5`. Arte aún candidato: alfa parcial y revisión de 96 fotogramas, ataques, escala y pies pendientes. No APK ni merge.
