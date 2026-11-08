@@ -16,6 +16,7 @@ flutter:
   assets:
     - assets/images/title_approved.png
     - assets/images/title_cars_fixed_091.png
+    - assets/images/title_wide_20x9_approved.webp
     - assets/images/twc_mark_from_tiku.png
     - assets/images/twc_title_mark_clean.png
     - assets/images/twc_corporate_verified_091.png
