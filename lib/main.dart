@@ -2902,7 +2902,7 @@ class StagePainter extends CustomPainter {
       // Every third platform uses a distinct approved-candidate silhouette,
       // with no change to world hitboxes or jump reach.
       final alternate=alternateAtlas!=null && surfaceIndex%3==1;
-      final atlas=alternate?alternateAtlas!:originalAtlas;
+      final atlas=alternate?alternateAtlas:originalAtlas;
       final slice=atlas.width/4.0;
       final sx=footing.leftAt(time)-cameraX;
       if(sx>viewW+30 || sx+footing.width< -30)continue;
