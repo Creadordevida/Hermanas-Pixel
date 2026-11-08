@@ -989,7 +989,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         }
       }
       if(support==null && hero.vy>=0) {
-        for(final item in ArgaCourse.surfaces) {
+        for(final item in ArgaCourse.allSurfaces) {
           final elapsed=identical(argaSupport,item)
               ? time-argaSupportSince : 0.0;
           final top=item.topAt(time,elapsed);
