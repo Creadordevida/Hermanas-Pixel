@@ -169,3 +169,6 @@ Commit `02c0676` crea `scripts/check_arga_24_candidates.py`: verifica formato/tr
 
 ### 2026-11-08 — Eliminada activación automática de QA en PR #5
 Por petición expresa del propietario, pausados triggers de `push`/`pull_request` en 25 workflows de `.github/workflows`; ahora todos usan `workflow_dispatch`. Comprobación por lectura GitHub 25/25; último commit `94b5d6e`. No se ejecutó Actions, no se gastó deliberadamente, no se compiló APK. El consumo histórico por ejecuciones previas queda sin cuantificar. Las pruebas permanecen recuperables para futura reactivación bajo autorización.
+
+### 2026-11-08 — Río Arga: preparación anzuelo pescador
+Commits `39ea03b` y `c0aaa2d`: modelo aislado de proyectil de pesca y cinco pruebas de contrato, integridad de archivos comprobada en rama PR5. Dart/Flutter no ejecutados, no render real, no cambio en otras etapas ni GitHub Actions. Pendiente conectar únicamente a QA stage 7 y revisar colisión durante frames lentos.
