@@ -40,8 +40,13 @@ se conservan temporalmente, sin referencias en `main.dart`, hasta cerrar QA.
 10. `lib/main.dart`: QA `stage==7` carga/dibuja planos lejanos y medios con velocidades distintas y apoyos a velocidad 1:1. Se eliminó la decodificación superpuesta del panorama descartado. Agua visible con pequeños brillos animados; commits `230fc64`, `47eee5e`, `c5ade03`.
 11. `test/arga_rc7_real_render_test.dart`: comprueba ambas capas y ausencia del panorama antiguo duplicado, commit `3b26d23`.
 
+12. `lib/arga_platform_rules.dart`: curso extendido determinísticamente hasta 36.500 unidades, huecos comprobables, variedad de tipos y checkpoints; orilla final sólida. Commits `9413b04`, `a31406c`.
+13. `lib/main.dart`: renderiza todo el curso, no guarda checkpoints genéricos en huecos, añade monedas sobre apoyos y limita el desplazamiento de capas para que no aparezcan áreas vacías. Commits `c9455cd`, `233b9c1`, `caf5a26`, `51d2a08`.
+14. `test/arga_platform_rules_test.dart`: tests de curso completo, checkpoints y llegada sobre suelo firme, commits `dc0846a`, `b9e995d`.
+15. `test/arga_rc7_real_render_test.dart` y workflow: ocho capturas 20:9, desde inicio hasta zona final; commits `43d91b3`, `be0a122`.
+
 ## Estado: NO validado
-- La prueba automatizada específica del Arga aún no tiene resultado confirmado. El nuevo workflow no figura entre los runs asociados al commit; otros siete workflows del repositorio aparecen fallidos pero sus jobs no devuelven pasos ni logs (no hay base para atribuirlo al código).
+- El workflow de Arga **sí existe y se ejecuta** (identificado por check-run `arga-prototype`), pero aparece fallido a los pocos segundos y sin pasos/logs recuperables. Los workflows ajenos fallan del mismo modo. **No hay evidencia de compilación ni captura real**, y tampoco evidencia suficiente para atribuir el fallo al código. Revisar la anotación de GitHub Actions al disponer de ella.
 - No hay capturas reales revisadas visualmente del Arga.
 - Fondo, vegetación y soportes son una prueba auxiliar, no recursos finales aprobados. El agua tiene brillos dinámicos pero necesita validar su movimiento y continuidad real.
 - Movimiento y hundimiento ya codificados, pero aún no verificados en Flutter; faltan agua animada, capas reales
@@ -56,5 +61,7 @@ se conservan temporalmente, sin referencias en `main.dart`, hasta cerrar QA.
    personajes duplicados ni artefactos en los límites del panorama.
 3. Completar cinemática de tronco móvil, hundimiento de roca y checkpoints;
    validar aterrizajes de Miren y Sara y muerte real en cada hueco.
-4. Ampliar por secciones y verificar una partida completa antes de habilitar
-   capítulo 8 en el mapa.
+4. Revisar visualmente y completar variantes artísticas para los tramos largos
+   (las capas actuales se fijan al agotar su recorrido para evitar huecos, pero
+   no constituyen fondos definitivos de 36.500 px). Verificar una partida
+   completa antes de habilitar capítulo 8 en el mapa.
