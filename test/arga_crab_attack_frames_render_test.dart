@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show listEquals;
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,7 +60,7 @@ void main() {
         });
       }
       for (var frame = 1; frame < samples.length; frame++) {
-        expect(samples[frame], isNot(samples[frame - 1]),
+        expect(listEquals(samples[frame], samples[frame - 1]), isFalse,
             reason: 'Consecutive real pinch renders must differ');
       }
     } finally {
