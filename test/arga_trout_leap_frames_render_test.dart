@@ -73,6 +73,30 @@ void main() {
         expect(listEquals(regions[i], regions[i - 1]), isFalse,
             reason: 'Trout source atlas leap frames must visibly change');
       }
+      // Capture six atlas states with correct water/air anchor for visual QA.
+      for (final pose in ArgaTroutPose.values) {
+        game.setState(() {
+          game.argaTrout.pose = pose;
+          game.argaTrout.y = pose == ArgaTroutPose.leap ? 340.0 : 417.0;
+          game.argaTrout.elapsed =
+              pose == ArgaTroutPose.defeated ? 3 / 9.0 : 1 / 9.0;
+        });
+        await tester.pump();
+        final boundary = imageKey.currentContext!.findRenderObject()!
+            as RenderRepaintBoundary;
+        expect(boundary.debugNeedsPaint, isFalse);
+        await tester.runAsync(() async {
+          final picture = await boundary.toImage(pixelRatio: 1);
+          try {
+            final data = await picture.toByteData(format: ui.ImageByteFormat.png);
+            expect(data, isNotNull);
+            final file = File('qa/arga_rc7_flutter/trout_state_${pose.name}.png');
+            await file.parent.create(recursive: true);
+            await file.writeAsBytes(data!.buffer.asUint8List(), flush: true);
+            expect(await file.length(), greaterThan(10000));
+          } finally { picture.dispose(); }
+        });
+      }
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.binding.setSurfaceSize(null);
