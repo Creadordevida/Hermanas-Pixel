@@ -1009,10 +1009,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         if(hearts==0) {
           screen=Screen.gameOver;leftHeld=false;rightHeld=false;
         } else {
-          hero=Character(checkpointX,y:ArgaCourse.surfaces.first.top);
           argaSupport=ArgaCourse.allSurfaces.firstWhere(
             (s)=>s.checkpoint && (s.x+55-checkpointX).abs()<.01,
             orElse:()=>ArgaCourse.surfaces.first);
+          hero=Character(checkpointX,y:argaSupport!.topAt(time,0));
           argaSupportSince=time;
           cameraX=(checkpointX-viewW*.375).clamp(0.0,stageWidth-viewW).toDouble();
           hero.hurtUntil=time+1.0;
@@ -1374,10 +1374,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     final cp=checkpointX;
     _layoutStage();hero.x=cp;hearts=maxHeroHearts;
     if(stage==7) {
-      hero.y=ArgaCourse.surfaces.first.top;
       argaSupport=ArgaCourse.allSurfaces.firstWhere(
         (s)=>s.checkpoint && (s.x+55-cp).abs()<.01,
         orElse:()=>ArgaCourse.surfaces.first);
+      hero.y=argaSupport!.topAt(time,0);
       argaSupportSince=time;
     }
     cameraX=(cp-viewW*.375).clamp(0.0,stageWidth-viewW).toDouble();
