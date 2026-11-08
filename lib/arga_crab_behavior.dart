@@ -6,9 +6,13 @@ enum ArgaCrabPose { idle, sideways, warning, pinch, hurt, defeated }
 enum ArgaCrabImpact { none, pincers }
 
 class ArgaCrabMotion {
-  ArgaCrabMotion(this.home) : x = home;
+  ArgaCrabMotion(this.home, {double? minX, double? maxX})
+      : minX = minX ?? home - patrolLimit,
+        maxX = maxX ?? home + patrolLimit,
+        x = home;
 
   final double home;
+  final double minX, maxX;
   double x;
   int facing = -1;
   ArgaCrabPose pose = ArgaCrabPose.idle;
@@ -90,7 +94,7 @@ class ArgaCrabMotion {
       facing = heroX >= x ? 1 : -1;
       _transition(ArgaCrabPose.sideways);
       x += facing * 36 * dt;
-      x = x.clamp(home - patrolLimit, home + patrolLimit).toDouble();
+      x = x.clamp(minX, maxX).toDouble();
     } else {
       _transition(ArgaCrabPose.idle);
     }
