@@ -180,3 +180,6 @@ Archivos `lib/arga_hook_projectile.dart` (`39ea03b`) y `test/arga_hook_projectil
 
 ### 2026-11-08 — Pescador Arga integrado en prototipo QA, no validado
 `lib/main.dart` commit `37388cc`: seis poses, instancia en quinta roca numerada desde cero, lanzamiento de anzuelo con marcador provisional, interrupción y derrota en dos impactos, todo bajo `stage 7` de QA no accesible por mapa. Test `test/arga_rc7_real_render_test.dart` ampliado en `f04079d`, solo escrito y no ejecutado. Archivo remoto confirmado. Pendientes Flutter, barrido de colisión, escala real, atlas final y captura StagePainter. GitHub Actions permanecen manuales y no se generó APK. Véase `ARGA_ENEMIGOS_RC7_ESTADO.md` microtarea 18.
+
+### 2026-11-08 — GitHub Actions pública operativa; primer QA Arga falla en warning
+Una ejecución aislada `42490249834` de `arga-rc7-qa.yml` arrancó runner Ubuntu, configuró Flutter y resolvió dependencias. Falló en `flutter analyze` por `unnecessary_non_null_assertion` línea 2905, por lo que los tests y ocho capturas no se ejecutaron. Corregido en commit `9021548`, pendiente verificar en ejecución posterior. Trigger temporal revertido en `d5d72af`, todos los workflows manuales; no APK. Ver `RIO_ARGA_RC7_ESTADO.md`.
