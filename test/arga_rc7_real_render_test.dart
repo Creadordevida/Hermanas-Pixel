@@ -77,6 +77,19 @@ void main() {
             reason:'Missing independent trout pose $pose');
         }
         expect(game.argaTrout,isNotNull);
+        // Atlas QA must decode the exact 24-frame sheets that StagePainter
+        // selects. No candidate is enabled in a regular gameplay build.
+        if (const bool.fromEnvironment('TWC_ARGA_ATLAS_QA')) {
+          for (final key in [
+            'arga_crab_atlas', 'arga_fisher_atlas',
+            'arga_boy_atlas', 'arga_trout_atlas',
+          ]) {
+            final atlas=game.images[key];
+            expect(atlas,isNotNull,reason:'Atlas not decoded: $key');
+            expect(atlas!.width,1024,reason:'Unexpected columns: $key');
+            expect(atlas.height,1536,reason:'Unexpected rows: $key');
+          }
+        }
 
         await tester.pump(const Duration(milliseconds:16));
         final boundary=boundaryKey.currentContext!.findRenderObject()!
