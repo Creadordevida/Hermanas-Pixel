@@ -84,6 +84,18 @@ void main() {
           await tester.pump(const Duration(milliseconds:33));
           expect(game.hero.y,greaterThan(365),
               reason:'Sinking rock must descend after warning');
+
+          // One river fall consumes exactly one heart and respawns safely.
+          game.hero=Character(260,y:440);
+          game.hero.grounded=false;
+          game.argaSupport=null;
+          game.hearts=5;
+          game.checkpointX=ArgaCourse.startX;
+          await tester.pump(const Duration(milliseconds:33));
+          expect(game.hearts,4);
+          expect(game.hero.x,ArgaCourse.startX);
+          expect(game.hero.y,ArgaCourse.surfaces.first.top);
+          expect(game.screen,Screen.playing);
         }
       }
     } finally {
