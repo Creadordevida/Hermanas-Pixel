@@ -46,15 +46,50 @@ class ArgaCourse {
     ArgaSurface(1920, 230, 365, ArgaSurfaceKind.rock,checkpoint:true),
   ];
 
+  /// Deterministic river beyond the introductory authored nine surfaces.
+  /// The movement pattern varies by section; no RNG and no impossible gaps.
+  static final List<ArgaSurface> allSurfaces = List.unmodifiable([
+    ...surfaces,
+    ..._extendedSurfaces(),
+  ]);
+
+  static List<ArgaSurface> _extendedSurfaces() {
+    final result=<ArgaSurface>[];
+    const gaps=<double>[65,82,74,90,68,76,86,72];
+    const widths=<double>[185,155,220,165,190,170,210,180];
+    const heights=<double>[365,360,368,355,362,370,358,365];
+    const kinds=<ArgaSurfaceKind>[
+      ArgaSurfaceKind.rock, ArgaSurfaceKind.log,
+      ArgaSurfaceKind.timber, ArgaSurfaceKind.movingLog,
+      ArgaSurfaceKind.rock, ArgaSurfaceKind.sinkingRock,
+      ArgaSurfaceKind.log, ArgaSurfaceKind.rock,
+    ];
+    var right=surfaces.last.x+surfaces.last.width;
+    var index=0;
+    while(right<35900) {
+      final segment=index~/8;
+      final variant=(index+segment*3)%8;
+      final width=widths[variant];
+      final gap=gaps[(index+segment)%8];
+      final kind=kinds[variant];
+      final x=right+gap;
+      result.add(ArgaSurface(x,width,heights[variant],kind,
+          checkpoint:index%8==7,phase:index*.43));
+      right=x+width;
+      index++;
+    }
+    return result;
+  }
+
   bool overPlatform(double footX, double actorRadius, double seconds) =>
-      surfaces.any((s) => footX + actorRadius > s.leftAt(seconds) &&
+      allSurfaces.any((s) => footX + actorRadius > s.leftAt(seconds) &&
           footX - actorRadius < s.rightAt(seconds));
 
   /// Returns a support only when feet cross its top while descending.
   ArgaSurface? landing(double prevFootY, double footY,
       double footX, double radius, double seconds,
       {double sinkingElapsed = 0}) {
-    for (final platform in surfaces) {
+    for (final platform in allSurfaces) {
       final top = platform.topAt(seconds, sinkingElapsed);
       if (prevFootY <= top + 2 && footY >= top &&
           footX + radius > platform.leftAt(seconds) &&
@@ -69,7 +104,7 @@ class ArgaCourse {
 
   double checkpointBefore(double x) {
     var result = startX;
-    for (final s in surfaces) {
+    for (final s in allSurfaces) {
       if (s.checkpoint && s.x + 30 <= x) result = s.x + 55;
     }
     return result;
@@ -78,8 +113,8 @@ class ArgaCourse {
   /// Static gaps must remain comfortably within the actual leap range.
   /// Moving logs have an additional 16px drift margin at either extreme.
   bool get allGapsReachable {
-    for (var i = 1; i < surfaces.length; i++) {
-      final a = surfaces[i - 1], b = surfaces[i];
+    for (var i = 1; i < allSurfaces.length; i++) {
+      final a = allSurfaces[i - 1], b = allSurfaces[i];
       final extraDrift = (a.kind == ArgaSurfaceKind.movingLog ? 16 : 0) +
           (b.kind == ArgaSurfaceKind.movingLog ? 16 : 0);
       if (b.x - (a.x + a.width) + extraDrift > flatJumpRange - 20) {
