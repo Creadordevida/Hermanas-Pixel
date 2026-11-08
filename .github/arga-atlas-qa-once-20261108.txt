@@ -23,3 +23,5 @@ Duodécima ejecución: las seis poses del pescador.
 Decimotercera ejecución: seis poses del niño gamberro.
 
 Decimocuarta ejecución: seis estados del atlas de trucha.
+
+Decimoquinta ejecución: batería ampliada de daño y proyectiles.
