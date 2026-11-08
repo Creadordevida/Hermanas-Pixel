@@ -76,6 +76,10 @@ const double twcAyuntamientoRC7TileWidth = 960.0;
 const bool twcEstafetaRC7ArtworkEnabled = true;
 const int twcEstafetaRC7TileCount = 39;
 const double twcEstafetaRC7TileWidth = 960.0;
+// Arga is prepared for the next candidate release on this feature branch.
+// No APK is built or published by enabling it here.
+const bool twcArgaNextVersionEnabled = true;
+const int twcChapterCount = twcArgaNextVersionEnabled ? 8 : 7;
 const double stageWidth = 36500; // ~3.6 minutes walking, closer to 5 including obstacles and enemies.
 const double actorRadius = 14;
 const double actorHeight = 118;
@@ -84,7 +88,7 @@ const String oldSaveKey = 'miren_sara_v080_save';
 const List<String> chapterNames = [
   'La salida de casa', 'Ayuntamiento de Pamplona', 'Calle Estafeta',
   'Plaza del Castillo', 'Campo de entrenamiento', 'Escuela de danza',
-  'El colegio', 'Río Arga (QA)',
+  'El colegio', 'Río Arga',
 ];
 const List<String> chapterScenes = [
   'level_pixel', 'level_ayuntamiento', 'level_estafeta',
@@ -478,10 +482,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         if (i == 4) paths['mid_4_plain'] = 'assets/images/mid/stage_4_plain.png';
       }
       // El prototipo Arga se carga solo en QA, nunca en el juego Android normal.
-      if (widget.qaStage == 7) {
-        // Opt-in test of the 24-frame candidate atlases. These are NOT yet
-        // approved production art; ordinary Arga QA preserves single poses.
-        const atlasPlaytest = bool.fromEnvironment('TWC_ARGA_ATLAS_QA');
+      if (widget.qaStage == 7 || twcArgaNextVersionEnabled) {
+        // Atlas candidates are now staged for the next-version Arga chapter;
+        // QA may also force-enable them independently for controlled tests.
+        const atlasPlaytest = bool.fromEnvironment('TWC_ARGA_ATLAS_QA') ||
+            twcArgaNextVersionEnabled;
         if (atlasPlaytest) {
           paths['arga_crab_atlas'] =
             'assets/images/arga_rc7/enemies_candidates/cangrejo_atlas_4x6_v1_candidate_q95.webp';
@@ -924,11 +929,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     if (raw==null) return;
     try {
       final s=jsonDecode(raw) as Map<String,dynamic>;
-      stage=((s['stage'] as num?)?.toInt()??0).clamp(0,6).toInt();
+      stage=((s['stage'] as num?)?.toInt()??0).clamp(0,twcChapterCount-1).toInt();
       selected=((s['selected'] as num?)?.toInt()??0).clamp(0,1).toInt();
       totalCoins=((s['totalCoins'] as num?)?.toInt()??0).clamp(0,99999).toInt();
       completed..clear()..addAll((s['completed'] as List<dynamic>? ?? [])
-        .whereType<num>().map((e)=>e.toInt()).where((i)=>i>=0 && i<7));
+        .whereType<num>().map((e)=>e.toInt()).where((i)=>i>=0 && i<twcChapterCount));
       introPlayed=s['introPlayed']==true || (s['version'] as num? ?? 0)<3;
       if((s['version'] as num? ?? 0)<3) {
         for(int i=0;i<stage;i++)completed.add(i);
@@ -1667,6 +1672,17 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       for(int i=0;i<mapHitboxesOriginal.length;i++)
         transparentTap(mapHitboxesOriginal[i],()=>_selectChapter(i),
           'Capítulo ${i+1}: ${chapterNames[i]}'),
+      if (twcArgaNextVersionEnabled)
+        Positioned(right:16,bottom:14,child:OutlinedButton(
+          onPressed:()=>_selectChapter(7),
+          style:OutlinedButton.styleFrom(
+            backgroundColor:const Color(0xee08335c),
+            foregroundColor:Colors.white,
+            side:const BorderSide(color:Color(0xffffdb72),width:2),
+            padding:const EdgeInsets.symmetric(horizontal:16,vertical:10)),
+          child:const Text('8 · RÍO ARGA',
+            style:TextStyle(fontWeight:FontWeight.w900,fontSize:13)),
+        )),
       // MENU is already part of the original image, not another overlay.
       transparentTap(const Rect.fromLTWH(45,790,255,145),_returnTitle,'Menú'),
       // Replace only the baked-in example counter; position relative to the
@@ -1678,7 +1694,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           padding:const EdgeInsets.symmetric(horizontal:8),
           decoration:BoxDecoration(color:const Color(0xff08335c),
             borderRadius:BorderRadius.circular(5)),
-          child:Text('COMPLETADOS: ${completed.length}/7  ·  MONEDAS: $totalCoins',
+          child:Text('COMPLETADOS: ${completed.length}/$twcChapterCount  ·  MONEDAS: $totalCoins',
             style:const TextStyle(color:Colors.white,fontSize:10,
               fontWeight:FontWeight.w900)),
         ),
