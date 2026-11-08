@@ -166,3 +166,6 @@ Autor original recuperado EXACTO: `COLEGIO_REFERENCIA_EXACTA_27_PANELES_Y_VENTAN
 
 ### 2026-11-08 — Enemigos Arga, auditoría estática nueva
 Commit `02c0676` crea `scripts/check_arga_24_candidates.py`: verifica formato/transparencia/recorte de las seis poses candidatas de cada uno de los cuatro enemigos y mide pivotes, sin tocar los originales. Solo se comprobó sintaxis Python; pendiente ejecución con las 24 imágenes reales y revisión artística. No se gastó en Actions, no se compiló APK, no se modificaron capítulos 0–6. Próximo paso en `docs/continuidad/ARGA_ENEMIGOS_RC7_ESTADO.md`.
+
+### 2026-11-08 — Eliminada activación automática de QA en PR #5
+Por petición expresa del propietario, pausados triggers de `push`/`pull_request` en 25 workflows de `.github/workflows`; ahora todos usan `workflow_dispatch`. Comprobación por lectura GitHub 25/25; último commit `94b5d6e`. No se ejecutó Actions, no se gastó deliberadamente, no se compiló APK. El consumo histórico por ejecuciones previas queda sin cuantificar. Las pruebas permanecen recuperables para futura reactivación bajo autorización.
