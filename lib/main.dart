@@ -20,6 +20,8 @@ import 'arga_platform_rules.dart';
 import 'arga_crab_behavior.dart';
 import 'arga_fisher_behavior.dart';
 import 'arga_hook_projectile.dart';
+import 'arga_boy_behavior.dart';
+import 'arga_stone_projectile.dart';
 import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
@@ -373,6 +375,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   ArgaFisherMotion? argaFisher;
   ArgaHookProjectile? argaHook;
   int argaFisherHits = 0;
+  ArgaBoyMotion? argaBoy;
+  ArgaStoneProjectile? argaStone;
+  int argaBoyHits = 0;
   double argaSupportSince = 0;
   final List<Offset> coins = [];
   final List<Enemy> enemies = [];
@@ -485,6 +490,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         for (final pose in ['reposo','caminar','alerta','lanzamiento','impacto','derrota']) {
           paths['arga_fisher_$pose'] =
             'assets/images/arga_rc7/enemies_candidates/pescador_${pose}_aislado_candidate.webp';
+        }
+        for(final pose in ['reposo','correr','alerta','lanzamiento','impacto','derrota']) {
+          paths['arga_boy_$pose']='assets/images/arga_rc7/enemies_candidates/gamberro_${pose}_aislado_candidate.webp';
         }
       }
       // El nuevo capítulo 1 carga recursos que el juego realmente dibuja.
@@ -645,6 +653,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
             key == 'arga_supports_v2' ||
             key.startsWith('arga_crab_') ||
             key.startsWith('arga_fisher_') ||
+            key.startsWith('arga_boy_') ||
             ['coin','ball','comb'].contains(key) ||
             key.startsWith('futbolista_') || key.startsWith('bailarina_') ||
             key.startsWith('costume_') || key.startsWith('padre_');
@@ -718,6 +727,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     argaFisher=null;
     argaHook=null;
     argaFisherHits=0;
+    argaBoy=null;argaStone=null;argaBoyHits=0;
     if (stage == 7) {
       // Independent playable collision prototype; release remains art-gated.
       hero=Character(ArgaCourse.startX,y:ArgaCourse.surfaces.first.top);
@@ -726,6 +736,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // Single crab QA specimen on the second safe stone, never on a gap.
       argaCrab=ArgaCrabMotion(375,minX:320,maxX:420);
       argaFisher=ArgaFisherMotion(1300);
+      argaBoy=ArgaBoyMotion(2035);
       // Coins reward controlled leaps; none are placed in an unrecoverable gap.
       for(var i=2;i<ArgaCourse.allSurfaces.length;i+=3) {
         final footing=ArgaCourse.allSurfaces[i];
@@ -1088,6 +1099,22 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         }
       }
     }
+    if(stage==7 && argaBoy!=null) {
+      final boy=argaBoy!;
+      final visible=(hero.x-boy.x).abs()<ArgaBoyMotion.sight &&
+          hero.y<ArgaCourse.waterDeathY;
+      if(boy.update(dt,hero.x,playerVisible:visible)) {
+        argaStone=ArgaStoneProjectile(originX:boy.x+boy.facing*20,
+          originY:ArgaCourse.surfaces[8].top-77,targetX:hero.x);
+      }
+      final stone=argaStone;
+      if(stone!=null && stone.active && stone.advance(dt,
+        waterY:ArgaCourse.waterDeathY,heroCenterX:hero.x,
+        heroHalfWidth:actorRadius,heroTop:hero.y-actorHeight,
+        heroBottom:hero.y-8)) {
+        _receiveDamage(stone.vx.sign.toInt());
+      }
+    }
     for(int i=0;i<coins.length;i++) {
       if(collected.contains(i))continue;
       if((coins[i].dx-hero.x).abs()<23 && (coins[i].dy-(hero.y-46)).abs()<41) {
@@ -1119,6 +1146,15 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         else {argaFisher!.hit();}
         particlesUntil=time+.35;
         continue;
+      }
+      if(stage==7 && !shot.fromEnemy && argaBoy!=null &&
+          argaBoy!.pose!=ArgaBoyPose.defeated &&
+          (shot.x-argaBoy!.x).abs()<40 &&
+          (shot.y-(ArgaCourse.surfaces[8].top-55)).abs()<57) {
+        shot.active=false;argaBoyHits++;argaStone?.cancel();
+        if(argaBoyHits>=2) {argaBoy!.defeat();}
+        else {argaBoy!.hit();}
+        particlesUntil=time+.35;continue;
       }
       if(shot.fromEnemy) {
         shot.vy+=210*dt;
@@ -1645,6 +1681,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       selected:selected,obstacles:obstacles,platforms:platforms,
       argaSupport:argaSupport,argaSupportSince:argaSupportSince,
       argaCrab:argaCrab,argaFisher:argaFisher,argaHook:argaHook,
+      argaBoy:argaBoy,argaStone:argaStone,
       coins:coins,collected:collected,enemies:enemies,shots:shots,particlesUntil:particlesUntil))),
     Positioned(left:10,top:9,child:Container(padding:const EdgeInsets.all(8),
       decoration:BoxDecoration(color:const Color(0xdd0d3050),borderRadius:BorderRadius.circular(7)),
@@ -1716,7 +1753,8 @@ class StagePainter extends CustomPainter {
     required this.selected,required this.obstacles,required this.platforms,
     required this.coins,required this.collected,required this.enemies,required this.shots,
     required this.particlesUntil,
-    this.argaSupport,this.argaSupportSince=0,this.argaCrab,this.argaFisher,this.argaHook});
+    this.argaSupport,this.argaSupportSince=0,this.argaCrab,this.argaFisher,this.argaHook,
+    this.argaBoy,this.argaStone});
   final Map<String,ui.Image> images;
   final int stage,selected;
   final double cameraX,time,particlesUntil,lastAttackTime;
@@ -1724,6 +1762,8 @@ class StagePainter extends CustomPainter {
   final ArgaCrabMotion? argaCrab;
   final ArgaFisherMotion? argaFisher;
   final ArgaHookProjectile? argaHook;
+  final ArgaBoyMotion? argaBoy;
+  final ArgaStoneProjectile? argaStone;
   final double argaSupportSince;
   final Character hero,otherSister,father;
   final bool showFamily;
@@ -2141,6 +2181,7 @@ class StagePainter extends CustomPainter {
     }
     if(stage==7 && argaCrab!=null) _paintArgaCrab(canvas);
     if(stage==7 && argaFisher!=null) _paintArgaFisher(canvas);
+    if(stage==7 && argaBoy!=null) _paintArgaBoy(canvas);
     if(showFamily) {
       _actor(canvas,father,'padre',2,false);
       _actor(canvas,otherSister,selected==0?'bailarina':'futbolista',1-selected,false);
@@ -2240,6 +2281,37 @@ class StagePainter extends CustomPainter {
       canvas.drawCircle(marker,ArgaHookProjectile.radius,
         Paint()..style=PaintingStyle.stroke..strokeWidth=2
           ..color=const Color(0xff33495b));
+    }
+  }
+
+  // Experimental candidate, only in inaccessible Stage 7 QA.
+  void _paintArgaBoy(Canvas canvas) {
+    final boy=argaBoy!;
+    final pose=switch(boy.pose) {
+      ArgaBoyPose.idle=>'reposo',
+      ArgaBoyPose.run=>'correr',
+      ArgaBoyPose.warning=>'alerta',
+      ArgaBoyPose.throwStone=>'lanzamiento',
+      ArgaBoyPose.hurt=>'impacto',
+      ArgaBoyPose.defeated=>'derrota',
+    };
+    final art=images['arga_boy_$pose'];
+    if(art==null)return;
+    final x=boy.x-cameraX;
+    if(x < -160 || x > viewW+160)return;
+    const size=144.0;
+    final dest=Rect.fromLTWH(x-size/2,ArgaCourse.surfaces[8].top-123,size,size);
+    canvas.save();
+    if(boy.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
+    canvas.drawImageRect(art,Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+      dest,Paint()..filterQuality=FilterQuality.none);
+    canvas.restore();
+    final stone=argaStone;
+    if(stone!=null && stone.active) {
+      final center=Offset(stone.x-cameraX,stone.y);
+      canvas.drawCircle(center,ArgaStoneProjectile.radius,Paint()..color=const Color(0xff94877a));
+      canvas.drawCircle(center,ArgaStoneProjectile.radius,
+        Paint()..style=PaintingStyle.stroke..strokeWidth=2..color=const Color(0xff564940));
     }
   }
 
