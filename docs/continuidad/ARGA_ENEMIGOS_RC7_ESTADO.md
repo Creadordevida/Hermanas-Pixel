@@ -232,3 +232,19 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   fotogramas intermedios, desacoplar hilo/anzuelo de la caña al lanzar y
   comprobar fotograma real en StagePainter. No inventar proyectil sustituto
   sin preservar el aspecto aprobado; no activar al pescador en el mapa.
+
+## Microtarea 12 — niño y trucha: comportamiento aislado (2026-11-08)
+- Nuevo `lib/arga_stone_boy_trout_behavior.dart` (commit `6eeae1c`):
+  niño gamberro con reposo, carrera limitada a la roca, aviso previo de
+  0,48 s, lanzamiento de una piedra por acción, interrupción por daño y
+  derrota; trucha con nado, aviso de 0,45 s, salto balístico desde el agua
+  hacia la protagonista, un solo impacto por salto, regreso al agua y
+  enfriamiento.
+- Test `test/arga_stone_boy_trout_behavior_test.dart` (commit `b19c873`)
+  cubre lanzamiento único, límites de patrulla del niño, salto de la
+  trucha y estado terminal de derrota.
+- Los originales artísticos aprobados del niño y la trucha siguen
+  protegidos en `docs/continuidad/referencias/arga_enemigos_aprobados_20261108/`.
+  **Aún no** tienen poses aisladas, efectos ni proyectiles integrados.
+- Las pruebas Dart no se han ejecutado por las restricciones acordadas;
+  NO confundir lógica de prototipo con enemigo terminado.
