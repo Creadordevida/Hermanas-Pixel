@@ -1,11 +1,7 @@
 name: Quiosco RC7 - code safety and regression (NO APK)
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
 on:
-  push:
-    branches: [work/revision-visual-20261028-continuidad]
-    paths:
-      - .github/workflows/quiosco-rc7-code-qa.yml
-      - lib/main.dart
-      - test/quiosco_rc7_contract_test.dart
   workflow_dispatch:
 permissions:
   contents: read
