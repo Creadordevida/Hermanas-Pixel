@@ -117,3 +117,16 @@ capítulo. Puede realizarse sin suscripción adicional a GitHub.
   avanzado a distinta altura, commits `659a24f`, `e37fdb5`, `83a2069`.
 - Todo queda preparado, **no probado en Flutter** por ausencia de SDK local y
   bloqueo de GitHub Actions por presupuesto de 0 USD.
+
+## Tercera zona visual candidata (2026-11-08)
+- Paisaje del tramo final: molino tradicional junto al Arga, arbolado y río
+  continuo en la parte inferior; candidatos en
+  `assets/images/arga_rc7/arga_far_mill_candidate.webp` y
+  `arga_mid_mill_candidate.webp` (alpha), commit `9179765`.
+- Transición QA entre vista urbana, tramo silvestre y molino; las imágenes
+  son planos independientes y las plataformas conservan sus coordenadas y
+  colisiones. Código `d9b9053`, test de carga `47a13d5`.
+- La imagen original aprobada sigue siendo la referencia vinculante. Estas
+  tres zonas son **candidatas** hasta comparar capturas Flutter reales.
+- Conforme a la elección del propietario, la instalación de Flutter se
+  **aplaza**; los scripts locales quedan preparados para más adelante.
