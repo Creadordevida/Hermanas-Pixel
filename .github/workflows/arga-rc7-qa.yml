@@ -28,6 +28,7 @@ jobs:
       - run: flutter analyze --no-pub lib
       - run: flutter test --no-pub --reporter expanded test/arga_platform_rules_test.dart test/arga_crossing_test.dart test/arga_boy_behavior_test.dart test/arga_stone_projectile_test.dart test/arga_trout_behavior_test.dart test/arga_sprite_atlas_test.dart
       - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_rc7_real_render_test.dart
+      - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_crab_attack_frames_render_test.dart
       - name: Verify eight authentic 20:9 frames
         run: |
           python3 - <<'PY'
@@ -45,7 +46,7 @@ jobs:
         run: |
           git config user.name "twc-arga-qa[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add qa/arga_rc7_flutter/qa_*.png qa/arga_rc7_flutter/trout_leap_810.png
+          git add qa/arga_rc7_flutter/qa_*.png qa/arga_rc7_flutter/trout_leap_810.png qa/arga_rc7_flutter/crab_pinch_frame_*.png
           if ! git diff --cached --quiet; then
             git commit -m "qa(arga): preserve genuine Arga Flutter panoramas and trout leap"
             git pull --rebase origin "$GITHUB_REF_NAME"
