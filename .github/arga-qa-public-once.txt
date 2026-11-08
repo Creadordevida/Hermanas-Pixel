@@ -1,0 +1,1 @@
+Ejecución única autorizada el 2026-11-08: comprobar si QA Flutter de Río Arga puede iniciar en GitHub Actions público, sin APK.
