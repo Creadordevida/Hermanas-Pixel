@@ -479,6 +479,19 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       }
       // El prototipo Arga se carga solo en QA, nunca en el juego Android normal.
       if (widget.qaStage == 7) {
+        // Opt-in test of the 24-frame candidate atlases. These are NOT yet
+        // approved production art; ordinary Arga QA preserves single poses.
+        const atlasPlaytest = bool.fromEnvironment('TWC_ARGA_ATLAS_QA');
+        if (atlasPlaytest) {
+          paths['arga_crab_atlas'] =
+            'assets/images/arga_rc7/enemies_candidates/cangrejo_atlas_4x6_v1_candidate_q95.webp';
+          paths['arga_fisher_atlas'] =
+            'assets/images/arga_rc7/enemies_candidates/pescador_atlas_4x6_v2_candidate_q95.webp';
+          paths['arga_boy_atlas'] =
+            'assets/images/arga_rc7/enemies_candidates/gamberro_atlas_4x6_v2_candidate_lossless.webp';
+          paths['arga_trout_atlas'] =
+            'assets/images/arga_rc7/enemies_candidates/trucha_atlas_4x6_v3_candidate_lossless.webp';
+        }
         paths['arga_far'] = 'assets/images/arga_rc7/arga_far_rc7_candidate.webp';
         paths['arga_mid'] = 'assets/images/arga_rc7/arga_mid_rc7_candidate.webp';
         paths['arga_far_wild'] = 'assets/images/arga_rc7/arga_far_wild_candidate.webp';
@@ -2283,7 +2296,7 @@ class StagePainter extends CustomPainter {
     };
     const size=132.0;
     final dest=Rect.fromLTWH(x-size/2,
-      ArgaCourse.surfaces[1].top-size*bottom/1254.0,size,size);
+      ArgaCourse.surfaces[1].top-size*(atlas==null ? bottom/1254.0 : .84),size,size);
     canvas.save();
     if(crab.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
     canvas.drawImageRect(art,source,
@@ -2333,7 +2346,7 @@ class StagePainter extends CustomPainter {
     final x=fisher.x-cameraX;
     if(x< -160 || x>viewW+160) return;
     final dest=Rect.fromLTWH(x-size/2,
-      ArgaCourse.surfaces[5].top-size*bottom/1254.0,size,size);
+      ArgaCourse.surfaces[5].top-size*(atlas==null ? bottom/1254.0 : .90),size,size);
     canvas.save();
     if(fisher.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
     canvas.drawImageRect(art,source,
