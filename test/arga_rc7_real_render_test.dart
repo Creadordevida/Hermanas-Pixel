@@ -11,6 +11,7 @@ import 'package:hermanas_aventura/arga_platform_rules.dart';
 import 'package:hermanas_aventura/arga_crab_behavior.dart';
 import 'package:hermanas_aventura/arga_fisher_behavior.dart';
 import 'package:hermanas_aventura/arga_boy_behavior.dart';
+import 'package:hermanas_aventura/arga_trout_behavior.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -94,6 +95,30 @@ void main() {
             print('ARGA_STAGEPAINTER_20x9 ${file.path}');
           } finally {image.dispose();}
         });
+        if(x==810) {
+          // Capture a REAL offensive trout pose after its warning period;
+          // loading six images alone does not prove the leap is ever drawn.
+          game.argaTrout.update(.1,game.hero.x,playerVisible:true);
+          game.argaTrout.update(.56,game.hero.x,playerVisible:true);
+          expect(game.argaTrout.pose,ArgaTroutPose.leap);
+          await tester.pump(const Duration(milliseconds:120));
+          expect(game.argaTrout.airborne,isTrue);
+          final leapBoundary=boundaryKey.currentContext!.findRenderObject()!
+            as RenderRepaintBoundary;
+          expect(leapBoundary.debugNeedsPaint,isFalse);
+          await tester.runAsync(() async {
+            final leapImage=await leapBoundary.toImage(pixelRatio:1);
+            try {
+              final bytes=await leapImage.toByteData(format:ui.ImageByteFormat.png);
+              expect(bytes,isNotNull);
+              final file=File('qa/arga_rc7_flutter/trout_leap_810.png');
+              await file.parent.create(recursive:true);
+              await file.writeAsBytes(bytes!.buffer.asUint8List(),flush:true);
+              expect(await file.length(),greaterThan(10000));
+              print('ARGA_TROUT_REAL_LEAP_20x9 ${file.path}');
+            } finally {leapImage.dispose();}
+          });
+        }
         if(x==positions.last) {
           // QA crab must take two legitimate shots and enter its defeat pose.
           expect(game.argaCrabHits,0);
