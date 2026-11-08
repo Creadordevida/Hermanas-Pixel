@@ -129,3 +129,32 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   revisión comparativa con diseño aprobado, fotogramas intermedios y conexión
   exclusiva al prototipo QA stage 7; después captura real de `StagePainter`
   cuando Flutter vuelva a estar disponible.
+
+## Microtarea 7 — cangrejo conectado solo al Arga QA (2026-11-08)
+- **Hallazgo de revisión**: en `lib/main.dart`, el aterrizaje físico dentro
+  de stage 7 recorría solo `ArgaCourse.surfaces` (nueve primeros apoyos)
+  aunque el curso largo tiene 135. Corregido a `allSurfaces` en
+  `e541f97`; prueba de aterrizajes generados añadida en `9de719c`.
+  **Este cambio aún requiere ejecución en Flutter**.
+- El cangrejo limita su patrulla a los bordes interiores de su roca;
+  el módulo puro Dart recibe `minX` y `maxX`, prueba de seguridad en
+  `test/arga_crab_behavior_test.dart`. Commits `c9ca12b`, `f411004`.
+- Se declara `assets/images/arga_rc7/enemies_candidates/` en pubspec
+  (`f389ada`) y se cargan sus seis imágenes **solo si qaStage==7**.
+  `lib/main.dart` instancia un cangrejo en la segunda roca (x 375),
+  usa su máquina de estados para acercarse, avisar y pinzar, y lo dibuja
+  con la pose correspondiente y `FilterQuality.none`. La posición visible
+  se alinea al tope físico usando bboxes medidos de las seis candidatas.
+  Commit `9c3637a`.
+- El daño de pinza se cancela si Miren o Sara no están en la misma roca.
+  El modelo no se ha añadido a los índices 0–6 ni al mapa de capítulos.
+- `test/arga_rc7_real_render_test.dart` exige ahora decodificar las seis
+  imágenes del cangrejo y comprueba instancia en el prototipo; commit
+  `a62780e`.
+- **ESTADO**: código y recursos de prototipo conectados, pero NO compilados,
+  NO ejecutados y NO validados por captura real, porque Flutter se mantiene
+  aplazado y GitHub Actions bloqueado por presupuesto 0. La calidad artística
+  y escala final permanecen como CANDIDATAS. No liberar al mapa normal.
+- **Siguiente acción**: ampliar pruebas de física del cangrejo, validar el
+  acceso correcto a sprites en QA y aplicar el mismo proceso al pescador,
+  sin declarar terminado ninguno hasta prueba real.
