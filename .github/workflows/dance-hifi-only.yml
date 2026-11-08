@@ -1,18 +1,8 @@
 name: Danza arte aprobado - importacion y Flutter QA SIN APK
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
 on:
-  push:
-    branches:
-      - work/revision-visual-20261028-continuidad
-    paths:
-      - qa/dance_inbox/DANZA_CINCO_ESCENAS_APROBADAS_091.zip
-      - .github/workflows/dance-hifi-only.yml
-      - lib/main.dart
-      - lib/interiors_parallax_twc.dart
-      - tools/prepare_dance_window_alpha_twc.py
-      - qa/check_dance_window_parallax.py
-      - test/dance_hifi_real_render_test.dart
   workflow_dispatch:
-
 permissions:
   contents: write
 
