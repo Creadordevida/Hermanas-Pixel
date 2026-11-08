@@ -116,7 +116,7 @@ class AdaptiveTitleScreen extends StatelessWidget {
         // A matching painted surround preserves the entire 16:9 approved art
         // while respecting the panoramic viewport (no duplicate scenery).
         const Positioned.fill(child:Image(
-          image:AssetImage('assets/images/title_wide_20x9_approved.webp'),
+          image:AssetImage('assets/images/title_wide_20x9_wall_continuity_v2.webp'),
           fit:BoxFit.cover,
           alignment:Alignment.center,
           filterQuality:FilterQuality.high,
