@@ -42,6 +42,8 @@ void main() {
         expect(painters,isNotEmpty,reason:'No real Arga StagePainter');
         expect(game.images['arga_far'],isNotNull);
         expect(game.images['arga_mid'],isNotNull);
+        expect(game.images['arga_far_wild'],isNotNull);
+        expect(game.images['arga_mid_wild'],isNotNull);
         expect(game.images['arga_art'],isNull,
           reason:'Superseded single panorama must not be decoded');
         expect(game.images['arga_supports'],isNotNull);
