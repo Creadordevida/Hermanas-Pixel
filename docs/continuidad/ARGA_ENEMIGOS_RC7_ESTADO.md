@@ -39,3 +39,20 @@ Todas son 2172×724 px y representan **conceptos para aprobación**, no atlas de
 
 ## Siguiente microtarea
 Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras sin amputaciones), medir siluetas y apoyo; solo entonces crear secuencias de fotogramas intermedios y registrar una captura de revisión. Continuar después con los otros tres conservando la referencia.
+
+## Microtarea 2 — inspección de máscaras (2026-11-08)
+- Se ensayó una reordenación de poses del cangrejo mediante edición visual.
+  **DESCARTADA** por introducir ruido de píxeles sueltos en áreas transparentes.
+  No se guardó como sprite definitivo ni se sobrescribió el original aprobado.
+- Nuevo comprobador de solo lectura `scripts/check_arga_enemy_atlases.py`,
+  commit `ad9a7e7`. Marca visualmente las celdas cuyo contenido opaco
+  llega a menos de 8 px del borde de un sexto (362 px) de lámina.
+- Resultado de análisis alfa efectuado sobre los cuatro originales locales:
+  cangrejo celdas **3, 4, 5**; pescador **1–6**; gamberro **2, 3, 4, 6**;
+  trucha **1–5** requieren inspección de recorte y/o accesorios.
+  Estos son **avisos de seguridad**, no demostración de amputación; no cortar
+  los atlas por sextos sin resolución del conflicto.
+- Siguiente acción: aislar siluetas por transparencia y recuperar las partes
+  que atraviesan límites. Empezar por cangrejo, comparar cada una de sus
+  seis poses con la imagen aprobada, y solo aprobar el atlas cuando esté limpio.
+  No hay integración a Flutter ni cambio en capítulos existentes.
