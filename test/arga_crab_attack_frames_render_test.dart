@@ -79,7 +79,8 @@ void main() {
       for (final pose in ArgaCrabPose.values) {
         game.setState(() {
           game.argaCrab.pose = pose;
-          game.argaCrab.elapsed = 1 / 9.0;
+          // Defeat must show its terminal overturned state, not mid-fall.
+          game.argaCrab.elapsed = pose == ArgaCrabPose.defeated ? 3 / 9.0 : 1 / 9.0;
         });
         await tester.pump();
         final boundary = boundaryKey.currentContext!.findRenderObject()!
