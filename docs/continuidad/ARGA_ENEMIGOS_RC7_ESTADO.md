@@ -307,3 +307,9 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
 - **SIGUIENTE**: unificar criterios de pivote/escala respecto a Miren y
   Sara; preparar proyectil de piedra, anzuelo y salpicadura; continuar
   conexiones de QA por separado y pruebas sin iniciar Actions.
+
+## Microtarea 16 — auditoría repetible de 24 poses (2026-11-08)
+- Añadido `scripts/check_arga_24_candidates.py` en commit `02c0676` y confirmado en GitHub (blob `5009f70210a0a84cf36563c410f26ccd302f9af8`). Es un comprobador **de solo lectura**, sin generación ni reemplazo de los originales o candidatos.
+- Exige 24 archivos WebP de 1254×1254 con canal alfa, silueta opaca interior y fondo transparente; informa bbox, altura, anchura y variación vertical por enemigo para preparar normalización de escala y pivotes. No confunde diferencias deliberadas de salto/derrota con fallos automáticos.
+- **Ejecutado**: comprobación sintáctica `python3 -m py_compile` del script local. **No ejecutado** todavía contra los 24 WebP: este entorno no tiene el checkout binario de la rama; no se declara PASS de imágenes. Tampoco se ha ejecutado Dart/Flutter ni Actions.
+- **Siguiente acción concreta**: ejecutar `python3 scripts/check_arga_24_candidates.py` en un checkout con Pillow y las 24 imágenes; revisar las medidas y cada pose frente a sus cuatro láminas aprobadas, normalizar pivotes sin perder caña/piedras/aletas y después integrar pescador, niño y trucha exclusivamente en QA stage 7. No activar para APK ni mapa sin capturas reales.
