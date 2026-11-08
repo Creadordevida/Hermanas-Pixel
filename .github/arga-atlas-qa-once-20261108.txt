@@ -37,3 +37,5 @@ Decimonovena ejecución: anzuelo natural del pescador y daño real.
 Vigésima ejecución: piedra natural del niño y daño real.
 
 Run natural trout gameplay contact test and screenshot.
+
+Run alternate heroine Sara trout contact check.
