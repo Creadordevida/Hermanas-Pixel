@@ -151,3 +151,8 @@ Próxima acción: obtener recortes de pixel art con alfa duro auténtico y borde
 - Workflow ampliado en `7a6116b`, ejecución `42507571366` iniciada desde `daac8065`. Estado pendiente de verificación visual y de resultado; si los pies flotan o las poses se recortan, corregir antes de aprobar.
 
 - Octava ejecución `42507571366` **SUCCESS**; capturas preservadas en commit QA `79d9b5e`. Inspección de `boy_throw_frame_1.png` y `_3.png`: el niño presenta poses distintas de preparación/lanzamiento, mantiene rostro, ropa y proporciones, y aparece sobre la roca sin recorte visible. La proyección de piedra y la continuidad de los 24 fotogramas aún no están verificadas en partida; no se declara finalizado.
+
+### Microfase de trucha: fotogramas del atlas durante salto
+
+- `test/arga_trout_leap_frames_render_test.dart` creado en `f2449b6`, exige cuatro imágenes reales de `StagePainter` con la trucha en `ArgaTroutPose.leap` y `y=340` fijo para aislar la animación del atlas de la trayectoria física. Compara cambio RGBA en el área de la trucha y guarda `qa/arga_rc7_flutter/trout_pose_frame_{0,1,2,3}.png`. La física real está cubierta por las pruebas de comportamiento y por `trout_leap_810.png` existente.
+- Workflow ampliado en `985b218`, novena ejecución `42507858191` lanzada desde `037b34f`; pendiente de resultado e inspección. No se activa el capítulo ni el atlas en producción.
