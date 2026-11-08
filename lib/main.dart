@@ -77,14 +77,14 @@ const String oldSaveKey = 'miren_sara_v080_save';
 const List<String> chapterNames = [
   'La salida de casa', 'Ayuntamiento de Pamplona', 'Calle Estafeta',
   'Plaza del Castillo', 'Campo de entrenamiento', 'Escuela de danza',
-  'El colegio',
+  'El colegio', 'Río Arga (QA)',
 ];
 const List<String> chapterScenes = [
   'level_pixel', 'level_ayuntamiento', 'level_estafeta',
-  'level_plaza_castillo', 'football', 'ballet', 'school',
+  'level_plaza_castillo', 'football', 'ballet', 'school', 'arga',
 ];
 const List<String> chapterProps = [
-  'crate', 'crate', 'crate', 'planter', 'cone', 'gym_bench', 'backpack',
+  'crate', 'crate', 'crate', 'planter', 'cone', 'gym_bench', 'backpack', 'crate',
 ];
 const List<String> enemyKinds = [
   'dog_dalmatian', 'dog_brown', 'dog_doberman', 'pigeon', 'cat', 'navarre_king',
@@ -401,7 +401,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       return;
     }
     if (widget.qaStage != null) {
-      stage = widget.qaStage!.clamp(0, 6);
+      stage = widget.qaStage!.clamp(0, 7);
       selected = widget.qaSelected == 1 ? 1 : (level.forcedSara ? 1 : 0);
       _layoutStage();
       if (widget.qaWorldX != null) {
@@ -457,6 +457,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           paths['mid_$i'] = 'assets/images/mid/stage_$i.png';
         }
         if (i == 4) paths['mid_4_plain'] = 'assets/images/mid/stage_4_plain.png';
+      }
+      // El prototipo Arga se carga solo en QA, nunca en el juego Android normal.
+      if (widget.qaStage == 7) {
+        paths['arga_art'] = 'assets/images/arga_rc7/arga_concept_rc7_v1.webp';
+        paths['arga_supports'] = 'assets/images/arga_rc7/arga_supports_rc7_v1.webp';
       }
       // El nuevo capítulo 1 carga recursos que el juego realmente dibuja.
       // No son renders ilustrativos ni sustituyen a los originales protegidos.
@@ -608,6 +613,12 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // football/dance scenes and six other stages. In Android qaStage is null,
       // so the complete original asset loading and gameplay are untouched.
       bool neededForSchoolQA(String key) {
+        if (widget.qaStage == 7) {
+          return key == 'arga_art' || key == 'arga_supports' ||
+            ['coin','ball','comb'].contains(key) ||
+            key.startsWith('futbolista_') || key.startsWith('bailarina_') ||
+            key.startsWith('costume_') || key.startsWith('padre_');
+        }
         // El QA de danza carga solo sus recursos reales y los sprites
         // compartidos. No exige atlas de enemigos de otros capitulos.
         // Esto NO cambia el cargador normal ni las reglas de enemigos.
@@ -649,7 +660,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         codec.dispose();
       }
       if (widget.qaStage != null) {
-        stage = widget.qaStage!.clamp(0, 6);
+        stage = widget.qaStage!.clamp(0, 7);
         selected = widget.qaSelected == 1 ? 1 : (level.forcedSara ? 1 : 0);
         _layoutStage();
         if(widget.qaWorldX != null) {
@@ -2604,7 +2615,52 @@ class StagePainter extends CustomPainter {
     }
   }
 
+  /// QA-only prototype. Visual supports share ArgaCrossing world coordinates.
+  /// The flattened river concept remains a candidate, not final parallax.
+  void _argaPrototypeBackground(Canvas canvas) {
+    final background=images['arga_art'];
+    if(background!=null) {
+      final sourceW=math.min(1200.0,background.width.toDouble());
+      final sourceH=math.min(675.0,background.height.toDouble());
+      final scroll=(cameraX*.12).clamp(0.0,
+          math.max(0.0,background.width-sourceW)).toDouble();
+      canvas.drawImageRect(background,
+          Rect.fromLTWH(scroll,0,sourceW,sourceH),
+          Rect.fromLTWH(0,0,viewW,viewH),Paint()..filterQuality=FilterQuality.none);
+    }
+    final atlas=images['arga_supports'];
+    if(atlas==null)return;
+    final slice=atlas.width/4.0;
+    for(final footing in ArgaCrossing.firstSection()) {
+      final sx=footing.left-cameraX;
+      if(sx>viewW+30 || sx+footing.width< -30)continue;
+      final index=switch(footing.surface) {
+        ArgaSurface.bank => 0,
+        ArgaSurface.rock => 1,
+        ArgaSurface.log => 2,
+        ArgaSurface.plank => 3,
+      };
+      // Broad riverbanks use discrete non-stretched stone chunks.
+      final count=footing.surface==ArgaSurface.bank
+          ? (footing.width/160).ceil() : 1;
+      for(var i=0;i<count;i++) {
+        final width=footing.surface==ArgaSurface.bank
+            ? math.min(160.0,footing.width-i*160) : footing.width;
+        final x=sx+(footing.surface==ArgaSurface.bank?i*160:0);
+        if(x>viewW+20 || x+width< -20)continue;
+        canvas.drawImageRect(atlas,
+          Rect.fromLTWH(index*slice,240,slice,290),
+          Rect.fromLTWH(x,382,width,100),
+          Paint()..filterQuality=FilterQuality.none);
+      }
+    }
+  }
+
   void _background(Canvas canvas) {
+    if (stage == 7) {
+      _argaPrototypeBackground(canvas);
+      return; // Never index the seven original ground/mid art arrays.
+    }
     // The approved detailed backdrop is a DISTANT vista. Its limited camera
     // pan cannot wrap the same clock, cathedral, car or kiosk indefinitely.
     // Foreground structures scroll at full world speed, just like sprites.
