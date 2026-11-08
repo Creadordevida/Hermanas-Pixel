@@ -75,8 +75,9 @@ void main() {
             final boundary = captureKey.currentContext!.findRenderObject()!
                 as RenderRepaintBoundary;
             expect(boundary.debugNeedsPaint, isFalse);
-            final image = await boundary.toImage(pixelRatio: 1);
-            try {
+            await tester.runAsync(() async {
+              final image = await boundary.toImage(pixelRatio: 1);
+              try {
               final bytes = await image.toByteData(
                   format: ui.ImageByteFormat.rawRgba);
               expect(bytes, isNotNull);
@@ -98,7 +99,8 @@ void main() {
               }
               previousHash = hash;
               checked++;
-            } finally { image.dispose(); }
+              } finally { image.dispose(); }
+            });
           }
         }
         expect(checked, 24);
