@@ -2765,9 +2765,16 @@ class StagePainter extends CustomPainter {
         final top=footing.topAt(time,
             identical(argaSupport,footing)?time-argaSupportSince:0);
         final visualOffset=(opaqueTop-240)/290*100;
+        final occupied=identical(argaSupport,footing)
+            ? time-argaSupportSince : 0.0;
+        // Brief visible trembling warns before a sinking rock descends;
+        // visual-only, collision remains at its exact world coordinate.
+        final warning=footing.kind==ArgaSurfaceKind.sinkingRock &&
+            occupied>=.30 && occupied<.60;
+        final shake=warning ? 1.5*math.sin(time*30) : 0.0;
         canvas.drawImageRect(atlas,
           Rect.fromLTWH(index*slice,240,slice,290),
-          Rect.fromLTWH(x,top-visualOffset,width,100),
+          Rect.fromLTWH(x+shake,top-visualOffset,width,100),
           Paint()..filterQuality=FilterQuality.none);
       }
     }
