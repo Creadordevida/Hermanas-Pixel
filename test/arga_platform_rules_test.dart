@@ -17,7 +17,9 @@ void main() {
   test('Full authored river has safe jumps and recurring checkpoints', () {
     final all=ArgaCourse.allSurfaces;
     expect(all.length,greaterThan(100));
-    expect(all.last.x+all.last.width,greaterThan(35900));
+    expect(all.last.x+all.last.width,greaterThan(36500));
+    expect(course.overPlatform(36410,14,0),isTrue,
+      reason:'Goal trigger must be reachable on solid ground');
     expect(course.allGapsReachable,isTrue);
     for(var i=1;i<all.length;i++) {
       expect(all[i].x,greaterThan(all[i-1].x+all[i-1].width));
