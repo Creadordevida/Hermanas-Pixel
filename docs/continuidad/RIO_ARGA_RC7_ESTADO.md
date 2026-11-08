@@ -142,3 +142,6 @@ capítulo. Puede realizarse sin suscripción adicional a GitHub.
   su primer píxel opaco sobre el tope de colisión, evitando pies flotantes.
 - Estos recursos siguen siendo candidatos; las capturas auténticas continúan
   pendientes por decisión de aplazar Flutter y mantener GitHub Actions a 0 USD.
+
+- Banco final ancho: dibujo por piezas de ~190 unidades para mantener escala
+  pixel art coherente sin estirar una roca a 500 px; commit `1af79d4`.
