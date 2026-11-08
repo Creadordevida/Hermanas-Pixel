@@ -37,7 +37,7 @@ void main() {
       // The 705..770 interval contains water between safe log and timber.
       game.hero.x = 730.0;
       game.hero.y = ArgaCourse.waterDeathY - 6;
-      game.hero.vy = 160;
+      game.hero.vy = 160.0;
       game.hero.grounded = false;
       game.argaSupport = null;
       for (var i = 0; i < 40 && game.hearts == 5; i++) {
