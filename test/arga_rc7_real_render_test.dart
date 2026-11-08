@@ -93,7 +93,7 @@ void main() {
           game.checkpointX=ArgaCourse.startX;
           await tester.pump(const Duration(milliseconds:33));
           expect(game.hearts,4);
-          expect(game.hero.x,ArgaCourse.startX);
+          expect(game.hero.x,const ArgaCourse().checkpointBefore(260));
           expect(game.hero.y,ArgaCourse.surfaces.first.top);
           expect(game.screen,Screen.playing);
         }
