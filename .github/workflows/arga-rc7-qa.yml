@@ -3,11 +3,6 @@ name: Río Arga RC7 - QA Flutter 20:9 sin APK
 # No activar mientras GitHub Actions esté bloqueado por presupuesto.
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - work/revision-visual-20261028-continuidad
-    paths:
-      - .github/arga-qa-public-once.txt
 permissions:
   contents: write
 concurrency:
