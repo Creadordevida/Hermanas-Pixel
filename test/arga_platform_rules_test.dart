@@ -31,6 +31,25 @@ void main() {
     }
   });
 
+  test('Extended river grows harder and checkpoints are stable safe rocks', () {
+    final extended=ArgaCourse.allSurfaces.skip(ArgaCourse.surfaces.length).toList();
+    final generated=extended.take(extended.length-1).toList();
+    final gaps=<double>[];
+    for(var i=0;i<generated.length;i++) {
+      final prior=i==0 ? ArgaCourse.surfaces.last : generated[i-1];
+      gaps.add(generated[i].x-(prior.x+prior.width));
+    }
+    double average(Iterable<double> values) =>
+        values.reduce((a,b)=>a+b)/values.length;
+    expect(average(gaps.take(24)),lessThan(average(gaps.skip(24).take(56))));
+    expect(average(gaps.skip(24).take(56)),
+        lessThan(average(gaps.skip(80))));
+    for(final support in extended.where((s)=>s.checkpoint)) {
+      expect(support.kind,ArgaSurfaceKind.rock);
+      expect(support.width,greaterThanOrEqualTo(230));
+    }
+  });
+
   test('A standing hero can land on rocks but cannot land over open river', () {
     expect(course.landing(350, 370, 100, 14, 0), isNotNull);
     expect(course.landing(350, 370, 260, 14, 0), isNull);
