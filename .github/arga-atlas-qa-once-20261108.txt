@@ -15,3 +15,5 @@ Octava ejecución: secuencia de cuatro fotogramas del niño gamberro.
 Novena ejecución: cuatro poses sucesivas de la trucha en salto.
 
 Décima ejecución: seis poses del cangrejo en capturas reales.
+
+Undécima ejecución: último fotograma de derrota del cangrejo.
