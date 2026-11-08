@@ -130,3 +130,15 @@ capítulo. Puede realizarse sin suscripción adicional a GitHub.
   tres zonas son **candidatas** hasta comparar capturas Flutter reales.
 - Conforme a la elección del propietario, la instalación de Flutter se
   **aplaza**; los scripts locales quedan preparados para más adelante.
+
+## Variantes de apoyos y ajuste de píxeles (2026-11-08)
+- Atlas alternativo alpha `assets/images/arga_rc7/arga_supports_rc7_v2_candidate.webp`
+  guardado en `8b20c8a` (original intacto).
+- Selección determinista de variantes sin modificar la geometría del salto,
+  `lib/main.dart` commit `eaf3b19`; comprobación de carga `de5b4ff`.
+- Diagnóstico de máscaras alpha al 20%: las primeras filas opacas en el
+  atlas original son roca 257, tronco 280, tablón 296; en el alternativo son
+  roca 281, tronco 280, tablón 293. El pintor ajusta cada recurso para colocar
+  su primer píxel opaco sobre el tope de colisión, evitando pies flotantes.
+- Estos recursos siguen siendo candidatos; las capturas auténticas continúan
+  pendientes por decisión de aplazar Flutter y mantener GitHub Actions a 0 USD.
