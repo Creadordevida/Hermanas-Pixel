@@ -50,6 +50,14 @@ void main() {
           reason:'Superseded single panorama must not be decoded');
         expect(game.images['arga_supports'],isNotNull);
         expect(game.images['arga_supports_v2'],isNotNull);
+        // QA-only experimental crab: all six user-approved candidate poses
+        // must decode, and the active state machine is attached to stage 7.
+        for (final pose in ['reposo','caminar','alerta','ataque','impacto','derrota']) {
+          expect(game.images['arga_crab_$pose'],isNotNull,
+            reason:'Missing independent crab pose $pose');
+        }
+        expect(game.argaCrab,isNotNull);
+
         await tester.pump(const Duration(milliseconds:16));
         final boundary=boundaryKey.currentContext!.findRenderObject()!
           as RenderRepaintBoundary;
