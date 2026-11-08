@@ -186,3 +186,6 @@ Una ejecución aislada `42490249834` de `arga-rc7-qa.yml` arrancó runner Ubuntu
 
 ### 2026-11-08 — Segundo QA Arga: análisis correcto, test checkpoint fallido y corregido sin reejecución
 Run [42490644673](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42490644673), job `128762027854`: análisis Flutter superado; tests `10 passed / 1 failed`, `checkpointBefore` esperaba x=110 y devolvía 55 por el checkpoint inicial. `lib/arga_platform_rules.dart` corregido con `math.max(startX, s.x + 55)` commit `1b2c739`, verificado en repo, **aún no probado en Flutter**. Capturas auténticas no generadas; workflow Arga restaurado a solo manual (`87899db`); sin APK ni merge. Próxima acción: QA controlado con permiso y luego inspección de ocho PNG. Véase `RIO_ARGA_RC7_ESTADO.md`.
+
+### 2026-11-08 — QA Arga #56: física validada y cargador pescador corregido
+Run `42490992815`: análisis Flutter limpio, 11/11 tests de física superados; render falló por clave `arga_fisher_reposo` no decodificada. Los seis WebP existen; filtro QA stage 7 omitía `arga_fisher_*`. Corregido en `lib/main.dart` (`9752f46`) y lanzado un solo QA #57 `42491177824` para verificar, pendiente resultado. Workflow de nuevo solo manual (`636b1c1`). Ocho PNG y revisión visual aún pendientes; no APK. Véase `RIO_ARGA_RC7_ESTADO.md`.
