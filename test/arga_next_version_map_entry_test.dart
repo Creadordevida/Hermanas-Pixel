@@ -1,5 +1,8 @@
 // QA-only: the next-release map exposes stage eight without hiding old chapters.
+import 'dart:io';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hermanas_aventura/main.dart';
@@ -14,13 +17,29 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await tester.binding.setSurfaceSize(const Size(1000, 450));
     final key = GlobalKey();
+    final imageKey = GlobalKey();
     try {
-      await tester.pumpWidget(MaterialApp(home: HermanasGame(
-        key: key, qaMap: true,
+      await tester.pumpWidget(MaterialApp(home: RepaintBoundary(
+        key: imageKey,
+        child: HermanasGame(key: key, qaMap: true),
       )));
       await tester.pump();
       expect(find.text('8 · RÍO ARGA'), findsOneWidget);
       expect(find.textContaining('COMPLETADOS: 0/8'), findsOneWidget);
+      final boundary = imageKey.currentContext!.findRenderObject()!
+          as RenderRepaintBoundary;
+      expect(boundary.debugNeedsPaint, isFalse);
+      await tester.runAsync(() async {
+        final picture = await boundary.toImage(pixelRatio: 1);
+        try {
+          final png = await picture.toByteData(format: ui.ImageByteFormat.png);
+          expect(png, isNotNull);
+          final file = File('qa/arga_rc7_flutter/arga_next_version_map.png');
+          await file.parent.create(recursive: true);
+          await file.writeAsBytes(png!.buffer.asUint8List(), flush: true);
+          expect(await file.length(), greaterThan(10000));
+        } finally { picture.dispose(); }
+      });
       await tester.tap(find.text('8 · RÍO ARGA'));
       await tester.pump();
       final dynamic game = key.currentState;
