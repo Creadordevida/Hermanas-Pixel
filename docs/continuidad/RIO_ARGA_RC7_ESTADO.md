@@ -31,6 +31,8 @@ composición. Los enemigos se trabajarán con el método de sprites aprobado.
 
 3. `lib/main.dart` — puente de integración en el motor: en una futura fase `stage == 7`, el suelo continuo se sustituye por apoyos de Arga y el agua resta una vida con reaparición o `gameOver`. Los capítulos 0–6 mantienen su física. El índice 7 sigue sin estar expuesto en el mapa ni declarado en las listas hasta integrar el arte. Commit `31460bb8d46d587c84367da9c2161bbe98c601fd`.
 
+4. `assets/images/arga_rc7/arga_concept_rc7_v1.webp` — primera escena ilustrada 16-bit como **candidata visual**, con puente, orillas arboladas y secuencia de rocas/troncos/tablones. Se conserva aparte: NO es todavía un atlas de capas ni está declarada en `pubspec.yaml` o dibujada por `StagePainter`. Blob verificado en GitHub, commit `0b026e7b6547e65ca4cd114e6f02bd598024bc1d`.
+
 ## Estado real
 **Fase 1 del modelo y puente de física guardados; NO es todavía un capítulo seleccionable ni validado visualmente.**
 Los archivos fueron guardados mediante GitHub; no se ha ejecutado Flutter
@@ -38,9 +40,9 @@ sobre el nuevo módulo y no hay capturas `StagePainter` del Arga.
 No afirmar que el capítulo está listo para RC7.
 
 ## Siguiente acción concreta
-1. Obtener/guardar los recursos pixel-art definitivos del Arga inspirados en
-   la referencia aprobada, con capas lejanas, medias, río y apoyos físicos
-   distintos, protegidos de generadores antiguos.
+1. Evaluar la imagen candidata contra la referencia aprobada y descomponer/rediseñar
+   los recursos pixel-art definitivos en capas lejanas, medias, río animable y
+   apoyos físicos distintos, protegidos de generadores antiguos.
 2. Completar la integración del índice 7 en selección, carga de assets y `StagePainter`
    **solo cuando todos los recursos estén presentes**, sin cambiar índices
    0–6 ni el comportamiento de los capítulos anteriores.
