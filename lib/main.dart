@@ -462,7 +462,6 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       }
       // El prototipo Arga se carga solo en QA, nunca en el juego Android normal.
       if (widget.qaStage == 7) {
-        paths['arga_art'] = 'assets/images/arga_rc7/arga_concept_rc7_v1.webp';
         paths['arga_far'] = 'assets/images/arga_rc7/arga_far_rc7_candidate.webp';
         paths['arga_mid'] = 'assets/images/arga_rc7/arga_mid_rc7_candidate.webp';
         paths['arga_supports'] = 'assets/images/arga_rc7/arga_supports_rc7_v1.webp';
@@ -618,7 +617,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // so the complete original asset loading and gameplay are untouched.
       bool neededForSchoolQA(String key) {
         if (widget.qaStage == 7) {
-          return key == 'arga_art' || key == 'arga_far' ||
+          return key == 'arga_far' ||
             key == 'arga_mid' || key == 'arga_supports' ||
             ['coin','ball','comb'].contains(key) ||
             key.startsWith('futbolista_') || key.startsWith('bailarina_') ||
