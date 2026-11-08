@@ -691,7 +691,13 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // Independent playable collision prototype; release remains art-gated.
       hero=Character(ArgaCourse.startX,y:ArgaCourse.surfaces.first.top);
       argaSupport=ArgaCourse.surfaces.first;
-      argaSupportSince=time;otherSister=Character(230);father=Character(67);
+      argaSupportSince=time;
+      // Coins reward controlled leaps; none are placed in an unrecoverable gap.
+      for(var i=2;i<ArgaCourse.allSurfaces.length;i+=3) {
+        final footing=ArgaCourse.allSurfaces[i];
+        coins.add(Offset(footing.x+footing.width/2,footing.top-65));
+      }
+      otherSister=Character(230);father=Character(67);
       cameraX=0;checkpointX=ArgaCourse.startX;hearts=maxHeroHearts;lastAttackTime=-10;
       levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
       return;
