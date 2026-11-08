@@ -127,27 +127,9 @@ class AdaptiveTitleScreen extends StatelessWidget {
               hasSavedGame?onContinue:null),
 
         ],
-        // Authentic TIKU TWC emblem. The wordmark and seal are rendered
-        // transparently; there is no dark rectangular backing.
-        Positioned.fromRect(rect:g.logo,child:IgnorePointer(
-          child:Column(mainAxisAlignment:MainAxisAlignment.end,children:[
-            // The previous TWC PNG contains visible background pixels that
-            // cover the approved pavement. Keep the transparent typography
-            // only until an alpha-verified emblem is available.
-            Text('THE WOLF COMPANY',
-              textAlign:TextAlign.center,
-              style:TextStyle(color:const Color(0xffffe2a1),
-                fontSize:9*g.scale,fontWeight:FontWeight.w900,
-                letterSpacing:1.5*g.scale,
-                shadows:const [Shadow(color:Colors.black87,blurRadius:2)])),
-            Text('MIREN & SARA SEAL OF APPROVAL',
-              textAlign:TextAlign.center,
-              style:TextStyle(color:const Color(0xffffe2a1),
-                fontSize:5.5*g.scale,fontWeight:FontWeight.w600,
-                letterSpacing:.5*g.scale,
-                shadows:const [Shadow(color:Colors.black87,blurRadius:2)])),
-          ]),
-        )),
+        // No extra logo/text overlay here: the former TWC mark and tiny
+        // text rendered as pale blocks over the approved paving stones.
+        // Reintroduce branding only with a separately verified alpha asset.
       ]);
     },
   );
