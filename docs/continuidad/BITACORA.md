@@ -201,3 +201,7 @@ Rama `work/revision-visual-20261028-continuidad`. Selector de fotogramas ajustad
 ## 2026-11-08 — Río Arga: atlas candidatos de cuatro enemigos
 
 Creados y guardados en la rama cuatro WebP Q95 de revisión 4×6 (24 fotogramas) para cangrejo (`76741f1`), pescador (`4834077`), gamberro (`7d8ee8a`) y trucha (`db5261f`). Contrato y auditoría específicos en `docs/continuidad/ARGA_ENEMIGOS_ANIMACIONES_2026-11-08.md`, actualización `dc8bef0`. Los cuatro son **candidatos** y no están habilitados: trucha con recortes y fondo opaco en segunda tentativa rechazada; niño con márgenes bajos; todos pendientes de revisión de alfa, escala y movimiento real. No se ejecutó Flutter, Actions, APK ni se modificó stage 0–6. Siguiente acción: arreglar y validar atlas finales sin pérdida antes de carga a QA stage 7.
+
+## 2026-11-08 — Arga: trucha y gamberro corregidos, QA de atlas
+
+En GitHub: WebP sin pérdida 4×6 de trucha v3 y gamberro v2, commit `55fb52a`; verificador `qa/check_arga_candidate_atlas.py`, commit `cff556e`. El análisis local detectó 24/24 celdas y margen >=12px en las cuatro versiones candidatas seleccionadas (cangrejo v1, pescador v2, trucha v3, gamberro v2); gamberro v1 fallaba y queda descartado. Documento detallado `docs/continuidad/ARGA_ENEMIGOS_ANIMACIONES_2026-11-08.md`, commit `e13e5cb`. **Pendiente** validación visual de transparencia, paleta, apoyos, fluidez real e integración StagePainter. No Flutter, Actions, APK ni activación del capítulo.
