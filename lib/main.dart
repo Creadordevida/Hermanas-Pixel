@@ -23,6 +23,7 @@ import 'arga_hook_projectile.dart';
 import 'arga_boy_behavior.dart';
 import 'arga_stone_projectile.dart';
 import 'arga_trout_behavior.dart';
+import 'arga_sprite_atlas.dart';
 import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
@@ -2247,8 +2248,27 @@ class StagePainter extends CustomPainter {
       ArgaCrabPose.hurt => 'impacto',
       ArgaCrabPose.defeated => 'derrota',
     };
-    final art=images['arga_crab_$key'];
+    // When the approved 4x6 atlas is bundled, advance real source frames.
+    // Until then use the preserved single-pose candidate with no fabrication.
+    final atlas=images['arga_crab_atlas'];
+    final art=atlas ?? images['arga_crab_$key'];
     if(art==null) return;
+    final row=switch(pose) {
+      ArgaCrabPose.idle => 0,
+      ArgaCrabPose.sideways => 1,
+      ArgaCrabPose.warning => 2,
+      ArgaCrabPose.pinch => 3,
+      ArgaCrabPose.hurt => 4,
+      ArgaCrabPose.defeated => 5,
+    };
+    final source=atlas==null
+      ? Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble())
+      : Rect.fromLTWH(
+          ArgaSpriteAtlas.frame(poseRow:row,elapsed:crab.elapsed) *
+              atlas.width / ArgaSpriteAtlas.columns,
+          row * atlas.height / ArgaSpriteAtlas.rows,
+          atlas.width / ArgaSpriteAtlas.columns,
+          atlas.height / ArgaSpriteAtlas.rows);
     final x=crab.x-cameraX;
     if(x< -100 || x>viewW+100) return;
     // Measured alpha bboxes, all images 1254x1254. Preserve the exact
@@ -2266,7 +2286,7 @@ class StagePainter extends CustomPainter {
       ArgaCourse.surfaces[1].top-size*bottom/1254.0,size,size);
     canvas.save();
     if(crab.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
-    canvas.drawImageRect(art,Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+    canvas.drawImageRect(art,source,
       dest,Paint()..filterQuality=FilterQuality.none);
     canvas.restore();
   }
