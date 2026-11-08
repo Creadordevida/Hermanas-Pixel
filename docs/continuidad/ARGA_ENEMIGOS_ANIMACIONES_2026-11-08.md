@@ -176,3 +176,6 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 
 - Commit `39d5e66`: se amplía la prueba real de `StagePainter` para forzar y guardar una imagen de cada valor de `ArgaCrabPose`: reposo, caminar, alerta, pinzazo, impacto y derrota. Archivos `qa/arga_rc7_flutter/crab_pose_*.png`, 1000×450; no son partida Android. Los cuatro fotogramas temporales de pinzazo y ROI siguen incluidos.
 - Workflow conserva las seis capturas en commit `b9388dc`; ejecución `42508439366` lanzada desde `8a0943d`. Pendiente de resultado e inspección visual de las seis imágenes antes de aprobar alineación/identidad. Originales sin modificar.
+
+- Décima ejecución `42508439366` **SUCCESS**, seis capturas de filas del cangrejo guardadas por QA bot en `4830e17`. Inspección de `crab_pose_hurt.png`: gesto de impacto visible, sobre la roca. `crab_pose_defeated.png` con tiempo 1/9 muestra **caída intermedia todavía de pie**; esto es coherente con el atlas fuente, cuya sexta fila termina con el cangrejo boca arriba en las columnas 2 y 3. No confundir ese estado intermedio con la pose final de derrota.
+- En `bee51063` se corrige exclusivamente la captura QA de derrota para usar tiempo 3/9 y mostrar la última celda del atlas. Undécima ejecución `42508717907` iniciada en `a97a5e6`, pendiente de revisar imagen final. Original intacto.
