@@ -78,6 +78,13 @@ class ArgaCourse {
       right=x+width;
       index++;
     }
+    // The final bank safely covers the actual 36,500-unit chapter exit,
+    // so reaching the goal never requires a leap into open water.
+    const finishGap=65.0;
+    final finishLeft=right+finishGap;
+    final finishWidth=math.max(520.0,36620.0-finishLeft);
+    result.add(ArgaSurface(finishLeft,finishWidth,365,
+        ArgaSurfaceKind.rock,checkpoint:true));
     return result;
   }
 
