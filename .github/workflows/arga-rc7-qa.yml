@@ -38,6 +38,7 @@ jobs:
       - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_boy_gameplay_stone_test.dart
       - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_trout_gameplay_leap_hit_test.dart
       - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_sara_gameplay_leap_hit_test.dart
+      - run: flutter test --no-pub --dart-define=TWC_ARGA_ATLAS_QA=true --reporter expanded test/arga_sara_other_enemies_gameplay_test.dart
       - name: Verify eight authentic 20:9 frames
         run: |
           python3 - <<'PY'
