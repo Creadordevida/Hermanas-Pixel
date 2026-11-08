@@ -2771,7 +2771,7 @@ class StagePainter extends CustomPainter {
         // visual-only, collision remains at its exact world coordinate.
         final warning=footing.kind==ArgaSurfaceKind.sinkingRock &&
             occupied>=.30 && occupied<.60;
-        final shake=warning ? 1.5*math.sin(time*30) : 0.0;
+        final shake=warning ? (math.sin(time*30)>=0 ? 1.0 : -1.0) : 0.0;
         canvas.drawImageRect(atlas,
           Rect.fromLTWH(index*slice,240,slice,290),
           Rect.fromLTWH(x+shake,top-visualOffset,width,100),
