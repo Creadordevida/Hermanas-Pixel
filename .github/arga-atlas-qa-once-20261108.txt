@@ -49,3 +49,5 @@ Rerun 96-frame Flutter test with runAsync readback fix.
 Validate eighth Arga chapter next-version map entry.
 
 Repeat Arga next-version selection after real panorama asset fix.
+
+Capture genuine next release map with eighth chapter access.
