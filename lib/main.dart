@@ -2749,10 +2749,12 @@ class StagePainter extends CustomPainter {
         ArgaSurfaceKind.log || ArgaSurfaceKind.movingLog => 2,
         ArgaSurfaceKind.timber => 3,
       };
-      final count=1;
+      // Keep the final wide safe bank at normal sprite scale.
+      // Stretching one rock to 500+px would destroy its SNES pixel density.
+      final count=footing.width>260 ? (footing.width/190).ceil() : 1;
       for(var i=0;i<count;i++) {
-        final width=footing.width;
-        final x=sx;
+        final width=footing.width/count;
+        final x=sx+i*width;
         if(x>viewW+20 || x+width< -20)continue;
         // Alpha diagnostics of the approved candidate atlas (threshold 20%):
         // rock y=257, log y=280, timber y=296 in the 724px source.
