@@ -469,6 +469,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         paths['arga_far_mill'] = 'assets/images/arga_rc7/arga_far_mill_candidate.webp';
         paths['arga_mid_mill'] = 'assets/images/arga_rc7/arga_mid_mill_candidate.webp';
         paths['arga_supports'] = 'assets/images/arga_rc7/arga_supports_rc7_v1.webp';
+        paths['arga_supports_v2'] = 'assets/images/arga_rc7/arga_supports_rc7_v2_candidate.webp';
       }
       // El nuevo capítulo 1 carga recursos que el juego realmente dibuja.
       // No son renders ilustrativos ni sustituyen a los originales protegidos.
@@ -625,6 +626,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
             key == 'arga_mid' || key == 'arga_far_wild' ||
             key == 'arga_mid_wild' || key == 'arga_far_mill' ||
             key == 'arga_mid_mill' || key == 'arga_supports' ||
+            key == 'arga_supports_v2' ||
             ['coin','ball','comb'].contains(key) ||
             key.startsWith('futbolista_') || key.startsWith('bailarina_') ||
             key.startsWith('costume_') || key.startsWith('padre_');
@@ -2730,10 +2732,16 @@ class StagePainter extends CustomPainter {
     middleLayer('arga_mid',1-wildAlpha);
     middleLayer('arga_mid_wild',wildAlpha*(1-millAlpha));
     middleLayer('arga_mid_mill',millAlpha);
-    final atlas=images['arga_supports'];
-    if(atlas==null)return;
-    final slice=atlas.width/4.0;
-    for(final footing in ArgaCourse.allSurfaces) {
+    final originalAtlas=images['arga_supports'];
+    final alternateAtlas=images['arga_supports_v2'];
+    if(originalAtlas==null)return;
+    for(var surfaceIndex=0;surfaceIndex<ArgaCourse.allSurfaces.length;surfaceIndex++) {
+      final footing=ArgaCourse.allSurfaces[surfaceIndex];
+      // Every third platform uses a distinct approved-candidate silhouette,
+      // with no change to world hitboxes or jump reach.
+      final alternate=alternateAtlas!=null && surfaceIndex%3==1;
+      final atlas=alternate?alternateAtlas!:originalAtlas;
+      final slice=atlas.width/4.0;
       final sx=footing.leftAt(time)-cameraX;
       if(sx>viewW+30 || sx+footing.width< -30)continue;
       final index=switch(footing.kind) {
@@ -2749,7 +2757,9 @@ class StagePainter extends CustomPainter {
         // Alpha diagnostics of the approved candidate atlas (threshold 20%):
         // rock y=257, log y=280, timber y=296 in the 724px source.
         // Align the first visible pixel with the actual collision top.
-        final opaqueTop=switch(index) {1=>257.0,2=>280.0,3=>296.0,_=>271.0};
+        final opaqueTop=alternate
+          ? switch(index) {1=>281.0,2=>280.0,3=>293.0,_=>265.0}
+          : switch(index) {1=>257.0,2=>280.0,3=>296.0,_=>271.0};
         final top=footing.topAt(time,
             identical(argaSupport,footing)?time-argaSupportSince:0);
         final visualOffset=(opaqueTop-240)/290*100;
