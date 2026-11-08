@@ -58,3 +58,10 @@ Actualmente `StagePainter` selecciona **una imagen aislada por estado**. No exis
 - El WebP es una versión sin pérdida del PNG candidato. **No sustituye la pose original aprobada ni entra en el atlas cargado por el motor.** Sigue pendiente limpieza del borde semitransparente, correspondencia de paleta/silueta, línea de apoyo y aprobación visual.
 - No se ejecutaron pruebas Flutter, Actions, APK ni render real.
 - Siguiente microfase precisa: corregir borde alfa de esta pose, comparar a igual escala con la original y solo después construir los fotogramas intermedios; repetir las verificaciones con las otras cinco poses.
+
+## Microfase de caminata — candidato visual transferido (2026-11-08)
+
+- Revisado `cangrejo_caminar_aislado_candidate.webp`: estelas horizontales a la derecha del caparazón y pinza; no apto para atlas final sin corregir.
+- Creada versión separada `assets/images/arga_rc7/enemies_candidates/cangrejo_caminar_limpieza_v2_candidate.webp`, WebP sin pérdida de la prueba de limpieza; mantiene la orientación lateral y elimina las bandas largas. Commit remoto `1484786`, blob `0f59ec2c27e14fc07a9a02416d8c5e983903c23c`.
+- Ambos archivos son **candidatos**, no sprites finales; requieren comparar paleta, contorno duro, alfa, escala y pies con referencias, y después crear ciclos de varios fotogramas distintos. No hay integración StagePainter, pruebas Flutter ni aprobación final.
+- Siguiente microfase: revisar y limpiar alerta, pinzazo, impacto y derrota; inspección conjunta de seis siluetas antes de normalizar celda y producir animación de locomoción. Mantener originales intactos.
