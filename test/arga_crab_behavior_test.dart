@@ -55,6 +55,14 @@ void main() {
     expect(crab.x, x);
   });
 
+  test('rock-edge bounds stop crab from walking into the river', () {
+    final crab = ArgaCrabMotion(375, minX: 320, maxX: 420);
+    for (var i = 0; i < 900; i++) {
+      crab.update(.016, 590, 365, 365, onSameSupport: true);
+    }
+    expect(crab.x, inInclusiveRange(320, 420));
+  });
+
   test('walk is limited to home rock patrol radius', () {
     final crab = ArgaCrabMotion(500);
     for (var i = 0; i < 1000; i++) {
