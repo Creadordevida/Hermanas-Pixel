@@ -2684,7 +2684,7 @@ class StagePainter extends CustomPainter {
       // the skyline, and cropping its bottom would remove the water entirely.
       canvas.drawImageRect(far,
         Rect.fromLTWH(0,0,far.width.toDouble(),far.height.toDouble()),
-        Rect.fromLTWH(-cameraX*.035,0,viewW*1.35,viewH),
+        Rect.fromLTWH(-math.min(cameraX*.035,viewW*.35),0,viewW*1.35,viewH),
         Paint()..filterQuality=FilterQuality.none);
     }
     // Small moving glints over the authored blue-green river texture.
@@ -2705,7 +2705,7 @@ class StagePainter extends CustomPainter {
       final width=viewW*1.8;
       canvas.drawImageRect(mid,
         Rect.fromLTWH(0,0,mid.width.toDouble(),mid.height.toDouble()),
-        Rect.fromLTWH(-cameraX*.20,0,width,viewH),
+        Rect.fromLTWH(-math.min(cameraX*.20,width-viewW),0,width,viewH),
         Paint()..filterQuality=FilterQuality.none);
     }
     final atlas=images['arga_supports'];
