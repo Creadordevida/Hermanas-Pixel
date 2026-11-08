@@ -56,3 +56,15 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   que atraviesan límites. Empezar por cangrejo, comparar cada una de sus
   seis poses con la imagen aprobada, y solo aprobar el atlas cuando esté limpio.
   No hay integración a Flutter ni cambio en capítulos existentes.
+
+## Microtarea 3 — cangrejo, reposo aislado (2026-11-08)
+- Extraída una versión candidata del primer estado (reposo frontal), con
+  separación amplia y transparencia, a partir de la imagen artística aprobada.
+- **Solo candidata, no validada para juego**, 1024×1024: 
+  `assets/images/arga_rc7/enemies_candidates/cangrejo_reposo_aislado_candidate.webp`,
+  Git blob `57a64a1de1c021723d2242ba87d376b9a63d80ee`,
+  commit `27053b0`. Integridad de subida verificada mediante SHA Git.
+- Falta comparar cuantitativamente la silueta y paleta con la pose 1 de la
+  referencia, reducir al tamaño real sin suavizar píxeles, alinear los pies
+  y crear los otros cinco estados limpios. No registrar este fotograma como
+  aprobado ni usarlo en `StagePainter` aún.
