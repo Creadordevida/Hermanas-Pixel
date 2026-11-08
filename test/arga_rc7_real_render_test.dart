@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hermanas_aventura/main.dart';
+import 'package:hermanas_aventura/arga_platform_rules.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +59,27 @@ void main() {
             print('ARGA_STAGEPAINTER_20x9 ${file.path}');
           } finally {image.dispose();}
         });
+        if(x==positions.last) {
+          // Actual game ticker: moving log carries the hero while grounded.
+          game.hero=Character(1060,y:365);
+          game.argaSupport=ArgaCourse.surfaces[4];
+          game.argaSupportSince=game.time;
+          game.hero.grounded=true;
+          game.leftHeld=false;game.rightHeld=false;
+          final logStart=game.hero.x;
+          await tester.pump(const Duration(milliseconds:33));
+          expect(game.hero.x,isNot(logStart),
+              reason:'Moving log must carry the grounded hero');
+
+          // Occupied sinking rock must physically lower the hero.
+          game.hero=Character(1520,y:365);
+          game.argaSupport=ArgaCourse.surfaces[6];
+          game.argaSupportSince=game.time-1.5;
+          game.hero.grounded=true;
+          await tester.pump(const Duration(milliseconds:33));
+          expect(game.hero.y,greaterThan(365),
+              reason:'Sinking rock must descend after warning');
+        }
       }
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
