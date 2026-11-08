@@ -108,3 +108,24 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
   formar atlas de producción solo cuando sean uniformes, luego programar
   aproximación lateral, ventana de pinzazo y daño; no alterar los siete capítulos
   existentes. Después, proceder con pescador, gamberro y trucha.
+
+## Microtarea 6 — contrato físico del cangrejo, aislado (2026-11-08)
+- `lib/arga_crab_behavior.dart`: máquina de estados pura Dart
+  `idle / sideways / warning / pinch / hurt / defeated`, basada en
+  `lib/four_enemy_behaviors.dart` (método probado en enemigos anteriores).
+  Distancia de aproximación 215, aproximación lateral 36 u/s, alcance de
+  pinza 66, aviso visible 0,55 s, golpe a 0,12 s del gesto, recuperación 1,8 s,
+  patrulla limitada a 100 px de su apoyo de origen.
+- El golpe solo es válido si **ambos están en la misma superficie**
+  (`onSameSupport`), personaje a altura alcanzable y delante de las pinzas.
+  Se entrega como máximo una vez. Impacto recibido cancela el ataque;
+  derrota congela definitivamente el movimiento.
+- `test/arga_crab_behavior_test.dart`: cuatro pruebas de aviso/impacto único,
+  huecos y altura, interrupción/derrota y límite de patrulla.
+- Commits `c5d082b`, `62445a9`, `81b6d0d`. **No ejecutados en Dart/Flutter**
+  por las restricciones acordadas; no se ha conectado aún este módulo a
+  `main.dart`, no hay enemigos activados en stage 7 ni se modificó 0–6.
+- **Próximo paso**: normalización conservadora de seis imágenes del cangrejo,
+  revisión comparativa con diseño aprobado, fotogramas intermedios y conexión
+  exclusiva al prototipo QA stage 7; después captura real de `StagePainter`
+  cuando Flutter vuelva a estar disponible.
