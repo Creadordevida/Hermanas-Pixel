@@ -205,3 +205,7 @@ Creados y guardados en la rama cuatro WebP Q95 de revisión 4×6 (24 fotogramas)
 ## 2026-11-08 — Arga: trucha y gamberro corregidos, QA de atlas
 
 En GitHub: WebP sin pérdida 4×6 de trucha v3 y gamberro v2, commit `55fb52a`; verificador `qa/check_arga_candidate_atlas.py`, commit `cff556e`. El análisis local detectó 24/24 celdas y margen >=12px en las cuatro versiones candidatas seleccionadas (cangrejo v1, pescador v2, trucha v3, gamberro v2); gamberro v1 fallaba y queda descartado. Documento detallado `docs/continuidad/ARGA_ENEMIGOS_ANIMACIONES_2026-11-08.md`, commit `e13e5cb`. **Pendiente** validación visual de transparencia, paleta, apoyos, fluidez real e integración StagePainter. No Flutter, Actions, APK ni activación del capítulo.
+
+## 2026-11-08 — Arga: conexión experimental de atlas a Flutter
+
+Commits `61d7b70` (`main.dart` carga de cuatro atlas solo con `TWC_ARGA_ATLAS_QA` y `qaStage:7`), `ee82040` (test de decodificación), `5e97814` (workflow de QA 20:9 preparado con define). Repositorio público confirmado. No se han ejecutado Flutter/Actions ni generado APK; la integración conserva el fallback original. Bloqueo: falta lanzar manualmente el workflow, revisar render auténtico y reparar alfa/escala/fluidez. Referencia ampliada en `docs/continuidad/ARGA_ENEMIGOS_ANIMACIONES_2026-11-08.md`.
