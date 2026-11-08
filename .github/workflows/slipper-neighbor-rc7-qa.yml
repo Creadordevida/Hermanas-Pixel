@@ -1,25 +1,7 @@
 name: Slipper neighbor RC7 Flutter gameplay QA
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
 on:
-  push:
-    branches:
-      - work/revision-visual-20261028-continuidad
-    paths:
-      - lib/main.dart
-      - lib/four_enemy_behaviors.dart
-      - assets/images/enemies_new/slipper_neighbor_atlas.png
-      - assets/images/enemies_new/green_slipper.png
-      - test/slipper_neighbor_rc7_gameplay_test.dart
-      - test/slipper_neighbor_rc7_render_test.dart
-      - test/slipper_neighbor_rc7_release_test.dart
-      - .github/workflows/slipper-neighbor-rc7-qa.yml
-  pull_request:
-    paths:
-      - lib/main.dart
-      - lib/four_enemy_behaviors.dart
-      - test/slipper_neighbor_rc7_gameplay_test.dart
-      - test/slipper_neighbor_rc7_render_test.dart
-      - test/slipper_neighbor_rc7_release_test.dart
-      - .github/workflows/slipper-neighbor-rc7-qa.yml
   workflow_dispatch:
 permissions:
   contents: write
