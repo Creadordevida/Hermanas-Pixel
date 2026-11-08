@@ -184,3 +184,6 @@ Ejecución [42490644673](https://github.com/Creadordevida/Hermanas-Pixel/actions
 
 ### 2026-11-08 — Arga: once pruebas físicas correctas, render aún en revisión
 Run #56 `42490992815`: `flutter analyze` y once tests físicos PASS. Falló primer test `StagePainter` al exigir reposo pescador no cargado; archivos WebP comprobados en GitHub, error aislado en filtro QA, solución `9752f46` de `main.dart`. Run #57 `42491177824` solicitada una sola vez para comprobar la corrección; no afirmar éxito antes de logs. Trigger restaurado a `workflow_dispatch` (`636b1c1`), sin APK ni merge.
+
+### 2026-11-08 — Primeras ocho capturas auténticas del Río Arga
+QA #57 `42491177824` terminó SUCCESS (11 pruebas físicas, `flutter analyze`, render real y 8 PNG 20:9, commit `d5c3f69`). Se inspeccionaron imágenes de inicio, zona pescador y molino. Los paneles/saltos están visibles; quedan cuadrados en glifos de interfaz del runner a revisar. Son capturas Flutter, no Android ni revisión completa de todas las poses. Trigger de workflow manual, sin APK ni merge.
