@@ -111,7 +111,12 @@ void main() {
         if(x==810) {
           // Capture a REAL offensive trout pose after its warning period;
           // loading six images alone does not prove the leap is ever drawn.
+          // Three distinct state transitions: swim -> accelerate -> warning
+          // -> leap. A single oversized tick cannot skip the warning phase.
           game.argaTrout.update(.1,game.hero.x,playerVisible:true);
+          expect(game.argaTrout.pose,ArgaTroutPose.accelerate);
+          game.argaTrout.update(.23,game.hero.x,playerVisible:true);
+          expect(game.argaTrout.pose,ArgaTroutPose.warning);
           game.argaTrout.update(.56,game.hero.x,playerVisible:true);
           expect(game.argaTrout.pose,ArgaTroutPose.leap);
           await tester.pump(const Duration(milliseconds:120));
