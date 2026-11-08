@@ -149,3 +149,5 @@ Próxima acción: obtener recortes de pixel art con alfa duro auténtico y borde
 
 - Nuevo `test/arga_boy_throw_frames_render_test.dart` (commit `b8a70c7`), que fuerza `ArgaBoyPose.throwStone` en cuatro tiempos y guarda capturas `qa/arga_rc7_flutter/boy_throw_frame_{0,1,2,3}.png`. Analiza cambios RGBA solo en la región del niño, con Miren separada, sin alterar físicas ni la activación del capítulo. Es prueba controlada de `StagePainter`, no partida Android.
 - Workflow ampliado en `7a6116b`, ejecución `42507571366` iniciada desde `daac8065`. Estado pendiente de verificación visual y de resultado; si los pies flotan o las poses se recortan, corregir antes de aprobar.
+
+- Octava ejecución `42507571366` **SUCCESS**; capturas preservadas en commit QA `79d9b5e`. Inspección de `boy_throw_frame_1.png` y `_3.png`: el niño presenta poses distintas de preparación/lanzamiento, mantiene rostro, ropa y proporciones, y aparece sobre la roca sin recorte visible. La proyección de piedra y la continuidad de los 24 fotogramas aún no están verificadas en partida; no se declara finalizado.
