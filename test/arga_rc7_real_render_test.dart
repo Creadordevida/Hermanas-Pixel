@@ -71,6 +71,11 @@ void main() {
             reason:'Missing independent stone thrower pose $pose');
         }
         expect(game.argaBoy,isNotNull);
+        for(final pose in ['nado','acelerar','alerta','salto','impacto','derrota']) {
+          expect(game.images['arga_trout_$pose'],isNotNull,
+            reason:'Missing independent trout pose $pose');
+        }
+        expect(game.argaTrout,isNotNull);
 
         await tester.pump(const Duration(milliseconds:16));
         final boundary=boundaryKey.currentContext!.findRenderObject()!
