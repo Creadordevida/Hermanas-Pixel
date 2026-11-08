@@ -74,6 +74,29 @@ void main() {
         expect(listEquals(crabPixels[frame], crabPixels[frame - 1]), isFalse,
             reason: 'Consecutive real pinch poses must differ inside crab bounds');
       }
+      // One genuine render from each row, for manual identity/footing QA.
+      // Do not infer gameplay approval from these controlled forced poses.
+      for (final pose in ArgaCrabPose.values) {
+        game.setState(() {
+          game.argaCrab.pose = pose;
+          game.argaCrab.elapsed = 1 / 9.0;
+        });
+        await tester.pump();
+        final boundary = boundaryKey.currentContext!.findRenderObject()!
+            as RenderRepaintBoundary;
+        expect(boundary.debugNeedsPaint, isFalse);
+        await tester.runAsync(() async {
+          final picture = await boundary.toImage(pixelRatio: 1);
+          try {
+            final data = await picture.toByteData(format: ui.ImageByteFormat.png);
+            expect(data, isNotNull);
+            final file = File('qa/arga_rc7_flutter/crab_pose_${pose.name}.png');
+            await file.parent.create(recursive: true);
+            await file.writeAsBytes(data!.buffer.asUint8List(), flush: true);
+            expect(await file.length(), greaterThan(10000));
+          } finally { picture.dispose(); }
+        });
+      }
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.binding.setSurfaceSize(null);
