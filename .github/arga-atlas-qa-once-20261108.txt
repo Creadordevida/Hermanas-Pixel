@@ -3,3 +3,5 @@ Segunda ejecución: corregido test de transición swim -> accelerate -> warning 
 Tercera ejecución: captura cuatro fotogramas reales de pinzazo del cangrejo.
 
 QA crab strict pixel-byte comparison 2026-11-08 run 4
+
+Quinta ejecución: cuatro poses del cangrejo sin oclusión y comparación ROI.
