@@ -1,24 +1,7 @@
 name: Rival coach RC7 real Flutter gameplay QA
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
 on:
-  push:
-    branches:
-      - work/revision-visual-20261028-continuidad
-    paths:
-      - lib/main.dart
-      - lib/four_enemy_behaviors.dart
-      - assets/images/enemies_new/rival_coach_atlas.png
-      - test/rival_coach_rc7_gameplay_test.dart
-      - test/rival_coach_rc7_render_test.dart
-      - test/rival_coach_rc7_release_test.dart
-      - .github/workflows/rival-coach-rc7-qa.yml
-  pull_request:
-    paths:
-      - lib/main.dart
-      - lib/four_enemy_behaviors.dart
-      - test/rival_coach_rc7_gameplay_test.dart
-      - test/rival_coach_rc7_render_test.dart
-      - test/rival_coach_rc7_release_test.dart
-      - .github/workflows/rival-coach-rc7-qa.yml
   workflow_dispatch:
 permissions:
   contents: write
