@@ -181,3 +181,8 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 - En `bee51063` se corrige exclusivamente la captura QA de derrota para usar tiempo 3/9 y mostrar la última celda del atlas. Undécima ejecución `42508717907` iniciada en `a97a5e6`, pendiente de revisar imagen final. Original intacto.
 
 - Undécima ejecución `42508717907` **SUCCESS**, nueva `qa/arga_rc7_flutter/crab_pose_defeated.png` guardada por QA bot en `a103fb2`. Inspección visual: última columna de derrota aparece realmente boca arriba sobre la roca, con ojos en aspa, pinzas y patas visibles, sin amputación evidente. La fila muestra transición intermedia a tumbo y desenlace terminal; queda pendiente la reproducción continua con colisión/estado de muerte. Esta captura y las otras cinco corresponden a `StagePainter` real, no Android jugado.
+
+### Segunda ronda de poses del pescador
+
+- `test/arga_fisher_cast_frames_render_test.dart` extendido en `d101eec`: además de cuatro fotogramas de lanzamiento, fuerza y guarda las seis filas de `ArgaFisherPose` (reposo, caminar, alerta, lanzamiento, impacto y derrota). Para la derrota utiliza la última celda del atlas. Son capturas auténticas de `StagePainter` (`qa/arga_rc7_flutter/fisher_pose_*.png`), no de Android.
+- Workflow actualizado en `d9fd62f`; ejecución `42509388954` lanzada en `a68023a`, pendiente de comprobar resultado y pies/silueta/caña por imagen. Original aprobado no sobrescrito.
