@@ -45,3 +45,5 @@ Run Sara against crab, fisher and boy in full game loop.
 Run all 96 StagePainter atlas frame continuity test.
 
 Rerun 96-frame Flutter test with runAsync readback fix.
+
+Validate eighth Arga chapter next-version map entry.
