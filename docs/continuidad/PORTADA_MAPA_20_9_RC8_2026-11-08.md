@@ -32,3 +32,9 @@ No confundir `BoxFit.contain` sobre un fondo plano con soporte panorámico. Los 
 - Capturas guardadas bajo `qa/title_map_rc7_flutter/` (title/map en 16:9, 19.5:9 y 20:9), con prueba cromática de ambos extremos a 20:9.
 - Los seis recursos PNG de QA se han verificado por su SHA en la rama tras el push del propio workflow.
 - **Falta aceptación visual humana y prueba en Redmi Note 14.** No sustituye la inspección de la siguiente APK.
+
+## Revisión tras feedback visual del usuario
+- El usuario aprobó expresamente el mapa 20:9 y la ampliación lateral de la portada, pero señaló barras blancas bajo **Continuar** y un parche rectangular de pavimento en la zona baja.
+- Las barras pertenecían al `Text('Sin partida guardada')` superpuesto a la imagen: se eliminó; el botón desactivado conserva su estado funcional.
+- La comparación del PNG fuente con la captura real permitió localizar el parche en la región donde Flutter superponía `twc_title_mark_clean.png`, no en la panorámica. Se quitó esa imagen opaca y se mantuvo la marca tipográfica transparente de TWC. Ningún píxel de la panorámica aprobada ni el mapa fue alterado.
+- QA real repetida con éxito en ejecución `42463124002`: analyze, botones, seis capturas y guardado Git, incluida `qa/title_map_rc7_flutter/title_20_9.png`. **Pendiente aprobación visual de esta nueva captura por el usuario.**
