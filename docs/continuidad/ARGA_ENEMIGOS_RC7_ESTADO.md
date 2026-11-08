@@ -158,3 +158,23 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
 - **Siguiente acción**: ampliar pruebas de física del cangrejo, validar el
   acceso correcto a sprites en QA y aplicar el mismo proceso al pescador,
   sin declarar terminado ninguno hasta prueba real.
+
+## Microtarea 8 — pescador, lógica inicial aislada (2026-11-08)
+- Se conserva aprobada la lámina de seis poses del pescador. Sin separar todavía
+  la caña o el hilo, porque atraviesan bordes de celda y no queremos amputarlos.
+- `lib/arga_fisher_behavior.dart`: se ha añadido el contrato puro Dart
+  `idle / walk / warning / cast / hurt / defeated`; alcance de detección
+  280 px, aviso 0,75 s, lanzamiento al segundo 0,19 de la acción,
+  un único evento de anzuelo por ataque, recuperación 2,7 s.
+  Se cancela el aviso si pierde la línea de visión, al recibir impacto
+  interrumpe el ataque y tras derrota no actúa ni sale de su roca.
+  Commit `7dd8f54`.
+- `test/arga_fisher_behavior_test.dart` (commit `56b8b4`):
+  aviso y único lanzamiento, cancelación por pérdida de visibilidad,
+  interrupción por daño y derrota.
+- **PENDIENTE**: extraer seis siluetas limpias (incluida la caña completa),
+  proyectil/anzuelo con trayectoria visible y colisiones, integración solo
+  `qaStage:7`, capturas reales y tests ejecutados. No existe aún pescador
+  activo en juego.
+- Restricciones sin cambios: no Flutter local, Actions bloqueado sin gasto,
+  ningún capítulo normal afectado.
