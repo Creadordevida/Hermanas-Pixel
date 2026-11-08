@@ -175,3 +175,6 @@ Commits `39ea03b` y `c0aaa2d`: modelo aislado de proyectil de pesca y cinco prue
 
 ### 2026-11-08 — Pescador Arga, conexión exclusiva QA
 `37388cc` conecta pescador y anzuelo al stage 7 de `main.dart`; `f04079d` añade pruebas de carga de seis poses y derrota por dos disparos. Marcador de anzuelo provisional, originales artísticos intactos. Guardado verificado en GitHub, sin ejecución Flutter/Actions ni APK. Aún no aprobado para el juego normal.
+
+### 2026-11-08 — Primer runner público de Arga y corrección estática
+Run `42490249834` (job `128760844026`) de Arga inicia gratis en runner estándar, pasa checkout/Flutter/pub get, falla en warning de análisis línea 2905. Los tests/capturas quedan sin ejecutar. Corrección mínima `9021548` aún no reprobada. Workflow devuelto a manual (`d5d72af`); sin APK ni merges.
