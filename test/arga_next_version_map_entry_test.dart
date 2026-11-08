@@ -44,6 +44,12 @@ void main() {
       await tester.pump(const Duration(milliseconds: 120));
       expect(find.text('8 · RÍO ARGA'), findsOneWidget);
       expect(find.textContaining('COMPLETADOS: 0/8'), findsOneWidget);
+      final entryRect = tester.getRect(find.text('8 · RÍO ARGA'));
+      final counterRect = tester.getRect(find.textContaining('COMPLETADOS: 0/8'));
+      expect(entryRect.overlaps(counterRect), isFalse,
+          reason: 'Arga entry must not be hidden by map counter');
+      expect(entryRect.left, greaterThanOrEqualTo(0));
+      expect(entryRect.right, lessThanOrEqualTo(1000));
       final boundary = imageKey.currentContext!.findRenderObject()!
           as RenderRepaintBoundary;
       expect(boundary.debugNeedsPaint, isFalse);
