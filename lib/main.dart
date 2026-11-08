@@ -31,6 +31,7 @@ import 'new_enemy_behaviors.dart';
 import 'four_enemy_behaviors.dart';
 import 'new_enemy_hitboxes.dart';
 import 'classic_enemy_pose.dart';
+import 'rival_player_atlas.dart';
 import 'adaptive_title_screen.dart';
 
 // Puerta artística conservadora, evaluada en tiempo de ejecución para evitar
@@ -657,6 +658,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       paths['enemy_four_guitar_musician'] = 'assets/images/enemies_new/guitar_musician_atlas.png';
       paths['enemy_four_slipper_neighbor'] = 'assets/images/enemies_new/slipper_neighbor_atlas.png';
       paths['enemy_four_rival_coach'] = 'assets/images/enemies_new/rival_coach_atlas.png';
+      paths['enemy_rival_player_atlas'] = 'assets/images/enemies_new/rival_player_atlas.png';
       paths['slipper'] = 'assets/images/enemies_new/green_slipper.png';
       paths['enemy_navarre_king_atlas'] = 'assets/images/enemies_new/navarre_king_atlas.png';
       for (final kind in ['estafeta_bull','sanfermin_runner']) {
@@ -2149,6 +2151,23 @@ class StagePainter extends CustomPainter {
             groundY-foe.flightAltitude-pigeonFlightFootY[frame]*flightScale+bob,
             pigeonAtlasWorldCell,pigeonAtlasWorldCell),
           source:pigeonFlightSource(frame));
+      } else if(foe.kind=='rival' && images['enemy_rival_player_atlas']!=null) {
+        // Twenty-four genuinely distinct authored poses for the original
+        // training-field rival. The six original PNGs remain untouched.
+        final moving=(foe.x-foe.lastRenderedX).abs()>.12;
+        foe.lastRenderedX=foe.x;
+        final frame=rivalPlayerAtlasFrame(
+          elapsed:foe.t,moving:moving,
+          attacking:foe.launched || foe.meleeWarning>0,
+          stunned:foe.stunned>0,defeated:foe.defeated,
+          attackCooldown:foe.attackCooldown,
+          heroDistance:(hero.x-foe.x).abs());
+        final source=rivalPlayerAtlasSource(frame);
+        final scale=rivalPlayerWorldHeight/rivalPlayerSilhouettes[0].height;
+        _sprite(canvas,images['enemy_rival_player_atlas'],
+          Rect.fromLTWH(x-source.width*scale/2,
+            groundY-source.height*scale,
+            source.width*scale,source.height*scale),source:source);
       } else if(['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher'].contains(foe.kind)) {
         // Distinct combat states: a teacher must not run while throwing an exam,
         // and a referee must actually show his raised red card in wind-up.
