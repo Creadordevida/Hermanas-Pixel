@@ -45,6 +45,10 @@ se conservan temporalmente, sin referencias en `main.dart`, hasta cerrar QA.
 14. `test/arga_platform_rules_test.dart`: tests de curso completo, checkpoints y llegada sobre suelo firme, commits `dc0846a`, `b9e995d`.
 15. `test/arga_rc7_real_render_test.dart` y workflow: ocho capturas 20:9, desde inicio hasta zona final; commits `43d91b3`, `be0a122`.
 
+16. Comprobación independiente de la geometría extendida: 140 apoyos, salida en x=36.630, salto plano 148,93 px, máximo hueco con deriva 106 px y 0 huecos inválidos. **Cálculo reproducido fuera de Flutter**, no QA de juego.
+17. `assets/images/arga_rc7/arga_far_wild_candidate.webp` y `arga_mid_wild_candidate.webp`: segunda vista natural candidata, sin suelo falso, commit `46674a8`; `main.dart` mezcla progresivamente ambas zonas sin desplazar plataformas, commit `c32ca05`; test de decodificación `4540b92`.
+18. Último check-run Arga observado `128697805328`: **failure en 2 s**, una anotación GitHub sin contenido recuperable mediante conexión; otros jobs fallan igualmente antes de ejecutar pasos. Requiere intervención para leer esa anotación o restaurar GitHub Actions.
+
 ## Estado: NO validado
 - El workflow de Arga **sí existe y se ejecuta** (identificado por check-run `arga-prototype`), pero aparece fallido a los pocos segundos y sin pasos/logs recuperables. Los workflows ajenos fallan del mismo modo. **No hay evidencia de compilación ni captura real**, y tampoco evidencia suficiente para atribuir el fallo al código. Revisar la anotación de GitHub Actions al disponer de ella.
 - No hay capturas reales revisadas visualmente del Arga.
@@ -54,8 +58,9 @@ se conservan temporalmente, sin referencias en `main.dart`, hasta cerrar QA.
 - No activar el capítulo normalmente ni declararlo listo para RC7.
 
 ## Siguiente acción precisa
-1. Ejecutar y consultar el workflow específico Arga. Corregir cualquier fallo
-   del análisis, decoding, StagePainter o test, y revisar las cinco imágenes.
+1. Consultar la anotación de error de GitHub Actions del job `arga-prototype`.
+   La conexión actual no permite leerla y los logs devuelven `BlobNotFound`.
+   Reanudar y corregir QA en cuanto el runner funcione; revisar las ocho imágenes.
 2. Comparar las capturas con la referencia original *aprobada* y corregir
    las capas candidatas de fondo lejano, vegetación media y agua móvil, sin
    personajes duplicados ni artefactos en los límites del panorama.
