@@ -190,3 +190,22 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
 - **SIN VERIFICAR EN FLUTTER**: el test está añadido, pero no ejecutado
   y no hay captura real. Imagen, animación y hitbox requieren ajuste a
   tamaño definitivo antes de declarar completado.
+
+## Microtarea 10 — pescador, dos poses gráficas aisladas (2026-11-08)
+- Extraídos para evaluación los estados de **reposo** y **lanzamiento de caña**
+  conservando sombrero, rostro, chaleco, bolsa y caña completa.
+- Archivos CANDIDATOS (no definitivos) bajo
+  `assets/images/arga_rc7/enemies_candidates/`:
+  `pescador_reposo_aislado_candidate.webp` (blob
+  `d16f8cf5f00fc298743a8afa94b2d37251784d99`) y
+  `pescador_lanzamiento_aislado_candidate.webp` (blob
+  `515c87a6df945f4e806b3080b0b565786eb2515e`).
+  Ambos son 1254×1254 WebP sin pérdida, máscaras visibles interiores:
+  reposo bbox (319,134)-(922,1093); lanzamiento
+  bbox (94,284)-(1163,1076). Se ha verificado lectura de ambos
+  archivos tras regenerar la conversión de lanzamiento.
+- Commit de dos candidatos `c656ce8`; commit de corrección conservadora
+  de conversión `5a47723`. Los originales aprobados siguen intactos.
+- Falta caminar, alerta, impacto y derrota; preservar longitud completa
+  de caña y línea, escala igual entre seis estados y separar anzuelo
+  como proyectil. No integrados en StagePainter todavía.
