@@ -144,3 +144,8 @@ Próxima acción: obtener recortes de pixel art con alfa duro auténtico y borde
 - Microcorrección solo para atlas QA en `lib/main.dart`, commit `45b3f80`: anclaje vertical de pescador en superficie 5 cambiado de `size*.90` a `size*.72` (descenso ~28 px). Se preserva el anclaje de imágenes candidatas originales sin atlas y no se modifica la física. Séptima ejecución disparada en `e06dc04`, pendiente de nueva inspección visual y QA.
 
 - Séptima ejecución `42507122056` **SUCCESS**, QA bot guardó capturas renovadas en `c3b2057`. Comparación visual de `fisher_cast_frame_1.png` y `_3.png`: el pescador ya apoya los pies sobre la roca, la caña cambia de posición entre fotogramas y la silueta permanece identificable. La corrección vertical queda aceptada **para este tramo de QA**; faltan revisar las otras cinco filas del atlas, transparencia, colisión del anzuelo y juego Android. Próxima microfase: cuatro fases de lanzamiento del niño y salto de trucha con el mismo test real y revisión de pies/agua.
+
+### Microfase del niño gamberro: lanzamiento en cuatro fotogramas
+
+- Nuevo `test/arga_boy_throw_frames_render_test.dart` (commit `b8a70c7`), que fuerza `ArgaBoyPose.throwStone` en cuatro tiempos y guarda capturas `qa/arga_rc7_flutter/boy_throw_frame_{0,1,2,3}.png`. Analiza cambios RGBA solo en la región del niño, con Miren separada, sin alterar físicas ni la activación del capítulo. Es prueba controlada de `StagePainter`, no partida Android.
+- Workflow ampliado en `7a6116b`, ejecución `42507571366` iniciada desde `daac8065`. Estado pendiente de verificación visual y de resultado; si los pies flotan o las poses se recortan, corregir antes de aprobar.
