@@ -85,3 +85,26 @@ Crear y verificar una extracción conservadora del **cangrejo** (seis máscaras 
 - Faltan estados de alerta, impacto y derrota, así como los intermedios;
   el objetivo siguiente es completar estos tres conservando imagen original,
   limpiar efectos ajenos al cuerpo y después definir atlas homogéneo sin cortes.
+
+## Microtarea 5 — seis estados clave aislados (2026-11-08)
+- Completadas las **seis imágenes individuales candidatas** del cangrejo
+  en `assets/images/arga_rc7/enemies_candidates/`:
+  `cangrejo_{reposo,caminar,alerta,ataque,impacto,derrota}_aislado_candidate.webp`.
+- Tres imágenes nuevas en commit `3dfdc2f`: alerta blob
+  `f6de3a4e2e55264036de2db0ad2734fa09f7caec`,
+  impacto `f27932502854e0dbc8f230a2d73e9558aefeaa14`,
+  derrota `ae3f782352156190ac00cbb1c46d24d2f01107ab`.
+  SHAs de GitHub verificados contra `git hash-object` local.
+- Las seis son 1254×1254 con máscaras opacas interiores (umbral alpha 64);
+  bboxes: reposo (188,374)-(1066,914), caminar (181,399)-(1067,930),
+  alerta (234,288)-(970,967), ataque (164,398)-(1089,899),
+  impacto (312,332)-(922,925), derrota (216,370)-(1037,929).
+  Ninguna silueta recorta los bordes del lienzo.
+- **Sin integrar**: son imágenes aisladas de evaluación. Todavía deben
+  compararse a píxel/paleta con la referencia vinculante, homogeneizar escala
+  y línea de suelo, eliminar de los cuerpos los efectos de impacto que se
+  quieran animar aparte, crear intermedios y comprobar el atlas final en juego.
+- Próximo paso exacto: inspección comparativa de las seis poses a igual escala,
+  formar atlas de producción solo cuando sean uniformes, luego programar
+  aproximación lateral, ventana de pinzazo y daño; no alterar los siete capítulos
+  existentes. Después, proceder con pescador, gamberro y trucha.
