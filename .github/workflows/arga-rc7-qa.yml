@@ -1,0 +1,56 @@
+name: Río Arga RC7 - QA Flutter 20:9 sin APK
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - lib/arga_platform_rules.dart
+      - lib/main.dart
+      - test/arga_rc7_real_render_test.dart
+      - test/arga_platform_rules_test.dart
+      - assets/images/arga_rc7/**
+      - .github/workflows/arga-rc7-qa.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: arga-rc7-real-qa
+  cancel-in-progress: false
+jobs:
+  arga-prototype:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze --no-pub lib
+      - run: flutter test --no-pub --reporter expanded test/arga_platform_rules_test.dart test/arga_crossing_test.dart
+      - run: flutter test --no-pub --reporter expanded test/arga_rc7_real_render_test.dart
+      - name: Verify five authentic 20:9 frames
+        run: |
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+          frames=sorted(Path('qa/arga_rc7_flutter').glob('qa_*.png'))
+          assert len(frames)==5, frames
+          for frame in frames:
+              blob=frame.read_bytes()
+              assert len(blob)>10000 and blob[:8]==b'\x89PNG\r\n\x1a\n'
+              assert struct.unpack('>II',blob[16:24])==(1000,450), frame
+          print('Verified five Arga StagePainter screenshots 1000x450')
+          PY
+      - name: Preserve real QA images (no APK)
+        run: |
+          git config user.name "twc-arga-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa/arga_rc7_flutter/qa_*.png
+          if ! git diff --cached --quiet; then
+            git commit -m "qa(arga): preserve five genuine Flutter 20:9 prototype captures"
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin HEAD:"$GITHUB_REF_NAME"
+          fi
