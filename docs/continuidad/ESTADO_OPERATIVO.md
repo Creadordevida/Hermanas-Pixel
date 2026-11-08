@@ -202,3 +202,7 @@ Runs #59 `42492359121` y #60 `42492684662` **SUCCESS** en Flutter: analizador, c
 ## 2026-11-08 — Río Arga, microfase incremental de animación
 
 Rama `work/revision-visual-20261028-continuidad`. Selector de fotogramas ajustado para admitir filas de 1–4 dibujos reales sin acceder a celdas vacías (`lib/arga_sprite_atlas.dart`, commit `e4c197b`) y pruebas adicionales versionadas (`test/arga_sprite_atlas_test.dart`, commit `4f02cd2`). Evidencia: commits y lectura de código en GitHub; NO se ejecutó Flutter/Dart, NO se generaron atlas definitivos ni capturas StagePainter. Restricciones intactas: no Actions de pago, APK, merge, activación del Arga ni cambios en capítulos 0–6. Pendiente: inspección artística y fotogramas intermedios del cangrejo, después pescador, niño y trucha.
+
+## 2026-11-08 — Río Arga: atlas candidatos de cuatro enemigos
+
+Creados y guardados en la rama cuatro WebP Q95 de revisión 4×6 (24 fotogramas) para cangrejo (`76741f1`), pescador (`4834077`), gamberro (`7d8ee8a`) y trucha (`db5261f`). Contrato y auditoría específicos en `docs/continuidad/ARGA_ENEMIGOS_ANIMACIONES_2026-11-08.md`, actualización `dc8bef0`. Los cuatro son **candidatos** y no están habilitados: trucha con recortes y fondo opaco en segunda tentativa rechazada; niño con márgenes bajos; todos pendientes de revisión de alfa, escala y movimiento real. No se ejecutó Flutter, Actions, APK ni se modificó stage 0–6. Siguiente acción: arreglar y validar atlas finales sin pérdida antes de carga a QA stage 7.
