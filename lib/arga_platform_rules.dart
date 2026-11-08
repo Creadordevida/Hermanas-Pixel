@@ -55,7 +55,9 @@ class ArgaCourse {
 
   static List<ArgaSurface> _extendedSurfaces() {
     final result=<ArgaSurface>[];
-    const gaps=<double>[65,82,74,90,68,76,86,72];
+    const easyGaps=<double>[58,64,68,72,60,66,70,63];
+    const mediumGaps=<double>[68,78,74,84,70,76,82,72];
+    const hardGaps=<double>[77,86,82,93,78,85,90,80];
     const widths=<double>[185,155,220,165,190,170,210,180];
     const heights=<double>[365,360,368,355,362,370,358,365];
     const kinds=<ArgaSurfaceKind>[
@@ -69,12 +71,19 @@ class ArgaCourse {
     while(right<35900) {
       final segment=index~/8;
       final variant=(index+segment*3)%8;
-      final width=widths[variant];
-      final gap=gaps[(index+segment)%8];
-      final kind=kinds[variant];
+      final tier=index<24 ? 0 : index<80 ? 1 : 2;
+      final gapPattern=tier==0 ? easyGaps : tier==1 ? mediumGaps : hardGaps;
+      final gap=gapPattern[(index+segment)%8];
+      final checkpoint=index%8==7;
+      // Every checkpoint is a stable broad rock, never moving or sinking.
+      final width=widths[variant]+(checkpoint ? 80 : 0);
+      final kind=checkpoint ? ArgaSurfaceKind.rock
+          : (tier==2 && index%5==2) ? ArgaSurfaceKind.movingLog
+          : (tier==2 && index%7==4) ? ArgaSurfaceKind.sinkingRock
+          : kinds[variant];
       final x=right+gap;
       result.add(ArgaSurface(x,width,heights[variant],kind,
-          checkpoint:index%8==7,phase:index*.43));
+          checkpoint:checkpoint,phase:index*.43));
       right=x+width;
       index++;
     }
