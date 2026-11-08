@@ -15,13 +15,22 @@ Future<void> waitReady(WidgetTester tester) async {
  }
  throw StateError('Loading timeout');
 }
-Future<void> waitBitmaps(WidgetTester tester) async {
- for(var i=0;i<180;i++){
-  await tester.pump(const Duration(milliseconds:40));
-  if(tester.widgetList<RawImage>(find.byType(RawImage)).any((w)=>w.image!=null)) return;
+Future<void> waitBitmaps(WidgetTester tester,bool isMap) async {
+ final asset=isMap
+   ? 'assets/images/worldmap/pamplona_wide_20x9_approved.webp'
+   : 'assets/images/title_wide_20x9_approved.webp';
+ final background=find.byWidgetPredicate((w)=>
+   w is Image && w.image is AssetImage &&
+   (w.image as AssetImage).assetName==asset);
+ for(var i=0;i<240;i++){
+  await tester.pump(const Duration(milliseconds:50));
+  if(background.evaluate().isNotEmpty){
+   final rendered=find.descendant(of:background,matching:find.byType(RawImage));
+   if(tester.widgetList<RawImage>(rendered).any((w)=>w.image!=null))return;
+  }
   await tester.runAsync(()=>Future<void>.delayed(const Duration(milliseconds:20)));
  }
- throw StateError('Rendered Image.asset not decoded');
+ throw StateError('Panorama asset not decoded: $asset');
 }
 void main(){
  TestWidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +49,7 @@ void main(){
      await tester.pumpWidget(MaterialApp(home:RepaintBoundary(key:key,
       child:HermanasGame(key:ValueKey('${pair.key}-$isMap'),qaMap:isMap,qaTitle:!isMap))));
      await waitReady(tester);
-     await waitBitmaps(tester);
+     await waitBitmaps(tester,isMap);
      await tester.pump(const Duration(milliseconds:120));
      final boundary=key.currentContext!.findRenderObject() as RenderRepaintBoundary;
      expect(boundary.size,pair.value);
