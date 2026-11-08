@@ -70,6 +70,29 @@ void main() {
         expect(listEquals(regions[i], regions[i - 1]), isFalse,
             reason: 'Stone throw must change visibly in boy region');
       }
+      // Capture all six state rows, including the terminal defeat cell.
+      for (final pose in ArgaBoyPose.values) {
+        game.setState(() {
+          game.argaBoy.pose = pose;
+          game.argaBoy.elapsed =
+              pose == ArgaBoyPose.defeated ? 3 / 9.0 : 1 / 9.0;
+        });
+        await tester.pump();
+        final boundary = captureKey.currentContext!.findRenderObject()!
+            as RenderRepaintBoundary;
+        expect(boundary.debugNeedsPaint, isFalse);
+        await tester.runAsync(() async {
+          final picture = await boundary.toImage(pixelRatio: 1);
+          try {
+            final data = await picture.toByteData(format: ui.ImageByteFormat.png);
+            expect(data, isNotNull);
+            final file = File('qa/arga_rc7_flutter/boy_pose_${pose.name}.png');
+            await file.parent.create(recursive: true);
+            await file.writeAsBytes(data!.buffer.asUint8List(), flush: true);
+            expect(await file.length(), greaterThan(10000));
+          } finally { picture.dispose(); }
+        });
+      }
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.binding.setSurfaceSize(null);
