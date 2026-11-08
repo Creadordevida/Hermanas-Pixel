@@ -178,3 +178,10 @@ capítulo. Puede realizarse sin suscripción adicional a GitHub.
   `python3 scripts/arga_static_preflight.py` desde una copia del repositorio.
 - Sigue **sin** prueba Flutter, capturas reales, APK ni habilitación del
   capítulo en el mapa. Se mantienen intactos los límites de gasto de GitHub.
+
+## Primera ejecución Flutter pública, sin APK (2026-11-08)
+- Tras hacerse público el repositorio, se lanzó una única prueba deliberada de `arga-rc7-qa.yml` con marcador `.github/arga-qa-public-once.txt` (commit `0dcd17e`), run **42490249834**, job **128760844026**. El trigger de `push` se retiró inmediatamente en commit `d5d72af`; los 25 workflows siguen manuales.
+- **GitHub Actions ahora sí inicia el runner estándar**: checkout, preparación Flutter 3.47.8 y `flutter pub get` terminaron correctamente. Esto confirma superado el bloqueo inicial de facturación para esta ejecución pública, no certifica facturación global.
+- Resultado del job: `failure` en `flutter analyze --no-pub lib`, **solo warning** `unnecessary_non_null_assertion` en `lib/main.dart:2905:43`; tests físicos, ocho capturas y preservación de PNG quedaron `skipped`. Logs del job recuperados. No se generó APK.
+- Corrección mínima aplicada a `lib/main.dart`: `alternate?alternateAtlas!:originalAtlas` → `alternate?alternateAtlas:originalAtlas`, commit `9021548`. No se modificaron hitboxes, arte, otros capítulos ni la lógica del nivel. **La corrección aún NO se ha revalidado en Flutter.**
+- Siguiente paso: autorizar una segunda ejecución controlada del mismo QA sobre el nuevo HEAD, inspeccionar primero análisis/tests y después ocho capturas reales. No activar automáticamente el resto de Actions.
