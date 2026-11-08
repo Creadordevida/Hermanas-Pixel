@@ -188,3 +188,7 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 - Workflow actualizado en `d9fd62f`; ejecución `42509388954` lanzada en `a68023a`, pendiente de comprobar resultado y pies/silueta/caña por imagen. Original aprobado no sobrescrito.
 
 - Duodécima ejecución `42509388954` **SUCCESS**, las seis capturas `fisher_pose_*.png` fueron guardadas por QA bot en `52e1631`. Inspección visual de `fisher_pose_defeated.png`: sentado con caña sobre roca, terminal legible y sin amputaciones visibles. `fisher_pose_hurt.png` conserva apoyo e identidad, pero se diferencia poco de `fisher_pose_warning.png` a escala 1000×450; revisar contraste/lectura de impacto antes de producción. No equivale a verificar su anzuelo ni daño en partida.
+
+### Segunda ronda de poses del niño gamberro
+
+- `test/arga_boy_throw_frames_render_test.dart` ampliado en `f9aecc8` para guardar `boy_pose_*.png` de los seis valores de `ArgaBoyPose`; derrota terminal en fotograma 3. El test de cuatro fotogramas de lanzamiento y comparación ROI sigue activo. Workflow `ae54dfd` conserva imágenes, ejecución `42509731578` lanzada en `38270f7`, resultado e inspección pendientes. No se altera arte ni física.
