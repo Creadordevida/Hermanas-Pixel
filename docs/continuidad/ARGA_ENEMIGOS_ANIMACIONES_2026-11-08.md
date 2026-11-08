@@ -207,3 +207,8 @@ Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar 
 - Workflow ampliado en `f834eb5` para incluir los cuatro archivos junto a los seis tests previamente activos, conservando análisis Flutter, StagePainter 20:9 y las capturas reales de los cuatro atlas. Ejecución `42510641684` iniciada en `8b0d9a9`; resultado pendiente. No se alteran físicas ni arte; si falla, analizar el caso antes de aprobar la jugabilidad.
 
 - Decimoquinta ejecución `42510641684` **SUCCESS**. Logs del job `128822732301`: **46 tests unitarios pasan** tras incluir los cuatro archivos omitidos (`arga_crab_behavior_test`, `arga_fisher_behavior_test`, `arga_hook_projectile_test`, `arga_stone_boy_trout_behavior_test`), más cinco pruebas de render controlado 20:9. Las pruebas del anzuelo, daño único y comportamiento enemigo ya forman parte de CI. **Limitación:** siguen siendo tests de componentes y capturas controladas; falta un recorrido continuo con colisiones de las protagonistas, caídas y reapariciones en una partida real.
+
+### Integración jugable: caer al río y reaparecer
+
+- `test/arga_drowning_gameplay_test.dart` creado en `e49d29f`: carga `HermanasGame(qaStage:7)` y recursos reales; sitúa a Miren sobre hueco en x=730 con pies cerca de `waterDeathY`, deja avanzar el `AnimationController` real y comprueba que pasa de cinco a cuatro corazones, reaparece sobre el primer checkpoint y no queda bajo agua. Captura `arga_respawn_after_fall.png`, únicamente si pasa. No simula el resultado con llamadas a la clase de reglas aislada.
+- Workflow ampliado en `cc29c0c`, ejecución `42511022596` lanzada en `cddb05f`. Resultado pendiente, corregir sin tocar otros capítulos si se detecta fallo.
