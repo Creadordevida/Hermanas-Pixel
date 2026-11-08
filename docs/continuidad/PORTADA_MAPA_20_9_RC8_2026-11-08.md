@@ -38,3 +38,8 @@ No confundir `BoxFit.contain` sobre un fondo plano con soporte panorámico. Los 
 - Las barras pertenecían al `Text('Sin partida guardada')` superpuesto a la imagen: se eliminó; el botón desactivado conserva su estado funcional.
 - La comparación del PNG fuente con la captura real permitió localizar el parche en la región donde Flutter superponía `twc_title_mark_clean.png`, no en la panorámica. Se quitó esa imagen opaca y se mantuvo la marca tipográfica transparente de TWC. Ningún píxel de la panorámica aprobada ni el mapa fue alterado.
 - QA real repetida con éxito en ejecución `42463124002`: analyze, botones, seis capturas y guardado Git, incluida `qa/title_map_rc7_flutter/title_20_9.png`. **Pendiente aprobación visual de esta nueva captura por el usuario.**
+
+## Segunda corrección fina tras captura del usuario
+- Se observó todavía una banda de baldosas claras bajo la figura del padre, aunque las antiguas manchas habían desaparecido. El WebP panorámico local en esa región presenta pavimento continuo; se identificó la última capa superpuesta de marca `g.logo` como fuente residual.
+- Se retiró la totalidad del sello/texto TWC overlay de la portada (no se elimina de ningún otro lugar del juego). La marca volverá solo con un recurso de transparencia verificada. La imagen panorámica, el mapa y las zonas táctiles no se han modificado.
+- Ejecución QA `42463692214`: pruebas y guardado de capturas auténticas **SUCCESS**. Nueva `qa/title_map_rc7_flutter/title_20_9.png` disponible para aceptación visual del usuario.
