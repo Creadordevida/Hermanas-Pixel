@@ -139,3 +139,6 @@ Próxima acción: obtener recortes de pixel art con alfa duro auténtico y borde
 
 - `test/arga_fisher_cast_frames_render_test.dart` (commit `d6e7525`) carga atlas candidato QA y captura cuatro tiempos de `ArgaFisherPose.cast` con `HermanasGame(qaStage:7,qaWorldX:1110)`. Valida la diferencia de RGBA en región local del pescador y guarda `qa/arga_rc7_flutter/fisher_cast_frame_{0,1,2,3}.png`; imágenes del StagePainter, no partida Android.
 - Workflow ampliado en `0a1d458`, ejecución `42506842165` lanzada desde `2a91b18`; pendiente de resultado, inspección visual y corrección si es necesaria. No se ha habilitado el atlas para publicación.
+
+- Sexta ejecución `42506842165` **SUCCESS**, imágenes guardadas en commit QA `2ff92f2`. Inspección de `fisher_cast_frame_1.png` y `_3.png`: la postura y la caña cambian claramente, pero los pies del pescador flotan unos 20–30 px por encima de la roca. No apto para producción aún.
+- Microcorrección solo para atlas QA en `lib/main.dart`, commit `45b3f80`: anclaje vertical de pescador en superficie 5 cambiado de `size*.90` a `size*.72` (descenso ~28 px). Se preserva el anclaje de imágenes candidatas originales sin atlas y no se modifica la física. Séptima ejecución disparada en `e06dc04`, pendiente de nueva inspección visual y QA.
