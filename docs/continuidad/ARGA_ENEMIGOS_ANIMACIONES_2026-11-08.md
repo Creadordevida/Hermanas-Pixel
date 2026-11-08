@@ -96,3 +96,11 @@ Los cuatro WebP subidos son **previsualizaciones Q95 con pérdida**, no PNG defi
 - **QA reutilizable:** `qa/check_arga_candidate_atlas.py`, commit `cff556e`, comprueba 4×6, 24 imágenes no vacías, margen mínimo de 12px, y detecta duplicados contiguos exactos. Ejecución local: PASS para cangrejo v1, pescador v2, trucha v3, gamberro v2; FAIL para el gamberro v1 por márgenes. **No demuestra** suavidad de movimiento, ausencia de halos, apoyo estable, calidad visual o jugabilidad.
 - Ambos nuevos WebP son **sin pérdida** (equivalentes en píxeles a sus PNG generados); no se han conectado al motor. Se mantienen referencias originales y versiones anteriores.
 - Siguiente microfase: revisar alfa real y diversidad perceptible, normalizar apoyos, fabricar atlas final de producción y comprobarlo en `StagePainter` solo en QA stage 7. Flutter sigue aplazado, sin Actions/APK.
+
+## Auditoría alfa — bloqueo de producción (2026-11-08)
+
+Sobre los PNG generados de los cuatro atlas seleccionados (1024×1536 píxeles), el histograma del canal alfa reveló que **ningún píxel llega a alfa 255** (todos los píxeles visibles son parcialmente transparentes). Píxeles con alfa 1–127 / 128–254: cangrejo 323147 / 448247; pescador 180223 / 232862; gamberro v2 148222 / 222248; trucha v3 149472 / 212373.
+
+Esto **bloquea los atlas como producción definitiva** aunque la geometría y diversidad básica pasen. A escala de juego pueden aparecer bordes suavizados/halos y la paleta mezclarse con el fondo. No pasar estas versiones a `assets/images/enemies_new/` ni al mapa normal; los WebP sin pérdida conservan fielmente esta limitación y los Q95 son solo previsualizaciones.
+
+Próxima acción: obtener recortes de pixel art con alfa duro auténtico y bordes estables, revisar 24 celdas de cada uno frente a la referencia aprobada, luego integrar con `FilterQuality.none` y capturas StagePainter 20:9 antes de habilitar. Ninguna prueba Flutter ejecutada.
