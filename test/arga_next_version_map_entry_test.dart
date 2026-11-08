@@ -7,6 +7,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hermanas_aventura/main.dart';
 
+Future<void> waitForMapBitmap(WidgetTester tester) async {
+  const asset='assets/images/worldmap/pamplona_wide_20x9_approved.webp';
+  for(var i=0;i<240;i++) {
+    await tester.pump(const Duration(milliseconds: 50));
+    final matches=find.byWidgetPredicate((w)=>
+      w is Image && w.image is AssetImage &&
+      (w.image as AssetImage).assetName==asset);
+    if(matches.evaluate().isNotEmpty) {
+      final rendered=find.descendant(of:matches,matching:find.byType(RawImage));
+      if(tester.widgetList<RawImage>(rendered).any((w)=>w.image!=null)) return;
+    }
+    await tester.runAsync(()=>
+      Future<void>.delayed(const Duration(milliseconds: 20)));
+  }
+  throw StateError('Map artwork was never decoded');
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('Arga appears as eighth map chapter and can be selected',
@@ -23,7 +40,8 @@ void main() {
         key: imageKey,
         child: HermanasGame(key: key, qaMap: true),
       )));
-      await tester.pump();
+      await waitForMapBitmap(tester);
+      await tester.pump(const Duration(milliseconds: 120));
       expect(find.text('8 · RÍO ARGA'), findsOneWidget);
       expect(find.textContaining('COMPLETADOS: 0/8'), findsOneWidget);
       final boundary = imageKey.currentContext!.findRenderObject()!
