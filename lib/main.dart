@@ -1366,39 +1366,51 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     Rect.fromLTWH(1299,475,197,81), // Danza
     Rect.fromLTWH(240,534,220,88),  // Colegio
   ];
-  Widget _map() => Stack(children:[
-    // The original map stays at its genuine 800x450 ratio.
-    // Fill peripheral screen space with matching art, no black bars.
-    const Positioned.fill(child:ColoredBox(color:Color(0xff08335c))),
-    Center(child:SizedBox(width:800,height:viewH,child:Stack(children:[
-    // Ajuste 1672/941 ≃ 800/450, sin estirar un fondo antiguo del Ayuntamiento.
-    const Positioned.fill(child:Image(image:AssetImage(
-      'assets/images/worldmap/pamplona_aprobado.png'),fit:BoxFit.contain)),
-    for(int i=0;i<mapHitboxesOriginal.length;i++)
-      Positioned(
-        left: mapHitboxesOriginal[i].left*800/mapArtWidth,
-        top: mapHitboxesOriginal[i].top*viewH/mapArtHeight,
-        width: mapHitboxesOriginal[i].width*800/mapArtWidth,
-        height: mapHitboxesOriginal[i].height*viewH/mapArtHeight,
-        child:Semantics(label:'Capítulo ${i+1}: ${chapterNames[i]}',button:true,
-          child:Material(color:Colors.transparent,
-            child:InkWell(onTap:()=>_selectChapter(i),splashColor:Colors.white24,
-              child:const SizedBox.expand()))),
+  Widget _map() {
+    // Viewport is always viewW x 450: gameplay keeps its existing camera.
+    // This 20:9 scene has exactly one canonical image. A 16:9 viewport crops
+    // only the newly painted side extensions, never the original 16:9 map.
+    const double scale = viewH / mapArtHeight;
+    final double originalLeft = (viewW - mapArtWidth * scale) / 2;
+    Rect area(Rect source) => Rect.fromLTWH(
+      originalLeft + source.left * scale,
+      source.top * scale,
+      source.width * scale,
+      source.height * scale,
+    );
+    Widget transparentTap(Rect source, VoidCallback action, String label) =>
+      Positioned.fromRect(rect:area(source),child:Semantics(
+        label:label,button:true,
+        child:Material(color:Colors.transparent,
+          child:InkWell(onTap:action,splashColor:Colors.white24,
+            child:const SizedBox.expand()))));
+    return Stack(fit:StackFit.expand,children:[
+      const Positioned.fill(child:Image(
+        image:AssetImage('assets/images/worldmap/pamplona_wide_20x9_approved.webp'),
+        fit:BoxFit.cover,alignment:Alignment.center,
+        filterQuality:FilterQuality.high,
+      )),
+      for(int i=0;i<mapHitboxesOriginal.length;i++)
+        transparentTap(mapHitboxesOriginal[i],()=>_selectChapter(i),
+          'Capítulo ${i+1}: ${chapterNames[i]}'),
+      // MENU is already part of the original image, not another overlay.
+      transparentTap(const Rect.fromLTWH(45,790,255,145),_returnTitle,'Menú'),
+      // Replace only the baked-in example counter; position relative to the
+      // original 1672px illustration rather than to the panorama edge.
+      Positioned.fromRect(
+        rect:area(const Rect.fromLTWH(1160,879,500,51)),
+        child:Container(
+          alignment:Alignment.centerRight,
+          padding:const EdgeInsets.symmetric(horizontal:8),
+          decoration:BoxDecoration(color:const Color(0xff08335c),
+            borderRadius:BorderRadius.circular(5)),
+          child:Text('COMPLETADOS: ${completed.length}/7  ·  MONEDAS: $totalCoins',
+            style:const TextStyle(color:Colors.white,fontSize:10,
+              fontWeight:FontWeight.w900)),
+        ),
       ),
-    // Botón MENÚ que está DIBUJADO en la propia imagen aprobada.
-    Positioned(left:22,top:396,width:122,height:43,
-      child:Material(color:Colors.transparent,child:InkWell(onTap:_returnTitle))),
-    // El contador de la ilustración era de ejemplo (123 monedas): actualizaremos
-    // solo esa cifra dinámica con un recuadro del mismo color y tipografía.
-    Positioned(bottom:5,right:9,child:Container(
-      width:250,height:27,alignment:Alignment.centerRight,
-      padding:const EdgeInsets.symmetric(horizontal:8),
-      decoration:BoxDecoration(color:const Color(0xff08335c),
-        borderRadius:BorderRadius.circular(5)),
-      child:Text('COMPLETADOS: ${completed.length}/7  ·  MONEDAS: $totalCoins',
-        style:const TextStyle(color:Colors.white,fontSize:10,fontWeight:FontWeight.w900)))),
-  ]))),
-  ]);
+    ]);
+  }
 
   Widget _chooseScreen()=>Stack(children:[
     Positioned.fill(child:Image.asset(stage==3 && twcQuioscoRC7ArtworkEnabled
