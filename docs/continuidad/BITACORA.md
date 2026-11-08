@@ -187,3 +187,6 @@ Run #56 `42490992815`: `flutter analyze` y once tests físicos PASS. Falló prim
 
 ### 2026-11-08 — Primeras ocho capturas auténticas del Río Arga
 QA #57 `42491177824` terminó SUCCESS (11 pruebas físicas, `flutter analyze`, render real y 8 PNG 20:9, commit `d5c3f69`). Se inspeccionaron imágenes de inicio, zona pescador y molino. Los paneles/saltos están visibles; quedan cuadrados en glifos de interfaz del runner a revisar. Son capturas Flutter, no Android ni revisión completa de todas las poses. Trigger de workflow manual, sin APK ni merge.
+
+### 2026-11-08 — Integración provisional del tercer enemigo Arga
+Niño gamberro conectado a QA-only: seis poses, alerta, piedra con subpasos, colisión y dos impactos de derrota. Commits `c55dd4c`, `49c63b2`, `df4c264`, tests `cdaa77e`, `9eda931`, `c7ecca8`. QA #58 `42492213266` superó análisis y física, pero test gráfico falló por `.name` dinámico; corregido `15ea687`; QA #59 `42492359121` en curso. Sin declaración visual ni APK; workflows manuales.
