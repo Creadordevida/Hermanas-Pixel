@@ -14,6 +14,21 @@ void main() {
     }
   });
 
+  test('Full authored river has safe jumps and recurring checkpoints', () {
+    final all=ArgaCourse.allSurfaces;
+    expect(all.length,greaterThan(100));
+    expect(all.last.x+all.last.width,greaterThan(35900));
+    expect(course.allGapsReachable,isTrue);
+    for(var i=1;i<all.length;i++) {
+      expect(all[i].x,greaterThan(all[i-1].x+all[i-1].width));
+    }
+    for(final point in [3000.0,9000.0,17000.0,28000.0,35000.0]) {
+      final cp=course.checkpointBefore(point);
+      expect(cp,lessThanOrEqualTo(point));
+      expect(course.overPlatform(cp,14,0),isTrue);
+    }
+  });
+
   test('A standing hero can land on rocks but cannot land over open river', () {
     expect(course.landing(350, 370, 100, 14, 0), isNotNull);
     expect(course.landing(350, 370, 260, 14, 0), isNull);
