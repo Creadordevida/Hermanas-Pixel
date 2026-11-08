@@ -56,6 +56,16 @@ void main() {
     expect(course.overPlatform(260, 14, 0), isFalse);
   });
 
+  test('Hero can land on generated supports beyond the first nine', () {
+    final supports=ArgaCourse.allSurfaces;
+    for(final s in supports.where((s)=>s.x>2500).take(12)) {
+      final center=s.x+s.width/2;
+      final top=s.topAt(0,0);
+      expect(course.landing(top-16,top+4,center,14,0),same(s),
+        reason:'All generated platforms must be physically landable');
+    }
+  });
+
   test('Falling into a gap reaches the water death plane', () {
     expect(course.drowned(390), isFalse);
     expect(course.drowned(435), isFalse);
