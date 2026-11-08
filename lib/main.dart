@@ -364,6 +364,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   final List<Obstacle> obstacles = [];
   final List<Rect> platforms = [];
   final ArgaCourse argaCourse = const ArgaCourse();
+  ArgaSurface? argaSupport;
+  double argaSupportSince = 0;
   final List<Offset> coins = [];
   final List<Enemy> enemies = [];
   final List<Projectile> shots = [];
@@ -682,9 +684,12 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _layoutStage() {
     obstacles.clear(); platforms.clear(); coins.clear(); enemies.clear();
     collected.clear(); shots.clear();
+    argaSupport=null;
     if (stage == 7) {
       // Independent playable collision prototype; release remains art-gated.
-      hero=Character(ArgaCourse.startX,y:ArgaCourse.surfaces.first.top);otherSister=Character(230);father=Character(67);
+      hero=Character(ArgaCourse.startX,y:ArgaCourse.surfaces.first.top);
+      argaSupport=ArgaCourse.surfaces.first;
+      argaSupportSince=time;otherSister=Character(230);father=Character(67);
       cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
       levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
       return;
@@ -926,6 +931,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     if(input!=0)hero.facing=input;
     final prevX=hero.x,prevY=hero.y;
     final wasGrounded=hero.grounded;
+    // Carry a standing hero with a moving log, but never during a jump.
+    if(stage==7 && wasGrounded &&
+        argaSupport?.kind==ArgaSurfaceKind.movingLog) {
+      hero.x+=argaSupport!.leftAt(time)-argaSupport!.leftAt(time-dt);
+    }
     hero.x=(hero.x+hero.vx*dt).clamp(actorRadius,stageWidth-actorRadius).toDouble();
     // Solid platforms and themed obstacles share one tested collision routine.
     final solids=<Rect>[...platforms,...obstacles.where((o)=>!o.destroyed).map((o)=>o.rect)];
@@ -951,11 +961,36 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     }
     if(stage == 7) {
       // Solid footing exists only over the authored rocks, wood and banks.
-      final support=hero.vy>=0
-          ? argaCourse.landing(prevY,hero.y,hero.x,actorRadius,time)
-          : null;
-      if(support!=null) {
-        hero.y=support.topAt(time,0);hero.vy=0;hero.grounded=true;
+      ArgaSurface? support;
+      // A sinking rock physically carries the hero downward after warning.
+      if(wasGrounded && argaSupport!=null &&
+          hero.x+actorRadius>argaSupport!.leftAt(time) &&
+          hero.x-actorRadius<argaSupport!.rightAt(time)) {
+        final y=argaSupport!.topAt(time,time-argaSupportSince);
+        if(y<=ArgaCourse.waterDeathY) {
+          hero.y=y;hero.vy=0;hero.grounded=true;
+          support=argaSupport;
+        }
+      }
+      if(support==null && hero.vy>=0) {
+        for(final item in ArgaCourse.surfaces) {
+          final elapsed=identical(argaSupport,item)
+              ? time-argaSupportSince : 0.0;
+          final top=item.topAt(time,elapsed);
+          if(prevY<=top+2 && hero.y>=top &&
+              hero.x+actorRadius>item.leftAt(time) &&
+              hero.x-actorRadius<item.rightAt(time)) {
+            support=item;
+            hero.y=top;hero.vy=0;hero.grounded=true;
+            break;
+          }
+        }
+      }
+      if(support==null) {
+        argaSupport=null;
+      } else if(!identical(argaSupport,support)) {
+        argaSupport=support;
+        argaSupportSince=time;
       }
       checkpointX=argaCourse.checkpointBefore(hero.x);
       if(argaCourse.drowned(hero.y)) {
@@ -964,6 +999,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           screen=Screen.gameOver;leftHeld=false;rightHeld=false;
         } else {
           hero=Character(checkpointX,y:ArgaCourse.surfaces.first.top);
+          argaSupport=ArgaCourse.surfaces.firstWhere(
+            (s)=>s.checkpoint && (s.x+55-checkpointX).abs()<.01,
+            orElse:()=>ArgaCourse.surfaces.first);
+          argaSupportSince=time;
           cameraX=(checkpointX-viewW*.375).clamp(0.0,stageWidth-viewW).toDouble();
           hero.hurtUntil=time+1.0;
         }
@@ -1300,6 +1339,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _jump() {
     if(screen==Screen.playing && hero.grounded) {
       hero.vy=-423;hero.grounded=false;
+      if(stage==7) argaSupport=null;
       hero.jumpedAt=time;
       hero.landedAt=-100;
     }
@@ -1318,6 +1358,13 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _retry() {
     final cp=checkpointX;
     _layoutStage();hero.x=cp;hearts=maxHeroHearts;
+    if(stage==7) {
+      hero.y=ArgaCourse.surfaces.first.top;
+      argaSupport=ArgaCourse.surfaces.firstWhere(
+        (s)=>s.checkpoint && (s.x+55-cp).abs()<.01,
+        orElse:()=>ArgaCourse.surfaces.first);
+      argaSupportSince=time;
+    }
     cameraX=(cp-viewW*.375).clamp(0.0,stageWidth-viewW).toDouble();
     // Reset only the unfinished part of the chapter after checkpoint.
     screen=Screen.playing;_save();setState((){});
@@ -1499,6 +1546,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       images:images,stage:stage,cameraX:cameraX,time:time,lastAttackTime:lastAttackTime,hero:hero,
       otherSister:otherSister,father:father,showFamily:showFamily || exitTime>=0,
       selected:selected,obstacles:obstacles,platforms:platforms,
+      argaSupport:argaSupport,argaSupportSince:argaSupportSince,
       coins:coins,collected:collected,enemies:enemies,shots:shots,particlesUntil:particlesUntil))),
     Positioned(left:10,top:9,child:Container(padding:const EdgeInsets.all(8),
       decoration:BoxDecoration(color:const Color(0xdd0d3050),borderRadius:BorderRadius.circular(7)),
@@ -1569,10 +1617,13 @@ class StagePainter extends CustomPainter {
     required this.hero,required this.otherSister,required this.father,required this.showFamily,
     required this.selected,required this.obstacles,required this.platforms,
     required this.coins,required this.collected,required this.enemies,required this.shots,
-    required this.particlesUntil});
+    required this.particlesUntil,
+    this.argaSupport,this.argaSupportSince=0});
   final Map<String,ui.Image> images;
   final int stage,selected;
   final double cameraX,time,particlesUntil,lastAttackTime;
+  final ArgaSurface? argaSupport;
+  final double argaSupportSince;
   final Character hero,otherSister,father;
   final bool showFamily;
   final List<Obstacle> obstacles;
@@ -2645,7 +2696,9 @@ class StagePainter extends CustomPainter {
         if(x>viewW+20 || x+width< -20)continue;
         canvas.drawImageRect(atlas,
           Rect.fromLTWH(index*slice,240,slice,290),
-          Rect.fromLTWH(x,footing.top-8,width,100),
+          Rect.fromLTWH(x,footing.topAt(time,
+              identical(argaSupport,footing)?time-argaSupportSince:0)-8,
+              width,100),
           Paint()..filterQuality=FilterQuality.none);
       }
     }
