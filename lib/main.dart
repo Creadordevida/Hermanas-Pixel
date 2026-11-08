@@ -16,7 +16,7 @@ import 'chapter_one_camera_v3.dart';
 import 'creature_sheet_bounds.dart';
 import 'animal_sprite_bounds.dart';
 import 'jump_visuals.dart';
-import 'arga_crossing.dart';
+import 'arga_platform_rules.dart';
 import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
@@ -363,7 +363,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   Character otherSister = Character(190);
   final List<Obstacle> obstacles = [];
   final List<Rect> platforms = [];
-  List<ArgaFooting> argaFootings = const [];
+  final ArgaCourse argaCourse = const ArgaCourse();
   final List<Offset> coins = [];
   final List<Enemy> enemies = [];
   final List<Projectile> shots = [];
@@ -682,11 +682,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _layoutStage() {
     obstacles.clear(); platforms.clear(); coins.clear(); enemies.clear();
     collected.clear(); shots.clear();
-    argaFootings = const [];
     if (stage == 7) {
       // Independent playable collision prototype; release remains art-gated.
-      argaFootings = ArgaCrossing.firstSection();
-      hero=Character(145);otherSister=Character(230);father=Character(67);
+      hero=Character(ArgaCourse.startX,y:ArgaCourse.surfaces.first.top);otherSister=Character(230);father=Character(67);
       cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
       levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
       return;
@@ -953,18 +951,19 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     }
     if(stage == 7) {
       // Solid footing exists only over the authored rocks, wood and banks.
-      if(hero.vy>=0 && prevY<=ArgaCrossing.landingY &&
-          hero.y>=ArgaCrossing.landingY &&
-          ArgaCrossing.supported(hero.x, argaFootings)) {
-        hero.y=ArgaCrossing.landingY;hero.vy=0;hero.grounded=true;
+      final support=hero.vy>=0
+          ? argaCourse.landing(prevY,hero.y,hero.x,actorRadius,time)
+          : null;
+      if(support!=null) {
+        hero.y=support.topAt(time,0);hero.vy=0;hero.grounded=true;
       }
-      if(ArgaCrossing.fellInWater(footX:hero.x,footY:hero.y,
-          verticalVelocity:hero.vy,footings:argaFootings)) {
+      checkpointX=argaCourse.checkpointBefore(hero.x);
+      if(argaCourse.drowned(hero.y)) {
         hearts=heartsAfterDamage(hearts);
         if(hearts==0) {
           screen=Screen.gameOver;leftHeld=false;rightHeld=false;
         } else {
-          hero=Character(checkpointX);
+          hero=Character(checkpointX,y:ArgaCourse.surfaces.first.top);
           cameraX=(checkpointX-viewW*.375).clamp(0.0,stageWidth-viewW).toDouble();
           hero.hurtUntil=time+1.0;
         }
@@ -2615,7 +2614,7 @@ class StagePainter extends CustomPainter {
     }
   }
 
-  /// QA-only prototype. Visual supports share ArgaCrossing world coordinates.
+  /// QA-only prototype. Visual supports share the existing ArgaCourse world coordinates.
   /// The flattened river concept remains a candidate, not final parallax.
   void _argaPrototypeBackground(Canvas canvas) {
     final background=images['arga_art'];
@@ -2631,26 +2630,22 @@ class StagePainter extends CustomPainter {
     final atlas=images['arga_supports'];
     if(atlas==null)return;
     final slice=atlas.width/4.0;
-    for(final footing in ArgaCrossing.firstSection()) {
-      final sx=footing.left-cameraX;
+    for(final footing in ArgaCourse.surfaces) {
+      final sx=footing.leftAt(time)-cameraX;
       if(sx>viewW+30 || sx+footing.width< -30)continue;
-      final index=switch(footing.surface) {
-        ArgaSurface.bank => 0,
-        ArgaSurface.rock => 1,
-        ArgaSurface.log => 2,
-        ArgaSurface.plank => 3,
+      final index=switch(footing.kind) {
+        ArgaSurfaceKind.rock || ArgaSurfaceKind.sinkingRock => 1,
+        ArgaSurfaceKind.log || ArgaSurfaceKind.movingLog => 2,
+        ArgaSurfaceKind.timber => 3,
       };
-      // Broad riverbanks use discrete non-stretched stone chunks.
-      final count=footing.surface==ArgaSurface.bank
-          ? (footing.width/160).ceil() : 1;
+      final count=1;
       for(var i=0;i<count;i++) {
-        final width=footing.surface==ArgaSurface.bank
-            ? math.min(160.0,footing.width-i*160) : footing.width;
-        final x=sx+(footing.surface==ArgaSurface.bank?i*160:0);
+        final width=footing.width;
+        final x=sx;
         if(x>viewW+20 || x+width< -20)continue;
         canvas.drawImageRect(atlas,
           Rect.fromLTWH(index*slice,240,slice,290),
-          Rect.fromLTWH(x,382,width,100),
+          Rect.fromLTWH(x,footing.top-8,width,100),
           Paint()..filterQuality=FilterQuality.none);
       }
     }
