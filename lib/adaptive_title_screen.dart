@@ -125,17 +125,7 @@ class AdaptiveTitleScreen extends StatelessWidget {
           button(g.newGame,'Nueva partida',onNewGame),
           button(g.continueGame,'Continuar',
               hasSavedGame?onContinue:null),
-          if(!hasSavedGame)
-            Positioned.fromRect(
-              rect:g.originalRect(const Rect.fromLTWH(578,310,183,17)),
-              child:IgnorePointer(child:Text(
-                'Sin partida guardada',
-                textAlign:TextAlign.center,
-                style:TextStyle(color:Colors.white,
-                  fontSize:11*g.scale,
-                  shadows:const [Shadow(color:Colors.black,blurRadius:3)]),
-              )),
-            ),
+
         ],
         // Authentic TIKU TWC emblem. The wordmark and seal are rendered
         // transparently; there is no dark rectangular backing.
