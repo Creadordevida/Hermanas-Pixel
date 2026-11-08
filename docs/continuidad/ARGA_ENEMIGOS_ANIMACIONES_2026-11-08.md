@@ -134,3 +134,8 @@ Próxima acción: obtener recortes de pixel art con alfa duro auténtico y borde
 
 - Commit `58d16d6`: `test/arga_crab_attack_frames_render_test.dart` mueve a Miren de `qaWorldX=340` a `230` y extrae RGBA solo del rectángulo de pantalla `(310,250)-(450,395)` para comprobar cuatro ataques `pinch`; excluye monedas e interfaz del criterio de diferencia. Conserva cuatro capturas auténticas. No cambia arte, físicas ni entrada al capítulo.
 - Ejecución automatizada `42506624338` disparada en `1c054804`; **SUCCESS**. Los cuatro fotogramas tienen cambios reales en la región RGBA del cangrejo; el análisis Flutter y el resto de pruebas también pasan. Captura `crab_pinch_frame_1.png` inspeccionada tras sincronizar commit QA `4e9b88b`: Miren a la izquierda, pinzas y rostro del cangrejo visibles en la segunda roca, sin oclusión. El tamaño es llamativo y aún requiere validación de proporciones con referencia, hitbox, transparencia y contacto durante el juego.
+
+### Microfase lanzamiento del pescador (QA controlada)
+
+- `test/arga_fisher_cast_frames_render_test.dart` (commit `d6e7525`) carga atlas candidato QA y captura cuatro tiempos de `ArgaFisherPose.cast` con `HermanasGame(qaStage:7,qaWorldX:1110)`. Valida la diferencia de RGBA en región local del pescador y guarda `qa/arga_rc7_flutter/fisher_cast_frame_{0,1,2,3}.png`; imágenes del StagePainter, no partida Android.
+- Workflow ampliado en `0a1d458`, ejecución `42506842165` lanzada desde `2a91b18`; pendiente de resultado, inspección visual y corrección si es necesaria. No se ha habilitado el atlas para publicación.
