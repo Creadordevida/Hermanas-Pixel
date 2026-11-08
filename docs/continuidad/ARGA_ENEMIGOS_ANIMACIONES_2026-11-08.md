@@ -158,3 +158,16 @@ Próxima acción: obtener recortes de pixel art con alfa duro auténtico y borde
 - Workflow ampliado en `985b218`, novena ejecución `42507858191` lanzada desde `037b34f`; pendiente de resultado e inspección. No se activa el capítulo ni el atlas en producción.
 
 - Novena ejecución `42507858191` **SUCCESS**, cuatro imágenes persistidas en commit QA `dd6f233`. Inspección visual de `trout_pose_frame_1.png` y `_3.png`: la trucha modifica claramente la curvatura del cuerpo y queda visible sobre el agua, sin recorte evidente en esas poses. La altura se fijó solo para QA de animación: el recorrido y contacto con Miren/Sara deben evaluarse aparte; también las demás filas de atlas, alfa y escala relativa. Primera ronda de cuatro ataques por enemigo completada, pero **ninguno habilitado para producción**.
+
+### Auditoría de canal alfa de los cuatro atlas candidatos (solo lectura)
+
+Se inspeccionaron sus 1.572.864 píxeles RGBA por atlas con Pillow, sin alterar archivos. En los cuatro, `alpha máximo=254` y **ningún píxel tiene alfa 255**. Se identifican además muchos píxeles con alfa muy bajo (`1..30`), posible borde/halo al componer sobre río y rocas:
+
+| Atlas QA | Alfa=0 | Alfa 1..254 | Alfa 1..30 | Alfa>=240 | Máximo |
+|---|---:|---:|---:|---:|---:|
+| Cangrejo q95 | 801.470 | 771.394 | 303.242 | 402.660 | 254 |
+| Pescador q95 | 1.159.779 | 413.085 | 167.816 | 208.708 | 254 |
+| Niño lossless | 1.202.394 | 370.470 | 138.613 | 203.215 | 254 |
+| Trucha lossless | 1.211.019 | 361.845 | 140.543 | 192.941 | 254 |
+
+**Consecuencia:** los atlas pasan render y animación de cuatro fotogramas por enemigo, pero todavía no pasan una aprobación de transparencia. No aplicar umbral destructivo global ni modificar los originales: primero comparar siluetas/halos con las referencias en fondos claros y oscuros, crear variantes derivadas y volver a validar cada fotograma. La pérdida de alfa 255 puede ser del proceso de creación/exportación; la tabla, por sí sola, no implica que todos los bordes se vean mal.
