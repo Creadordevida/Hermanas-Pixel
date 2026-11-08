@@ -22,6 +22,7 @@ import 'arga_fisher_behavior.dart';
 import 'arga_hook_projectile.dart';
 import 'arga_boy_behavior.dart';
 import 'arga_stone_projectile.dart';
+import 'arga_trout_behavior.dart';
 import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
@@ -378,6 +379,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   ArgaBoyMotion? argaBoy;
   ArgaStoneProjectile? argaStone;
   int argaBoyHits = 0;
+  ArgaTroutMotion? argaTrout;
+  int argaTroutHits = 0;
   double argaSupportSince = 0;
   final List<Offset> coins = [];
   final List<Enemy> enemies = [];
@@ -493,6 +496,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         }
         for(final pose in ['reposo','correr','alerta','lanzamiento','impacto','derrota']) {
           paths['arga_boy_$pose']='assets/images/arga_rc7/enemies_candidates/gamberro_${pose}_aislado_candidate.webp';
+        }
+        for(final pose in ['nado','acelerar','alerta','salto','impacto','derrota']) {
+          paths['arga_trout_$pose']='assets/images/arga_rc7/enemies_candidates/trucha_${pose}_aislado_candidate.webp';
         }
       }
       // El nuevo capítulo 1 carga recursos que el juego realmente dibuja.
@@ -654,6 +660,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
             key.startsWith('arga_crab_') ||
             key.startsWith('arga_fisher_') ||
             key.startsWith('arga_boy_') ||
+            key.startsWith('arga_trout_') ||
             ['coin','ball','comb'].contains(key) ||
             key.startsWith('futbolista_') || key.startsWith('bailarina_') ||
             key.startsWith('costume_') || key.startsWith('padre_');
@@ -728,6 +735,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     argaHook=null;
     argaFisherHits=0;
     argaBoy=null;argaStone=null;argaBoyHits=0;
+    argaTrout=null;argaTroutHits=0;
     if (stage == 7) {
       // Independent playable collision prototype; release remains art-gated.
       hero=Character(ArgaCourse.startX,y:ArgaCourse.surfaces.first.top);
@@ -737,6 +745,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       argaCrab=ArgaCrabMotion(375,minX:320,maxX:420);
       argaFisher=ArgaFisherMotion(1300);
       argaBoy=ArgaBoyMotion(2035);
+      argaTrout=ArgaTroutMotion(952,waterY:417);
       // Coins reward controlled leaps; none are placed in an unrecoverable gap.
       for(var i=2;i<ArgaCourse.allSurfaces.length;i+=3) {
         final footing=ArgaCourse.allSurfaces[i];
@@ -1099,6 +1108,16 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         }
       }
     }
+    if(stage==7 && argaTrout!=null) {
+      final trout=argaTrout!;
+      trout.update(dt,hero.x,
+        playerVisible:hero.y<ArgaCourse.waterDeathY &&
+          (hero.x-trout.x).abs()<ArgaTroutMotion.detection);
+      if(trout.touchesHero(centerX:hero.x,halfWidth:actorRadius,
+          top:hero.y-actorHeight,bottom:hero.y-8)) {
+        _receiveDamage(trout.facing);
+      }
+    }
     if(stage==7 && argaBoy!=null) {
       final boy=argaBoy!;
       final visible=(hero.x-boy.x).abs()<ArgaBoyMotion.sight &&
@@ -1154,6 +1173,15 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         shot.active=false;argaBoyHits++;argaStone?.cancel();
         if(argaBoyHits>=2) {argaBoy!.defeat();}
         else {argaBoy!.hit();}
+        particlesUntil=time+.35;continue;
+      }
+      if(stage==7 && !shot.fromEnemy && argaTrout!=null &&
+          argaTrout!.airborne && !argaTrout!.defeated &&
+          (shot.x-argaTrout!.x).abs()<35 &&
+          (shot.y-argaTrout!.y).abs()<30) {
+        shot.active=false;argaTroutHits++;
+        if(argaTroutHits>=2) {argaTrout!.defeat();}
+        else {argaTrout!.hit();}
         particlesUntil=time+.35;continue;
       }
       if(shot.fromEnemy) {
@@ -1681,7 +1709,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       selected:selected,obstacles:obstacles,platforms:platforms,
       argaSupport:argaSupport,argaSupportSince:argaSupportSince,
       argaCrab:argaCrab,argaFisher:argaFisher,argaHook:argaHook,
-      argaBoy:argaBoy,argaStone:argaStone,
+      argaBoy:argaBoy,argaStone:argaStone,argaTrout:argaTrout,
       coins:coins,collected:collected,enemies:enemies,shots:shots,particlesUntil:particlesUntil))),
     Positioned(left:10,top:9,child:Container(padding:const EdgeInsets.all(8),
       decoration:BoxDecoration(color:const Color(0xdd0d3050),borderRadius:BorderRadius.circular(7)),
@@ -1754,7 +1782,7 @@ class StagePainter extends CustomPainter {
     required this.coins,required this.collected,required this.enemies,required this.shots,
     required this.particlesUntil,
     this.argaSupport,this.argaSupportSince=0,this.argaCrab,this.argaFisher,this.argaHook,
-    this.argaBoy,this.argaStone});
+    this.argaBoy,this.argaStone,this.argaTrout});
   final Map<String,ui.Image> images;
   final int stage,selected;
   final double cameraX,time,particlesUntil,lastAttackTime;
@@ -1764,6 +1792,7 @@ class StagePainter extends CustomPainter {
   final ArgaHookProjectile? argaHook;
   final ArgaBoyMotion? argaBoy;
   final ArgaStoneProjectile? argaStone;
+  final ArgaTroutMotion? argaTrout;
   final double argaSupportSince;
   final Character hero,otherSister,father;
   final bool showFamily;
@@ -2182,6 +2211,7 @@ class StagePainter extends CustomPainter {
     if(stage==7 && argaCrab!=null) _paintArgaCrab(canvas);
     if(stage==7 && argaFisher!=null) _paintArgaFisher(canvas);
     if(stage==7 && argaBoy!=null) _paintArgaBoy(canvas);
+    if(stage==7 && argaTrout!=null) _paintArgaTrout(canvas);
     if(showFamily) {
       _actor(canvas,father,'padre',2,false);
       _actor(canvas,otherSister,selected==0?'bailarina':'futbolista',1-selected,false);
@@ -2313,6 +2343,30 @@ class StagePainter extends CustomPainter {
       canvas.drawCircle(center,ArgaStoneProjectile.radius,
         Paint()..style=PaintingStyle.stroke..strokeWidth=2..color=const Color(0xff564940));
     }
+  }
+
+  // QA-only trout: waterline and leap share physical coordinates.
+  void _paintArgaTrout(Canvas canvas) {
+    final trout=argaTrout!;
+    final pose=switch(trout.pose) {
+      ArgaTroutPose.swim=>'nado',
+      ArgaTroutPose.accelerate=>'acelerar',
+      ArgaTroutPose.warning=>'alerta',
+      ArgaTroutPose.leap=>'salto',
+      ArgaTroutPose.hurt=>'impacto',
+      ArgaTroutPose.defeated=>'derrota',
+    };
+    final art=images['arga_trout_$pose'];
+    if(art==null)return;
+    final x=trout.x-cameraX;
+    if(x < -140 || x > viewW+140)return;
+    const size=105.0;
+    final dest=Rect.fromLTWH(x-size/2,trout.y-size*.58,size,size);
+    canvas.save();
+    if(trout.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
+    canvas.drawImageRect(art,Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+      dest,Paint()..filterQuality=FilterQuality.none);
+    canvas.restore();
   }
 
   // SNES-inspired THREE-PLANE world: distant approved illustration (camera
