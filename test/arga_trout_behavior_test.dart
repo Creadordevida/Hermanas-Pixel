@@ -6,6 +6,8 @@ void main() {
     final trout=ArgaTroutMotion(600);
     trout.update(.1,650,playerVisible:true);
     expect(trout.pose,ArgaTroutPose.accelerate);
+    trout.update(.23,650,playerVisible:true);
+    expect(trout.pose,ArgaTroutPose.warning);
     trout.update(.56,650,playerVisible:true);
     expect(trout.pose,ArgaTroutPose.leap);
     trout.update(.12,650,playerVisible:true);
