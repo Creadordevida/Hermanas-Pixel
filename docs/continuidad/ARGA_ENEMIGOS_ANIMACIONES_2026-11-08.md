@@ -129,3 +129,8 @@ Próxima acción: obtener recortes de pixel art con alfa duro auténtico y borde
 - Ejecución `42505155653` **SUCCESS**: el render Flutter guardó los cuatro PNG auténticos; no son fotogramas de una partida Android. Capturas inspeccionadas individualmente: pinzas y postura cambian visiblemente, pies en la roca, pero el cuerpo del cangrejo queda parcialmente oculto detrás de Miren. Con esta cámara **no queda evaluada de forma completa la lectura del ataque ni la colisión**.
 - Se detectó que el primer test comparaba listas de bytes con un matcher potencialmente insuficiente para asegurar diferencia de contenido. Se corrigió a `listEquals(samples[frame], samples[frame - 1]) == false` en commit `77981cb`. Cuarta ejecución estricta: `42505487355` **SUCCESS**; todas las comprobaciones de Flutter terminaron correctamente con igualdad de bytes contrastada.
 - **Próxima microfase:** completar y registrar el resultado estricto; capturar pinzazo con personaje separado para inspección visual sin oclusión, y verificar impacto con test de juego. Mantener atlas como candidato; no declarar producción ni levantar la bandera de QA por defecto.
+
+### Microfase de encuadre sin oclusión y región del cangrejo
+
+- Commit `58d16d6`: `test/arga_crab_attack_frames_render_test.dart` mueve a Miren de `qaWorldX=340` a `230` y extrae RGBA solo del rectángulo de pantalla `(310,250)-(450,395)` para comprobar cuatro ataques `pinch`; excluye monedas e interfaz del criterio de diferencia. Conserva cuatro capturas auténticas. No cambia arte, físicas ni entrada al capítulo.
+- Ejecución automatizada `42506624338` disparada en `1c054804`; estado pendiente de comprobar y documentar tras inspección de las nuevas imágenes.
