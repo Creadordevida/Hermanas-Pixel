@@ -49,6 +49,17 @@ se conservan temporalmente, sin referencias en `main.dart`, hasta cerrar QA.
 17. `assets/images/arga_rc7/arga_far_wild_candidate.webp` y `arga_mid_wild_candidate.webp`: segunda vista natural candidata, sin suelo falso, commit `46674a8`; `main.dart` mezcla progresivamente ambas zonas sin desplazar plataformas, commit `c32ca05`; test de decodificación `4540b92`.
 18. Último check-run Arga observado `128697805328`: **failure en 2 s**, una anotación GitHub sin contenido recuperable mediante conexión; otros jobs fallan igualmente antes de ejecutar pasos. Requiere intervención para leer esa anotación o restaurar GitHub Actions.
 
+## Bloqueo confirmado por captura del propietario (2026-11-08)
+La anotación de GitHub Actions indica: "The job was not started because
+recent account payments have failed or your spending limit needs to be
+increased. Please check the 'Billing & plans' section..."
+Esto explica el fallo en ~2 segundos y la ausencia de pasos y logs.
+**No es un diagnóstico de error de Flutter ni de los tests.**
+Requiere que el propietario revise facturación y límite de gasto de GitHub
+Actions. No modificar el código para intentar sortear esta restricción.
+Después de resolverlo, reejecutar `arga-rc7-qa.yml`, revisar ocho PNG
+`StagePainter` 20:9 y corregir únicamente problemas efectivamente observados.
+
 ## Estado: NO validado
 - El workflow de Arga **sí existe y se ejecuta** (identificado por check-run `arga-prototype`), pero aparece fallido a los pocos segundos y sin pasos/logs recuperables. Los workflows ajenos fallan del mismo modo. **No hay evidencia de compilación ni captura real**, y tampoco evidencia suficiente para atribuir el fallo al código. Revisar la anotación de GitHub Actions al disponer de ella.
 - No hay capturas reales revisadas visualmente del Arga.
