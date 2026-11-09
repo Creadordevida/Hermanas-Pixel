@@ -674,6 +674,19 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // football/dance scenes and six other stages. In Android qaStage is null,
       // so the complete original asset loading and gameplay are untouched.
       bool neededForSchoolQA(String key) {
+        // Only the opt-in Quiosco candidate QA needs a small scene-3 asset set.
+        // Full Android/standard StagePainter loading remains unchanged.
+        // Avoid decoding several hundred MB of unrelated chapter-one tiles
+        // before capturing the 5,782px candidate slice.
+        if (widget.qaStage == 3 && widget.qaQuioscoPrototype != null) {
+          return key == 'ground_3' || key == 'coin' ||
+              key == 'ball' || key == 'comb' ||
+              key == 'crate' || key == 'logo' ||
+              key.startsWith('futbolista_') ||
+              key.startsWith('bailarina_') ||
+              key.startsWith('costume_') ||
+              key.startsWith('padre_');
+        }
         if (widget.qaStage == 7) {
           return key == 'arga_far' ||
             key == 'arga_mid' || key == 'arga_far_wild' ||
