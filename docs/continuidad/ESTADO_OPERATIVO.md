@@ -1,3 +1,7 @@
+## 2026-11-09 — Fauna: atlas candidato del perro marrón
+
+Guardado `assets/images/dog/brown_atlas.png`, SHA-256 `8b0520024c3ce27549790e5438e8a86513374b77e2ddb029e23680edec9ce317`. Revisadas 24 celdas distintas, transparencia binaria, márgenes limpios y apoyo en y=94. Los PNG originales permanecen en `assets/images/dog/`. La tabla de fases está en [FAUNA_RENOVACION.md](FAUNA_RENOVACION.md). En este punto el atlas aún no sustituye el arte en la ruta de juego. La siguiente microfase es comprobar mordisco, esquiva y derrota en Flutter con Miren y Sara y revisar capturas de StagePainter antes de activar el atlas.
+
 ## 2026-11-09 — Quiosco: siete capturas Flutter auténticas del candidato, sin integrar
 
 GitHub Actions 42637909799 y 42638008924 SUCCESS. Test real Flutter `test/quiosco_candidate_flutter_preview_test.dart`: 7 cámaras, 1000x450, panorama de 5782x390 importado de ZIP subido; artefacto descargado y comprobado localmente, capturas visibles en conversación. Es CustomPainter QA aislado; NO StagePainter, gameplay ni APK. El render muestra quiosco bien visible pero repetición de edificios; el escenario de 37440px sigue sin reconstruir. Última documentación específica commit d8cf9569364d5fb66677fb6efd6dd2d74cb19cd9. No modificar assets activos ni fusionar. Siguiente fase arte continuo completo y prueba StagePainter después de completar 39 paneles.
