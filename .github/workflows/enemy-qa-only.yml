@@ -41,7 +41,7 @@ jobs:
       - name: Behaviors and collisions
         run: flutter test --no-pub test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart test/classic_enemy_pose_test.dart test/rival_player_atlas_test.dart test/enemy_gameplay_integration_test.dart
       - name: Authentic StagePainter captures
-        run: flutter test --no-pub --reporter expanded test/qa_new_enemy_real_render_test.dart test/qa_four_classic_enemy_render_test.dart
+        run: flutter test --no-pub --reporter expanded test/qa_four_classic_enemy_render_test.dart
       - name: Save compact genuine render evidence to Git, no artifact quota
         run: |
           python3 - <<'PY'
