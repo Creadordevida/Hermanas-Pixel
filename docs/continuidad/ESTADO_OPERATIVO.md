@@ -1,3 +1,7 @@
+## 2026-11-09 — Quiosco: siete capturas Flutter auténticas del candidato, sin integrar
+
+GitHub Actions 42637909799 y 42638008924 SUCCESS. Test real Flutter `test/quiosco_candidate_flutter_preview_test.dart`: 7 cámaras, 1000x450, panorama de 5782x390 importado de ZIP subido; artefacto descargado y comprobado localmente, capturas visibles en conversación. Es CustomPainter QA aislado; NO StagePainter, gameplay ni APK. El render muestra quiosco bien visible pero repetición de edificios; el escenario de 37440px sigue sin reconstruir. Última documentación específica commit d8cf9569364d5fb66677fb6efd6dd2d74cb19cd9. No modificar assets activos ni fusionar. Siguiente fase arte continuo completo y prueba StagePainter después de completar 39 paneles.
+
 ## 2026-11-09 — Quiosco: QA de uniones internas probada
 
 Confirmado **SUCCESS** en ejecución GitHub Actions https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42619854509 (SHA 7169e20952a60c5b7ea5a146bd2854b78235e470). Incorpora test sintético que detecta un corte RGB brusco entre núcleo y conector, además de test de solapamiento, montaje y contrato geométrico. Registrada nueva herramienta `tools/audit_quiosco_connector_edges.py` y actualizada la documentación principal, commit 0374777aeaf33f93ea35f924e8c77b1b4564a590. No hay seis panoramas definitivos, no se han actualizado 39 WebP activos y no existe captura StagePainter de esta reconstrucción. Mantener RC antigua intacta, sin APK ni merge. Próxima acción: composición visual de los sectores a partir de arte original diferente y QA visual auténtico.
