@@ -116,3 +116,10 @@ Siguiente accion concreta: elaborar y transferir los seis nucleos y conectores A
 Confirmada visibilidad PUBLIC y permisos de escritura. GitHub indica que sus ejecutores estándar alojados son gratuitos para repositorios públicos (con límites de uso y almacenamiento). Se ha creado `.github/workflows/quiosco-connectors-qa.yml` en commit `d75c2ca96506348934a242f6c3b58c4028437207`; disparador por cambios específicos, una única batería ligera de pruebas Python, SIN APK y SIN otros workflows de desarrollo. Primera ejecución: https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42618299825 . No confundir los tests de conectores con validación artística o capturas reales de StagePainter.
 
 Los seis núcleos de arte final y los tres conectores finales siguen pendientes. No sustituir los 39 paneles activos hasta revisarlos en contexto y registrar pruebas genuinas del nuevo arte.
+
+
+### Resultado verificado del workflow público (09/11/2026)
+
+Ejecución GitHub Actions [42618299825](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42618299825): **SUCCESS**, commit `d75c2ca96506348934a242f6c3b58c4028437207`. Pasaron instalación de Pillow, `tools/test_quiosco_connector_overlap.py`, `tools/test_quiosco_connector_production.py` y `tools/check_quiosco_rebuild_plan.py`. Es validación **técnica sintética y de geometría**, no prueba de recursos artísticos terminados ni visualización en Flutter. El repositorio está confirmado PUBLIC y los runners estándar no consumen minutos de la cuota privada. Mantener el flujo limitado a las rutas del Quiosco.
+
+Se examinó visualmente en el entorno de conversación el arte candidato de fachadas `quiosco_fachadas_tramo_candidato_2172x390.png`: recorte de fachadas y soportales SIN cielo ni base de suelo completos, con escala de arquitectura grande y longitud insuficiente para el primer sector (7.200 px). No elevarlo a fondo de juego ni reutilizarlo en mosaico; sirven de referencia de estilo y posible fuente parcial. Arte nuevo integrado: NO. Capturas Flutter del nuevo montaje: NO.
