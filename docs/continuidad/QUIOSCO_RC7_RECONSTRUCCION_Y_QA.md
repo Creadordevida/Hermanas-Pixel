@@ -93,3 +93,10 @@ Orden aprobada: cada segmento comparte un edificio con el anterior, evitando un 
 Nueva prueba tools/test_quiosco_connector_overlap.py: compara una imagen sintetica continua con paneles ensamblados y comprueba que una junta alterada se rechaza. Prueba guardada pero EJECUCION PENDIENTE. Commit de prueba d900d55b7f118f5de97fef53983c3133609405e1.
 
 ESTADO: codigo de ensamblaje en GitHub; faltan ilustraciones definitivas de seis sectores, ejecucion del montador, Flutter StagePainter, inspeccion del desplazamiento, regresiones y aprobacion visual del usuario. Los 39 paneles activos no se han cambiado. No APK, no fusionar PR.
+
+
+## 09/11/2026 — Produccion de conectores a partir de piezas originales
+
+La idea de compartir los edificios de entrada/salida se ha trasladado tambien a la fase de preparacion: `tools/prepare_quiosco_connector_sources.py` (commit `49bce794309ffd3962348143652159b783dd52c7`) acepta seis nucleos arquitectonicos realmente distintos y tres PNG de conectores A/B/C de 256x390. Genera las seis panoramicas esperadas por `tools/build_quiosco_reconstruction.py`; el montaje posterior elimina la franja compartida duplicada. Las transiciones entre cada nucleo y su conector aun requieren revision artistica; las uniones pixel-identicas entre piezas no garantizan que las cornisas, arboles o edificios queden bien dibujados.
+
+Se ha guardado `tools/test_quiosco_connector_production.py` (commit `a0f972602590d216ae10dd31edf4880d550664df`), caso sintetico de tres nucleos + dos conectores que compara el raster final con el raster original para detectar columnas duplicadas/perdidas. **No consta ejecucion del test en el runner ni del nuevo pipeline con recursos definitivos.** Los seis nucleos originales de produccion aun no estan creados/subidos. No hay nuevas capturas reales StagePainter, ni arte final validado, ni APK; el codigo y PNG activos estan protegidos. Siguiente accion: producir arte original amplio con conexiones revisadas, ejecutar los dos tests, montar candidate y contrastar captura Flutter real.
