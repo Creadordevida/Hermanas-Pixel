@@ -269,3 +269,7 @@ QA pública gratuita en runner Ubuntu. Run `42504613482` falló por test que omi
 
 Detectado salto directo a pose de derrota 23; las poses 20, 21 y 22 quedaban sin uso. Corregida selección de las cuatro poses de derrota/impacto/ataque con el reloj de cada evento (`deathAt`, `stunned`, `meleeWarning`), preservando movimiento, física y originales. Ampliada prueba `rival_player_atlas_test.dart`, adaptado el test de StagePainter y registrado en workflow manual `enemy-qa-only.yml`. Recortes 24/24 comprobados mediante alfa del PNG real, no con arte inventado. Falta ejecutar el runner Flutter para confirmar la imagen integrada y las pruebas.
 
+## 2026-11-09 — Cierre del rival clásico con evidencia real de Flutter
+
+Con autorización, se ejecutó QA en Actions: #9 detectó error de redondeo (`[12,12,14,15]` frente a `[12,13,14,15]`), corregido con épsilon; #10 validó todas las pruebas de comportamiento y falló en capturas por test decimal/Estafeta ajeno; #11 **SUCCESS** en análisis, comportamiento y capturas auténticas de enemigos clásicos. Evidencia real guardada en `qa/enemy_verified_render/classic_rival.{jpg,webp,gif}` por `76dd51a`; inspeccionados fondo, escala, pies y caída horizontal. Se preservan las seis poses originales y el entrenador rival. Workflow devuelto a manual para evitar nuevas ejecuciones. Preparado técnicamente para RC siguiente; revisión subjetiva del usuario en Android todavía pendiente.
+
