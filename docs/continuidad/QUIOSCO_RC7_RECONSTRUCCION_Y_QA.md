@@ -109,3 +109,10 @@ Verificados los codigos de constructor de seis sectores y prueba sintetica. Se a
 Limitacion comprobada en esta sesion: los seis nuevos nucleos de produccion NO estan en el repositorio ni en los archivos disponibles del entorno; solo existe un candidato antiguo insuficiente para cubrir la longitud. No se ha ejecutado el ensamblador con arte definitivo; no hay captura real del fondo nuevo ni aprobacion estetica. Existe captura autentica del fondo ANTERIOR `qa/quiosco_rc7_flutter/800x450_18200.png`, que NO demuestra la mejora. Los workflows Quiosco permanecen en modo manual por restriccion previa de presupuesto; no se han lanzado. No cambiar el fondo de RC7, no generar APK ni fusionar PR hasta contar con arte original, inspeccion del barrido en Flutter y autorizacion de version.
 
 Siguiente accion concreta: elaborar y transferir los seis nucleos y conectores A/B/C, ejecutar test_quiosco_connector_production.py, prepare_quiosco_connector_sources.py, build_quiosco_reconstruction.py y preview_quiosco_connector_seams.py, inspeccionar las diez juntas internas/externas, luego StagePainter genuino y QA de juego.
+
+
+## 09/11/2026 — Repositorio público: reanudación de QA gratuita
+
+Confirmada visibilidad PUBLIC y permisos de escritura. GitHub indica que sus ejecutores estándar alojados son gratuitos para repositorios públicos (con límites de uso y almacenamiento). Se ha creado `.github/workflows/quiosco-connectors-qa.yml` en commit `d75c2ca96506348934a242f6c3b58c4028437207`; disparador por cambios específicos, una única batería ligera de pruebas Python, SIN APK y SIN otros workflows de desarrollo. Primera ejecución: https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42618299825 . No confundir los tests de conectores con validación artística o capturas reales de StagePainter.
+
+Los seis núcleos de arte final y los tres conectores finales siguen pendientes. No sustituir los 39 paneles activos hasta revisarlos en contexto y registrar pruebas genuinas del nuevo arte.
