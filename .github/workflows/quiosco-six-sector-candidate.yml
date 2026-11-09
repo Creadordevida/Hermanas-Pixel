@@ -9,6 +9,10 @@ on:
       - 'test/quiosco_candidate_flutter_preview_test.dart'
       - '.github/workflows/quiosco-six-sector-candidate.yml'
 
+concurrency:
+  group: quiosco-six-sector-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
