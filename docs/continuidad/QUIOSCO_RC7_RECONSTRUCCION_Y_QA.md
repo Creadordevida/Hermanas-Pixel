@@ -1,3 +1,11 @@
+## 09/11/2026 — microfase de reducción de dobles exposiciones (candidata)
+
+- Commit de código `af1127c`: el montador conserva la costura optimizada de píxeles pero limita la mezcla horizontal a 6px en toda la altura. Antes mezclaba todo el cielo en 96px y producía nubes y tejados fantasma.
+- Se regeneró localmente el mundo candidato de 37.440×390 y sus 17 contactos, conservando un único quiosco y los 39 paneles de QA separados. Se inspeccionaron los contactos anterior y posterior: desaparece la superposición ancha de tejados y nubes.
+- **No aprobado aún:** la corrección no recompone cornisas incompatibles, huecos o alturas de edificios. Persisten saltos arquitectónicos; los 39 paneles activos NO se modifican.
+- `python3 tools/test_quiosco_connector_edges.py`: PASS sintético. `pytest` no está instalado y no se ejecutó Flutter, Actions, APK ni prueba Android.
+- Próxima microfase: retoque artístico específico de los empalmes que siguen cortados, con nueva inspección y capturas auténticas de StagePainter antes de activación.
+
 # Quiosco RC7 / Plaza del Castillo — primera integración protegida
 
 ## Auditoría de continuidad retomada — 09/11/2026 (segunda conversación)
