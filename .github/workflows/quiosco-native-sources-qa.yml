@@ -1,0 +1,41 @@
+name: Quiosco native source StagePainter QA only
+
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - 'test/quiosco_native_sources_stage_painter_test.dart'
+      - 'qa/quiosco_inbox/fachadas_*_nativas_2172x390_candidate.webp'
+      - '.github/workflows/quiosco-native-sources-qa.yml'
+
+concurrency:
+  group: quiosco-native-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Eight authentic StagePainter frames from native-size candidate art
+        timeout-minutes: 18
+        run: flutter test --no-pub --reporter expanded test/quiosco_native_sources_stage_painter_test.dart
+      - name: Upload StagePainter native candidate captures - not final chapter
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quiosco-native-sources-REAL-StagePainter-NOT-final
+          path: qa-output/quiosco_native_stagepainter/*.png
+          if-no-files-found: warn
+          retention-days: 14
