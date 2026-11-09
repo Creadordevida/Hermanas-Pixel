@@ -61,6 +61,7 @@ def main():
             'optimized_cost':cost(best),
             'join_differences':[round(score[a][b],2) for a,b in zip(best,best[1:])],
             'status':'COLOR_ONLY_VISUAL_ARCHITECTURE_REVIEW_REQUIRED'}
+    args.out.parent.mkdir(parents=True,exist_ok=True)
     args.out.write_text(json.dumps(result,indent=2,ensure_ascii=False)+'\n')
     print(json.dumps(result,indent=2,ensure_ascii=False))
 
