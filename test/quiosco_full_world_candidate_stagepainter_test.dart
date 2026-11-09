@@ -47,7 +47,7 @@ void main() {
         for(final im in frames) { im.dispose(); }
         final last=(count*960-1050).toDouble();
         final positions=<double>[0,860,940,1850,2810,3770,4730,
-          5690,6650,7610,8570].where((x)=>x<=last).toList();
+          5690,6650,7610,8000,8300,8400].where((x)=>x<=last).toList();
         try {
           for(final local in positions) {
             await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
