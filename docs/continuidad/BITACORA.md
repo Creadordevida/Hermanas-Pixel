@@ -1,3 +1,7 @@
+## 2026-11-09 — Comparsa del Ayuntamiento: atlas candidato del Gigante
+
+Referencia visual aprobada y tabla de poses guardadas en [COMPARSA_AYUNTAMIENTO.md](COMPARSA_AYUNTAMIENTO.md). Atlas de 24 poses con portador visible y pivote de apoyo. La siguiente microfase es integrar y comprobar en Flutter el giro, el golpe único, la recuperación y la derrota con ambas protagonistas.
+
 ## 2026-11-09 — Fauna: paloma integrada y validación conjunta Flutter
 
 Atlas RGBA de 32 poses `assets/images/enemies_hifi/pigeon_atlas.png` (SHA-256 `c94dda99e5ab55d6299dd086807c657b9d28e066e40b16d757a19dde6b2e3135`). Una orientación de referencia y pivote común para suelo y aire. Despegue con agachada, vuelo con batida y planeo, aviso de picado de 220 ms y dirección comprometida, recuperación de altura, aterrizaje con patas extendidas y caída visible hasta tocar suelo. La caja de impacto sigue el cuerpo y deja libres las puntas de ala. Se conserva el arte anterior. Diez pruebas Flutter de fauna, ocho de PNG y análisis Dart focalizado superados. StagePainter 1000 × 450 inspeccionado en los cuatro animales, con ataque, esquiva y derrota con Miren y Sara. Las mejoras están activas en la ruta normal de esta rama. Queda probar en el Redmi Note 14 la próxima compilación Android, incluidos controles, legibilidad y fluidez.
