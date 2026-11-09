@@ -204,7 +204,7 @@ class Enemy {
         // Bite must be shown BEFORE damage; no invisible instant contact.
         if (!biteApplied && animalTime >= dogBiteContactTime) {
           biteApplied = true;
-          if (distance * facing >= 0 && absDist < 61 && heroY > groundY - 48) {
+          if (distance * facing > 0 && absDist < 61 && heroY > groundY - 48) {
             return true;
           }
         }

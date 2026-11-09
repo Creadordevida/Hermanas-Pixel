@@ -1,3 +1,7 @@
+## 2026-11-09 — Fauna: dálmata integrado y probado en Flutter
+
+Atlas RGBA de 24 poses `assets/images/dog/dalmatian_atlas.png` (SHA-256 `7dd7e4d5818725c82100488b9c2bc52e940bec06a478571a5999657da39151ad`). Pata larga, torso estrecho y manchas coherentes. Marcha de 5 fps y carrera de 8 fps, con velocidad y resistencia originales. La zona de impacto del proyectil sigue el cuerpo más alto. Los golpes finales de ambos perros muestran primero retroceso y luego caída. Nueve pruebas Flutter de fauna y siete de recursos superadas. Inspeccionadas capturas reales de StagePainter a 1000 × 450. Queda Android. Siguiente animal: dóberman.
+
 ## 2026-11-09 — Fauna: perro marrón integrado y probado en Flutter
 
 El atlas de `7c47b577` ya se carga en la ruta normal. Mordisco con dos poses de preparación, un solo contacto frontal a los 240 ms y recuperación. Paseo y carrera separados, pivote de pies común y caja de impacto ajustada al cuerpo. Flutter 3.47.8 pasó las 9 pruebas de fauna, incluida la escena con marcha, mordisco, esquiva, balón y peine con Miren y Sara. Capturas auténticas de StagePainter de 1000 × 450 inspeccionadas. Los originales siguen disponibles. Una prueba antigua de `dog_mechanics_test.dart` espera siete capítulos y la rama tiene ocho. Pendiente validar en Android. Siguiente animal: dálmata.

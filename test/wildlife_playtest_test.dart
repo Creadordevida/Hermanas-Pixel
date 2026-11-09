@@ -195,7 +195,7 @@ void main() {
               if (i % 5 == 0) {
                 await capture('$kind/motion/c_${i.toString().padLeft(3, '0')}');
               }
-              if (i == 20) await capture('$kind/defeat');
+              if (i == 26) await capture('$kind/defeat');
               await tick();
             }
           }

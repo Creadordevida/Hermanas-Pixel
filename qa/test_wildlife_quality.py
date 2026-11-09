@@ -20,7 +20,7 @@ POSES = ('idle', 'walk', 'alert', 'run', 'bite', 'hit', 'stunned', 'defeated')
 
 class WildlifeQuality(unittest.TestCase):
     def test_renewed_dog_atlases_have_distinct_clean_grounded_cells(self):
-        for breed in ('brown',):
+        for breed in ('brown', 'dalmatian'):
             with self.subTest(breed=breed), Image.open(DOG / f'{breed}_atlas.png') as atlas:
                 self.assertEqual(atlas.mode, 'RGBA')
                 self.assertEqual(atlas.size, (608, 648))
