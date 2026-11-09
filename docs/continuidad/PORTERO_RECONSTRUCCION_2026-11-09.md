@@ -36,3 +36,11 @@
 - `test/goalkeeper_animation_contract_test.dart` comprueba filas, transición aviso/estirada, acceso a las cuatro poses de caída y rango 0–23 de índice. **Código preparatorio desconectado del motor normal:** el portero existente se conserva.
 - `flutter` y `dart` no están disponibles localmente; pruebas no ejecutadas. CI manual tampoco ejecutada por la restricción de `AGENTS.md`. La validación Dart queda pendiente.
 - El intento adicional de producir atlas nuevo con fondo realmente transparente volvió a generar un degradado. Queda descartado como producción; no se ha introducido el recurso en la aplicación.
+
+## Microfase 4 — seis poses maestras aisladas con alfa real
+
+- La generación por personaje aislado sí obtuvo transparencias reales. Se conservaron seis PNG RGBA separados en `qa/goalkeeper_rebuild_20261109/pose_{ready,shuffle,warning,dive,hurt,defeated}_rgba.png`.
+- Comprobación local `identify`: los seis tienen canal alpha y esquinas transparentes (en la pose shuffle hay alpha residual 1/255 en la esquina, que exige limpieza antes de producción). No contienen el fondo degradado opaco de la hoja anterior.
+- Resoluciones origen: ready/shuffle/warning/hurt 1312×1199, dive 1774×887 y defeated 2007×783. **No son aún fotogramas de tamaño de juego**, y no deben estirarse individualmente a altura fija. Se preservan como fuentes artísticas para derivar y alinear el atlas.
+- Las poses conservan pelo castaño, ojos verdes, equipación verde/blanca y guantes. Hay que comprobar comparativamente proporciones y silueta a la misma escala y corregir halos/semialfa de borde antes de aprobarlas.
+- Pendiente: producir variaciones intermedias genuinas, normalizar pivote de apoyo, montar el atlas sin cortar extremidades ni juntar siluetas, conectar en Flutter y verificar 20:9. Sin cambio de recursos activos, sin CI ni APK.
