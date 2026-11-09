@@ -1,3 +1,7 @@
+## 2026-11-09 — Comparsa: atlas de Caravinagre
+
+24 celdas de Caravinagre revisadas y guardadas con sus apoyos y espuma. [Continuidad](COMPARSA_AYUNTAMIENTO.md). Siguiente microfase: guardar el atlas del zaldiko y completar la prueba conjunta en Flutter.
+
 ## 2026-11-09 — Comparsa del Ayuntamiento: Gigante probado y activo
 
 Corregido el alfa del atlas tras detectar un recuadro en el primer render. Cuatro pruebas Flutter superadas y capturas StagePainter de 1000 × 450 inspeccionadas. Portador visible ante la fachada consistorial. Tres impactos durante recuperación con balón o peine. El WebP final conserva exactamente los píxeles RGBA revisados. Siguiente microfase: Caravinagre. [Continuidad](COMPARSA_AYUNTAMIENTO.md).

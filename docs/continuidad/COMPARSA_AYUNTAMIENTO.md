@@ -25,3 +25,7 @@ SHA-256 del atlas: `8b9ab0ec679e801c198ffcc384f8f825c970e9068084fa119a9367f8e335
 ## Gigante, integración y revisión real
 
 El PNG indexado del primer punto de control dejaba un rectángulo negro en Flutter. Se sustituyó por RGBA de 8 bits por canal con alfa binario y el mismo arte. El atlas de producción es WebP sin pérdida con los mismos píxeles RGBA. SHA-256 `64c13fc7592913c9db5acafd1953a25cffb4748e9f16e7008bf02803cd58f933`. Revisado en StagePainter de 1000 × 450, con el portador visible durante el giro y al bajar la figura tras la derrota. Tres impactos durante recuperación. El encuentro se ubica en x=18520 para aprovechar la fachada histórica existente, situada a mitad del capítulo, y se despeja el espacio de combate inmediato. Las pruebas de Flutter con Miren y Sara verificaron aviso, contacto único, esquiva y derrota. Activado en la ruta normal del Ayuntamiento. Siguiente microfase: atlas e integración de Caravinagre.
+
+## Caravinagre, atlas
+
+Hoja fuente SHA-256 `2db347ca4a07701a0ffa223623f1b1d022c1535500eea83739a89410ec65342e`. Derivado `assets/images/enemies_new/comparsa_caravinagre.png`, SHA-256 `e91ba1fddba1d5f93c60ee91ac277a8921334c176ae7fe6aad87b09792af3bbc`. Altura de referencia 149 px, gesto agrio, tricornio, casaca verde y espuma amarilla. Inspeccionadas las 24 celdas y la extensión frontal de la espuma. El recorrido de la espuma se mantiene dentro de una celda de producción. Siguiente microfase: guardar el atlas del zaldiko y verificar ambos combates con el reloj del motor.
