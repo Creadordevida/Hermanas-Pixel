@@ -76,3 +76,10 @@
 - Cuatro nuevas fuentes aisladas, con transparencia nominal: `pose_idle_shift_a_rgba.png`, `pose_idle_shift_b_rgba.png`, `pose_warning_crouch_rgba.png`, `pose_warning_reach_rgba.png`.
 - Hay quince poses maestras/intermedias únicas bajo control geométrico; aún no forman el atlas final de 24. Las variaciones pequeñas de reposo deben evaluarse en secuencia a tamaño real para descartar cambios de anatomía o duplicaciones encubiertas.
 - Se mantienen todos los originales, no se alteran golpes ni tiempos de juego y no se ha lanzado Flutter/Actions/Android.
+
+## Microfase 10 — estirada e impacto ampliados
+
+- Fuentes con transparencia: `pose_dive_extension_rgba.png`, `pose_hurt_side_rgba.png` y `pose_hurt_recover_rgba.png`. Se conservan distintas de las poses maestras de estirada y golpe.
+- El candidato de lanzamiento diagonal de esta tanda se **descartó** por mostrar de nuevo un fondo de iluminación/degradado; no se incluye en el verificador ni en los assets activos.
+- El inventario controlado alcanza 18 imágenes individuales. Eso no demuestra aún 18 buenos fotogramas sucesivos: siguen sin ajustar pivotes, escala final ni fluidez y existe riesgo de variaciones sutiles de anatomía.
+- Falta una secuencia completa de 24 celdas aprobadas y capturas StagePainter. No hay alteración de `main.dart` ni pruebas Flutter/Android de esta variante.

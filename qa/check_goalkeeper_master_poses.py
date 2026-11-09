@@ -11,7 +11,8 @@ from PIL import Image
 ROOT = Path("qa/goalkeeper_rebuild_20261109")
 NAMES = ("ready", "idle_shift_a", "idle_shift_b", "shuffle",
          "shuffle_step_a", "shuffle_step_b", "warning", "warning_crouch",
-         "warning_reach", "dive", "hurt", "hurt_recoil", "defeat_knee",
+         "warning_reach", "dive", "dive_extension", "hurt", "hurt_recoil",
+         "hurt_side", "hurt_recover", "defeat_knee",
          "defeat_hands", "defeated")
 
 
