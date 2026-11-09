@@ -205,3 +205,10 @@ Próxima acción: sustituir las fachadas repetidas con originales nuevos, comple
 - Se mantiene el fondo de producción de 39 paneles y el quiosco único original, sin cambios en `lib/main.dart`, sprites, físicas, enemigos ni otros capítulos.
 
 **Siguiente trabajo artístico imprescindible:** producir los seis núcleos panorámicos completos y distintos con las dimensiones indicadas en `qa/quiosco_rc7_art_rebuild_plan.json`, pintar tres conectores A/B/C compatibles, analizar las uniones internas y las 38 uniones de panel; solo entonces generar el ZIP de candidato, probarlo en StagePainter y considerar su activación. Los tests sintéticos de conectores no sustituyen esa intervención pictórica.
+
+### Nueva aportación artística recuperable — fachadas de poniente
+
+- Nuevo recurso original de edificios diferentes, generado tomando el prototipo como **referencia de estilo**, sin quiosco: `qa/quiosco_inbox/fachadas_poniente_original_candidato_1170x390.webp`.
+- PNG matriz de 2172 × 724 completado sin márgenes blancos y convertido a WebP **1170 × 390** para prueba a escala de composición; SHA-256 del WebP: `2731eebdb99e39cddc57dd003d2028ca34166602c3152f986ac0a31ca135ac73`.
+- Archivo binario guardado en commit `873f1be1e3dcf7109866ccef988a51306715b61b` y releído desde GitHub. Es **una fuente parcial nueva, no un sector final de 7200 px**. No hay duplicación del quiosco.
+- Estado: **arte candidato, no aprobado, no incorporado a `assets/images/quiosco_rc7` ni probado en StagePainter**. Faltan los conectores A/B/C compatibles y la escala/composición con otros recursos, que debe revisarse visualmente antes de extenderlo.
