@@ -10,6 +10,8 @@ on:
       - 'tools/prepare_quiosco_connector_sources.py'
       - 'tools/test_quiosco_connector_overlap.py'
       - 'tools/test_quiosco_connector_production.py'
+      - 'tools/audit_quiosco_connector_edges.py'
+      - 'tools/test_quiosco_connector_edges.py'
       - 'qa/quiosco_rc7_art_rebuild_plan.json'
   workflow_dispatch:
 
@@ -28,6 +30,7 @@ jobs:
         run: |
           python3 tools/test_quiosco_connector_overlap.py
           python3 tools/test_quiosco_connector_production.py
+          python3 tools/test_quiosco_connector_edges.py
       - name: Verify world geometry against active manifest
         run: python3 tools/check_quiosco_rebuild_plan.py
       - name: Distinguish code tests from real art
