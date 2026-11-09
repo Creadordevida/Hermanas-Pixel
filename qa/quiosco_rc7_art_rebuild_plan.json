@@ -79,5 +79,19 @@
     "real_stagepainter_captures_required": true,
     "android_review_pending": true
   },
-  "current_renderer": "flattened quiosco_rc7 tiles at worldX-cameraX; new 3-layer renderer NOT integrated"
+  "current_renderer": "flattened quiosco_rc7 tiles at worldX-cameraX; new 3-layer renderer NOT integrated",
+  "connector_system": {
+    "method": "pixel_identical_overlap_single_copy",
+    "overlap_px": 256,
+    "boundary_connector_types": [
+      "A",
+      "B",
+      "C",
+      "A",
+      "B"
+    ],
+    "description": "cada panoramica posterior empieza con los 256 px finales de la anterior; se descarta la copia izquierda para no duplicar el edificio",
+    "source_width_rule": "first=end-start; subsequent=end-start+256",
+    "art_gate": "las piezas centrales deben ser distintas, edificios completos, compatible cornisa/acera/perspectiva; la verificacion pixel a pixel no prueba calidad visual"
+  }
 }
