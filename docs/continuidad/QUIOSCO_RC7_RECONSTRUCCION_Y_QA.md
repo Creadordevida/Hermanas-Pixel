@@ -84,3 +84,12 @@ El candidato de fachadas creado en la conversación fue inspeccionado en 2172×7
 **Pendiente inmediato**: elaborar ilustraciones realmente distintas y completas para los seis sectores (7200, 7200, 3520, 2880, 7200, 9440 px de ancho respectivamente; altura 390), con composición arquitectónica coherente en cada límite; decidir por arte y captura el tratamiento del quiosco original en la zona central; después ejecutar montador y verificar vídeo/capturas auténticas de Flutter. Un diagnóstico de diferencias de píxel no sustituye revisión visual.
 
 No se han cambiado `lib/main.dart`, assets activos, física, colisiones, protagonistas ni enemigos. Sin Flutter, sin APK, sin merge y sin certificación artística.
+
+
+## 09/11/2026 — Conectores arquitectonicos A/B/C
+
+Orden aprobada: cada segmento comparte un edificio con el anterior, evitando un duplicado al ensamblar. Implementado en tools/build_quiosco_reconstruction.py y configurado en qa/quiosco_rc7_art_rebuild_plan.json: cinco juntas A-B-C-A-B con franja de solapamiento de 256 pixeles. Cada imagen posterior debe comenzar con 256 pixeles identicos a los ultimos 256 de la anterior. El montador rechaza uniones diferentes y descarta la copia superpuesta, conservando una sola aparicion. El quiosco sigue siendo unico y permanece anclado en mundo.
+
+Nueva prueba tools/test_quiosco_connector_overlap.py: compara una imagen sintetica continua con paneles ensamblados y comprueba que una junta alterada se rechaza. Prueba guardada pero EJECUCION PENDIENTE. Commit de prueba d900d55b7f118f5de97fef53983c3133609405e1.
+
+ESTADO: codigo de ensamblaje en GitHub; faltan ilustraciones definitivas de seis sectores, ejecucion del montador, Flutter StagePainter, inspeccion del desplazamiento, regresiones y aprobacion visual del usuario. Los 39 paneles activos no se han cambiado. No APK, no fusionar PR.
