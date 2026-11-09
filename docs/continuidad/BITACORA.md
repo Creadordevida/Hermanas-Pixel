@@ -1,3 +1,7 @@
+## 2026-11-09 — Fauna: paloma integrada y validación conjunta Flutter
+
+Atlas RGBA de 32 poses `assets/images/enemies_hifi/pigeon_atlas.png` (SHA-256 `c94dda99e5ab55d6299dd086807c657b9d28e066e40b16d757a19dde6b2e3135`). Una orientación de referencia y pivote común para suelo y aire. Despegue con agachada, vuelo con batida y planeo, aviso de picado de 220 ms y dirección comprometida, recuperación de altura, aterrizaje con patas extendidas y caída visible hasta tocar suelo. La caja de impacto sigue el cuerpo y deja libres las puntas de ala. Se conserva el arte anterior. Diez pruebas Flutter de fauna, ocho de PNG y análisis Dart focalizado superados. StagePainter 1000 × 450 inspeccionado en los cuatro animales, con ataque, esquiva y derrota con Miren y Sara. Las mejoras están activas en la ruta normal de esta rama. Queda probar en el Redmi Note 14 la próxima compilación Android, incluidos controles, legibilidad y fluidez.
+
 ## 2026-11-09 — Fauna: dóberman integrado y probado en Flutter
 
 Atlas RGBA de 24 poses `assets/images/dog/doberman_atlas.png` (SHA-256 `577f029dfd354ec4100c8c36aafef4b0a3c36afacac5525bcf37ede6b2e01fb4`). Pecho profundo, orejas erguidas y galope a 12 fps. Mantiene velocidad, detección y dos impactos. Prueba real con Miren y Sara: primer proyectil aturde y el segundo derrota, con aviso y esquiva de mordisco. Nueve pruebas Flutter de fauna y siete de recursos superadas. Revisadas capturas StagePainter 1000 × 450, incluido aturdimiento. Queda Android. Siguiente animal: paloma.

@@ -259,37 +259,54 @@ class Enemy {
     }
     if (animalMode == 'takeoff') {
       flightDuration += dt;
-      flightAltitude = math.min(82, flightAltitude + 158 * dt);
-      x += facing * speed * .64 * dt;
+      // The crouch and opening wings start at the last ground position.
+      final liftTime = flightAltitude > 0 ? dt : (animalTime - .08).clamp(0.0, dt);
+      flightAltitude = math.min(82, flightAltitude + 158 * liftTime);
+      x += facing * speed * .64 * liftTime;
       if (flightAltitude >= 82) _animalState('flap');
       return false;
     }
     if (animalMode == 'landing') {
       flightDuration += dt;
       if (absDist < 188) {
+        facing = distance >= 0 ? -1 : 1;
         _animalState('takeoff');
       } else {
         flightAltitude = math.max(0.0, flightAltitude - 82 * dt);
         final towardHome = (home - x).clamp(-speed * dt, speed * dt).toDouble();
+        if (towardHome.abs() > .01) facing = towardHome > 0 ? 1 : -1;
         x += towardHome;
         if (flightAltitude <= 0) _animalState('perch');
       }
       return false;
     }
+    if (animalMode == 'dive_warning') {
+      flightDuration += dt;
+      if (animalTime >= pigeonDiveWarningTime) _animalState('dive');
+      return false;
+    }
     if (animalMode == 'dive') {
       flightDuration += dt;
-      facing = distance >= 0 ? 1 : -1;
       flightAltitude = math.max(34, flightAltitude - 105 * dt);
       x += facing * speed * 1.35 * dt;
-      if (absDist < 48 && flightAltitude <= 50 && heroY > groundY - 50) {
+      final forwardDistance = (heroX - x) * facing;
+      if (forwardDistance > 0 && forwardDistance < 48 &&
+          flightAltitude <= 50 && heroY > groundY - 50) {
         attackCooldown = 2.7;
-        _animalState('flap');
+        _animalState('recover');
         return true;
       }
       if (animalTime > 1.18) {
         attackCooldown = 2.3;
-        _animalState('flap');
+        _animalState('recover');
       }
+      return false;
+    }
+    if (animalMode == 'recover') {
+      flightDuration += dt;
+      flightAltitude = math.min(83, flightAltitude + 80 * dt);
+      x += facing * speed * .55 * dt;
+      if (animalTime >= .28) _animalState('flap');
       return false;
     }
     // Smooth, bounded flight around the nesting point, alternating wing beats
@@ -301,7 +318,8 @@ class Enemy {
     if (vx.abs() > .01) facing = vx > 0 ? 1 : -1;
     x += vx;
     if (absDist < 224 && attackCooldown <= 0 && flightAltitude > 60) {
-      _animalState('dive');
+      facing = heroX >= x ? 1 : -1;
+      _animalState('dive_warning');
     } else if (absDist > 320 && flightDuration > 1.5) {
       _animalState('landing');
     } else if (animalMode == 'flap' && animalTime > 1.12) {
@@ -675,6 +693,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       // Eight true flight silhouettes (upstroke, downstroke, glide, hit, fall).
       // The old pigeon frames remain for genuine ground walking/pecking.
       paths['pigeon_flight_sheet'] = 'assets/images/enemies_hifi/pigeon_flight_sheet.png';
+      paths['pigeon_flight_atlas'] = 'assets/images/enemies_hifi/pigeon_atlas.png';
       // Test-only StagePainter capture optimization: a school screenshot must
       // decode the ACTUAL school + hero sprites, not all 72 chapter-one tiles,
       // football/dance scenes and six other stages. In Android qaStage is null,
@@ -1256,11 +1275,15 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
                 lunging: foe.animalMode == 'bite' &&
                     foe.animalTime >= dogBiteContactTime && foe.animalTime < .40,
               )
+            : foe.aerial
+            ? pigeonProjectileHits(
+                relativeX: (shot.x - foe.x) * foe.facing,
+                height: groundY - foe.flightAltitude - shot.y,
+                diving: foe.animalMode == 'dive',
+              )
             : (() {
-                final ey=groundY-(foe.aerial
-                    ? foe.flightAltitude+24 : foe.kind=='rat'?24:64);
-                return (shot.x-foe.x).abs()<37 &&
-                    (shot.y-ey).abs()<(foe.aerial?42:51);
+                final ey=groundY-(foe.kind=='rat'?24:64);
+                return (shot.x-foe.x).abs()<37 && (shot.y-ey).abs()<51;
               })();
           if(intersects) {
             foe.hits++;foe.stunned=.66;foe.t=0;shot.active=false;
@@ -1944,9 +1967,10 @@ class StagePainter extends CustomPainter {
     for(final foe in enemies) {
       final x=foe.x-cameraX;if(x< -110 || x>900)continue;
       if(foe.defeated && time-foe.deathAt>.85)continue;
-      // One shared fade for every enemy type, including all six new atlases.
+      // Keep the pigeon opaque until it reaches the ground after an air hit.
+      final fadeStart = foe.aerial ? .58 : .32;
       final deathOpacity=foe.defeated
-        ? (1-(time-foe.deathAt-.32)/.53).clamp(0.0,1.0).toDouble()
+        ? (1-(time-foe.deathAt-fadeStart)/(.85-fadeStart)).clamp(0.0,1.0).toDouble()
         : 1.0;
       final shadowAlpha=foe.aerial ? (0x55*(1-foe.flightAltitude/190)).round().clamp(12,85).toInt() : 0x55;
       canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),
@@ -2146,25 +2170,36 @@ class StagePainter extends CustomPainter {
         }
         continue;
       }
-      final dogAtlas = foe.dog ? images['${foe.kind}_atlas'] : null;
-      if (dogAtlas != null) {
-        final frame = dogAtlasFrame(
-          kind: foe.kind,
-          mode: foe.animalMode,
-          elapsed: foe.animalTime,
-          stunRemaining: foe.stunned,
-          defeatElapsed: foe.defeated ? time - foe.deathAt : null,
-        );
+      final wildlifeAtlas = foe.aerial
+          ? images['pigeon_flight_atlas']
+          : foe.dog ? images['${foe.kind}_atlas'] : null;
+      if (wildlifeAtlas != null) {
+        final defeatElapsed = foe.defeated ? time - foe.deathAt : null;
+        final frame = foe.aerial
+            ? pigeonAtlasFrame(
+                mode: foe.animalMode,
+                elapsed: foe.animalTime,
+                altitude: foe.flightAltitude,
+                defeatElapsed: defeatElapsed,
+              )
+            : dogAtlasFrame(
+                kind: foe.kind,
+                mode: foe.animalMode,
+                elapsed: foe.animalTime,
+                stunRemaining: foe.stunned,
+                defeatElapsed: defeatElapsed,
+              );
         canvas.save();
         if (foe.facing < 0) {
           canvas.translate(2 * x, 0);
           canvas.scale(-1, 1);
         }
         canvas.drawImageRect(
-          dogAtlas,
+          wildlifeAtlas,
           wildlifeFrameSource(frame),
           Rect.fromLTWH(
-            x - wildlifeAnchorX, groundY - wildlifeGroundAnchorY,
+            x - wildlifeAnchorX,
+            groundY - foe.flightAltitude - wildlifeGroundAnchorY,
             wildlifeCellWidth, wildlifeCellHeight,
           ),
           Paint()..filterQuality = FilterQuality.none

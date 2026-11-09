@@ -48,6 +48,10 @@ void main() {
       expect(bird.flightAltitude, 0);
       bird.advanceAnimal(.10, 450, groundY);
       expect(bird.animalMode, 'takeoff');
+      final x = bird.x;
+      bird.advanceAnimal(.07, 450, groundY);
+      expect(bird.flightAltitude, 0);
+      expect(bird.x, x);
       bird.advanceAnimal(.20, 450, groundY);
       expect(bird.flightAltitude, greaterThan(25));
       expect(bird.flightAltitude, lessThan(83));
@@ -56,13 +60,19 @@ void main() {
       expect(bird.flightAltitude, closeTo(82, .001));
     });
 
-    test('El vuelo recupera su altura y puede entrar en picado', () {
+    test('La paloma avisa antes del picado y fija la dirección de ataque', () {
       final bird = Enemy(1, 'pigeon', 300)..attackCooldown = 0;
       bird.advanceAnimal(.10, 450, groundY);
       bird.advanceAnimal(.60, 450, groundY);
       bird.advanceAnimal(.10, 450, groundY);
+      expect(bird.animalMode, 'dive_warning');
+      final heading = bird.facing;
+      expect(bird.advanceAnimal(.20, 250, groundY), isFalse);
+      expect(bird.animalMode, 'dive_warning');
+      expect(bird.advanceAnimal(.03, 250, groundY), isFalse);
       expect(bird.animalMode, 'dive');
-      bird.advanceAnimal(.2, 450, groundY);
+      expect(bird.advanceAnimal(.4, 250, groundY), isFalse);
+      expect(bird.facing, heading);
       expect(bird.flightAltitude, lessThan(82));
     });
 

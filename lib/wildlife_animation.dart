@@ -11,6 +11,7 @@ const double wildlifeCellHeight = 108;
 const double wildlifeAnchorX = 76;
 const double wildlifeGroundAnchorY = 94;
 const double dogBiteContactTime = .24;
+const double pigeonDiveWarningTime = .22;
 
 Rect wildlifeFrameSource(int frame) => Rect.fromLTWH(
       (frame % 4) * wildlifeCellWidth,
@@ -71,4 +72,52 @@ bool dogProjectileHits({
       relativeX <= (lunging ? extended : front) &&
       height >= bottom &&
       height <= top;
+}
+
+int pigeonAtlasFrame({
+  required String mode,
+  required double elapsed,
+  required double altitude,
+  required double? defeatElapsed,
+}) {
+  if (defeatElapsed != null) {
+    if (defeatElapsed < .08) return 28;
+    if (defeatElapsed < .16) return 29;
+    return altitude > 0 ? 30 : 31;
+  }
+  return switch (mode) {
+    'walk' => 4 + (elapsed * 6).floor() % 4,
+    'takeoff' => altitude >= 35
+        ? 11
+        : altitude >= 12
+            ? 10
+            : elapsed < .08
+                ? 8
+                : 9,
+    'flap' => 12 + (elapsed * 11).floor() % 4,
+    'glide' => 16 + (elapsed * 3).floor() % 2,
+    'dive_warning' => elapsed < pigeonDiveWarningTime / 2 ? 18 : 19,
+    'dive' => 20 + (elapsed * 7).floor().clamp(0, 2),
+    'recover' => 23,
+    'landing' => altitude > 35
+        ? 24
+        : altitude > 14
+            ? 25
+            : altitude > 4
+                ? 26
+                : 27,
+    _ => (elapsed * 2).floor() % 4,
+  };
+}
+
+bool pigeonProjectileHits({
+  required double relativeX,
+  required double height,
+  required bool diving,
+}) {
+  // Measure the chest and head from the foot pivot. The wing tips are art only.
+  return relativeX >= -26 &&
+      relativeX <= (diving ? 35 : 29) &&
+      height >= (diving ? -9 : 2) &&
+      height <= (diving ? 38 : 53);
 }

@@ -99,7 +99,8 @@ void main() {
       );
       final images = game.images as Map<String, ui.Image>;
 
-      Enemy reset(String kind, int selected, double heroX) {
+      Enemy reset(String kind, int selected, double heroX,
+          {double enemyX = 430}) {
         game.obstacles.clear();
         game.platforms.clear();
         game.coins.clear();
@@ -114,9 +115,19 @@ void main() {
         game.rightHeld = false;
         game.exitTime = -1.0;
         game.lastAttackTime = -10.0;
-        final dog = Enemy(0, kind, 430)..attackCooldown = 0;
-        game.enemies.add(dog);
-        return dog;
+        final foe = Enemy(0, kind, enemyX)..attackCooldown = 0;
+        game.enemies.add(foe);
+        return foe;
+      }
+
+      Future<void> fire(int selected) async {
+        final asset = selected == 0 ? 'ball' : 'comb';
+        await tester.tap(find.byWidgetPredicate((widget) =>
+            widget is Image &&
+            widget.image is AssetImage &&
+            (widget.image as AssetImage).assetName ==
+                'assets/images/$asset.png' &&
+            widget.width == 41));
       }
 
       for (final kind in dogAtlasAssets.keys) {
@@ -173,16 +184,7 @@ void main() {
           await tick();
           for (var hit = 1; hit <= target.hp; hit++) {
             game.hero = Character(295)..facing = 1;
-            await tester.tap(
-              find.byWidgetPredicate(
-                (w) =>
-                    w is Image &&
-                    w.image is AssetImage &&
-                    (w.image as AssetImage).assetName ==
-                        'assets/images/$shotAsset.png' &&
-                    w.width == 41,
-              ),
-            );
+            await fire(selected);
             for (var i = 0; i < 40 && target.hits < hit; i++) {
               await tick();
             }
@@ -211,6 +213,117 @@ void main() {
             }
           }
         }
+      }
+
+      const pigeonKey = 'pigeon_flight_atlas';
+      final pigeonAtlas = images.remove(pigeonKey)!;
+      reset('pigeon', 0, 110, enemyX: 500);
+      await tick();
+      await capture('pigeon/previous');
+      images[pigeonKey] = pigeonAtlas;
+      await tick();
+      await capture('pigeon/idle');
+      final walking = reset('pigeon', 0, 110, enemyX: 500)..t = 3;
+      for (var i = 0; i < 35; i++) {
+        await tick();
+        if (i % 5 == 0)
+          await capture('pigeon/motion/0_${i.toString().padLeft(3, '0')}');
+      }
+      expect(walking.animalMode, 'walk');
+      expect(walking.flightAltitude, 0);
+
+      for (final selected in [0, 1]) {
+        final bird = reset('pigeon', selected, 390, enemyX: 500);
+        var sawTakeoff = false;
+        var sawWarning = false;
+        var sawDive = false;
+        for (var i = 0; i < 135 && game.hearts == maxHeroHearts; i++) {
+          await tick();
+          if (bird.animalMode == 'takeoff' && bird.flightAltitude > 12) {
+            if (!sawTakeoff && selected == 0) await capture('pigeon/takeoff');
+            sawTakeoff = true;
+          }
+          if (bird.animalMode == 'dive_warning') {
+            sawWarning = true;
+            expect(game.hearts, maxHeroHearts);
+          }
+          if (bird.animalMode == 'dive' && bird.flightAltitude < 55) {
+            if (!sawDive && selected == 0) await capture('pigeon/dive');
+            sawDive = true;
+          }
+          if (selected == 0 && i % 5 == 0) {
+            await capture('pigeon/motion/a_${i.toString().padLeft(3, '0')}');
+          }
+        }
+        expect(sawTakeoff, isTrue);
+        expect(sawWarning, isTrue);
+        expect(sawDive, isTrue);
+        expect(game.hearts, maxHeroHearts - 1);
+        expect(bird.animalMode, 'recover');
+        if (selected == 0) {
+          game.hero = Character(30);
+          var landed = false;
+          var sawLanding = false;
+          for (var i = 0; i < 210 && !landed; i++) {
+            await tick();
+            if (i % 5 == 0) {
+              await capture('pigeon/motion/b_${i.toString().padLeft(3, '0')}');
+            }
+            if (!sawLanding &&
+                bird.animalMode == 'landing' &&
+                bird.flightAltitude < 22) {
+              await capture('pigeon/landing');
+              sawLanding = true;
+            }
+            landed = bird.animalMode == 'perch';
+          }
+          expect(landed, isTrue);
+          expect(sawLanding, isTrue);
+          expect(bird.flightAltitude, 0);
+        }
+
+        final dodged = reset('pigeon', selected, 390, enemyX: 500);
+        for (var i = 0; i < 90 && dodged.animalMode != 'dive_warning'; i++) {
+          await tick();
+        }
+        expect(dodged.animalMode, 'dive_warning');
+        final lockedDirection = dodged.facing;
+        game.hero = Character(dodged.x - lockedDirection * 85);
+        await tick(31);
+        expect(dodged.facing, lockedDirection);
+        expect(game.hearts, maxHeroHearts);
+
+        final target = reset('pigeon', selected, 390, enemyX: 500)
+          ..attackCooldown = 9;
+        for (var i = 0; i < 65 && target.animalMode != 'flap'; i++) {
+          await tick();
+        }
+        expect(target.flightAltitude, greaterThan(70));
+        game.hero = Character(target.x - 85, y: groundY - 64)
+          ..grounded = false
+          ..facing = 1;
+        await fire(selected);
+        for (var i = 0; i < 30 && !target.defeated; i++) {
+          await tick();
+        }
+        expect(target.defeated, isTrue,
+            reason: 'Impacto aéreo de ${selected == 0 ? 'Miren' : 'Sara'}');
+        expect(target.flightAltitude, greaterThan(0));
+        if (selected == 0) {
+          for (var i = 0; i < 43; i++) {
+            if (i % 5 == 0) {
+              await capture('pigeon/motion/c_${i.toString().padLeft(3, '0')}');
+            }
+            if (i == 36) {
+              expect(target.flightAltitude, 0);
+              await capture('pigeon/defeat');
+            }
+            await tick();
+          }
+        } else {
+          await tick(43);
+        }
+        expect(target.flightAltitude, 0);
       }
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());

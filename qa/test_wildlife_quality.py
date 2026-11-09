@@ -19,6 +19,27 @@ POSES = ('idle', 'walk', 'alert', 'run', 'bite', 'hit', 'stunned', 'defeated')
 
 
 class WildlifeQuality(unittest.TestCase):
+    def test_unified_pigeon_atlas_has_clean_ground_and_air_poses(self):
+        with Image.open(FLIGHT.with_name('pigeon_atlas.png')) as atlas:
+            self.assertEqual(atlas.mode, 'RGBA')
+            self.assertEqual(atlas.size, (608, 864))
+            poses = set()
+            for frame in range(32):
+                row, column = divmod(frame, 4)
+                x, y = column * 152, row * 108
+                cell = atlas.crop((x, y, x + 152, y + 108))
+                alpha = cell.getchannel('A')
+                self.assertEqual(set(np.unique(alpha)), {0, 255})
+                left, top, right, bottom = alpha.getbbox()
+                self.assertGreater(left, 1)
+                self.assertGreater(top, 1)
+                self.assertLess(right, 151)
+                self.assertLess(bottom, 107)
+                if frame < 10 or frame in (26, 27, 31):
+                    self.assertEqual(bottom, 94)
+                poses.add(cell.tobytes())
+            self.assertEqual(len(poses), 32)
+
     def test_renewed_dog_atlases_have_distinct_clean_grounded_cells(self):
         for breed in ('brown', 'dalmatian', 'doberman'):
             with self.subTest(breed=breed), Image.open(DOG / f'{breed}_atlas.png') as atlas:
