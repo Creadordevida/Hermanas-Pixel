@@ -1,0 +1,31 @@
+name: Quiosco six sector candidate - inspect only
+
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - 'qa/quiosco_inbox/quiosco_prototipo_seis_composiciones.zip'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Pillow
+        run: python3 -m pip install --break-system-packages Pillow
+      - name: Verify exact six-sector candidate
+        run: |
+          python3 tools/check_quiosco_six_sector_prototype.py \
+            qa/quiosco_inbox/quiosco_prototipo_seis_composiciones.zip \
+            qa-output/quiosco_six_sector_candidate
+      - name: Publish candidate evidence ONLY
+        uses: actions/upload-artifact@v4
+        with:
+          name: quiosco-six-sector-candidate-qa-not-flutter
+          path: qa-output/quiosco_six_sector_candidate/
+          retention-days: 14
