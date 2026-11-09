@@ -7,6 +7,8 @@ on:
     paths:
       - 'qa/quiosco_inbox/quiosco_prototipo_seis_composiciones.zip'
       - 'test/quiosco_candidate_flutter_preview_test.dart'
+      - 'test/quiosco_candidate_stage_painter_test.dart'
+      - 'lib/main.dart'
       - '.github/workflows/quiosco-six-sector-candidate.yml'
 
 concurrency:
@@ -19,7 +21,7 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 38
     steps:
       - uses: actions/checkout@v4
       - name: Install Pillow
@@ -42,6 +44,15 @@ jobs:
         with:
           name: quiosco-six-sector-flutter-candidate-NOT-gameplay
           path: qa-output/quiosco_candidate_flutter/*.png
+          retention-days: 14
+      - name: Capture REAL StagePainter with candidate art and game characters (QA only)
+        timeout-minutes: 16
+        run: flutter test --no-pub --reporter expanded test/quiosco_candidate_stage_painter_test.dart
+      - name: Publish authentic StagePainter candidate images (NOT final stage)
+        uses: actions/upload-artifact@v4
+        with:
+          name: quiosco-candidate-ACTUAL-StagePainter-NOT-final
+          path: qa-output/quiosco_candidate_stagepainter/*.png
           retention-days: 14
       - name: Publish candidate evidence ONLY
         uses: actions/upload-artifact@v4
