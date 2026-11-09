@@ -1,0 +1,34 @@
+name: Quiosco connector pipeline - lightweight QA (no APK)
+
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - '.github/workflows/quiosco-connectors-qa.yml'
+      - 'tools/build_quiosco_reconstruction.py'
+      - 'tools/prepare_quiosco_connector_sources.py'
+      - 'tools/test_quiosco_connector_overlap.py'
+      - 'tools/test_quiosco_connector_production.py'
+      - 'qa/quiosco_rc7_art_rebuild_plan.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  connector-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Pillow
+        run: python3 -m pip install --break-system-packages Pillow
+      - name: Validate connector overlap and production builder
+        run: |
+          python3 tools/test_quiosco_connector_overlap.py
+          python3 tools/test_quiosco_connector_production.py
+      - name: Verify world geometry against active manifest
+        run: python3 tools/check_quiosco_rebuild_plan.py
+      - name: Distinguish code tests from real art
+        run: echo 'Only synthetic geometry tested. No artwork staged, no StagePainter capture, no APK.'
