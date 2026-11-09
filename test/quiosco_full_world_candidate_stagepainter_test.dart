@@ -46,8 +46,19 @@ void main() {
         p.dispose();
         for(final im in frames) { im.dispose(); }
         final last=(count*960-1050).toDouble();
-        final positions=<double>[0,860,940,1850,2810,3770,4730,
-          5690,6650,7610,8000,8300,8400].where((x)=>x<=last).toList();
+        final positionSet=<double>{0,860,940,1850,2810,3770,4730,
+          5690,6650,7610,8000,8300,8400};
+        // Every architectural A/B/C join must also be centered in a real
+        // StagePainter viewport, not merely clipped near the screenshot edge.
+        for(var connector=1;connector<=17;connector++) {
+          final local=(connector*2076-500-first*960).toDouble();
+          if(local>=0 && local<=last) positionSet.add(local);
+        }
+        for(final landmarkEdge in <int>[17920,19090]) {
+          final local=(landmarkEdge-500-first*960).toDouble();
+          if(local>=0 && local<=last) positionSet.add(local);
+        }
+        final positions=positionSet.where((x)=>x<=last).toList()..sort();
         try {
           for(final local in positions) {
             await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
