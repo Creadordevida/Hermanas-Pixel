@@ -284,3 +284,9 @@ Próxima acción: sustituir las fachadas repetidas con originales nuevos, comple
 - Se archivó hoja de contacto auténtica en `qa/quiosco_native_stagepainter/contacto_10_capturas_REALES_NO_FINAL.webp` (commit `d9b4bf2`, SHA-256 `d7e6219fc51b3feda9acc71dc32c177f4bf1c17e79e89c52168e1c73a3335787`). Puntos de cámara: x=700, 2040, 2390, 4220, 4700, 6480, 6800, 8900, 9400, 10200.
 - Inspección visual: la nueva zona de comercios es legible, el jugador/suelo/HUD se mantienen en las capturas y las fachadas muestran diversidad. Persisten bordes bruscos en algunas transiciones, especialmente galería→oriente, y bloques claros del HUD QA (sin atribuirlos al arte). El quiosco físico único queda fuera del alcance de estas capturas, porque se sitúa aproximadamente en x=17920.
 - Estado autorizado: **probado en motor solo el prototipo parcial de 10.860 px**; los sectores faltantes, conectores A/B/C y barrido completo de los 37.440 px siguen pendientes. No se cambian sprites, físicas, `lib/main.dart`, 39 tiles productivos, ni otros capítulos; no APK ni merge.
+
+### Prueba de una zona abierta como separación arquitectónica
+
+- Se dibujó una nueva vista abierta con árboles, edificios de fondo, bancos y pavimento horizontal, preservada en `qa/quiosco_inbox/plaza_abierta_2172x390_CAPA_DISTANTE_NO_UNIR.webp` (commit `6106f6a`). No incluye quiosco.
+- Prueba comparativa con las cinco fuentes de proximidad: la mejor de las 720 ordenaciones de seis vistas presenta un salto de **67,51 RGB** al conectar con la plaza abierta. Es peor que las transiciones vigentes: **descartada como panel cercano conectado**. Puede estudiarse como capa distante/intermedia separada a paralaje, sin modificar plataformas ni física.
+- Los cinco panoramas próximos continúan siendo los únicos comprobados en StagePainter (10.860px), con el tramo oriente todavía pendiente de conectores compatibles. No incrementar cobertura ni marcar esta prueba como superada.
