@@ -273,3 +273,7 @@ Detectado salto directo a pose de derrota 23; las poses 20, 21 y 22 quedaban sin
 
 Con autorización, se ejecutó QA en Actions: #9 detectó error de redondeo (`[12,12,14,15]` frente a `[12,13,14,15]`), corregido con épsilon; #10 validó todas las pruebas de comportamiento y falló en capturas por test decimal/Estafeta ajeno; #11 **SUCCESS** en análisis, comportamiento y capturas auténticas de enemigos clásicos. Evidencia real guardada en `qa/enemy_verified_render/classic_rival.{jpg,webp,gif}` por `76dd51a`; inspeccionados fondo, escala, pies y caída horizontal. Se preservan las seis poses originales y el entrenador rival. Workflow devuelto a manual para evitar nuevas ejecuciones. Preparado técnicamente para RC siguiente; revisión subjetiva del usuario en Android todavía pendiente.
 
+## 2026-11-09 — Manual maestro y respaldo documental
+
+Consolidación transversal de creación de protagonistas, enemigos, NPC y animales en `docs/FRAMEWORK_SNES_TWC/MANUAL_MAESTRO_PERSONAJES_SNES.md` y `PLANTILLA_FICHA_PERSONAJE.md`. El manual distingue imagen aprobada, PNG original, atlas, motor Flutter, captura real y test Android; recoge errores de clipping, alfa, tiempos, daño, falsa derrota, CI y transferencia GitHub. Casos de referencia: limpiador, vecina/chancla, guitarrista, jugador rival. **No se ejecutaron nuevas pruebas de juego al redactarlo**. Se solicita respaldo ZIP externo a GitHub para evitar pérdida del conocimiento.
+

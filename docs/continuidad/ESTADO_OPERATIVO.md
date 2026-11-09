@@ -279,3 +279,7 @@ Comprobados de nuevo en el PNG real los 24 recortes tras optimización cromátic
 
 Hubo dos ejecuciones previas que sirvieron de diagnóstico: [#9](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42576699134) detectó una frontera decimal en el ataque; [#10](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42577018373) superó el comportamiento, pero el bloque de capturas arrastraba un error de sintaxis del test y recursos de Estafeta ajenos a este enemigo. La ejecución focalizada #11 evitó atribuirle ese defecto al rival. Restaurado `enemy-qa-only.yml` a activación manual; no quedan disparadores automáticos de estas pruebas.
 
+# Documentación consolidada — 2026-11-09
+
+Se creó el [manual maestro de personajes SNES](../FRAMEWORK_SNES_TWC/MANUAL_MAESTRO_PERSONAJES_SNES.md) y la [plantilla de ficha](../FRAMEWORK_SNES_TWC/PLANTILLA_FICHA_PERSONAJE.md), con contrato artístico, atlas flexible, integración, capturas reales 20:9, QA, errores históricos y casos de éxito. Esta operación es **documental**; no implica nuevas compilaciones, capturas de motor o validación Android. Se preparará una copia ZIP independiente para guardar fuera de GitHub.
+

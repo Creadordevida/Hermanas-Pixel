@@ -125,3 +125,6 @@ Antes de generar el primer sprite, registrar:
 **No reconstruido con exactitud:** texto completo de los prompts iniciales de imagen, modelo/semillas/parámetros de generación de cada ilustración, software exacto usado en cada operación de limpieza de píxel, y la referencia grupal maestra faltante en la ruta indicada. No inventar estos datos para un GPT futuro. Se puede reproducir el **proceso de aceptación e integración** y mejorar el archivo de procedencia en nuevas tandas.
 
 **Próxima mejora del propio método:** exigir desde el inicio un manifiesto por personaje con prompt, modelo y versión, semilla (si existe), imagen fuente, aprobación fechada, dimensiones, celdas, hash, herramientas/transformaciones y capturas; así la próxima retrospectiva será completamente reproducible.
+# ACTUALIZACIÓN 2026-11-09
+
+Este documento histórico de **enemigos** se complementa con el manual unificado para **todos los personajes**, protagonistas incluidos: [`../FRAMEWORK_SNES_TWC/MANUAL_MAESTRO_PERSONAJES_SNES.md`](../FRAMEWORK_SNES_TWC/MANUAL_MAESTRO_PERSONAJES_SNES.md) y su [ficha reutilizable](../FRAMEWORK_SNES_TWC/PLANTILLA_FICHA_PERSONAJE.md). La tabla de 4×6/24 poses es un patrón de partida, no una limitación de animaciones. Es obligatorio inspeccionar capturas de Flutter auténticas y diferenciar aprobaciones técnicas, visuales y Android.

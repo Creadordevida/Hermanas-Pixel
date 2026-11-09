@@ -2,6 +2,8 @@
 
 **Propósito:** extraer herramientas y decisiones técnicas **comprobadas** de *Las aventuras de Miren y Sara* para ayudar a crear en el futuro otros juegos originales de estética Super Nintendo. Esto NO es todavía un GPT listo para publicar.
 
+**Punto de entrada actual para crear personajes:** [Manual maestro de personajes SNES](MANUAL_MAESTRO_PERSONAJES_SNES.md) y [plantilla de ficha por personaje](PLANTILLA_FICHA_PERSONAJE.md). Consolidan la técnica que ha funcionado con el limpiador, la señora de bata, el guitarrista y el jugador rival, así como los fallos detectados, las capturas reales obligatorias y los respaldos fuera de GitHub.
+
 ## Biblioteca prioritaria recuperada del código auténtico
 
 1. **[01 — Escenarios, cámara y parallax](01_MOTOR_ESCENARIOS_PARALLAX.md):** 36500 unidades, 72 teselas físicas 512px (última 148), seguimiento a 327px, velocidades .30/.56/1, fórmulas de recorte, exteriores por ventanas, suelos y controles de calidad. **NO** simplificar o sustituir por un fondo estático.
