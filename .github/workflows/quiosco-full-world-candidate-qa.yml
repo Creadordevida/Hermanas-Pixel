@@ -6,6 +6,7 @@ on:
       - work/revision-visual-20261028-continuidad
     paths:
       - 'tools/assemble_quiosco_18_art_candidate.py'
+      - 'tools/optimize_quiosco_source_order.py'
       - 'test/quiosco_full_world_candidate_stagepainter_test.dart'
       - 'qa/quiosco_inbox/fachadas_*_nativas_2172x390_candidate.webp'
       - '.github/workflows/quiosco-full-world-candidate-qa.yml'
