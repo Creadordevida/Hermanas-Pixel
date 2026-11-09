@@ -15,6 +15,7 @@ import 'chapter_one_world_tiles.dart';
 import 'chapter_one_camera_v3.dart';
 import 'creature_sheet_bounds.dart';
 import 'animal_sprite_bounds.dart';
+import 'wildlife_animation.dart';
 import 'jump_visuals.dart';
 import 'arga_platform_rules.dart';
 import 'arga_crab_behavior.dart';
@@ -201,9 +202,11 @@ class Enemy {
       }
       if (animalMode == 'bite') {
         // Bite must be shown BEFORE damage; no invisible instant contact.
-        if (!biteApplied && animalTime >= .24) {
+        if (!biteApplied && animalTime >= dogBiteContactTime) {
           biteApplied = true;
-          if (absDist < 61 && heroY > groundY - 48) return true;
+          if (distance * facing >= 0 && absDist < 61 && heroY > groundY - 48) {
+            return true;
+          }
         }
         if (animalTime >= .62) _animalState('alert');
         return false;
@@ -640,6 +643,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         for (final v in ['dalmatian','doberman']) {
           paths['dog_${v}_$pose'] = 'assets/images/dog/$v/$pose.png';
         }
+      }
+      for (final entry in dogAtlasAssets.entries) {
+        paths['${entry.key}_atlas'] = entry.value;
       }
       for (final v in ['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher']) {
         if (v=='cat' || v=='rat') {
@@ -1242,6 +1248,14 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           final intersects = profile != null
             ? profile.projectileHits(foeX:foe.x, groundY:groundY,
                 shotX:shot.x, shotY:shot.y)
+            : dogAtlasAssets.containsKey(foe.kind)
+            ? dogProjectileHits(
+                kind: foe.kind,
+                relativeX: (shot.x - foe.x) * foe.facing,
+                height: groundY - shot.y,
+                lunging: foe.animalMode == 'bite' &&
+                    foe.animalTime >= dogBiteContactTime && foe.animalTime < .40,
+              )
             : (() {
                 final ey=groundY-(foe.aerial
                     ? foe.flightAltitude+24 : foe.kind=='rat'?24:64);
@@ -2130,6 +2144,33 @@ class StagePainter extends CustomPainter {
               ..color=Colors.white.withValues(alpha:deathOpacity));
           canvas.restore();
         }
+        continue;
+      }
+      final dogAtlas = foe.dog ? images['${foe.kind}_atlas'] : null;
+      if (dogAtlas != null) {
+        final frame = dogAtlasFrame(
+          kind: foe.kind,
+          mode: foe.animalMode,
+          elapsed: foe.animalTime,
+          stunRemaining: foe.stunned,
+          defeatElapsed: foe.defeated ? time - foe.deathAt : null,
+        );
+        canvas.save();
+        if (foe.facing < 0) {
+          canvas.translate(2 * x, 0);
+          canvas.scale(-1, 1);
+        }
+        canvas.drawImageRect(
+          dogAtlas,
+          wildlifeFrameSource(frame),
+          Rect.fromLTWH(
+            x - wildlifeAnchorX, groundY - wildlifeGroundAnchorY,
+            wildlifeCellWidth, wildlifeCellHeight,
+          ),
+          Paint()..filterQuality = FilterQuality.none
+            ..color = Colors.white.withValues(alpha: deathOpacity),
+        );
+        canvas.restore();
         continue;
       }
       canvas.save();

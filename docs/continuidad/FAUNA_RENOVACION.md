@@ -38,3 +38,7 @@ patas rosadas. Una sola identidad, escala y dirección para suelo y aire.
 El pivote de vuelo enlaza con el apoyo en tierra. El picado conserva el alcance
 y enfriamiento de referencia y avisa antes de infligir daño. El impacto de un
 proyectil cancela el ataque y hace que el ave caiga antes de desvanecerse.
+## 2026-11-09 — Fauna: perro marrón integrado y probado en Flutter
+
+El atlas de `7c47b577` ya se carga en la ruta normal. Mordisco con dos poses de preparación, un solo contacto frontal a los 240 ms y recuperación. Paseo y carrera separados, pivote de pies común y caja de impacto ajustada al cuerpo. Flutter 3.47.8 pasó las 9 pruebas de fauna, incluida la escena con marcha, mordisco, esquiva, balón y peine con Miren y Sara. Capturas auténticas de StagePainter de 1000 × 450 inspeccionadas. Los originales siguen disponibles. Una prueba antigua de `dog_mechanics_test.dart` espera siete capítulos y la rama tiene ocho. Pendiente validar en Android. Siguiente animal: dálmata.
+
