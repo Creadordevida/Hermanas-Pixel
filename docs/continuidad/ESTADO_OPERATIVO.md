@@ -1,3 +1,7 @@
+## 2026-11-09 — Quiosco, corrección parcial de costuras de cielo
+
+En `af1127c` se eliminó la mezcla amplia de 96px del cielo del constructor candidato y se limitó el feather a 6px; imagen local de 17 uniones examinada antes/después, con menos nubes y cubiertas fantasmas. Mundo candidato completo 37.440×390 y 39 paneles regenerados *fuera de assets activos*. La continuidad arquitectónica aún falla en varios empalmes. Prueba Python sintética superada; sin Flutter ni Android nuevos. Próximo paso: reparar manualmente esos empalmes y verificar StagePainter. No APK ni merge.
+
 ## 2026-11-09 — Comparsa del Ayuntamiento: tres enemigos activos
 
 Gigante, Caravinagre y zaldiko integrados exclusivamente en la ruta normal de Ayuntamiento. Verificados los tres atlas de 24 poses y la transparencia en Flutter. 12 pruebas superadas y análisis sin incidencias. StagePainter 1000 × 450 revisado con combate de ambas protagonistas. [Continuidad](COMPARSA_AYUNTAMIENTO.md). Siguiente microfase: partida en el Redmi Note 14 con la próxima compilación Android.
