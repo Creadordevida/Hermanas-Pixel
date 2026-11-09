@@ -51,3 +51,9 @@
 - Ejecución local con Pillow 13: `GOALKEEPER_MASTER_ALPHA_PASS`. Las seis siluetas son interiores al lienzo y las cuatro esquinas tienen alfa 0, salvo un residual 1/255 de la esquina superior izquierda de `shuffle` (tolerado para diagnóstico, pendiente limpieza final).
 - Quedan muchos píxeles semitransparentes de antialiasing, por lo que el éxito geométrico **no acredita ausencia visual de halos**; hay que revisar sobre fondos claro/oscuro y a tamaño de juego.
 - El atlas 4×6 anterior sigue rechazado. Los seis archivos maestros no sustituyen todavía los cinco sprites de producción; no se ha ejecutado Flutter ni QA Android.
+
+## Microfase 6 — ensayo de tres intermedios de estirada
+
+- Se generaron tres variaciones de impulso, vuelo diagonal y manos extendidas/cierre, a partir de la referencia artística. Los candidatos están en el entorno de generación, no en assets de producción.
+- Diagnóstico de esquina y alpha: los tres PNG tienen canal RGBA y fondo nominalmente transparente, pero la inspección visual detectó zonas de sombra/iluminación y píxeles sueltos ajenos al cuerpo; además deben armonizar proporciones con `pose_dive_rgba.png`.
+- **No aprobados para atlas**. No se han sustituido los seis maestros protegidos ni los cinco originales activos. Se requiere corregir los tres por silueta y probar reproducción de cuatro fases a escala uniforme antes de promoverlos.
