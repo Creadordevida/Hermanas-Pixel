@@ -57,3 +57,10 @@
 - Se generaron tres variaciones de impulso, vuelo diagonal y manos extendidas/cierre, a partir de la referencia artística. Los candidatos están en el entorno de generación, no en assets de producción.
 - Diagnóstico de esquina y alpha: los tres PNG tienen canal RGBA y fondo nominalmente transparente, pero la inspección visual detectó zonas de sombra/iluminación y píxeles sueltos ajenos al cuerpo; además deben armonizar proporciones con `pose_dive_rgba.png`.
 - **No aprobados para atlas**. No se han sustituido los seis maestros protegidos ni los cinco originales activos. Se requiere corregir los tres por silueta y probar reproducción de cuatro fases a escala uniforme antes de promoverlos.
+
+## Microfase 7 — variantes de marcha e impacto con transparencia
+
+- Generados tres PNG RGBA individuales, guardados aparte en `qa/goalkeeper_rebuild_20261109/`: `pose_shuffle_step_a_rgba.png`, `pose_shuffle_step_b_rgba.png` y `pose_hurt_recoil_rgba.png`. La identidad aprobada (pelo castaño, ojos verdes, camiseta verde, guantes) se mantiene.
+- Esquinas examinadas: alpha 0 en los tres. Los originales anteriores permanecen intactos. El verificador de geometría incorpora ahora nueve fuentes maestras/intermedias.
+- Estas variantes amplían el movimiento pero no sustituyen un atlas completo de 24 cuadros; requieren normalización del tamaño y pivote, inspección de halos en fondo claro/oscuro y secuencia a fps real.
+- No se ha alterado `lib/main.dart`, los cinco PNG activos, la lógica de ataque ni la visibilidad de la próxima APK. Sin Flutter ni Android.
