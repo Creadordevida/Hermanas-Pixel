@@ -17,12 +17,12 @@ void main() {
     expect(dog.animalMode, 'bite');
     expect(dog.advanceAnimal(.20, 440, groundY), isFalse);
     int pose() => dogAtlasFrame(
-      kind: dog.kind,
-      mode: dog.animalMode,
-      elapsed: dog.animalTime,
-      stunRemaining: 0,
-      defeatElapsed: null,
-    );
+          kind: dog.kind,
+          mode: dog.animalMode,
+          elapsed: dog.animalTime,
+          stunRemaining: 0,
+          defeatElapsed: null,
+        );
     expect(pose(), 13);
     expect(dog.advanceAnimal(.05, 440, groundY), isTrue);
     expect(pose(), 14);
@@ -187,7 +187,18 @@ void main() {
               await tick();
             }
             expect(target.hits, hit, reason: '$kind, $shotAsset');
-            if (hit < target.hp) await tick(43);
+            if (hit < target.hp) {
+              expect(target.defeated, isFalse);
+              expect(target.stunned, greaterThan(0));
+              for (var i = 0; i < 43; i++) {
+                if (selected == 0 && i % 5 == 0) {
+                  await capture(
+                      '$kind/motion/b_stun_${i.toString().padLeft(3, '0')}');
+                }
+                await tick();
+              }
+              expect(target.stunned, 0);
+            }
           }
           expect(target.defeated, isTrue);
           if (selected == 0) {

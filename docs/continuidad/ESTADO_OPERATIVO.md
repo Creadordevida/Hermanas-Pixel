@@ -1,3 +1,7 @@
+## 2026-11-09 — Fauna: dóberman integrado y probado en Flutter
+
+Atlas RGBA de 24 poses `assets/images/dog/doberman_atlas.png` (SHA-256 `577f029dfd354ec4100c8c36aafef4b0a3c36afacac5525bcf37ede6b2e01fb4`). Pecho profundo, orejas erguidas y galope a 12 fps. Mantiene velocidad, detección y dos impactos. Prueba real con Miren y Sara: primer proyectil aturde y el segundo derrota, con aviso y esquiva de mordisco. Nueve pruebas Flutter de fauna y siete de recursos superadas. Revisadas capturas StagePainter 1000 × 450, incluido aturdimiento. Queda Android. Siguiente animal: paloma.
+
 ## 2026-11-09 — Fauna: dálmata integrado y probado en Flutter
 
 Atlas RGBA de 24 poses `assets/images/dog/dalmatian_atlas.png` (SHA-256 `7dd7e4d5818725c82100488b9c2bc52e940bec06a478571a5999657da39151ad`). Pata larga, torso estrecho y manchas coherentes. Marcha de 5 fps y carrera de 8 fps, con velocidad y resistencia originales. La zona de impacto del proyectil sigue el cuerpo más alto. Los golpes finales de ambos perros muestran primero retroceso y luego caída. Nueve pruebas Flutter de fauna y siete de recursos superadas. Inspeccionadas capturas reales de StagePainter a 1000 × 450. Queda Android. Siguiente animal: dóberman.

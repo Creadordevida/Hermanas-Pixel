@@ -3,6 +3,7 @@ import 'dart:ui';
 const dogAtlasAssets = <String, String>{
   'dog_brown': 'assets/images/dog/brown_atlas.png',
   'dog_dalmatian': 'assets/images/dog/dalmatian_atlas.png',
+  'dog_doberman': 'assets/images/dog/doberman_atlas.png',
 };
 
 const double wildlifeCellWidth = 152;
@@ -33,10 +34,15 @@ int dogAtlasFrame({
   if (stunRemaining > 0) {
     return 16 + ((.66 - stunRemaining) * 7).floor().clamp(0, 3);
   }
+  final (walkFps, runFps) = switch (kind) {
+    'dog_dalmatian' => (5, 8),
+    'dog_doberman' => (7, 12),
+    _ => (6, 10),
+  };
   return switch (mode) {
     'alert' => 3,
-    'walk' => 4 + (elapsed * (kind == 'dog_dalmatian' ? 5 : 6)).floor() % 4,
-    'run' => 8 + (elapsed * (kind == 'dog_dalmatian' ? 8 : 10)).floor() % 4,
+    'walk' => 4 + (elapsed * walkFps).floor() % 4,
+    'run' => 8 + (elapsed * runFps).floor() % 4,
     'bite' => elapsed < dogBiteContactTime / 2
         ? 12
         : elapsed < dogBiteContactTime
@@ -56,15 +62,13 @@ bool dogProjectileHits({
 }) {
   // The target is the body, excluding the thin end of the tail and gaps
   // between paws. Only the extended bite increases its forward reach.
-  if (kind == 'dog_dalmatian') {
-    return relativeX >= -30 &&
-        relativeX <= (lunging ? 55 : 34) &&
-        height >= 16 &&
-        height <= 72;
-  }
-  final forwardEdge = lunging ? 53.0 : 33.0;
-  return relativeX >= -33 &&
-      relativeX <= forwardEdge &&
-      height >= 4 &&
-      height <= 63;
+  final (back, front, extended, bottom, top) = switch (kind) {
+    'dog_dalmatian' => (-30, 34, 55, 16, 72),
+    'dog_doberman' => (-37, 36, 57, 12, 75),
+    _ => (-33, 33, 53, 4, 63),
+  };
+  return relativeX >= back &&
+      relativeX <= (lunging ? extended : front) &&
+      height >= bottom &&
+      height <= top;
 }
