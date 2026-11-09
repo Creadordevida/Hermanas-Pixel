@@ -6,6 +6,8 @@ on:
       - work/revision-visual-20261028-continuidad
     paths:
       - 'qa/quiosco_inbox/quiosco_prototipo_seis_composiciones.zip'
+      - 'test/quiosco_candidate_flutter_preview_test.dart'
+      - '.github/workflows/quiosco-six-sector-candidate.yml'
 
 permissions:
   contents: read
@@ -13,7 +15,7 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Install Pillow
@@ -23,6 +25,20 @@ jobs:
           python3 tools/check_quiosco_six_sector_prototype.py \
             qa/quiosco_inbox/quiosco_prototipo_seis_composiciones.zip \
             qa-output/quiosco_six_sector_candidate
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Capture seven REAL Flutter raster views of the candidate (NOT StagePainter)
+        run: flutter test --no-pub --reporter expanded test/quiosco_candidate_flutter_preview_test.dart
+      - name: Publish Flutter-captured candidate evidence (not game capture)
+        uses: actions/upload-artifact@v4
+        with:
+          name: quiosco-six-sector-flutter-candidate-NOT-gameplay
+          path: qa-output/quiosco_candidate_flutter/*.png
+          retention-days: 14
       - name: Publish candidate evidence ONLY
         uses: actions/upload-artifact@v4
         with:
