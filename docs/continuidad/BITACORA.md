@@ -265,3 +265,7 @@ QA pública gratuita en runner Ubuntu. Run `42504613482` falló por test que omi
 - Primer commit de integración remoto: `beedf40e8b29fd552e805ce274b75e016999866f`. Verificado el SHA exacto del PNG en la rama pública.
 - Pendiente Flutter real: análisis, ejecución de pruebas, capturas 20:9 y revisión de escala/pies/ataque/derrota antes de marcar entrega aprobada. No se ejecutaron Actions ni APK.
 
+## 2026-11-09 — Jugador rival: microfase de animación real
+
+Detectado salto directo a pose de derrota 23; las poses 20, 21 y 22 quedaban sin uso. Corregida selección de las cuatro poses de derrota/impacto/ataque con el reloj de cada evento (`deathAt`, `stunned`, `meleeWarning`), preservando movimiento, física y originales. Ampliada prueba `rival_player_atlas_test.dart`, adaptado el test de StagePainter y registrado en workflow manual `enemy-qa-only.yml`. Recortes 24/24 comprobados mediante alfa del PNG real, no con arte inventado. Falta ejecutar el runner Flutter para confirmar la imagen integrada y las pruebas.
+

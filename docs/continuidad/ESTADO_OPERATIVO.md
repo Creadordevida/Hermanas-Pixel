@@ -267,3 +267,9 @@ La mejora afecta **solo** al enemigo `rival` del campo de entrenamiento; no se h
 
 **Guardado comprobado:** commit GitHub `beedf40e8b29fd552e805ce274b75e016999866f` contiene el PNG y la integración; los SHA Git del PNG remoto y local coinciden (`4768322e93ed8267befadbbb3cee0609ea1d3594`). **No declarar listo para APK todavía:** este entorno carece de ejecutable Flutter y aún faltan `flutter analyze`, tests y capturas auténticas `StagePainter` 20:9, comparación visual con el limpiador aprobado y verificación del comportamiento en el juego. La ejecución de Actions sigue siendo manual por el acuerdo de control de gasto. La imagen generada del atlas no es una captura del motor.
 
+## 2026-11-09 — Jugador rival: sincronización de atlas corregida, QA real todavía pendiente
+
+La revisión de los 24 fotogramas detectó un error de integración del 08/11: el estado `defeated` elegía directamente el último fotograma, dejando tres poses de caída inalcanzables. Corregido: derrota 20–23 por tiempo desde la muerte, impacto 16–19 por tiempo restante de aturdimiento y embestida 12–15 por cuenta atrás real del aviso cuerpo a cuerpo. La prueba unitaria ahora exige expresamente la secuencia completa de cuatro poses en los tres casos; el test de capturas StagePainter del jugador rival usa cuatro tiempos de caída diferenciados. El workflow `enemy-qa-only.yml` ejecutará esa prueba cuando se lance manualmente.
+
+Comprobados de nuevo en el PNG real los 24 recortes tras optimización cromática: 24 celdas con silueta opaca, ninguna vacía; dimensiones de cada silueta dentro de 256×256. Sigue sin haber SDK Flutter instalado en este entorno, por lo que **no se han ejecutado pruebas Flutter ni obtenido nuevas capturas del motor**. No presentar el atlas como captura real ni promocionar a «listo para APK» sin esa validación. Acciones automáticas no habilitadas por el acuerdo de control de gasto.
+

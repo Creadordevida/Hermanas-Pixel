@@ -2161,7 +2161,10 @@ class StagePainter extends CustomPainter {
           attacking:foe.launched || foe.meleeWarning>0,
           stunned:foe.stunned>0,defeated:foe.defeated,
           attackCooldown:foe.attackCooldown,
-          heroDistance:(hero.x-foe.x).abs());
+          heroDistance:(hero.x-foe.x).abs(),
+          deathElapsed:foe.defeated ? time-foe.deathAt : 0,
+          stunRemaining:foe.stunned,
+          warningRemaining:foe.meleeWarning);
         final source=rivalPlayerAtlasSource(frame);
         final scale=rivalPlayerWorldHeight/rivalPlayerSilhouettes[0].height;
         _sprite(canvas,images['enemy_rival_player_atlas'],

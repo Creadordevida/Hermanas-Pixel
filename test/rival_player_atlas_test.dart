@@ -31,4 +31,20 @@ void main() {
     expect(frame(stunned:true), inInclusiveRange(16,19));
     expect(frame(defeated:true), 23);
   });
+
+  test('attack, recoil and falling show each of their four authored frames', () {
+    int frame({double death=0,double stun=0,double warning=0,
+      bool defeated=false,bool stunned=false,bool attacking=false}) =>
+      rivalPlayerAtlasFrame(elapsed:0,moving:false,
+        attacking:attacking,stunned:stunned,defeated:defeated,
+        attackCooldown:0,heroDistance:30,
+        deathElapsed:death,stunRemaining:stun,
+        warningRemaining:warning);
+    expect([for (var i=0;i<4;i++) frame(defeated:true,death:i*.16)],
+      [20,21,22,23]);
+    expect([for (var i=0;i<4;i++) frame(stunned:true,stun:.66-i*.165)],
+      [16,17,18,19]);
+    expect([for (var i=0;i<4;i++) frame(attacking:true,warning:.36-i*.09)],
+      [12,13,14,15]);
+  });
 }

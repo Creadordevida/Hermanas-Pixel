@@ -40,10 +40,15 @@ int rivalPlayerAtlasFrame({
   required bool defeated,
   required double attackCooldown,
   required double heroDistance,
+  double deathElapsed = .5,
+  double stunRemaining = .0,
+  double warningRemaining = .0,
 }) {
-  if (defeated) return 23;
-  if (stunned) return 16 + ((elapsed * 9).floor() % 4);
-  if (attacking) return 12 + ((elapsed * 12).floor() % 4);
+  // Unlike a single six-pose replacement, the full sequence must be
+  // reachable. The terminal pose persists after the first four frames.
+  if (defeated) return 20 + (deathElapsed * 8).floor().clamp(0,3);
+  if (stunned) return 16 + ((.66-stunRemaining)/.66*4).floor().clamp(0,3);
+  if (attacking) return 12 + ((.36-warningRemaining)/.36*4).floor().clamp(0,3);
   if (moving) return 4 + ((elapsed * 9).floor() % 4);
   if (heroDistance < 95 && attackCooldown < .5) {
     return 8 + ((elapsed * 4).floor() % 4);

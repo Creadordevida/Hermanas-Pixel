@@ -112,7 +112,7 @@ void main() {
            }
          }
          if(pose==4)foe.stunned=.45;
-         if(pose==5)foe.deathAt=.8-phase*.12;
+         if(pose==5)foe.deathAt=.8-phase*(kind=='rival'?.16:.12);
          final repaint=GlobalKey();
          await tester.pumpWidget(Directionality(
            textDirection:TextDirection.ltr,
