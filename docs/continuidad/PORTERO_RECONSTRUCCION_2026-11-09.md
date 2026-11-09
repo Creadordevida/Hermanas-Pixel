@@ -64,3 +64,9 @@
 - Esquinas examinadas: alpha 0 en los tres. Los originales anteriores permanecen intactos. El verificador de geometría incorpora ahora nueve fuentes maestras/intermedias.
 - Estas variantes amplían el movimiento pero no sustituyen un atlas completo de 24 cuadros; requieren normalización del tamaño y pivote, inspección de halos en fondo claro/oscuro y secuencia a fps real.
 - No se ha alterado `lib/main.dart`, los cinco PNG activos, la lógica de ataque ni la visibilidad de la próxima APK. Sin Flutter ni Android.
+
+## Microfase 8 — dos transiciones de derrota
+
+- Nuevas fuentes `pose_defeat_knee_rgba.png` (rodilla al suelo) y `pose_defeat_hands_rgba.png` (ambas manos apoyadas) como transición hacia `pose_defeated_rgba.png` (tumbado).
+- Ambas son 1312×1199 con esquina alfa 0; mantener como ilustraciones de trabajo, pendientes de inspeccionar secuencia temporal y alinear apoyos a la misma escala. El conjunto alcanza once poses maestras/intermedias individuales, no 24 cuadros finales.
+- La prueba de control de transparencia se amplía a once archivos. La integración actual y la siguiente APK no se modifican en esta fase.

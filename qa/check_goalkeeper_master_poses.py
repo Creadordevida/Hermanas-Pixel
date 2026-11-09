@@ -10,7 +10,8 @@ from PIL import Image
 
 ROOT = Path("qa/goalkeeper_rebuild_20261109")
 NAMES = ("ready", "shuffle", "shuffle_step_a", "shuffle_step_b",
-         "warning", "dive", "hurt", "hurt_recoil", "defeated")
+         "warning", "dive", "hurt", "hurt_recoil", "defeat_knee",
+         "defeat_hands", "defeated")
 
 
 def inspect(path: Path) -> dict:
