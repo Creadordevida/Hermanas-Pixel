@@ -1,3 +1,7 @@
+## 2026-11-09 — Quiosco: reconstrucción artística aprobada, planificación versionada
+
+Recuperado diagnóstico de 163 fragmentos / 11 recortes únicos / 39 paneles. Usuario autoriza guardar en la rama y aprueba reconstrucción por grandes sectores, quiosco único protagonista y tres planos sin alterar jugabilidad. Guardados `qa/quiosco_rc7_art_rebuild_plan.json` y `tools/check_quiosco_rebuild_plan.py`, con plan de 6 sectores y contrato de geometría; documentación actualizada en `docs/continuidad/QUIOSCO_RC7_RECONSTRUCCION_Y_QA.md`. Último commit de documentación `fea5321677782becefdaaf403671ff0ee655811c`. Se confirmó lectura de los dos nuevos archivos remotos. Primer candidato PNG de fachadas solo en conversación; NO subido, integrado, aprobado ni probado en Flutter. Pendiente transferencia y composición gráfica real, QA visual dinámica y capturas StagePainter. Ninguna APK ni merge.
+
 ## 2026-11-04 — Enemigos preparados para la RC7 conjunta; recortes de producción corregidos
 
 Auditado HEAD 886a4af259241efd3e68129a6c85e84f6ca848bf, PR #5 abierta sin merge. Los 21 PNG protegidos son idénticos por SHA Git a la entrega verificada del 1/11. El workflow manual rc7-enemies-private-playtest.yml ya habilita TWC_GAMEPLAY_PLAYTEST=true: los seis nuevos aparecerán en la prueba privada sin declarar aprobación artística.
