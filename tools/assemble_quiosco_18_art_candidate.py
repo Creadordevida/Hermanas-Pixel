@@ -46,7 +46,7 @@ def source(name: str, work: Path) -> Path:
 
 def best_seam(left: Image.Image, right: Image.Image,
               preferred: int) -> list[int]:
-    """Find a low-contrast, slowly winding seam through the 96px overlap.
+    """Find a low-contrast, nearly vertical architectural seam.
 
     This optimizes pixels, not building semantics: every result still requires
     human review, especially incompatible roofs / windows / arch dimensions.
@@ -54,12 +54,24 @@ def best_seam(left: Image.Image, right: Image.Image,
     width = left.width
     a = left.load()
     b = right.load()
+    # Windows and pillars should not be cut along a serpentine path: prefer
+    # a single join axis throughout the façade, with a higher emphasis on
+    # the occupied architectural zone than on the moving sky.
+    columns = []
+    for x in range(8, width - 8):
+        cost = 0.0
+        for y in range(HEIGHT):
+            delta = sum(abs(v-w) for v,w in zip(a[x,y],b[x,y])) / 3
+            cost += delta * (2.0 if 100 <= y < 330 else 0.7)
+        cost += HEIGHT * abs(x-preferred) * 0.16
+        columns.append((cost,x))
+    axis = min(columns)[1]
     costs = [[0.0]*width for _ in range(HEIGHT)]
     parents = [[0]*width for _ in range(HEIGHT)]
     for y in range(HEIGHT):
         for x in range(8, width-8):
             c = sum(abs(v-w) for v,w in zip(a[x,y], b[x,y])) / 3
-            center_penalty = abs(x-preferred)*0.16
+            center_penalty = abs(x-axis)*2.0
             if y == 0:
                 costs[y][x] = c + center_penalty
             else:
