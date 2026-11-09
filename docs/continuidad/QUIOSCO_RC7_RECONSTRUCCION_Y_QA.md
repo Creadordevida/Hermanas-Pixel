@@ -64,3 +64,12 @@ Las ilustraciones, paneles infográficos o simulaciones generadas por IA durante
 **Siguiente acción concreta:** crear la biblioteca de panorámicas originales distintas (no recortes reciclados), registrar sus hashes y subidas reales; recomponer sectores enteros ajustando líneas de cornisa, arcadas, árboles y perspectivas; recortar el maestro continuo en 39 paneles; auditar todas las uniones internas y las 38 interpanel; importar en Flutter; inspeccionar barrido real alrededor del quiosco y a lo largo del nivel; corregir y verificar regresiones antes de cambiar los recursos activos.
 
 **Seguridad:** no fusionar PR #5, no ejecutar workflows manuales ni compilar APK sin orden específica.
+
+## 09/11/2026 — constructor de nuevos fondos (continuación)
+
+Guardados en GitHub y recuperados después de cada escritura:
+
+- `tools/build_quiosco_sectors_candidate.py`: solo admite seis panoramas **originales** de anchura exacta por sector, altura 390 y píxeles opacos. Rechaza entradas ausentes, estiramientos implícitos, transparencias y archivos idénticos. Produce los 39 WebP sin escalado horizontal y conserva sin recomprimir el quiosco de música único del material validado. Su ZIP es **candidato** y no modifica el juego.
+- `tools/audit_quiosco_candidate_seams.py`: comprueba geometría y fuentes diferenciadas del candidato y calcula diferencias de color entre 38 pares de bordes. La métrica no prueba continuidad arquitectónica interna, ni sustituye inspección artística o un vídeo de desplazamiento real.
+
+**Situación:** faltan seis fuentes originales con anchuras (7200, 7200, 3520, 2880, 7200, 9440), todas por 390 px, para ejecutar el empaquetador. La primera imagen candidata generada en el chat no llena por sí sola un sector a resolución nativa, y NO se reutilizará/escalará para fingir variedad. El fondo actual del juego no se reemplaza. No se han ejecutado Flutter, Actions ni pruebas de integración en esta fase. Pendiente crear arte suficiente e importarlo después de validación.
