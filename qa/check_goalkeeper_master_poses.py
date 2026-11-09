@@ -9,8 +9,9 @@ from PIL import Image
 
 
 ROOT = Path("qa/goalkeeper_rebuild_20261109")
-NAMES = ("ready", "shuffle", "shuffle_step_a", "shuffle_step_b",
-         "warning", "dive", "hurt", "hurt_recoil", "defeat_knee",
+NAMES = ("ready", "idle_shift_a", "idle_shift_b", "shuffle",
+         "shuffle_step_a", "shuffle_step_b", "warning", "warning_crouch",
+         "warning_reach", "dive", "hurt", "hurt_recoil", "defeat_knee",
          "defeat_hands", "defeated")
 
 

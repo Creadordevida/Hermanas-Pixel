@@ -70,3 +70,9 @@
 - Nuevas fuentes `pose_defeat_knee_rgba.png` (rodilla al suelo) y `pose_defeat_hands_rgba.png` (ambas manos apoyadas) como transición hacia `pose_defeated_rgba.png` (tumbado).
 - Ambas son 1312×1199 con esquina alfa 0; mantener como ilustraciones de trabajo, pendientes de inspeccionar secuencia temporal y alinear apoyos a la misma escala. El conjunto alcanza once poses maestras/intermedias individuales, no 24 cuadros finales.
 - La prueba de control de transparencia se amplía a once archivos. La integración actual y la siguiente APK no se modifican en esta fase.
+
+## Microfase 9 — reposo y anticipación antes de estirada
+
+- Cuatro nuevas fuentes aisladas, con transparencia nominal: `pose_idle_shift_a_rgba.png`, `pose_idle_shift_b_rgba.png`, `pose_warning_crouch_rgba.png`, `pose_warning_reach_rgba.png`.
+- Hay quince poses maestras/intermedias únicas bajo control geométrico; aún no forman el atlas final de 24. Las variaciones pequeñas de reposo deben evaluarse en secuencia a tamaño real para descartar cambios de anatomía o duplicaciones encubiertas.
+- Se mantienen todos los originales, no se alteran golpes ni tiempos de juego y no se ha lanzado Flutter/Actions/Android.
