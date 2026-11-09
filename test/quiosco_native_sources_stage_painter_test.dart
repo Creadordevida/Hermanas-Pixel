@@ -1,4 +1,4 @@
-// QA ONLY: actual StagePainter showing four distinct native-scale source images.
+// QA ONLY: actual StagePainter showing five distinct native-scale source images.
 // This does NOT certify joins or cover the 37,440px world; normal game unchanged.
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -17,13 +17,14 @@ Future<ui.Image> load(String path) async {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('Real StagePainter, four separate native Quiosco sources', (tester) async {
+  testWidgets('Real StagePainter, five separate native Quiosco sources', (tester) async {
     SharedPreferences.setMockInitialValues({});
     const folder='qa/quiosco_inbox/';
     const names=<String>[
-      'fachadas_galeria_nativas_2172x390_candidate.webp',
       'fachadas_teatro_nativas_2172x390_candidate.webp',
       'fachadas_poniente_nativas_2172x390_candidate.webp',
+      'fachadas_comercios_nativas_2172x390_candidate.webp',
+      'fachadas_galeria_nativas_2172x390_candidate.webp',
       'fachadas_oriente_nativas_2172x390_candidate.webp',
     ];
     final imgs=<ui.Image>[];
@@ -40,12 +41,12 @@ void main() {
       canvas.drawImage(imgs[i],ui.Offset((i*2172).toDouble(),0),ui.Paint());
     }
     final picture=recorder.endRecording();
-    final candidate=await picture.toImage(8688,390);
+    final candidate=await picture.toImage(10860,390);
     picture.dispose();
     for(final im in imgs) { im.dispose(); }
     final boundaryKey=GlobalKey();
     final gameKey=GlobalKey();
-    const worldXs=<double>[700,2040,2390,4220,4700,6480,6800,8020];
+    const worldXs=<double>[700,2040,2390,4220,4700,6480,6800,8900,9400,10200];
     try {
       await tester.binding.setSurfaceSize(const Size(1000,450));
       for(final x in worldXs) {
