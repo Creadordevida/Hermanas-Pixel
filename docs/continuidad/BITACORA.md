@@ -1,3 +1,10 @@
+## 09/11/2026 — segunda pasada de las 17 uniones: eje arquitectónico
+
+- Código `847cb88`: el montador puntúa los 96 posibles ejes dando mayor peso a fachadas (y=100..329) y restringe la costura serpenteante a un eje casi vertical. No altera las imágenes maestras ni la ruta de juego activa.
+- Regenerado el candidato completo de 37.440 × 390 con sus 39 WebP de staging. Se compararon visualmente las 17 uniones con la versión anterior: desaparecen varios fragmentos de ventanas y fachadas con fundido irregular; todavía se aprecian límites estructurales entre edificios de origen incompatible.
+- `python3 tools/test_quiosco_connector_edges.py`: PASS sintético. `py_compile`: PASS. 39/39 paneles candidatos presentes. **Sin Flutter ni Android nuevos; no lanzar Actions, APK o merge.**
+- **Puerta de calidad todavía cerrada:** queda reconstrucción manual de geometría de algunas fachadas y posterior barrido StagePainter. Los paneles activos se conservan intactos.
+
 ## 2026-11-09 — Quiosco, microfase costuras
 
 Cambio: `tools/assemble_quiosco_18_art_candidate.py` (commit `af1127c`), reducir mezcla de 96px en cielo a feather de 6px y evitar doble exposición. Se generó el candidato completo y 17 contactos locales, revisados antes/después; mejora visible del cielo, pero arcos y cornisas todavía discontinuos. `tools/test_quiosco_connector_edges.py` PASS sintético; Flutter/Android no ejecutados. Activos intactos. Siguiente: restaurar continuidad arquitectónica, luego Flutter y QA visual.
