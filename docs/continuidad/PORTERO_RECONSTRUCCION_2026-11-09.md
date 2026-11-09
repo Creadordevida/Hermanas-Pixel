@@ -21,3 +21,11 @@
 7. Habilitar el nuevo recurso para la próxima APK únicamente después del cierre de QA y de la aceptación artística. Mantener test Android pendiente hasta jugar en Redmi Note 14.
 
 **Siguiente acción:** obtener aprobación artística de la referencia candidata y realizar la limpieza de siluetas antes de fabricar el atlas definitivo.
+
+## Microfase 2 — diseño aprobado y atlas 24 poses NO LIMPIO
+
+- El usuario aprobó el aspecto de la referencia y autorizó su subida a GitHub. Referencia y documento de recuperación guardados en commit remoto `159a3b7948528d667b843d8e41739841dfa49977`.
+- Generada hoja candidata de 4 columnas × 6 filas (`1024×1536`, celda `256×256`) en `qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_UNCLEAN_candidate.png`, SHA-256 `3522b9e2bc21bd24490251febb3b3e2c90c2fb42d0a833fb0d0ffbf0a1a93e64`.
+- Filas: espera, carrera/desplazamiento, aviso, estirada, impacto y derrota. Son dibujos de evaluación: algunos fotogramas tienen variaciones insuficientes para animación fluida y **la imagen conserva fondo degradado opaco**. La petición de quitarlo mediante edición generativa no produjo transparencia útil.
+- **RECHAZADO COMO ATLAS DE PRODUCCIÓN**. No registrar en pubspec, no sustituir `goalkeeper_0..4`, no atribuirle validación Flutter o Android. Se conserva para redibujar/limpiar usando la identidad aprobada.
+- Siguiente microfase concreta: preparar 24 celdas realmente RGBA sin halos, con pivote de pies y márgenes verificados, inspeccionar secuencia animada; después implementar el lector, tests de combate y capturas auténticas.
