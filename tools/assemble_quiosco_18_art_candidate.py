@@ -44,6 +44,38 @@ def source(name: str, work: Path) -> Path:
     raise FileNotFoundError(f'Missing original candidate {name}: {local}, {remote}')
 
 
+def best_seam(left: Image.Image, right: Image.Image,
+              preferred: int) -> list[int]:
+    """Find a low-contrast, slowly winding seam through the 96px overlap.
+
+    This optimizes pixels, not building semantics: every result still requires
+    human review, especially incompatible roofs / windows / arch dimensions.
+    """
+    width = left.width
+    a = left.load()
+    b = right.load()
+    costs = [[0.0]*width for _ in range(HEIGHT)]
+    parents = [[0]*width for _ in range(HEIGHT)]
+    for y in range(HEIGHT):
+        for x in range(8, width-8):
+            c = sum(abs(v-w) for v,w in zip(a[x,y], b[x,y])) / 3
+            center_penalty = abs(x-preferred)*0.16
+            if y == 0:
+                costs[y][x] = c + center_penalty
+            else:
+                choices = range(max(8,x-2), min(width-8,x+3))
+                parent = min(choices, key=lambda z: costs[y-1][z] + 0.3*abs(z-x))
+                parents[y][x] = parent
+                costs[y][x] = c + center_penalty + costs[y-1][parent]
+        for x in list(range(8))+list(range(width-8,width)):
+            costs[y][x] = float('inf')
+    end = min(range(8,width-8), key=lambda x: costs[-1][x])
+    path=[end]*HEIGHT
+    for y in range(HEIGHT-1,0,-1):
+        path[y-1] = parents[y][path[y]]
+    return path
+
+
 def main() -> None:
     import argparse
     p = argparse.ArgumentParser()
@@ -77,13 +109,14 @@ def main() -> None:
             available = left.width
             left_pixels = left.load()
             right_pixels = im.load()
+            seam_path = best_seam(left, im, seam)
             for y in range(HEIGHT):
                 for x in range(available):
                     # Wider blend for sky only; prevent double-exposed walls.
                     if y < 110:
                         alpha = x / max(1, available - 1)
                     else:
-                        alpha = max(0.0, min(1.0, (x - seam + 5) / 10.0))
+                        alpha = max(0.0, min(1.0, (x - seam_path[y] + 5) / 10.0))
                     a = left_pixels[x, y]
                     b = right_pixels[x, y]
                     art.putpixel((start + x, y), tuple(round(v * (1-alpha) + w * alpha)
@@ -94,7 +127,8 @@ def main() -> None:
                           (cursor, 0))
         details.append({'source': name, 'world_start': start,
                         'connector': connector, 'overlap': OVERLAP,
-                        'seam_center': start + seam})
+                        'seam_center': start + seam,
+                        'seam_mode': 'minimum_pixel_error_winding_path'})
         cursor = start + SOURCE_WIDTH
 
     if cursor < WORLD:
@@ -104,12 +138,17 @@ def main() -> None:
         kiosk = k.convert('RGB')
     if kiosk.size != (1170, HEIGHT):
         raise ValueError(f'Unexpected landmark size {kiosk.size}')
-    # Overlay the ONLY kiosk with 96px edge feather. It is not replicated.
+    # The kiosk already has a coherent courtyard/background. Its boundaries
+    # should NOT be blended over 96px: that double-exposes whole buildings.
+    # Use an 8px architectural feather and a 160px gradual paving transition
+    # below the building line. This avoids ghosted balconies and avoids a
+    # sudden straight seam through the different cobblestone perspectives.
     for x in range(kiosk.width):
         edge = min(x, kiosk.width - 1 - x)
-        alpha = min(1.0, edge / 96.0)
         worldx = KIOSK_X + x
         for y in range(HEIGHT):
+            feather = 8.0 + 152.0*max(0.0,min(1.0,(y-285)/65.0))
+            alpha = min(1.0, edge / feather)
             a = art.getpixel((worldx, y))
             b = kiosk.getpixel((x, y))
             art.putpixel((worldx, y), tuple(round(v * (1-alpha) + w * alpha)
@@ -124,6 +163,18 @@ def main() -> None:
     for n in range(39):
         art.crop((n*960, 0, (n+1)*960, HEIGHT)).save(
             pieces / f'quiosco_{n:02d}.webp', format='WEBP', lossless=True, method=6)
+    # Contact strips allow a reviewer to inspect each A/B/C connector at
+    # native pixels without loading a 37k-wide image into an image viewer.
+    seam_sheet = Image.new('RGB', (4*440, 5*390), '#273b51')
+    for n in range(1, 18):
+        anchor = n*(SOURCE_WIDTH-OVERLAP)
+        seam_sheet.paste(art.crop((anchor-220, 0, anchor+220, HEIGHT)),
+                         (((n-1)%4)*440, ((n-1)//4)*390))
+    seam_sheet.save(args.out / 'contact_17_connectors_CANDIDATE.webp',
+                    format='WEBP', quality=91, method=6)
+    art.crop((KIOSK_X-700, 0, KIOSK_X+1700, HEIGHT)).save(
+        args.out / 'kiosk_2400px_center_NOT_STAGEPAINTER.webp',
+        format='WEBP', quality=94, method=6)
     record = {
         'status': 'CANDIDATE_REQUIRES_REAL_STAGEPAINTER_AND_ARTISTIC_JOIN_REVIEW',
         'world_width': WORLD, 'height': HEIGHT, 'tile_count': 39,
