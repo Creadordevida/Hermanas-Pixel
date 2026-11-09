@@ -277,3 +277,7 @@ Con autorización, se ejecutó QA en Actions: #9 detectó error de redondeo (`[1
 
 Consolidación transversal de creación de protagonistas, enemigos, NPC y animales en `docs/FRAMEWORK_SNES_TWC/MANUAL_MAESTRO_PERSONAJES_SNES.md` y `PLANTILLA_FICHA_PERSONAJE.md`. El manual distingue imagen aprobada, PNG original, atlas, motor Flutter, captura real y test Android; recoge errores de clipping, alfa, tiempos, daño, falsa derrota, CI y transferencia GitHub. Casos de referencia: limpiador, vecina/chancla, guitarrista, jugador rival. **No se ejecutaron nuevas pruebas de juego al redactarlo**. Se solicita respaldo ZIP externo a GitHub para evitar pérdida del conocimiento.
 
+## 2026-11-09 — Identificación del retorno al mapa en todos los capítulos
+
+Solicitud del usuario: identificar el botón circular para volver al mapa. Inspeccionado `_play`: existía botón circular de pausa con acceso indirecto a «VOLVER AL MAPA». Incorporado control circular independiente de flecha izquierda + `MAPA` y borde dorado, sin eliminar pausa ni tocar `_returnMap` (guarda al mapa). Se aplica a todos los capítulos por composición común. Revisión de diff completada; **análisis, test visual y Android pendientes** al no disponer localmente del SDK Flutter. Sin CI manual ni APK.
+

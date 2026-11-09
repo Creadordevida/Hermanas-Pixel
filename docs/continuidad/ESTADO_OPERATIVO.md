@@ -283,3 +283,7 @@ Hubo dos ejecuciones previas que sirvieron de diagnóstico: [#9](https://github.
 
 Se creó el [manual maestro de personajes SNES](../FRAMEWORK_SNES_TWC/MANUAL_MAESTRO_PERSONAJES_SNES.md) y la [plantilla de ficha](../FRAMEWORK_SNES_TWC/PLANTILLA_FICHA_PERSONAJE.md), con contrato artístico, atlas flexible, integración, capturas reales 20:9, QA, errores históricos y casos de éxito. Esta operación es **documental**; no implica nuevas compilaciones, capturas de motor o validación Android. Se preparará una copia ZIP independiente para guardar fuera de GitHub.
 
+# UI común de capítulos — botón de vuelta al mapa (2026-11-09)
+
+`lib/main.dart`, `_play`: añadido en todos los capítulos jugables un botón circular azul oscuro con borde dorado, flecha blanca izquierda y texto `MAPA`, situado junto al botón existente de pausa. Activación accesible etiquetada «Volver al mapa». Usa `_returnMap()` existente, que libera controles, guarda progreso y vuelve al mapa; **no se ha cambiado** el comportamiento del botón de pausa ni de las pantallas de derrota/final. Comprobación estática `git diff --check`: correcta. **Pendiente** `flutter analyze`, test widget y captura auténtica 20:9; no hay Flutter instalado en este entorno y no se han ejecutado Actions ni APK. Próximo paso: ejecutar QA Flutter y revisión de escala/legibilidad en Redmi Note 14 cuando se prepare la siguiente versión.
+

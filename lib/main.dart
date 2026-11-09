@@ -1766,9 +1766,24 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         const SizedBox(width:12),
         _control(const Icon(Icons.arrow_upward_rounded,color:Colors.white,size:33),_jump,(){}),
       ])),
-      Positioned(right:12,top:10,child:IconButton(onPressed:(){leftHeld=false;rightHeld=false;
-        screen=Screen.paused;_save();setState((){});},
-        icon:const Icon(Icons.pause_circle_filled,color:Colors.white,size:29))),
+      Positioned(right:12,top:10,child:Row(mainAxisSize:MainAxisSize.min,children:[
+        Tooltip(message:'Volver al mapa de Pamplona',child:Semantics(
+          button:true,label:'Volver al mapa',child:Container(
+            width:49,height:49,
+            decoration:BoxDecoration(color:const Color(0xee0d3050),shape:BoxShape.circle,
+              border:Border.all(color:const Color(0xffffd875),width:2)),
+            child:IconButton(
+              padding:EdgeInsets.zero,
+              onPressed:_returnMap,
+              icon:const Column(mainAxisAlignment:MainAxisAlignment.center,children:[
+                Icon(Icons.arrow_back_rounded,color:Colors.white,size:25),
+                Text('MAPA',style:TextStyle(color:Colors.white,fontSize:9,fontWeight:FontWeight.w900,height:1)),
+              ]))))),
+        const SizedBox(width:5),
+        IconButton(tooltip:'Pausar partida',onPressed:(){leftHeld=false;rightHeld=false;
+          screen=Screen.paused;_save();setState((){});},
+          icon:const Icon(Icons.pause_circle_filled,color:Colors.white,size:29)),
+      ])),
     ],
     if(screen==Screen.introduction)Positioned(left:255,right:13,top:199,height:190,
       child:GestureDetector(onTap:_introNext,child:Container(padding:const EdgeInsets.all(14),
