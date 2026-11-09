@@ -120,11 +120,11 @@ def main() -> None:
             seam_path = best_seam(left, im, seam)
             for y in range(HEIGHT):
                 for x in range(available):
-                    # Wider blend for sky only; prevent double-exposed walls.
-                    if y < 110:
-                        alpha = x / max(1, available - 1)
-                    else:
-                        alpha = max(0.0, min(1.0, (x - seam_path[y] + 5) / 10.0))
+                    # A full-width sky blend creates duplicated clouds and
+                    # ghost roofs at transitions. Keep the same narrow seam
+                    # throughout the height. This is still ART QA: no seam
+                    # algorithm can invent matching architectural geometry.
+                    alpha = max(0.0, min(1.0, (x - seam_path[y] + 3) / 6.0))
                     a = left_pixels[x, y]
                     b = right_pixels[x, y]
                     art.putpixel((start + x, y), tuple(round(v * (1-alpha) + w * alpha)
