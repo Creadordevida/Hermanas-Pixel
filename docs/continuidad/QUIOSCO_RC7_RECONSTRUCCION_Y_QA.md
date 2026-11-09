@@ -1,5 +1,25 @@
 # Quiosco RC7 / Plaza del Castillo — primera integración protegida
 
+## Auditoría de continuidad retomada — 09/11/2026 (segunda conversación)
+
+- Se clonó y comprobó la rama en `09983ccb7cec89da9ee3437d423b25333dcb30a8`.
+- Se ejecutó localmente `tools/optimize_quiosco_source_order.py` y después
+  `tools/assemble_quiosco_18_art_candidate.py --order-json /tmp/quiosco_order.json`.
+  El resultado cubre los 37.440 px mediante 39 paneles y una única inserción
+  del quiosco (x=17.920); el constructor informa 37.464 px antes del recorte.
+- Se abrió y examinó visualmente la hoja de **17 uniones candidatas** generada
+  en esa ejecución. Siguen siendo evidentes transiciones bruscas de cubiertas,
+  cambios verticales de cornisas y nubes/tejados duplicados por superposición.
+  La reducción numérica del salto RGB (109,32 → 54,06) no los resuelve.
+- **DECISIÓN DE CALIDAD: NO ACTIVAR** este conjunto ni sustituir los 39 WebP
+  productivos. No se ha conseguido aún la continuidad arquitectónica aprobada;
+  tampoco se han realizado capturas Flutter de esta ejecución local ni prueba
+  en Android. No se declara acabado ni listo para publicar.
+- Siguiente microfase: retoque gráfico de las 17 juntas *sobre las imágenes
+  maestras*, respetando cota de pavimento, huecos, cubiertas y perspectiva;
+  repetir después StagePainter en todo el recorrido y comprobar los 39 hashes
+  antes de cualquier activación. Sin APK ni merge de PR #5.
+
 ## 09/11/2026 — cobertura gráfica completa candidata, sin activar
 
 - Biblioteca ampliada a **18 fuentes distintas de 2172 × 390** en `qa/quiosco_inbox/fachadas_*_nativas_2172x390_candidate.webp`, guardadas en GitHub. Su suma de 39.096 px permite cubrir los 37.440 px del mundo con 17 solapes de 96 px (cobertura neta 37.464 px y recorte final de 24 px). No son capturas de gameplay ni prueba de continuidad artística.
