@@ -29,3 +29,10 @@
 - Filas: espera, carrera/desplazamiento, aviso, estirada, impacto y derrota. Son dibujos de evaluación: algunos fotogramas tienen variaciones insuficientes para animación fluida y **la imagen conserva fondo degradado opaco**. La petición de quitarlo mediante edición generativa no produjo transparencia útil.
 - **RECHAZADO COMO ATLAS DE PRODUCCIÓN**. No registrar en pubspec, no sustituir `goalkeeper_0..4`, no atribuirle validación Flutter o Android. Se conserva para redibujar/limpiar usando la identidad aprobada.
 - Siguiente microfase concreta: preparar 24 celdas realmente RGBA sin halos, con pivote de pies y márgenes verificados, inspeccionar secuencia animada; después implementar el lector, tests de combate y capturas auténticas.
+
+## Microfase 3 — contrato temporal de atlas, aislado
+
+- `lib/goalkeeper_animation.dart` establece el mapeo de seis filas y cuatro columnas para las 24 poses propuestas. Diferencia espera (3 fps), desplazamiento lateral (8 fps), preparación de estirada, salto/estirada, impacto y caída real; preserva las ventanas actuales de aviso (.27 s) y contacto (.34–.52 s), sin cambiar daños o físicas.
+- `test/goalkeeper_animation_contract_test.dart` comprueba filas, transición aviso/estirada, acceso a las cuatro poses de caída y rango 0–23 de índice. **Código preparatorio desconectado del motor normal:** el portero existente se conserva.
+- `flutter` y `dart` no están disponibles localmente; pruebas no ejecutadas. CI manual tampoco ejecutada por la restricción de `AGENTS.md`. La validación Dart queda pendiente.
+- El intento adicional de producir atlas nuevo con fondo realmente transparente volvió a generar un degradado. Queda descartado como producción; no se ha introducido el recurso en la aplicación.
