@@ -9,11 +9,12 @@ from PIL import Image
 
 
 ROOT = Path("qa/goalkeeper_rebuild_20261109")
-NAMES = ("ready", "idle_shift_a", "idle_shift_b", "shuffle",
-         "shuffle_step_a", "shuffle_step_b", "warning", "warning_crouch",
-         "warning_reach", "dive", "dive_extension", "hurt", "hurt_recoil",
-         "hurt_side", "hurt_recover", "defeat_knee",
-         "defeat_hands", "defeated")
+NAMES = ("ready", "idle_shift_a", "idle_shift_b", "idle_shift_c",
+         "shuffle", "shuffle_step_a", "shuffle_step_b", "shuffle_step_c",
+         "warning", "warning_crouch", "warning_reach", "warning_extend",
+         "dive", "dive_extension", "dive_launch", "dive_full",
+         "hurt", "hurt_recoil", "hurt_side", "hurt_recover",
+         "defeat_knee", "defeat_hands", "defeat_side", "defeated")
 
 
 def inspect(path: Path) -> dict:

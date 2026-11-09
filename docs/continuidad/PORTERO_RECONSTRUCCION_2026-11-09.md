@@ -83,3 +83,10 @@
 - El candidato de lanzamiento diagonal de esta tanda se **descartó** por mostrar de nuevo un fondo de iluminación/degradado; no se incluye en el verificador ni en los assets activos.
 - El inventario controlado alcanza 18 imágenes individuales. Eso no demuestra aún 18 buenos fotogramas sucesivos: siguen sin ajustar pivotes, escala final ni fluidez y existe riesgo de variaciones sutiles de anatomía.
 - Falta una secuencia completa de 24 celdas aprobadas y capturas StagePainter. No hay alteración de `main.dart` ni pruebas Flutter/Android de esta variante.
+
+## Microfase 11 — inventario de 24 fuentes individuales
+
+- Se añaden seis imágenes de trabajo RGBA: `pose_idle_shift_c_rgba.png`, `pose_shuffle_step_c_rgba.png`, `pose_warning_extend_rgba.png`, `pose_dive_launch_rgba.png`, `pose_dive_full_rgba.png` y `pose_defeat_side_rgba.png`.
+- Se ha inspeccionado visualmente cada nueva imagen de forma individual. La identidad del portero y el vestuario verde/blanco se mantienen; `dive_full` extiende ambas manos y ambas piernas, `dive_launch` enlaza el impulso con el vuelo y `defeat_side` representa la caída lateral. No se confunden con el atlas opaco rechazado.
+- El verificador geométrico incorpora 24 nombres. **Son 24 ilustraciones fuente, no un atlas final**: falta reducir a píxel de juego con escala común, ajustar pivotes y orientación, inspeccionar fotogramas consecutivos en movimiento, eliminar cualquier halo y comprobar que ninguna celda corta cuerpo o guantes.
+- No se reemplazan los sprites históricos `goalkeeper_0..4` ni se conecta `lib/goalkeeper_animation.dart` a `lib/main.dart` mientras no haya un atlas real y pruebas StagePainter/Flutter. La APK anterior sigue teniendo el portero clásico.
