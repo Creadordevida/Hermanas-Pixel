@@ -16,6 +16,7 @@ import 'chapter_one_camera_v3.dart';
 import 'creature_sheet_bounds.dart';
 import 'animal_sprite_bounds.dart';
 import 'wildlife_animation.dart';
+import 'comparsa_enemy.dart';
 import 'jump_visuals.dart';
 import 'arga_platform_rules.dart';
 import 'arga_crab_behavior.dart';
@@ -49,6 +50,7 @@ const Map<String,bool> enemyArtValidated = {
   'guitar_musician': true, // RC7: seis capturas StagePainter y gameplay QA verificados
   'slipper_neighbor': true, // RC7: chancla, gameplay y seis capturas StagePainter verificados
   'rival_coach': true, // atlas, jugabilidad y capturas StagePainter validados para RC7
+  'comparsa_gigante': true,
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
@@ -150,6 +152,10 @@ class Enemy {
   // Visible melee warning for bully and rival soccer player.
   double meleeWarning = 0;
   NewEnemyMotion? newMotion;
+  late final ComparsaMotion? comparsaMotion = switch (ComparsaKind.byId[kind]) {
+    final type? => ComparsaMotion(type, home),
+    null => null,
+  };
   FourEnemyMotion? cleanerMotion;
   bool get danceCleaner => kind == 'dance_cleaner';
   FourEnemyMotion? musicianMotion;
@@ -167,9 +173,9 @@ class Enemy {
   bool get ranged => ['referee','breakdancer','teacher'].contains(kind);
   bool get dog => kind.startsWith('dog_');
   bool get aerial => kind == 'pigeon';
-  int get hp => (danceCleaner || guitarMusician) || kind == 'dog_doberman' || kind == 'cleaning_robot' ||
+  int get hp => comparsaMotion?.kind.hp ?? ((danceCleaner || guitarMusician) || kind == 'dog_doberman' || kind == 'cleaning_robot' ||
     kind == 'rival_supporter' || kind == 'estafeta_bull' ? 2 :
-    (ranged || slipperNeighbor || rivalCoach || kind == 'navarre_king') ? 3 : 1;
+    (ranged || slipperNeighbor || rivalCoach || kind == 'navarre_king') ? 3 : 1);
   double get speed => switch(kind) {
     'dog_dalmatian' => 56, 'dog_doberman' => 112,
     'rat' => 118, 'cat' => 92, 'pigeon' => 84,
@@ -665,6 +671,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       for (final entry in dogAtlasAssets.entries) {
         paths['${entry.key}_atlas'] = entry.value;
       }
+      for (final entry in comparsaAtlases.entries) {
+        paths['enemy_comparsa_${entry.key.name}'] = entry.value;
+      }
       for (final v in ['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher']) {
         if (v=='cat' || v=='rat') {
           // Se carga la hoja nueva única, con cinco poses coherentes y
@@ -904,6 +913,16 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         for (final x in [stageWidth*.42,stageWidth*.79]) {
           enemies.add(Enemy(enemies.length,'estafeta_bull',x));
         }
+      }
+    }
+    if (stage == comparsaStage) {
+      var comparsaId = enemies.length;
+      for (final kind in comparsaAtlases.keys) {
+        if (!isEnemyPlayableInBuild(kind.id) && widget.qaStage != comparsaStage) continue;
+        final x = comparsaPositions[kind]!;
+        enemies.removeWhere((foe) => (foe.x - x).abs() < 320);
+        obstacles.removeWhere((obstacle) => (obstacle.x - x).abs() < 210);
+        enemies.add(Enemy(comparsaId++, kind.id, x));
       }
     }
     if (stage>=4) enemies.add(Enemy(enemies.length,level.enemies.last,stageWidth-980));
@@ -1264,7 +1283,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           // New art uses a different physical silhouette for each enemy:
           // the bull is 168 px wide but used the 37px hit area of a pigeon.
           final profile=newEnemyHitProfiles[foe.kind];
-          final intersects = profile != null
+          final comparsa = foe.comparsaMotion;
+          final intersects = comparsa != null
+            ? comparsa.acceptsProjectile(shot.x, groundY - shot.y)
+            : profile != null
             ? profile.projectileHits(foeX:foe.x, groundY:groundY,
                 shotX:shot.x, shotY:shot.y)
             : dogAtlasAssets.containsKey(foe.kind)
@@ -1287,6 +1309,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
               })();
           if(intersects) {
             foe.hits++;foe.stunned=.66;foe.t=0;shot.active=false;
+            comparsa?.receiveHit(defeated: foe.hits >= foe.hp);
             // Cancel Estafeta warning and attack without a delayed hit.
             if(foe.kind=='sanfermin_runner') {
               foe.runnerWarningAt=-1;foe.runnerImpactUntil=-1;
@@ -1343,6 +1366,14 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         continue;
       }
       if(foe.stunned>0){foe.stunned=math.max(0,foe.stunned-dt);continue;}
+      final comparsa = foe.comparsaMotion;
+      if (comparsa != null) {
+        final impact = comparsa.update(dt, hero.x, groundY - hero.y);
+        foe.x = comparsa.x;
+        foe.facing = comparsa.facing;
+        if (impact != null) _receiveDamage(impact);
+        continue;
+      }
       if (foe.estafetaNew) {
         // Encierro: el toro anuncia el arranque antes de embestir.
         // El corredor se aparta de la protagonista, sin armas ni proyectiles.
@@ -1976,6 +2007,33 @@ class StagePainter extends CustomPainter {
       canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),
         width:foe.aerial?39+foe.flightAltitude*.13:53,height:7),
         Paint()..color=Color.fromARGB(shadowAlpha,9,23,35));
+      final comparsa = foe.comparsaMotion;
+      if (comparsa != null) {
+        final atlas = images['enemy_comparsa_${comparsa.kind.name}'];
+        if (atlas != null) {
+          final frame = comparsa.frame(
+            stunRemaining: foe.stunned,
+            defeatElapsed: foe.defeated ? time - foe.deathAt : null,
+          );
+          canvas.save();
+          if (comparsa.facing < 0) {
+            canvas.translate(2 * x, 0);
+            canvas.scale(-1, 1);
+          }
+          canvas.drawImageRect(
+            atlas,
+            comparsaFrameSource(frame),
+            Rect.fromLTWH(
+              x - comparsaPivot.dx, groundY - comparsaPivot.dy,
+              comparsaCell.width, comparsaCell.height,
+            ),
+            Paint()..filterQuality = FilterQuality.none
+              ..color = Colors.white.withValues(alpha: deathOpacity),
+          );
+          canvas.restore();
+        }
+        continue;
+      }
       if (foe.estafetaNew) {
         final art=images['enemy_${foe.kind}'];
         if(art!=null) {

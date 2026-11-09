@@ -1,6 +1,6 @@
 # Comparsa de la Plaza Consistorial
 
-Referencia aprobada el 9 de noviembre de 2026. Lámina revisada «Gigantes pixelados en la plaza.png». SHA-256 `b0a9fd3cb14d9508849c96e5a69a9bdf82e17d5d7c1315b781d191b679cf755d`. El gigante lleva peto plateado, banda dorada y faldón azul con el portador visible. Caravinagre lleva casaca verde bordada, tricornio y gesto agrio. El zaldiko lleva rojo y amarillo, cabeza oscura baja, crin larga y espuma amarilla al cordón. Ubicación exclusiva en el Ayuntamiento, índice 1. Primero Caravinagre, luego zaldiko y un gigante hacia el final.
+Referencia aprobada el 9 de noviembre de 2026. Lámina revisada «Gigantes pixelados en la plaza.png». SHA-256 `b0a9fd3cb14d9508849c96e5a69a9bdf82e17d5d7c1315b781d191b679cf755d`. El gigante lleva peto plateado, banda dorada y faldón azul con el portador visible. Caravinagre lleva casaca verde bordada, tricornio y gesto agrio. El zaldiko lleva rojo y amarillo, cabeza oscura baja, crin larga y espuma amarilla al cordón. Ubicación exclusiva en el Ayuntamiento, índice 1. Primero Caravinagre, luego zaldiko y un gigante ante la fachada consistorial, en el centro del recorrido existente.
 
 ## Contrato de animación
 
@@ -21,3 +21,7 @@ Daño único ligado a la pose de contacto y esquivable con un salto. El gigante 
 
 Hoja de origen de 24 poses, SHA-256 `0d037a486d12f9cd926f70d5afd2b21fbe7991077e97fe1bd33e3add028f0c06`. Derivado `assets/images/enemies_new/comparsa_gigante.png`. Máscara alfa binaria, pivote por apoyo y escala común de 258 px en reposo. Se conserva la apertura frontal con el portador. Integración y prueba Flutter pendientes en este punto.
 SHA-256 del atlas: `8b9ab0ec679e801c198ffcc384f8f825c970e9068084fa119a9367f8e3356153`.
+
+## Gigante, integración y revisión real
+
+El PNG indexado del primer punto de control dejaba un rectángulo negro en Flutter. Se sustituyó por RGBA de 8 bits por canal con alfa binario y el mismo arte. El atlas de producción es WebP sin pérdida con los mismos píxeles RGBA. SHA-256 `64c13fc7592913c9db5acafd1953a25cffb4748e9f16e7008bf02803cd58f933`. Revisado en StagePainter de 1000 × 450, con el portador visible durante el giro y al bajar la figura tras la derrota. Tres impactos durante recuperación. El encuentro se ubica en x=18520 para aprovechar la fachada histórica existente, situada a mitad del capítulo, y se despeja el espacio de combate inmediato. Las pruebas de Flutter con Miren y Sara verificaron aviso, contacto único, esquiva y derrota. Activado en la ruta normal del Ayuntamiento. Siguiente microfase: atlas e integración de Caravinagre.

@@ -1,3 +1,7 @@
+## 2026-11-09 — Comparsa del Ayuntamiento: Gigante probado y activo
+
+Corregido el alfa del atlas tras detectar un recuadro en el primer render. Cuatro pruebas Flutter superadas y capturas StagePainter de 1000 × 450 inspeccionadas. Portador visible ante la fachada consistorial. Tres impactos durante recuperación con balón o peine. El WebP final conserva exactamente los píxeles RGBA revisados. Siguiente microfase: Caravinagre. [Continuidad](COMPARSA_AYUNTAMIENTO.md).
+
 ## 2026-11-09 — Comparsa del Ayuntamiento: atlas candidato del Gigante
 
 Referencia visual aprobada y tabla de poses guardadas en [COMPARSA_AYUNTAMIENTO.md](COMPARSA_AYUNTAMIENTO.md). Atlas de 24 poses con portador visible y pivote de apoyo. La siguiente microfase es integrar y comprobar en Flutter el giro, el golpe único, la recuperación y la derrota con ambas protagonistas.
