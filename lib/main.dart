@@ -3232,8 +3232,8 @@ class StagePainter extends CustomPainter {
       final candidate=qaQuioscoPrototype!;
       canvas.drawRect(Rect.fromLTWH(0,0,viewW,groundY),
           Paint()..color=const Color(0xff78b4ed));
-      final sourceLeft=cameraX.clamp(0.0,
-          math.max(0.0,candidate.width.toDouble()-viewW));
+      final double sourceLeft=cameraX.clamp(0.0,
+          math.max(0.0,candidate.width.toDouble()-viewW)).toDouble();
       final sourceWidth=math.min(viewW,candidate.width.toDouble());
       canvas.drawImageRect(candidate,
           Rect.fromLTWH(sourceLeft,0,sourceWidth,groundY),
