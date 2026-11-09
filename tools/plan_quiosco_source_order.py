@@ -36,6 +36,7 @@ def audit(paths: list[Path]) -> dict:
                      "total_delta":round(sum(scores),2)})
     return {"candidate_count":len(paths),"orderings_checked":len(best),
             "lowest_total_delta":sorted(best,key=lambda x:(x["total_delta"],x["worst_join"]))[:3],
+            "lowest_worst_join":sorted(best,key=lambda x:(x["worst_join"],x["total_delta"]))[:3],
             "status":"PLANNING_ONLY_DO_NOT_ACTIVATE"}
 
 
