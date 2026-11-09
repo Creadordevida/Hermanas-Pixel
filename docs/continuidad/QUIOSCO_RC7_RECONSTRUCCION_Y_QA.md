@@ -48,3 +48,19 @@ Las ilustraciones, paneles infográficos o simulaciones generadas por IA durante
 - [GitHub Actions Estafeta 42000563217](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42000563217): **SUCCESS** en la misma rama.
 - Herramienta de bloqueo artístico: `python3 tools/audit_quiosco_visual_repetition.py --strict`. Con el material actual registra 163 segmentos, 11 recortes únicos (6,75 %), hasta 22 repeticiones de un mismo recorte, y **falla intencionadamente** para impedir aprobar falsamente el arte definitivo. El modo sin `--strict` genera diagnóstico y permite QA técnica para una RC de pruebas.
 - El capítulo es **utilizable en RC7 de prueba**, pero **NO cumple aún el requisito inicial de evitar repeticiones y cortes evidentes**. No hay aprobación artística final.
+
+
+## 09/11/2026 — nueva orden artística del usuario (reconstrucción integral)
+
+**Aprobado expresamente:** sustituir el montaje de fachadas repetidas y cortes internos por sectores amplios con arquitectura continua, destacar el quiosco de música como hito único y mantener tres capas de profundidad al estilo del capítulo 1. Conservar íntegros plataformas, enemigos, monedas, físicas, controles y restantes capítulos. No considerar el arte actual «terminado» ni activar piezas aisladas.
+
+**Cambios guardados y comprobados en GitHub:** 
+- `qa/quiosco_rc7_art_rebuild_plan.json`: seis sectores ordenados que cubren los 37.440 px, con monumento único x=17.920 y ancho 1.170; contrato de planos 0.30/0.56/1.0 y excepción explícita para anclar el quiosco a coordenadas del suelo. Estos números están en el MANIFIESTO actual, no implican que el nuevo dibujo esté generado.
+- `tools/check_quiosco_rebuild_plan.py`: comprobador independiente que cruza los sectores, paneles y posición del hito con el manifiesto real. **Pendiente ejecutar en checkout completo**; crear el archivo no equivale a superar QA.
+- Primera ilustración candidata de nuevas fachadas creada en esta conversación como PNG. **No está subida al repositorio, no está integrada y todavía no debe aparecer en una compilación.** No confundirla con capturas de StagePainter ni con arte aprobado.
+
+**Estado fiel:** planificación versionada; **reconstrucción de imágenes, montaje por sectores, captura real, revisión en movimiento, ejecución Flutter y validación Android PENDIENTES**. El fondo RC7 existente sigue visible y conserva sus defectos. No declarar cierre ni generar APK automáticamente.
+
+**Siguiente acción concreta:** crear la biblioteca de panorámicas originales distintas (no recortes reciclados), registrar sus hashes y subidas reales; recomponer sectores enteros ajustando líneas de cornisa, arcadas, árboles y perspectivas; recortar el maestro continuo en 39 paneles; auditar todas las uniones internas y las 38 interpanel; importar en Flutter; inspeccionar barrido real alrededor del quiosco y a lo largo del nivel; corregir y verificar regresiones antes de cambiar los recursos activos.
+
+**Seguridad:** no fusionar PR #5, no ejecutar workflows manuales ni compilar APK sin orden específica.
