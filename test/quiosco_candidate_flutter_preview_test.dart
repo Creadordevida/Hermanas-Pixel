@@ -31,9 +31,9 @@ void main() {
   testWidgets('real Flutter raster views of non-integrated Quiosco candidate',
       (tester) async {
     final input=File('qa-output/quiosco_six_sector_candidate/panorama_prototipo_6_sectores.png');
-    expect(await input.exists(), isTrue, reason:'Candidate ZIP was not extracted');
     // IO and image-codec futures must run outside fake async testWidgets time.
     final source=await tester.runAsync(() async {
+      if (!await input.exists()) throw StateError('Candidate ZIP was not extracted');
       final raw=await input.readAsBytes();
       final codec=await ui.instantiateImageCodec(raw);
       try {
