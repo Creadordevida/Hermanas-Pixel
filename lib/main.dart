@@ -348,7 +348,7 @@ void main() async {
 }
 
 class HermanasGame extends StatefulWidget {
-  const HermanasGame({super.key, this.qaStage, this.qaMap = false, this.qaTitle = false, this.qaWorldX, this.qaSelected});
+  const HermanasGame({super.key, this.qaStage, this.qaMap = false, this.qaTitle = false, this.qaWorldX, this.qaSelected, this.qaQuioscoPrototype});
   /// Entradas de diagnóstico usadas solo por testWidgets; en Android son null/false.
   final int? qaStage;
   final bool qaMap;
@@ -356,6 +356,8 @@ class HermanasGame extends StatefulWidget {
   final bool qaTitle;
   /// Posición del recorrido utilizada por capturas de QA, nunca por el juego Android.
   final double? qaWorldX;
+  /// QA-only injected image; null in all actual Android builds.
+  final ui.Image? qaQuioscoPrototype;
   /// Opcional exclusivo de capturas de test: 0 Miren, 1 Sara.
   /// No se utiliza durante el juego normal.
   final int? qaSelected;
@@ -1742,6 +1744,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   Widget _play({bool showFamily=false,Widget? overlay}) => Stack(children:[
     Positioned.fill(child:CustomPaint(painter:StagePainter(
       images:images,stage:stage,cameraX:cameraX,time:time,lastAttackTime:lastAttackTime,hero:hero,
+      qaQuioscoPrototype:widget.qaQuioscoPrototype,
       otherSister:otherSister,father:father,showFamily:showFamily || exitTime>=0,
       selected:selected,obstacles:obstacles,platforms:platforms,
       argaSupport:argaSupport,argaSupportSince:argaSupportSince,
@@ -1834,8 +1837,10 @@ class StagePainter extends CustomPainter {
     required this.coins,required this.collected,required this.enemies,required this.shots,
     required this.particlesUntil,
     this.argaSupport,this.argaSupportSince=0,this.argaCrab,this.argaFisher,this.argaHook,
-    this.argaBoy,this.argaStone,this.argaTrout});
+    this.argaBoy,this.argaStone,this.argaTrout,this.qaQuioscoPrototype});
   final Map<String,ui.Image> images;
+  /// QA-only provisional Plaza panorama; zero effect on normal game rendering.
+  final ui.Image? qaQuioscoPrototype;
   final int stage,selected;
   final double cameraX,time,particlesUntil,lastAttackTime;
   final ArgaSurface? argaSupport;
@@ -3221,7 +3226,20 @@ class StagePainter extends CustomPainter {
     // The approved detailed backdrop is a DISTANT vista. Its limited camera
     // pan cannot wrap the same clock, cathedral, car or kiosk indefinitely.
     // Foreground structures scroll at full world speed, just like sprites.
-    if(stage == 0) {
+    if(stage == 3 && qaQuioscoPrototype != null) {
+      // TEST ONLY. Draw at 1:1 over local 5,782px candidate: no repetition,
+      // no stretching and no fallback to the existing 39 bad-art panels.
+      final candidate=qaQuioscoPrototype!;
+      canvas.drawRect(Rect.fromLTWH(0,0,viewW,groundY),
+          Paint()..color=const Color(0xff78b4ed));
+      final sourceLeft=cameraX.clamp(0.0,
+          math.max(0.0,candidate.width.toDouble()-viewW));
+      final sourceWidth=math.min(viewW,candidate.width.toDouble());
+      canvas.drawImageRect(candidate,
+          Rect.fromLTWH(sourceLeft,0,sourceWidth,groundY),
+          Rect.fromLTWH(0,0,sourceWidth,groundY),
+          Paint()..filterQuality=FilterQuality.none);
+    } else if(stage == 0) {
       _neighborhoodBackground(canvas);
     } else if (stage == 1 && twcAyuntamientoRC7ArtworkEnabled) {
       _ayuntamientoBackgroundRC7(canvas);
