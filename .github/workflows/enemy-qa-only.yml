@@ -1,4 +1,5 @@
 name: Enemy verification only - NO APK
+# One-shot retrigger: verify rival attack frame boundary fix, 2026-11-09.
 # Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
 # No activar mientras GitHub Actions esté bloqueado por presupuesto.
 on:

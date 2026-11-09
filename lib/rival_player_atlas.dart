@@ -48,7 +48,9 @@ int rivalPlayerAtlasFrame({
   // reachable. The terminal pose persists after the first four frames.
   if (defeated) return 20 + (deathElapsed * 8).floor().clamp(0,3);
   if (stunned) return 16 + ((.66-stunRemaining)/.66*4).floor().clamp(0,3);
-  if (attacking) return 12 + ((.36-warningRemaining)/.36*4).floor().clamp(0,3);
+  // Frame boundaries such as .36-.27 can round to 0.999999999 and repeat
+  // the previous cell. Tiny epsilon is strictly below a visible frame step.
+  if (attacking) return 12 + ((.36-warningRemaining)/.36*4+1e-8).floor().clamp(0,3);
   if (moving) return 4 + ((elapsed * 9).floor() % 4);
   if (heroDistance < 95 && attackCooldown < .5) {
     return 8 + ((elapsed * 4).floor() % 4);
