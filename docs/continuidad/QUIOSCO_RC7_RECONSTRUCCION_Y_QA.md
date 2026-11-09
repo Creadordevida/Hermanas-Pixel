@@ -1,3 +1,11 @@
+## 09/11/2026 — ordenación alternativa descartada por inspección visual
+
+- Se probó localmente una optimización de las 18 fuentes que pondera x2 las fachadas, ventanas y soportales (y=100..329), frente a x0,7 para cielo y extremo de suelo. Se regeneraron los 37.440px y 39 WebP candidatos, y se inspeccionaron las 17 uniones.
+- **Resultado rechazado:** aunque algunos empalmes se aproximan más, aparecen nuevas discontinuidades claras entre coronaciones de edificios, alturas de arcos y tejados. La mejora de una función de color no implica continuidad constructiva.
+- Se restauró el optimizador original; **no se sube ni activa** la ordenación alternativa, ni se toca ningún panel de producción.
+- Prueba de retoque generativo de un panel: redibujó globalmente fachadas y cambió resolución, por lo que también fue descartada. Se conserva solo como estudio visual fuera del juego.
+- **Dependencia real pendiente:** corregir o sustituir localmente las ilustraciones incompatibles con bordes comunes nativos a 960×390, revisando cada composición como arquitectura, no como un simple fundido de color. Después StagePainter y revisión del barrido 0..37440. Sin APK ni merge.
+
 ## 09/11/2026 — segunda pasada de las 17 uniones: eje arquitectónico
 
 - Código `847cb88`: el montador puntúa los 96 posibles ejes dando mayor peso a fachadas (y=100..329) y restringe la costura serpenteante a un eje casi vertical. No altera las imágenes maestras ni la ruta de juego activa.
