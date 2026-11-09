@@ -44,3 +44,10 @@
 - Resoluciones origen: ready/shuffle/warning/hurt 1312×1199, dive 1774×887 y defeated 2007×783. **No son aún fotogramas de tamaño de juego**, y no deben estirarse individualmente a altura fija. Se preservan como fuentes artísticas para derivar y alinear el atlas.
 - Las poses conservan pelo castaño, ojos verdes, equipación verde/blanca y guantes. Hay que comprobar comparativamente proporciones y silueta a la misma escala y corregir halos/semialfa de borde antes de aprobarlas.
 - Pendiente: producir variaciones intermedias genuinas, normalizar pivote de apoyo, montar el atlas sin cortar extremidades ni juntar siluetas, conectar en Flutter y verificar 20:9. Sin cambio de recursos activos, sin CI ni APK.
+
+## Microfase 5 — diagnóstico de transparencia reproducible
+
+- `qa/check_goalkeeper_master_poses.py` analiza solo lectura seis PNG RGBA: bbox de silueta opaca, bordes, esquinas y distribución alfa, sin modificar imágenes.
+- Ejecución local con Pillow 13: `GOALKEEPER_MASTER_ALPHA_PASS`. Las seis siluetas son interiores al lienzo y las cuatro esquinas tienen alfa 0, salvo un residual 1/255 de la esquina superior izquierda de `shuffle` (tolerado para diagnóstico, pendiente limpieza final).
+- Quedan muchos píxeles semitransparentes de antialiasing, por lo que el éxito geométrico **no acredita ausencia visual de halos**; hay que revisar sobre fondos claro/oscuro y a tamaño de juego.
+- El atlas 4×6 anterior sigue rechazado. Los seis archivos maestros no sustituyen todavía los cinco sprites de producción; no se ha ejecutado Flutter ni QA Android.
