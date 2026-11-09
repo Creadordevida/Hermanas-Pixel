@@ -51,6 +51,8 @@ const Map<String,bool> enemyArtValidated = {
   'slipper_neighbor': true, // RC7: chancla, gameplay y seis capturas StagePainter verificados
   'rival_coach': true, // atlas, jugabilidad y capturas StagePainter validados para RC7
   'comparsa_gigante': true,
+  'comparsa_caravinagre': true,
+  'comparsa_zaldiko': true,
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
@@ -918,7 +920,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     if (stage == comparsaStage) {
       var comparsaId = enemies.length;
       for (final kind in comparsaAtlases.keys) {
-        if (!isEnemyPlayableInBuild(kind.id) && widget.qaStage != comparsaStage) continue;
+        if (!isEnemyPlayableInBuild(kind.id)) continue;
         final x = comparsaPositions[kind]!;
         enemies.removeWhere((foe) => (foe.x - x).abs() < 320);
         obstacles.removeWhere((obstacle) => (obstacle.x - x).abs() < 210);

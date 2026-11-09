@@ -10,6 +10,14 @@ import 'package:hermanas_aventura/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
+  test('Los tres miembros de la comparsa están activos en la ruta normal', () {
+    expect(comparsaAtlases.keys, unorderedEquals(ComparsaKind.values));
+    expect(comparsaStage, 1);
+    for (final kind in ComparsaKind.values) {
+      expect(isEnemyPlayableInBuild(kind.id), isTrue);
+    }
+  });
+
   for (final kind in ComparsaKind.values) {
     test('${kind.id}: aviso, fotograma de contacto, salto y recuperación', () {
       ComparsaMotion ready() {
@@ -36,7 +44,7 @@ void main() {
       expect(attack.pose, ComparsaPose.recover);
       expect(attack.acceptsProjectile(attack.x, 49), isTrue);
       final jump = ready();
-      expect(jump.update(contact + .01, heroX, kind.jump + 12), isNull);
+      expect(jump.update(contact + .01, heroX, kind.jump + 4), isNull);
       expect(jump.update(.02, heroX, 0), isNull);
 
       if (kind != ComparsaKind.giant) {
@@ -140,8 +148,16 @@ void main() {
 
       for (final kind in comparsaAtlases.keys) {
         final name = kind.name;
-        expect((game.images as Map<String, ui.Image>)['enemy_comparsa_$name'],
-            isNotNull);
+        final atlas =
+            (game.images as Map<String, ui.Image>)['enemy_comparsa_$name']!;
+        expect((atlas.width, atlas.height), (1280, 1728));
+        final rgba = (await tester.runAsync(() => atlas.toByteData()))!;
+        for (var frame = 0; frame < 24; frame++) {
+          final source = comparsaFrameSource(frame);
+          final index =
+              (source.top.toInt() * atlas.width + source.left.toInt()) * 4;
+          expect(rgba.getUint8(index + 3), 0, reason: '$name, marco $frame');
+        }
         final idle = reset(kind, 0, 360);
         await tick();
         expect(idle.comparsaMotion!.pose, ComparsaPose.idle);
@@ -165,7 +181,16 @@ void main() {
           expect(sawWarning, isTrue);
           expect(game.hearts, maxHeroHearts - 1, reason: kind.id);
           expect(motion.frame(), 14);
-          if (selected == 0) await capture('$name/contact');
+          if (selected == 0) {
+            await capture('$name/contact');
+            for (var i = 0; i < 40; i++) {
+              await tick();
+              if (i % 5 == 0) {
+                await capture(
+                    '$name/motion/a_recover_${i.toString().padLeft(3, '0')}');
+              }
+            }
+          }
 
           final dodged = reset(kind, selected, kind.trigger - 4);
           await tick();

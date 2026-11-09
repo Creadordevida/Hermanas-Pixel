@@ -6,8 +6,8 @@ enum ComparsaPose { idle, walk, warning, strike, recover, hit, defeated }
 enum ComparsaKind {
   giant('comparsa_gigante', 3, 38, 106, 111, .68, .56, 1.25, 35, 48, 129),
   caravinagre(
-      'comparsa_caravinagre', 1, 58, 64, 74, .44, .44, .66, 43, 29, 122),
-  zaldiko('comparsa_zaldiko', 2, 52, 156, 91, .56, .80, .86, 40, 54, 114);
+      'comparsa_caravinagre', 1, 58, 64, 84, .44, .44, .66, 79, 29, 122),
+  zaldiko('comparsa_zaldiko', 2, 52, 156, 117, .56, .80, .86, 61, 54, 114);
 
   const ComparsaKind(
       this.id,
@@ -39,6 +39,9 @@ enum ComparsaKind {
 
 const comparsaAtlases = {
   ComparsaKind.giant: 'assets/images/enemies_new/comparsa_gigante.webp',
+  ComparsaKind.caravinagre:
+      'assets/images/enemies_new/comparsa_caravinagre.png',
+  ComparsaKind.zaldiko: 'assets/images/enemies_new/comparsa_zaldiko.png',
 };
 
 const comparsaStage = 1;
@@ -136,9 +139,11 @@ class ComparsaMotion {
         _delivered = true;
         final dx = heroX - x;
         final sweep = kind == ComparsaKind.giant;
+        final forward = dx * facing;
+        final minimum = kind == ComparsaKind.zaldiko ? 48 : 36;
         final inReach = sweep
             ? dx.abs() < kind.reach
-            : dx * facing > 0 && dx.abs() < kind.reach;
+            : forward >= minimum && forward < kind.reach;
         if (inReach && heroHeight < kind.jump) {
           knockback = sweep ? (dx >= 0 ? 1 : -1) : facing;
         }

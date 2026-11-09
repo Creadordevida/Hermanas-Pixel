@@ -1,3 +1,7 @@
+## 2026-11-09 — Comparsa del Ayuntamiento: tres enemigos activos
+
+Gigante, Caravinagre y zaldiko integrados exclusivamente en la ruta normal de Ayuntamiento. Verificados los tres atlas de 24 poses y la transparencia en Flutter. 12 pruebas superadas y análisis sin incidencias. StagePainter 1000 × 450 revisado con combate de ambas protagonistas. [Continuidad](COMPARSA_AYUNTAMIENTO.md). Siguiente microfase: partida en el Redmi Note 14 con la próxima compilación Android.
+
 ## 2026-11-09 — Comparsa: atlas del zaldiko
 
 24 poses guardadas con el caballo oscuro, portador y bola al cordón. El contacto usa el balanceo bajo. [Continuidad](COMPARSA_AYUNTAMIENTO.md). Siguiente microfase: cerrar las pruebas de combate y la revisión del render conjunto.

@@ -33,3 +33,11 @@ Hoja fuente SHA-256 `2db347ca4a07701a0ffa223623f1b1d022c1535500eea83739a89410ec6
 ## Zaldiko, atlas
 
 Hoja fuente SHA-256 `e3ede39765e8d9422f36158aedb406c65e86ecfd533a5fb662fb710a2a8a59a7`. Derivado `assets/images/enemies_new/comparsa_zaldiko.png`, SHA-256 `ac4c039acc60b854028d86fc7c031e7c9931c5ead948e25c3364c8dc1fa400f2`. Altura de referencia 153 px. Se separaron siluetas completas de la rejilla original para conservar bola y cordón. Se eligió la extensión baja para contacto y la extensión alta para remate sin segundo daño. Las 24 celdas tienen alfa binario y apoyo en y=274. Siguiente microfase: comprobar los tres en el capítulo real, con ambos proyectiles y capturas 20:9.
+
+## Cierre de integración Flutter
+
+Caravinagre aparece en x=7200 y golpea tras el amago de hombro. Un impacto lo derrota. El zaldiko aparece en x=13100. Fija el rumbo, recorre hasta 70 px y frena antes del balanceo bajo. Resiste dos impactos. El Gigante aparece en x=18520, frente a la fachada histórica. Su barrido bajo se puede saltar y recibe proyectiles durante la recuperación. Se despeja el espacio inmediato de los tres encuentros.
+
+Activos en la ruta normal de la etapa 1. Se comprobaron 72 celdas con alfa binario y apoyo estable, y que los márgenes sigan siendo transparentes después de la carga de Flutter. Se revisó StagePainter real a 1000 × 450 en reposo, aviso, contacto, recuperación y derrota. Los tres casos de combate con Miren y con Sara verificaron contacto, esquiva, balón o peine y derrota. Resultado conjunto: 12 pruebas Flutter superadas, incluidas siete de regresión de fauna, y análisis focalizado sin incidencias.
+
+Queda validar en el Redmi Note 14 la fluidez, la legibilidad de la espuma y el tiempo para saltar con controles táctiles al instalar la próxima compilación Android de esta rama.
