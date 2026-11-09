@@ -14,1385 +14,444 @@
       "tile": 0,
       "filename": "quiosco_00.webp",
       "world_start": 0,
-      "sha256": "15081e83c11b69576a09688915b3f259e30f6ed6ccbdcb2e69c1ddfbfaeb6dcf"
+      "sha256": "d6779b6198c1de19b65094a6024b7bf90aa2d0cca1918be18dcc1ea084053e2a"
     },
     {
       "tile": 1,
       "filename": "quiosco_01.webp",
       "world_start": 960,
-      "sha256": "155027dd6b099f1ba675777f6ff46221af32ffb77ab5548e58c5ac39941d73ec"
+      "sha256": "fa056343748ac36194aeee224945721949e840b95f4be1785e2eadacb2f5f462"
     },
     {
       "tile": 2,
       "filename": "quiosco_02.webp",
       "world_start": 1920,
-      "sha256": "98df02d6717c32a221c26d0adf45b3b6f024040f30d3ea9149116df0719ccdca"
+      "sha256": "79e53c39c6dd0b420ffa5e6f0b99c46d4a380eaad0ca8f51beb9136efc9806e4"
     },
     {
       "tile": 3,
       "filename": "quiosco_03.webp",
       "world_start": 2880,
-      "sha256": "5787436765b45446fb7667a8f7ed7d8ee255c392ece2be42dd2e019183803dd9"
+      "sha256": "8ad9400102d5ea5292cf18b6cf82fc2708ec118a426fcadb1ca19f96d4817733"
     },
     {
       "tile": 4,
       "filename": "quiosco_04.webp",
       "world_start": 3840,
-      "sha256": "00fb734be9286bb49b3c3a1bc637de04d6bdd5909adab826cb7440d1bfcf0c19"
+      "sha256": "96997457ed0fd148d4693cd3d6142c53c26036474d953d716282afcbe294b84d"
     },
     {
       "tile": 5,
       "filename": "quiosco_05.webp",
       "world_start": 4800,
-      "sha256": "33a388df9c96fa03923a37ded90d73e812c71a9c3e3e9e17f93f93bb2f00ab5e"
+      "sha256": "ef771b46acbbe9d660f75cfc8e12a876e75b12709f24f166bee51d12810f076a"
     },
     {
       "tile": 6,
       "filename": "quiosco_06.webp",
       "world_start": 5760,
-      "sha256": "62067c25ffcd01c27ecd8b3155ed148966528f116c5d9bf4ba32baddbe133315"
+      "sha256": "2959cd2791a1f98a7c16d8f8b4c7f9e1c6864d35e0601e46d92f634bca24d73a"
     },
     {
       "tile": 7,
       "filename": "quiosco_07.webp",
       "world_start": 6720,
-      "sha256": "70a02f587d4fee01442835d2f162a0e71c91870a0c9c271c65913225f78f21b8"
+      "sha256": "bfd046cf44b79d0d8a28b9661be13653f6e30ffbf2b9b1716e75eea64834dae6"
     },
     {
       "tile": 8,
       "filename": "quiosco_08.webp",
       "world_start": 7680,
-      "sha256": "f0b0e232a05bb862feed2fe7c27b84da04efe870306d294028b6f49795d9927d"
+      "sha256": "a5a6803640147f0de62ed3e069bfbb02dfe9d85492e6e175a5ed8d6391dfbbba"
     },
     {
       "tile": 9,
       "filename": "quiosco_09.webp",
       "world_start": 8640,
-      "sha256": "e9b0d92b7bb98cdafbbba5f023e3cee42a0e95e68bde576ce135ff427d0c130d"
+      "sha256": "02a0dc1e51314e32f26d11efc86b50c19fd2a0f06018d9cb57ca6929ac1f479f"
     },
     {
       "tile": 10,
       "filename": "quiosco_10.webp",
       "world_start": 9600,
-      "sha256": "92e9f933acceef161ee37ed7432cb5bf30e8433d672a7425ae20fee90523a5f7"
+      "sha256": "2d8d33a31b245aacb055cce00c6c3cccf2c3e6ff9000c25b4e64853a2d45ed19"
     },
     {
       "tile": 11,
       "filename": "quiosco_11.webp",
       "world_start": 10560,
-      "sha256": "ce1aa28ab28497eb5b60e541d5b4977619adc60781c15dbb11365d65e51d1709"
+      "sha256": "360834b69ed6519503528874d9299f35b248b7686ba44a7802cb5e5a4b81561d"
     },
     {
       "tile": 12,
       "filename": "quiosco_12.webp",
       "world_start": 11520,
-      "sha256": "c0426d1accf5c66e413473881bff9fefad8e45d34a9d11950f393619719f6222"
+      "sha256": "f89473a693e786284813c8493f6a82295f9b8da9831aec258964b82318bec3f8"
     },
     {
       "tile": 13,
       "filename": "quiosco_13.webp",
       "world_start": 12480,
-      "sha256": "10f0986bb8bb70b99349168c817c9b2d6fdcb452018542d686f5e4e3cd22d9e8"
+      "sha256": "6e031c145b05d538c2990471507750e23b1f769e830e46c3d4bc5314b6dc7bc0"
     },
     {
       "tile": 14,
       "filename": "quiosco_14.webp",
       "world_start": 13440,
-      "sha256": "21c02bfd35f2deb5d950d54fab6788966abb0ae46c31a9c19a7e391693fb41cd"
+      "sha256": "5d3f507a092a009d2303beae9c62b61f3c054f700256b54b274cb7dac5da511f"
     },
     {
       "tile": 15,
       "filename": "quiosco_15.webp",
       "world_start": 14400,
-      "sha256": "06cf37f411ac0b3a17942dfdd221d2843e0e486bf53993f40e344e6d3a2ba3d7"
+      "sha256": "1738d0108bfbacd13b1bf8530cf01b1fe8dc63128b1a37bfdf003719a0dc1a4e"
     },
     {
       "tile": 16,
       "filename": "quiosco_16.webp",
       "world_start": 15360,
-      "sha256": "b8aaf5d77dca7670461e6871aceacffe36947155202ece0c9da992dd5b50974b"
+      "sha256": "2fa080b5cd3056ef59d5788f452568778414b14d4c90c7dac0f8f59e62e13777"
     },
     {
       "tile": 17,
       "filename": "quiosco_17.webp",
       "world_start": 16320,
-      "sha256": "6efa9c7442fd4c3d4446cd68231f184903bb76bd3e4361b43c573c4fa7328ed4"
+      "sha256": "d0c26649b26addee66013ea60c1d17b81b491587ad84fceee9ea53318037949f"
     },
     {
       "tile": 18,
       "filename": "quiosco_18.webp",
       "world_start": 17280,
-      "sha256": "b78e9e1f3804287be1e021077ef887ff0e1c467accebb2c78e0ba98dbcb11157"
+      "sha256": "9935a7ec0d5694f5e80730a3b59eeab2e7453d7ac0a5ca71fc0683bf05d82100"
     },
     {
       "tile": 19,
       "filename": "quiosco_19.webp",
       "world_start": 18240,
-      "sha256": "1b76db45ec1b670fe022d9d8c98d801c55acc39321c99f503ce7627d531de397"
+      "sha256": "5b1f9519b9676817d6a563c4a93e5b3ad1be2d2d076e574b885ba748ad12cf59"
     },
     {
       "tile": 20,
       "filename": "quiosco_20.webp",
       "world_start": 19200,
-      "sha256": "6146c55adf0004ec4ac9f4bacd5002f9ea61471bf7179a6d7edbdb3324cbbe0b"
+      "sha256": "333ffcefcabcd57a6b18c1e592b1b201cc8b777ae5ab1fde95246226d3305559"
     },
     {
       "tile": 21,
       "filename": "quiosco_21.webp",
       "world_start": 20160,
-      "sha256": "cf8ed5b1e8a23345659c8cd3b132caf26af6e9ca415aedaac4fda16891ca5978"
+      "sha256": "9826c191b5a4579e738d0a35b76009bb16b80e9a417fddabcb236ee158312d0a"
     },
     {
       "tile": 22,
       "filename": "quiosco_22.webp",
       "world_start": 21120,
-      "sha256": "8dc1a6c34224d75c30db3461fe59e531291ad20bc7cbf38d9d412c21bca7abed"
+      "sha256": "4124683a18966d06837c96092856063011a4095aef2224152d102379388bc91e"
     },
     {
       "tile": 23,
       "filename": "quiosco_23.webp",
       "world_start": 22080,
-      "sha256": "1cbdfd23372d5228fb65b9f723ae61639594618d60790054126d0eea80cf8ce3"
+      "sha256": "9df0d2877c35d3b6c8a6cf6801dcbb615c52a0a41fc873e3ce91b8fcac55326e"
     },
     {
       "tile": 24,
       "filename": "quiosco_24.webp",
       "world_start": 23040,
-      "sha256": "168e8da3a181fa48f7add871fc1dcd5133ca8e43554418838eac42e44d4c94fb"
+      "sha256": "535a059180784473529e9f5928458917a5d56fac9e4c4f19316ea8ec7c697a5b"
     },
     {
       "tile": 25,
       "filename": "quiosco_25.webp",
       "world_start": 24000,
-      "sha256": "659127551a7b8a927363e33b80f1a25f2f7d7a409329d64ba318d4ed3641a46c"
+      "sha256": "d803c1fa90294c94cad0de4934daedae5a67ea67a5032481f669d014007b33b3"
     },
     {
       "tile": 26,
       "filename": "quiosco_26.webp",
       "world_start": 24960,
-      "sha256": "50f0d7b7706390e3d8ffa0b059a4baffe5565036818f6fdf67a192691a3e9414"
+      "sha256": "26380898b56719dd1c807a3996a5e7a93c09bf58f846c02045b618894a2db585"
     },
     {
       "tile": 27,
       "filename": "quiosco_27.webp",
       "world_start": 25920,
-      "sha256": "f5b197715a4802a0959a714f9f6d1fe5cdb0140b4d6d9765c90eefff69baa501"
+      "sha256": "ec72d0846ba8467737b9317e9d73d54c675f5d5a0342e2fe9d08dd91510e0cda"
     },
     {
       "tile": 28,
       "filename": "quiosco_28.webp",
       "world_start": 26880,
-      "sha256": "4e8631a3dd97b6ca330efdb733aac0b700c836cda47e339f0d5a89e7947c5620"
+      "sha256": "ef6e6351b35ff64891193fce629fb1f53f28283f20a3fca99b0c2c6ffa7c2aca"
     },
     {
       "tile": 29,
       "filename": "quiosco_29.webp",
       "world_start": 27840,
-      "sha256": "28b0eb91eec65088ecc41373afe7fda2b35241bf5fb18dc30770ccffcf554bba"
+      "sha256": "6a22863d709261cc1a2ae96260f00216426726fa8ef413642d224b9c9cb592c6"
     },
     {
       "tile": 30,
       "filename": "quiosco_30.webp",
       "world_start": 28800,
-      "sha256": "b8201ef53ab11c6737341f842b0ec7a22da9305c0b1933551aa5e5857e4a7461"
+      "sha256": "420e5783bd4f37b5b90f5580028a6454c3ad7e4949cc660baa07efea0dda2206"
     },
     {
       "tile": 31,
       "filename": "quiosco_31.webp",
       "world_start": 29760,
-      "sha256": "40f01954449d1431c7ac2c3d2a8f16fec2dfd05c402ed40c5b26f156f2895016"
+      "sha256": "056cf1313d5485e59e6ce8fc47a9e6f2089741b25a61ac98949932442391e021"
     },
     {
       "tile": 32,
       "filename": "quiosco_32.webp",
       "world_start": 30720,
-      "sha256": "2fc8379d0f5da3a8a52c354db816156d16b36f911059d9632aacd1bdd8f646a0"
+      "sha256": "1ef5f3bf2e09aa4b2ecd46d75cff57f4ba9afc42349d5193cb378a1271b0ff90"
     },
     {
       "tile": 33,
       "filename": "quiosco_33.webp",
       "world_start": 31680,
-      "sha256": "10a35ca05236fed50139c0e13e843f3ba0c0e96da3b7ecbe3beb2907f05070bc"
+      "sha256": "c54e27d5cd58c95f1bc6800a450cc4e976f1b0d0c4f781b7c17c88c503575ea1"
     },
     {
       "tile": 34,
       "filename": "quiosco_34.webp",
       "world_start": 32640,
-      "sha256": "5d4ad8ef0c0f69c8ca8a6d103f3831492f9e1c410012e0513ddd0bc56e3806fe"
+      "sha256": "8eefa9733c98d11c22b4441a707013a065b6273d35ebc98cba2cf001d451e900"
     },
     {
       "tile": 35,
       "filename": "quiosco_35.webp",
       "world_start": 33600,
-      "sha256": "bce802de126da78ca5c967a053627bc8628840d2df30fa16b9c4e7801623faac"
+      "sha256": "78bed47f8b6ec87e1515cd8509df1d11b6417d25b31b1221253d1619122f77b9"
     },
     {
       "tile": 36,
       "filename": "quiosco_36.webp",
       "world_start": 34560,
-      "sha256": "048386024ec34700a224dd32035b1e41fb2414321db0393814cba48dbd91445a"
+      "sha256": "aa93a42e284fca94fdedf24fc0c5d9512aa348e552baae0eb2c2e18c102bdcb5"
     },
     {
       "tile": 37,
       "filename": "quiosco_37.webp",
       "world_start": 35520,
-      "sha256": "a3c636d56253ab31990c40a7d4bcabacbd3345d1be023b5e2c31a0c8120caf52"
+      "sha256": "e5f083608e5e4b344881198426774e59c20509d032c3c76086df0da7e118d41e"
     },
     {
       "tile": 38,
       "filename": "quiosco_38.webp",
       "world_start": 36480,
-      "sha256": "a3c7901434f0d2b2b0d7ef81ece93501b8f4c59eacfe13ffa325c67ee3d4be45"
+      "sha256": "f3be2a93761a3a2fd70f751cd9ece53bcde9a151781b1cb7bba12879e8dfac42"
     }
   ],
   "source_details": [
     {
+      "part": "facade_candidate",
+      "source": "barrio_comercial",
       "world_x": 0,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 260,
-      "source": "main",
-      "crop_x": 850,
-      "width": 210,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 470,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 690,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 945,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 1145,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 1365,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 1625,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 1825,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 2065,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 2325,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 2515,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 2735,
-      "source": "clean_plaza_master",
       "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 2905,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 3165,
-      "source": "main",
-      "crop_x": 850,
-      "width": 210,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 3375,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "mansiones_amarillas",
+      "world_x": 2076,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 3600,
-      "source": "clean_plaza_master",
+      "part": "facade_candidate",
+      "source": "biblioteca",
+      "world_x": 4152,
       "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 3770,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 4010,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 4245,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "arte_nuevo",
+      "world_x": 6228,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 4470,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 4660,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 4915,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 5105,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 5325,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 5585,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 5775,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 6035,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 6260,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 6495,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 6750,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 6940,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 7180,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 7405,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 7640,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "hotel_mansarda",
+      "world_x": 8304,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 7865,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 8090,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 8310,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 8510,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "galeria_balcones",
+      "world_x": 10380,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 8735,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 8925,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 9125,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 9360,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 9580,
-      "source": "clean_plaza_master",
+      "part": "facade_candidate",
+      "source": "hotel_rosa",
+      "world_x": 12456,
       "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 9750,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 9970,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 10230,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 10470,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 10725,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 10965,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "cafes_historicos",
+      "world_x": 14532,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 11190,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 11410,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 11600,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "galeria_invierno",
+      "world_x": 16608,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 11825,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 12065,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 12290,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 12545,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 12745,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 12985,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 13185,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "terraza_aristocratica",
+      "world_x": 18684,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 13410,
-      "source": "main",
-      "crop_x": 850,
-      "width": 210,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 13620,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 13810,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 14035,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 14275,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 14500,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 14740,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 14975,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 15195,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 15435,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 15635,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 15875,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 16130,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 16350,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 16575,
-      "source": "main",
-      "crop_x": 850,
-      "width": 210,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 16785,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 17040,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 17300,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 17500,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "palacio",
+      "world_x": 20760,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 17725,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 17920,
-      "source": "unique bandstand main 2172x724",
-      "width": 1170,
-      "part": "unique_quiosco"
-    },
-    {
-      "world_x": 19090,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 19350,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 19605,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 19825,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 20065,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 20255,
-      "source": "clean_plaza_master",
+      "part": "facade_candidate",
+      "source": "arcadas_siena",
+      "world_x": 22836,
       "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 20425,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 20685,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 20885,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 21125,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "oriente",
+      "world_x": 24912,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 21350,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 21610,
-      "source": "main",
-      "crop_x": 850,
-      "width": 210,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 21820,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 22055,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "poniente",
+      "world_x": 26988,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 22280,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 22535,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 22735,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "comercios",
+      "world_x": 29064,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 22960,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 23195,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 23385,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 23620,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 23840,
-      "source": "clean_plaza_master",
+      "part": "facade_candidate",
+      "source": "galeria",
+      "world_x": 31140,
       "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 24010,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 24265,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 24505,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 24695,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 24930,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 25150,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 25405,
-      "source": "main",
+      "part": "facade_candidate",
+      "source": "teatro",
+      "world_x": 33216,
       "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
+      "width": 2172
     },
     {
-      "world_x": 25630,
-      "source": "main",
-      "crop_x": 850,
-      "width": 210,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 25840,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 26060,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 26285,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 26525,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 26785,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 26975,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 27215,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 27440,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 27680,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 27880,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 28120,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 28355,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 28545,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 28780,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 28980,
-      "source": "main",
-      "crop_x": 850,
-      "width": 210,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 29190,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 29425,
-      "source": "clean_plaza_master",
+      "part": "facade_candidate",
+      "source": "palacetes",
+      "world_x": 35292,
       "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 29595,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 29850,
-      "source": "main",
-      "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 30075,
-      "source": "main",
-      "crop_x": 70,
-      "width": 255,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 30330,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 30555,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 30815,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 31015,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 31240,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 31460,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 31650,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 31890,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 32110,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 32310,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 32535,
-      "source": "clean_plaza_master",
-      "crop_x": 855,
-      "width": 190,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 32725,
-      "source": "clean_plaza_master",
-      "crop_x": 110,
-      "width": 200,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 32925,
-      "source": "clean_plaza_master",
-      "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 33095,
-      "source": "main",
-      "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 33320,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 33560,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 33785,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 34005,
-      "source": "clean_plaza_master",
-      "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 34175,
-      "source": "clean_plaza_master",
-      "crop_x": 900,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 34400,
-      "source": "main",
-      "crop_x": 930,
-      "width": 240,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 34640,
-      "source": "clean_plaza_master",
-      "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 34810,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 35070,
-      "source": "main",
-      "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 35295,
-      "source": "clean_plaza_master",
-      "crop_x": 0,
-      "width": 170,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 35465,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 35685,
-      "source": "main",
-      "crop_x": 850,
-      "width": 210,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 35895,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 36130,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 36350,
-      "source": "main",
-      "crop_x": 850,
-      "width": 210,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 36560,
-      "source": "main",
-      "crop_x": 0,
-      "width": 225,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 36785,
-      "source": "main",
-      "crop_x": 175,
-      "width": 260,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 37045,
-      "source": "clean_plaza_master",
-      "crop_x": 950,
-      "width": 220,
-      "part": "facade_candidate"
-    },
-    {
-      "world_x": 37265,
-      "source": "clean_plaza_master",
-      "crop_x": 35,
-      "width": 235,
-      "part": "facade_candidate"
+      "width": 2172
     }
   ],
-  "status": "candidate artistic reconstruction; no Flutter screenshot; architectural repetition pending inspection"
+  "separator_placements": [
+    {
+      "join": 1,
+      "status": "qa_overlay",
+      "kind": "lamppost",
+      "x": 2028,
+      "y": 104,
+      "width": 96,
+      "height": 278
+    },
+    {
+      "join": 3,
+      "status": "qa_overlay",
+      "kind": "tree",
+      "x": 6105,
+      "y": 100,
+      "width": 246,
+      "height": 282
+    },
+    {
+      "join": 6,
+      "status": "qa_overlay",
+      "kind": "tree",
+      "x": 12336,
+      "y": 107,
+      "width": 240,
+      "height": 275
+    },
+    {
+      "join": 7,
+      "status": "qa_overlay",
+      "kind": "lamppost",
+      "x": 14482,
+      "y": 90,
+      "width": 100,
+      "height": 292
+    },
+    {
+      "join": 10,
+      "status": "qa_overlay",
+      "kind": "lamppost",
+      "x": 20711,
+      "y": 97,
+      "width": 98,
+      "height": 285
+    },
+    {
+      "join": 12,
+      "status": "qa_overlay",
+      "kind": "tree",
+      "x": 24798,
+      "y": 121,
+      "width": 228,
+      "height": 261
+    },
+    {
+      "join": 15,
+      "status": "qa_overlay",
+      "kind": "tree",
+      "x": 31017,
+      "y": 100,
+      "width": 246,
+      "height": 282
+    },
+    {
+      "join": 16,
+      "status": "qa_overlay",
+      "kind": "lamppost",
+      "x": 33170,
+      "y": 111,
+      "width": 93,
+      "height": 271
+    }
+  ],
+  "stagepainter_verification": {
+    "workflow_run": 42680016537,
+    "result": "SUCCESS",
+    "screenshots": 64,
+    "source_commit": "42f1ed31367485c640146ae48dd64e86e80293a3",
+    "artistic_status": "RC7_PLAYTEST_CANDIDATE_ANDROID_PENDING"
+  }
 }
