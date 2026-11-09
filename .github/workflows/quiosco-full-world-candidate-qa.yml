@@ -1,0 +1,47 @@
+name: Quiosco 37440px candidate genuine StagePainter review
+
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - 'tools/assemble_quiosco_18_art_candidate.py'
+      - 'test/quiosco_full_world_candidate_stagepainter_test.dart'
+      - 'qa/quiosco_inbox/fachadas_*_nativas_2172x390_candidate.webp'
+      - '.github/workflows/quiosco-full-world-candidate-qa.yml'
+
+concurrency:
+  group: quiosco-full-world-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: python3 -m pip install --user pillow
+      - run: flutter pub get
+      - name: Assemble candidate separately from all active assets
+        run: python3 tools/assemble_quiosco_18_art_candidate.py --work qa/does_not_exist --out qa-output/quiosco_full_world_candidate
+      - name: Genuine StagePainter captures across candidate
+        timeout-minutes: 22
+        run: flutter test --no-pub --reporter expanded test/quiosco_full_world_candidate_stagepainter_test.dart
+      - name: Preserve inspectable real screenshots and audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quiosco-37440-REAL-StagePainter-CANDIDATE-not-final
+          path: |
+            qa-output/quiosco_full_world_candidate/screenshots/*.png
+            qa-output/quiosco_full_world_candidate/audit_candidate.json
+          if-no-files-found: warn
+          retention-days: 14

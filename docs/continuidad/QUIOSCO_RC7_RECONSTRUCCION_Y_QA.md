@@ -1,5 +1,13 @@
 # Quiosco RC7 / Plaza del Castillo — primera integración protegida
 
+## 09/11/2026 — cobertura gráfica completa candidata, sin activar
+
+- Biblioteca ampliada a **18 fuentes distintas de 2172 × 390** en `qa/quiosco_inbox/fachadas_*_nativas_2172x390_candidate.webp`, guardadas en GitHub. Su suma de 39.096 px permite cubrir los 37.440 px del mundo con 17 solapes de 96 px (cobertura neta 37.464 px y recorte final de 24 px). No son capturas de gameplay ni prueba de continuidad artística.
+- `tools/assemble_quiosco_18_art_candidate.py` compone un panorama de QA de 37.440×390, con tres conectores rotativos A/B/C, conserva **un único quiosco original** de 1170 px en x=17920 y produce 39 tiles en una carpeta separada. Los conectores son una primera costura de píxeles: **requieren revisión humana de arquitectura** y no se deben considerar una corrección artística completa por sí solos.
+- El test `test/quiosco_full_world_candidate_stagepainter_test.dart` recorre el candidato por lotes de dimensiones compatibles con Flutter (evita superar el límite de textura); el workflow `quiosco-full-world-candidate-qa.yml` construye los paneles en GitHub Actions y guarda capturas **auténticas de StagePainter**, sin instalar los paneles de prueba en `assets/images/quiosco_rc7`.
+- **Prueba ya completada, distinta del mundo completo:** [run 42662784331](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42662784331) SUCCESS. Contiene veinte imágenes auténticas `StagePainter` de las diez primeras fuentes, artifact `13695875621`. Las capturas no acreditan todavía las 17 juntas ni el resto de los sectores.
+- **Criterio de cierre:** inspeccionar el arte nuevo completo en capturas reales, corregir discontinuidades de cornisas, arcos, líneas de suelo y bordes del quiosco, volver a capturar y solo entonces reemplazar los 39 paneles activos. No fusionar PR, no generar APK.
+
 Rama: `work/revision-visual-20261028-continuidad`, PR #5. **NO APK, NO MERGE.**
 
 ## Hechos confirmados por código y pruebas
