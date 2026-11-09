@@ -73,3 +73,14 @@ Guardados en GitHub y recuperados después de cada escritura:
 - `tools/audit_quiosco_candidate_seams.py`: comprueba geometría y fuentes diferenciadas del candidato y calcula diferencias de color entre 38 pares de bordes. La métrica no prueba continuidad arquitectónica interna, ni sustituye inspección artística o un vídeo de desplazamiento real.
 
 **Situación:** faltan seis fuentes originales con anchuras (7200, 7200, 3520, 2880, 7200, 9440), todas por 390 px, para ejecutar el empaquetador. La primera imagen candidata generada en el chat no llena por sí sola un sector a resolución nativa, y NO se reutilizará/escalará para fingir variedad. El fondo actual del juego no se reemplaza. No se han ejecutado Flutter, Actions ni pruebas de integración en esta fase. Pendiente crear arte suficiente e importarlo después de validación.
+
+
+## 09/11/2026 — Montador de arte nuevo (segunda fase)
+
+Se ha subido a esta rama y comprobado por lectura remota `tools/build_quiosco_reconstruction.py` (commit `ab549dc912fcdfe92dc6c72f92a9f1ad0c54173d`). Lee seis panorámicas originales con dimensiones EXACTAS por sector según `qa/quiosco_rc7_art_rebuild_plan.json`, prohíbe escalar cada imagen, comprueba continuidad geométrica, rechaza archivos idénticos y genera 39 WebP lossless y un manifiesto de *staging* con SHA-256 y medidas orientativas de las cinco uniones entre sectores. Impide explícitamente escribir dentro de `assets/` y sobrescribir una carpeta de salida que contenga archivos. **No ha sido ejecutado aún con los seis panoramas definitivos**, ya que todavía no existen todos. No debe activarse el resultado automáticamente.
+
+El candidato de fachadas creado en la conversación fue inspeccionado en 2172×724 píxeles; se ha producido un recorte de 2172×390, sin escalado, para evaluar proporciones de pantalla. Ambos siguen como **arte candidato en archivos de conversación, no importados en GitHub**. Esa ilustración es insuficiente para cubrir un sector de 7200 px y está prohibido estirarla o repetirla artificialmente hasta llenar el recorrido.
+
+**Pendiente inmediato**: elaborar ilustraciones realmente distintas y completas para los seis sectores (7200, 7200, 3520, 2880, 7200, 9440 px de ancho respectivamente; altura 390), con composición arquitectónica coherente en cada límite; decidir por arte y captura el tratamiento del quiosco original en la zona central; después ejecutar montador y verificar vídeo/capturas auténticas de Flutter. Un diagnóstico de diferencias de píxel no sustituye revisión visual.
+
+No se han cambiado `lib/main.dart`, assets activos, física, colisiones, protagonistas ni enemigos. Sin Flutter, sin APK, sin merge y sin certificación artística.
