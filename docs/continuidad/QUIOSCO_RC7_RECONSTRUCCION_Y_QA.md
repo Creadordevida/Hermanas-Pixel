@@ -1,3 +1,11 @@
+## 09/11/2026 — ocho separadores QA de la Plaza, sin activar
+
+- Se prepararon dos sprites de **pixel art** a tamaño de juego, un plátano de sombra (240×275) y una farola ornamental (98×285), con transparencia binaria para retirar halos. Los PNG fueron guardados en `qa/quiosco_inbox/separators/`, blobs verificados por Git, commit `6389a46`. El boceto de pilastra aislada se descartó para evitar columnas artificiales entre edificios.
+- `tools/preview_quiosco_separator_candidate.py` crea **solo un montaje de prueba**, no altera Flutter ni los 39 assets actuales. Distribuye cuatro árboles y cuatro farolas en ocho de las diecisiete uniones, conserva nueve tal cual y evita colocar piezas encima del quiosco único en x=17.920..19.090.
+- Generada e inspeccionada localmente la hoja de 17 uniones y el mundo de 37.440×390. La variante con 17 decoraciones se rechazó por repetitiva; la versión escasa de ocho mejora la naturalidad visual. **Aún se aprecian cortes de arquitectura no cubiertos**, por lo que el montaje sigue marcado `NOT_FINAL`.
+- `python3 tools/test_quiosco_connector_edges.py`: PASS sintético; `python3 -m py_compile tools/preview_quiosco_separator_candidate.py`: PASS. No se ha realizado Flutter/StagePainter de esta variante ni prueba Android. No APK, no merge.
+- Siguiente paso: corregir específicamente los cortes sin resolver, activar solamente tras revisión real de StagePainter en todo el recorrido, comprobar hashes de 39 paneles y hacer regresión sin tocar mecánicas.
+
 ## 09/11/2026 — ordenación alternativa descartada por inspección visual
 
 - Se probó localmente una optimización de las 18 fuentes que pondera x2 las fachadas, ventanas y soportales (y=100..329), frente a x0,7 para cielo y extremo de suelo. Se regeneraron los 37.440px y 39 WebP candidatos, y se inspeccionaron las 17 uniones.
