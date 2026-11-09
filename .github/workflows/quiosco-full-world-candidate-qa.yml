@@ -30,8 +30,10 @@ jobs:
           cache: true
       - run: python3 -m pip install --user pillow
       - run: flutter pub get
+      - name: Find lower-contrast authored panorama order
+        run: python3 tools/optimize_quiosco_source_order.py --work qa/does_not_exist --out qa-output/quiosco_source_order_optimized.json
       - name: Assemble candidate separately from all active assets
-        run: python3 tools/assemble_quiosco_18_art_candidate.py --work qa/does_not_exist --out qa-output/quiosco_full_world_candidate
+        run: python3 tools/assemble_quiosco_18_art_candidate.py --work qa/does_not_exist --out qa-output/quiosco_full_world_candidate --order-json qa-output/quiosco_source_order_optimized.json
       - name: Genuine StagePainter captures across candidate
         timeout-minutes: 22
         run: flutter test --no-pub --reporter expanded test/quiosco_full_world_candidate_stagepainter_test.dart
@@ -46,5 +48,6 @@ jobs:
             qa-output/quiosco_full_world_candidate/tiles_NOT_ACTIVE/*.webp
             qa-output/quiosco_full_world_candidate/contact_17_connectors_CANDIDATE.webp
             qa-output/quiosco_full_world_candidate/kiosk_2400px_center_NOT_STAGEPAINTER.webp
+            qa-output/quiosco_source_order_optimized.json
           if-no-files-found: warn
           retention-days: 14

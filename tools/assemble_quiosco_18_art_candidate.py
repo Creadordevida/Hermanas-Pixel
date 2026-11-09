@@ -81,13 +81,21 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument('--work', type=Path, required=True)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--order-json', type=Path,
+                   help='Optional separately audited ordering of all 18 unique sources')
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
+
+    names = NAMES
+    if args.order_json is not None:
+        names = json.loads(args.order_json.read_text())['optimized_order']
+        if len(names)!=len(NAMES) or set(names)!=set(NAMES):
+            raise ValueError('Optimized order must contain each of 18 sources exactly once')
 
     art = Image.new('RGB', (WORLD, HEIGHT))
     details = []
     cursor = 0
-    for index, name in enumerate(NAMES):
+    for index, name in enumerate(names):
         path = source(name, args.work)
         with Image.open(path) as opened:
             im = opened.convert('RGB')
@@ -178,7 +186,7 @@ def main() -> None:
     record = {
         'status': 'CANDIDATE_REQUIRES_REAL_STAGEPAINTER_AND_ARTISTIC_JOIN_REVIEW',
         'world_width': WORLD, 'height': HEIGHT, 'tile_count': 39,
-        'sources_count': len(NAMES), 'original_sources': details,
+        'sources_count': len(names), 'original_sources': details,
         'kiosk_world_x': KIOSK_X, 'kiosk_width': 1170, 'kiosk_count': 1,
         'sha256_master': hashlib.sha256(master.read_bytes()).hexdigest(),
         'reason_not_activated': 'Blended seams A/B/C are unvalidated architecture',
