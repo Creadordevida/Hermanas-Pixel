@@ -29,3 +29,7 @@ El PNG indexado del primer punto de control dejaba un rectángulo negro en Flutt
 ## Caravinagre, atlas
 
 Hoja fuente SHA-256 `2db347ca4a07701a0ffa223623f1b1d022c1535500eea83739a89410ec65342e`. Derivado `assets/images/enemies_new/comparsa_caravinagre.png`, SHA-256 `e91ba1fddba1d5f93c60ee91ac277a8921334c176ae7fe6aad87b09792af3bbc`. Altura de referencia 149 px, gesto agrio, tricornio, casaca verde y espuma amarilla. Inspeccionadas las 24 celdas y la extensión frontal de la espuma. El recorrido de la espuma se mantiene dentro de una celda de producción. Siguiente microfase: guardar el atlas del zaldiko y verificar ambos combates con el reloj del motor.
+
+## Zaldiko, atlas
+
+Hoja fuente SHA-256 `e3ede39765e8d9422f36158aedb406c65e86ecfd533a5fb662fb710a2a8a59a7`. Derivado `assets/images/enemies_new/comparsa_zaldiko.png`, SHA-256 `ac4c039acc60b854028d86fc7c031e7c9931c5ead948e25c3364c8dc1fa400f2`. Altura de referencia 153 px. Se separaron siluetas completas de la rejilla original para conservar bola y cordón. Se eligió la extensión baja para contacto y la extensión alta para remate sin segundo daño. Las 24 celdas tienen alfa binario y apoyo en y=274. Siguiente microfase: comprobar los tres en el capítulo real, con ambos proyectiles y capturas 20:9.

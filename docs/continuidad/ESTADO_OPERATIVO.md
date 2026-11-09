@@ -1,3 +1,7 @@
+## 2026-11-09 — Comparsa: atlas del zaldiko
+
+24 poses guardadas con el caballo oscuro, portador y bola al cordón. El contacto usa el balanceo bajo. [Continuidad](COMPARSA_AYUNTAMIENTO.md). Siguiente microfase: cerrar las pruebas de combate y la revisión del render conjunto.
+
 ## 2026-11-09 — Comparsa: atlas de Caravinagre
 
 24 celdas de Caravinagre revisadas y guardadas con sus apoyos y espuma. [Continuidad](COMPARSA_AYUNTAMIENTO.md). Siguiente microfase: guardar el atlas del zaldiko y completar la prueba conjunta en Flutter.
