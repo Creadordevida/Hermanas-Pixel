@@ -71,6 +71,12 @@ def main() -> None:
     result = background.convert('RGB')
     result.save(args.out / 'quiosco_37440_SEPARATORS_QA_NOT_FINAL.png',
                 optimize=True)
+    tiles = args.out / 'tiles_NOT_ACTIVE'
+    tiles.mkdir(exist_ok=True)
+    for index in range(39):
+        result.crop((index*960, 0, (index+1)*960, 390)).save(
+            tiles / f'quiosco_{index:02}.webp', format='WEBP',
+            lossless=True, method=6)
     contact = Image.new('RGB', (4*440, 5*390), '#273b51')
     for index in range(1, 18):
         center = index * JOIN_STEP

@@ -7,6 +7,8 @@ on:
     paths:
       - 'tools/assemble_quiosco_18_art_candidate.py'
       - 'tools/optimize_quiosco_source_order.py'
+      - 'tools/preview_quiosco_separator_candidate.py'
+      - 'qa/quiosco_inbox/separators/*_qa.png'
       - 'test/quiosco_full_world_candidate_stagepainter_test.dart'
       - 'qa/quiosco_inbox/fachadas_*_nativas_2172x390_candidate.webp'
       - '.github/workflows/quiosco-full-world-candidate-qa.yml'
@@ -35,6 +37,8 @@ jobs:
         run: python3 tools/optimize_quiosco_source_order.py --work qa/does_not_exist --out qa-output/quiosco_source_order_optimized.json
       - name: Assemble candidate separately from all active assets
         run: python3 tools/assemble_quiosco_18_art_candidate.py --work qa/does_not_exist --out qa-output/quiosco_full_world_candidate --order-json qa-output/quiosco_source_order_optimized.json
+      - name: Add sparse architecture-safe separators to QA-only tiles
+        run: python3 tools/preview_quiosco_separator_candidate.py --master qa-output/quiosco_full_world_candidate/quiosco_37440x390_CANDIDATE_NOT_FINAL.png --out qa-output/quiosco_full_world_candidate
       - name: Genuine StagePainter captures across candidate
         timeout-minutes: 22
         run: flutter test --no-pub --reporter expanded test/quiosco_full_world_candidate_stagepainter_test.dart
@@ -48,6 +52,8 @@ jobs:
             qa-output/quiosco_full_world_candidate/audit_candidate.json
             qa-output/quiosco_full_world_candidate/tiles_NOT_ACTIVE/*.webp
             qa-output/quiosco_full_world_candidate/contact_17_connectors_CANDIDATE.webp
+            qa-output/quiosco_full_world_candidate/contact_17_separators_QA_NOT_FLUTTER.webp
+            qa-output/quiosco_full_world_candidate/separators_qa.json
             qa-output/quiosco_full_world_candidate/kiosk_2400px_center_NOT_STAGEPAINTER.webp
             qa-output/quiosco_source_order_optimized.json
           if-no-files-found: warn
