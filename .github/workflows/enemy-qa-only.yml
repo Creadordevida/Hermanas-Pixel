@@ -3,6 +3,11 @@ name: Enemy verification only - NO APK
 # No activar mientras GitHub Actions esté bloqueado por presupuesto.
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - '.github/workflows/enemy-qa-only.yml'
 permissions:
   contents: write
 concurrency:
