@@ -378,3 +378,7 @@ Se creó el [manual maestro de personajes SNES](../FRAMEWORK_SNES_TWC/MANUAL_MAE
 
 `lib/main.dart`, `_play`: añadido en todos los capítulos jugables un botón circular azul oscuro con borde dorado, flecha blanca izquierda y texto `MAPA`, situado junto al botón existente de pausa. Activación accesible etiquetada «Volver al mapa». Usa `_returnMap()` existente, que libera controles, guarda progreso y vuelve al mapa; **no se ha cambiado** el comportamiento del botón de pausa ni de las pantallas de derrota/final. Comprobación estática `git diff --check`: correcta. **Pendiente** `flutter analyze`, test widget y captura auténtica 20:9; no hay Flutter instalado en este entorno y no se han ejecutado Actions ni APK. Próximo paso: ejecutar QA Flutter y revisión de escala/legibilidad en Redmi Note 14 cuando se prepare la siguiente versión.
 
+## 09/11/2026 — Portero: referencia SNES candidata, pendiente de aprobación
+
+Inspeccionadas las cinco imágenes clásicas del portero y su carga/estirada en Flutter. Nueva referencia RGBA de seis poses conservada en `qa/goalkeeper_rebuild_20261109/goalkeeper_reference_candidate_v1.png`; originales intactos. El cambio es solo una propuesta artística, no un atlas productivo ni una captura real. Estado, hash, limitaciones y siguiente microfase en `docs/continuidad/PORTERO_RECONSTRUCCION_2026-11-09.md`. Sin CI, APK ni modificación del motor. Siguiente acción: aprobación del aspecto y limpieza de la referencia.
+

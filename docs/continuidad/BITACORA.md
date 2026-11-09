@@ -380,3 +380,7 @@ Consolidación transversal de creación de protagonistas, enemigos, NPC y animal
 
 Solicitud del usuario: identificar el botón circular para volver al mapa. Inspeccionado `_play`: existía botón circular de pausa con acceso indirecto a «VOLVER AL MAPA». Incorporado control circular independiente de flecha izquierda + `MAPA` y borde dorado, sin eliminar pausa ni tocar `_returnMap` (guarda al mapa). Se aplica a todos los capítulos por composición común. Revisión de diff completada; **análisis, test visual y Android pendientes** al no disponer localmente del SDK Flutter. Sin CI manual ni APK.
 
+## 09/11/2026 — Portero
+
+Microfase de inspección de los cinco sprites `goalkeeper_0..4`, identificación de su ruta de dibujo y creación de propuesta SNES de seis poses, aislada en `qa/goalkeeper_rebuild_20261109/`. Sin reemplazo de activos, Flutter ni Actions. Continuidad: `docs/continuidad/PORTERO_RECONSTRUCCION_2026-11-09.md`.
+
