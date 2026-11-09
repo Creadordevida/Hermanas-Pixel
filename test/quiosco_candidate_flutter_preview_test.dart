@@ -32,12 +32,19 @@ void main() {
       (tester) async {
     final input=File('qa-output/quiosco_six_sector_candidate/panorama_prototipo_6_sectores.png');
     expect(await input.exists(), isTrue, reason:'Candidate ZIP was not extracted');
-    final raw=await input.readAsBytes();
-    final codec=await ui.instantiateImageCodec(raw);
-    final frame=await codec.getNextFrame();
-    final source=frame.image;
-    expect(source.width, 5782);
-    expect(source.height, 390);
+    // IO and image-codec futures must run outside fake async testWidgets time.
+    final source=await tester.runAsync(() async {
+      final raw=await input.readAsBytes();
+      final codec=await ui.instantiateImageCodec(raw);
+      try {
+        final frame=await codec.getNextFrame();
+        return frame.image;
+      } finally {codec.dispose();}
+    });
+    expect(source,isNotNull);
+    final actualSource=source!;
+    expect(actualSource.width, 5782);
+    expect(actualSource.height, 390);
     const cameras=<double>[0, 900, 1850, 2450, 3200, 4250, 4782];
     const viewport=Size(1000, 450);
     final key=GlobalKey();
@@ -49,7 +56,7 @@ void main() {
             key:key,
             child:CustomPaint(
               size:viewport,
-              painter:_PanoramaPainter(source,camera),
+              painter:_PanoramaPainter(actualSource,camera),
             ),
           ))),
         );
@@ -70,7 +77,7 @@ void main() {
         });
       }
     } finally {
-      source.dispose();codec.dispose();
+      actualSource.dispose();
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.binding.setSurfaceSize(null);
     }
