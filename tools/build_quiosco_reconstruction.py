@@ -5,11 +5,10 @@ No changes to active assets; never claims artistic validation. Requires Pillow.
 Example:
  python3 tools/build_quiosco_reconstruction.py --sources qa/quiosco_art_sources --out /tmp/quiosco_candidate
 Input: <sector-id>.png for every sector in qa/quiosco_rc7_art_rebuild_plan.json
-Each image MUST be exactly (end-start) x 390 pixels. No stretching.
+First image width=end-start; other images width=end-start+overlap_px.\nEach right sector begins with an exact copy of the previous sector's last connector.\nThe repeated connector is discarded in assembly; no stretching.
 """
 from __future__ import annotations
 import argparse
-import collections
 import hashlib
 import json
 from pathlib import Path
@@ -40,13 +39,20 @@ def build(source_dir: Path, out: Path, plan_path: Path = PLAN) -> dict:
     for a,b in zip(sections,sections[1:]):
         if a["end"] != b["start"]:
             raise ValueError("Sector gap or overlap")
+    connector = plan.get("connector_system", {})
+    overlap = connector.get("overlap_px", 0)
+    if not 0 < overlap < min(p["end"] - p["start"] for p in sections):
+        raise ValueError("Invalid architectural connector overlap")
+    if len(connector.get("boundary_connector_types", [])) != len(sections)-1:
+        raise ValueError("Connector types missing for sector boundaries")
     sources, pictures = [], []
-    for part in sections:
+    for index, part in enumerate(sections):
         path = source_dir / (part["id"] + ".png")
         if not path.is_file():
             raise FileNotFoundError(f"Original sector missing: {path}")
         with Image.open(path) as im:
-            if im.size != (part["end"]-part["start"], height):
+            expected_width = part["end"]-part["start"]+(overlap if index else 0)
+            if im.size != (expected_width, height):
                 raise ValueError(f"Wrong original dimensions {path}: {im.size}")
             picture = im.convert("RGB").copy()
         sources.append({"sector": part["id"], "file": path.name,
@@ -54,12 +60,21 @@ def build(source_dir: Path, out: Path, plan_path: Path = PLAN) -> dict:
         pictures.append(picture)
     if len(set(s["sha256"] for s in sources)) != len(sources):
         raise ValueError("Identical whole-sector source images are forbidden")
-    sector_seams = [
-        {"boundary": parts["end"], "left": parts["id"],
-         "right": sections[i+1]["id"],
-         "mean_rgb_difference": seam_metric(pictures[i],pictures[i+1])}
-        for i,parts in enumerate(sections[:-1])
-    ]
+    sector_seams = []
+    for i, part in enumerate(sections[:-1]):
+        left = pictures[i].crop((pictures[i].width-overlap, 0, pictures[i].width, height))
+        right = pictures[i+1].crop((0, 0, overlap, height))
+        if left.tobytes() != right.tobytes():
+            raise ValueError(
+                f"Connector mismatch at world X={part['end']}: "
+                "the shared building must be pixel-identical"
+            )
+        sector_seams.append({
+            "boundary": part["end"], "left": part["id"],
+            "right": sections[i+1]["id"],
+            "connector_type": connector["boundary_connector_types"][i],
+            "overlap_px": overlap, "matching_pixels": True
+        })
     # Writes only to an isolated new/staging directory, never assets/images.
     if out.resolve().is_relative_to((ROOT / "assets").resolve()):
         raise ValueError("Staging output cannot be inside active assets")
@@ -73,7 +88,8 @@ def build(source_dir: Path, out: Path, plan_path: Path = PLAN) -> dict:
         for section,picture in zip(sections,pictures):
             lo=max(begin,section["start"]); hi=min(end,section["end"])
             if hi>lo:
-                fragment=picture.crop((lo-section["start"],0,hi-section["start"],height))
+                offset = overlap if section is not sections[0] else 0
+                fragment=picture.crop((lo-section["start"]+offset,0,hi-section["start"]+offset,height))
                 tile.paste(fragment,(lo-begin,0))
         dest=out/f"quiosco_{i:02d}.webp"
         tile.save(dest,format="WEBP",lossless=True,method=6)
@@ -82,7 +98,7 @@ def build(source_dir: Path, out: Path, plan_path: Path = PLAN) -> dict:
     manifest={"status":"STAGED_NOT_INTEGRATED_NOT_APPROVED",
               "world_width":width,"tile_width":tile_width,"tile_height":height,
               "tile_count":len(tiles),"source_sectors":sources,
-              "sector_seams":sector_seams,"tiles":tiles,
+              "sector_seams":sector_seams,"connector_method":"overlap_identical_once","tiles":tiles,
               "landmark":plan["landmark"],
               "notice":"quiosco_unico.webp remains protected in active asset bundle; no Flutter/Android validation"}
     (out/"rebuild_manifest.json").write_text(
