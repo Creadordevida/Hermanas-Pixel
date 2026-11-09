@@ -212,3 +212,9 @@ Próxima acción: sustituir las fachadas repetidas con originales nuevos, comple
 - PNG matriz de 2172 × 724 completado sin márgenes blancos y convertido a WebP **1170 × 390** para prueba a escala de composición; SHA-256 del WebP: `2731eebdb99e39cddc57dd003d2028ca34166602c3152f986ac0a31ca135ac73`.
 - Archivo binario guardado en commit `873f1be1e3dcf7109866ccef988a51306715b61b` y releído desde GitHub. Es **una fuente parcial nueva, no un sector final de 7200 px**. No hay duplicación del quiosco.
 - Estado: **arte candidato, no aprobado, no incorporado a `assets/images/quiosco_rc7` ni probado en StagePainter**. Faltan los conectores A/B/C compatibles y la escala/composición con otros recursos, que debe revisarse visualmente antes de extenderlo.
+
+### Segunda aportación — fachadas de oriente
+
+- `qa/quiosco_inbox/fachadas_oriente_original_candidato_1170x390.webp`, SHA-256 `70a87a60523d8090284f0f0a518dee1256b015eac3924f36dc265f039c18acaf`, guardado en GitHub en `9c32799745bf84e3e042835843f61b8df9ca60d2`.
+- Motivos de arquitectura diferentes respecto al prototipo y a la primera aportación; **no contiene quiosco**. La conversión de resolución fuente 2172 × 724 a 1170 × 390 utiliza calidad WebP 92 para transferencia, sin alterar recursos activos.
+- **Revisión artística pendiente:** sus edificios aparecen a escala aparente mayor que en la primera aportación. Corregir esa discrepancia de altura de cornisa/arcada y diseñar una transición apropiada antes de componerla como núcleo del sector oriente. Ni dos imágenes de 1170 px ni un ensamblaje rápido constituyen un sector de 7200 px.
