@@ -1,4 +1,4 @@
-// QA ONLY: actual StagePainter showing five distinct native-scale source images.
+// QA ONLY: actual StagePainter showing ten distinct native-scale source images.
 // This does NOT certify joins or cover the 37,440px world; normal game unchanged.
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -17,7 +17,7 @@ Future<ui.Image> load(String path) async {
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('Real StagePainter, five separate native Quiosco sources', (tester) async {
+  testWidgets('Real StagePainter, ten separate native Quiosco sources', (tester) async {
     SharedPreferences.setMockInitialValues({});
     const folder='qa/quiosco_inbox/';
     const names=<String>[
@@ -26,6 +26,11 @@ void main() {
       'fachadas_comercios_nativas_2172x390_candidate.webp',
       'fachadas_galeria_nativas_2172x390_candidate.webp',
       'fachadas_oriente_nativas_2172x390_candidate.webp',
+      'fachadas_arte_nuevo_nativas_2172x390_candidate.webp',
+      'fachadas_palacio_nativas_2172x390_candidate.webp',
+      'fachadas_arcadas_siena_nativas_2172x390_candidate.webp',
+      'fachadas_hotel_mansarda_nativas_2172x390_candidate.webp',
+      'fachadas_galeria_balcones_nativas_2172x390_candidate.webp',
     ];
     final imgs=<ui.Image>[];
     for(final name in names) {
@@ -35,21 +40,23 @@ void main() {
       expect(im.height,390);
       imgs.add(im);
     }
-    final recorder=ui.PictureRecorder();
-    final canvas=ui.Canvas(recorder);
-    for(var i=0;i<imgs.length;i++) {
-      canvas.drawImage(imgs[i],ui.Offset((i*2172).toDouble(),0),ui.Paint());
-    }
-    final picture=recorder.endRecording();
-    final candidate=await picture.toImage(10860,390);
-    picture.dispose();
-    for(final im in imgs) { im.dispose(); }
     final boundaryKey=GlobalKey();
     final gameKey=GlobalKey();
-    const worldXs=<double>[700,2040,2390,4220,4700,6480,6800,8900,9400,10200];
+    const localXs=<double>[700,2040,2390,4220,4700,6480,6800,8900,9400,10200];
     try {
       await tester.binding.setSurfaceSize(const Size(1000,450));
-      for(final x in worldXs) {
+      // Keep each QA panorama under common 16k texture limits. The second
+      // batch has a documented 10860px offset; screenshots are NOT stitched.
+      for(var batch=0;batch<2;batch++) {
+        final recorder=ui.PictureRecorder();
+        final canvas=ui.Canvas(recorder);
+        for(var i=0;i<5;i++) {
+          canvas.drawImage(imgs[batch*5+i],ui.Offset((i*2172).toDouble(),0),ui.Paint());
+        }
+        final picture=recorder.endRecording();
+        final candidate=await picture.toImage(10860,390);
+        picture.dispose();
+        for(final x in localXs) {
         await tester.pumpWidget(MaterialApp(home:RepaintBoundary(
           key:boundaryKey,
           child:HermanasGame(key:gameKey,qaStage:3,qaWorldX:x,
@@ -82,7 +89,8 @@ void main() {
           try {
             final bytes=await frame.toByteData(format:ui.ImageByteFormat.png);
             if(bytes==null) throw StateError('Empty capture at $x');
-            final out=File('qa-output/quiosco_native_stagepainter/stage3_native_${x.toInt()}.png');
+            final worldX=x+batch*10860;
+            final out=File('qa-output/quiosco_native_stagepainter/stage3_native_${worldX.toInt()}.png');
             await out.parent.create(recursive:true);
             await out.writeAsBytes(bytes.buffer.asUint8List(
               bytes.offsetInBytes,bytes.lengthInBytes),flush:true);
@@ -90,11 +98,14 @@ void main() {
             print('REAL_STAGEPAINTER_NATIVE_SOURCE ${out.path}');
           } finally { frame.dispose(); }
         });
+        }
+        await tester.pumpWidget(const SizedBox.shrink());
+        candidate.dispose();
       }
     } finally {
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.binding.setSurfaceSize(null);
-      candidate.dispose();
+      for(final im in imgs) { im.dispose(); }
     }
   });
 }
