@@ -1,3 +1,7 @@
+## 2026-11-09 — Quiosco, microfase costuras
+
+Cambio: `tools/assemble_quiosco_18_art_candidate.py` (commit `af1127c`), reducir mezcla de 96px en cielo a feather de 6px y evitar doble exposición. Se generó el candidato completo y 17 contactos locales, revisados antes/después; mejora visible del cielo, pero arcos y cornisas todavía discontinuos. `tools/test_quiosco_connector_edges.py` PASS sintético; Flutter/Android no ejecutados. Activos intactos. Siguiente: restaurar continuidad arquitectónica, luego Flutter y QA visual.
+
 ## 2026-11-09 — Comparsa del Ayuntamiento: tres enemigos activos
 
 Gigante, Caravinagre y zaldiko integrados exclusivamente en la ruta normal de Ayuntamiento. Verificados los tres atlas de 24 poses y la transparencia en Flutter. 12 pruebas superadas y análisis sin incidencias. StagePainter 1000 × 450 revisado con combate de ambas protagonistas. [Continuidad](COMPARSA_AYUNTAMIENTO.md). Siguiente microfase: partida en el Redmi Note 14 con la próxima compilación Android.
