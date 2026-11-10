@@ -1,0 +1,58 @@
+name: APK privada RC8 - 10 noviembre 2026
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - 'qa/release_requests/rc8_20261110.txt'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Preparar Android y dependencias
+        run: |
+          flutter create --no-overwrite --platforms=android --project-name hermanas_aventura .
+          cp -R launcher/res/. android/app/src/main/res/
+          sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
+          flutter pub get
+      - name: Comprobar capítulos y siete enemigos obligatorios
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('lib/main.dart').read_text()
+          c=Path('lib/comparsa_enemy.dart').read_text()
+          assert 'const bool twcArgaNextVersionEnabled = true' in s
+          assert 'const int twcChapterCount = twcArgaNextVersionEnabled ? 8 : 7' in s
+          for k in ['ArgaCrabMotion(', 'ArgaFisherMotion(', 'ArgaBoyMotion(', 'ArgaTroutMotion(', '_paintArgaCrab(', '_paintArgaFisher(', '_paintArgaBoy(', '_paintArgaTrout(']:
+              assert k in s,k
+          for k in ['comparsa_gigante','comparsa_caravinagre','comparsa_zaldiko']:
+              assert "'"+k+"': true" in s,k
+              assert k in c,k
+          assert 'if (stage == comparsaStage)' in s
+          for k in ["'goalkeeper': true", "'teacher': true", "'dance_cleaner': true", "'guitar_musician': true", "'slipper_neighbor': true", "'rival_coach': true"]:
+              assert k in s,k
+          print('PASS: 8 capitulos, Arga 4 enemigos, Ayuntamiento 3 enemigos y enemigos renovados')
+          PY
+      - name: Analizar Dart
+        run: flutter analyze lib
+      - name: Construir APK de prueba RC8
+        run: flutter build apk --release --build-name=0.9.1 --build-number=38
+      - name: Comprobar archivo APK
+        run: test -s build/app/outputs/flutter-apk/app-release.apk
+      - name: Guardar APK privada para descargar
+        uses: actions/upload-artifact@v4
+        with:
+          name: Miren-y-Sara-RC8-20261110-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 7
+          if-no-files-found: error
