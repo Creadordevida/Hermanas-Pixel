@@ -1,3 +1,7 @@
+## 2026-11-10 — Portero: atlas de 24 poses auditado
+
+Atlas de 24 celdas sin duplicados, con alfa binario y pivote común. La hoja inspeccionada conserva las 18 poses originales y las seis reconstruidas. Siguiente microfase: conectar el atlas en Flutter y validar el combate real. [Continuidad](PORTERO_RC7_ESTADO.md).
+
 ## 2026-11-10 — Portero: seis poses auténticas reconstruidas
 
 Se reconstruyeron los seis dibujos dañados y se conservaron las 18 poses válidas. Derivados RGBA y hashes en `qa/goalkeeper_rebuild_20261109/rebuilt_poses/`. Siguiente microfase: atlas de 24 celdas y auditoría. [Continuidad](PORTERO_RC7_ESTADO.md).

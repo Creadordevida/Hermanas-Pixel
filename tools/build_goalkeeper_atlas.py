@@ -12,7 +12,10 @@ import os
 
 ROOT = Path("qa/goalkeeper_rebuild_20261109")
 USE_SUBSTITUTES = os.environ.get("GOALKEEPER_USE_TEMPORARY_SUBSTITUTES") == "1"
-SUFFIX = "_temporary" if USE_SUBSTITUTES else ""
+USE_REBUILT = os.environ.get("GOALKEEPER_USE_REBUILT_POSES") == "1"
+if USE_REBUILT and USE_SUBSTITUTES:
+    raise ValueError("Use either the six rebuilt sources or temporary substitutes")
+SUFFIX = "_rebuilt" if USE_REBUILT else "_temporary" if USE_SUBSTITUTES else ""
 OUT = ROOT / f"goalkeeper_atlas_4x6_candidate{SUFFIX}_rgba.png"
 MANIFEST = ROOT / f"goalkeeper_atlas_4x6_candidate{SUFFIX}_manifest.json"
 ROWS = (
@@ -29,6 +32,10 @@ MARGIN = 12
 # Large source poses are normalized against the tallest upright pose; a dive
 # may require review for horizontal reach and the chosen common scale.
 TARGET_UPRIGHT_HEIGHT = 120
+REBUILT = {"shuffle_step_b", "dive", "dive_extension", "hurt",
+           "defeat_side", "defeated"}
+# Feet are fixed for ground poses. The three airborne poses clear that line.
+AIR_LIFT = {"dive_extension": 9, "dive_launch": 14, "dive_full": 10}
 
 
 def silhouette(im):
@@ -41,12 +48,20 @@ def main():
     for row in ROWS:
         for name in row:
             path = ROOT / f"pose_{name}_rgba.png"
-            chosen = ROOT / "replacement_candidates" / path.name if USE_SUBSTITUTES and (ROOT / "replacement_candidates" / path.name).exists() else path
+            chosen = path
+            if USE_REBUILT and name in REBUILT:
+                chosen = ROOT / "rebuilt_poses" / path.name
+            elif USE_SUBSTITUTES:
+                temporary = ROOT / "replacement_candidates" / path.name
+                if temporary.exists():
+                    chosen = temporary
             try:
                 with Image.open(chosen) as src:
                     im = src.convert("RGBA")
                     im.load()
             except OSError:
+                if USE_REBUILT:
+                    raise
                 recovery = ROOT / "diagnostic_recovery" / path.name
                 if not recovery.exists():
                     raise
@@ -71,7 +86,8 @@ def main():
             cropped = im.crop(bounds)
             w = max(1, round(cropped.width * scale))
             h = max(1, round(cropped.height * scale))
-            if w > CELL - 2 * MARGIN or h > CELL - 2 * MARGIN:
+            lift = AIR_LIFT.get(name, 0) if USE_REBUILT else 0
+            if w > CELL - 2 * MARGIN or h + lift > CELL - 2 * MARGIN:
                 raise ValueError(
                     f"{name}: {w}x{h} exceeds cell interior. "
                     "Do NOT crop limbs or rescale this pose independently; "
@@ -80,12 +96,17 @@ def main():
             # Bottom-centred is a review pivot, NOT final feet alignment for
             # horizontal dive or defeated poses.
             x = c * CELL + (CELL - w) // 2
-            y = r * CELL + CELL - MARGIN - h
+            y = r * CELL + CELL - MARGIN - h - lift
             sprite = cropped.resize((w, h), Image.Resampling.NEAREST)
+            if USE_REBUILT:
+                sprite.putalpha(sprite.getchannel("A").point(
+                    lambda a: 255 if a >= 128 else 0))
             atlas.alpha_composite(sprite, (x, y))
             records.append({"name": name, "row": r, "column": c,
                             "source_sha256": digest, "size": [w, h],
-                            "cell_pivot": "bottom-centre; needs visual review"})
+                            "cell_pivot": [CELL // 2, CELL - MARGIN] if USE_REBUILT
+                            else "bottom-centre; needs visual review",
+                            "air_lift": lift})
     if len(records) != 24:
         raise AssertionError("Expected exactly 24 poses")
     OUT.parent.mkdir(parents=True, exist_ok=True)

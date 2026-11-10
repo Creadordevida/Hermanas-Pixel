@@ -114,3 +114,9 @@ No habilitar un recurso inexistente ni afirmar que una prueba no ejecutada ha pa
 Revisadas las 18 fuentes intactas antes de generar. Las seis poses nuevas de paso cruzado, arranque, extensión, impacto, caída de lado y derrota tendida conservan la equipación verde/blanca, el pelo castaño y los guantes. La hoja fuente tiene SHA-256 `4d660f5de1cdb1522adcef65e94cf0f976f011c26af3bdeea492e921bff079a4`. Los seis PNG RGBA y los hashes individuales están en [rebuilt_poses](../../qa/goalkeeper_rebuild_20261109/rebuilt_poses/manifest.json). Se aisló cada silueta por alfa, con una única escala relativa de 2,35 frente a las fuentes originales y margen transparente. Se revisaron los seis recortes completos. Se preservaron los maestros dañados y las 18 fuentes intactas.
 
 Siguiente microfase: empaquetar las 18 originales y las 6 reconstruidas, revisar pivote y auditar 24 fotogramas. Integración Flutter pendiente en este punto.
+
+## Microfase 17 — atlas íntegro y auditado (10/11/2026)
+
+El atlas `assets/images/enemies_new/goalkeeper_atlas.png` tiene 1024 × 1536 píxeles y 24 celdas RGBA de 256 × 256. SHA-256 `568b3f5de285ac962b26d90ca4c2b3d62c469b4b517377a5d8c79a113320cd11`. Montado con `GOALKEEPER_USE_REBUILT_POSES=1 python tools/build_goalkeeper_atlas.py` y documentado en el manifiesto del atlas reconstruido. La auditoría obtuvo 24 fotogramas y cero pares duplicados. Los 24 conservan un margen de al menos 12 px, alfa binario y pivote (128, 244). Tres poses en vuelo están elevadas 9, 14 y 10 px. Se inspeccionó la hoja a escala de juego, incluidos guantes, calzado y caída tendida. Los clásicos y las fuentes originales siguen disponibles.
+
+Siguiente microfase: conectar carga y reloj del atlas en Flutter bajo la puerta de pruebas y comprobar el combate.
