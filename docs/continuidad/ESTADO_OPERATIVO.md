@@ -390,3 +390,7 @@ Se creó el [manual maestro de personajes SNES](../FRAMEWORK_SNES_TWC/MANUAL_MAE
 
 Inspeccionadas las cinco imágenes clásicas del portero y su carga/estirada en Flutter. Nueva referencia RGBA de seis poses conservada en `qa/goalkeeper_rebuild_20261109/goalkeeper_reference_candidate_v1.png`; originales intactos. El cambio es solo una propuesta artística, no un atlas productivo ni una captura real. Estado, hash, limitaciones y siguiente microfase en `docs/continuidad/PORTERO_RECONSTRUCCION_2026-11-09.md`. Sin CI, APK ni modificación del motor. Siguiente acción: aprobación del aspecto y limpieza de la referencia.
 
+
+## 2026-11-10 — Portero habilitado para la próxima APK
+
+Integración candidata verificada en GitHub en `adab1544` (`lib/main.dart`, `lib/goalkeeper_animation.dart`, pruebas de contrato y escena). La microfase siguiente activa el atlas en el Campo de entrenamiento y archiva doce PNG auténticos de `StagePainter` 20:9 en `qa/goalkeeper_rebuild_20261109/stagepainter/`. Ocho pruebas Flutter de configuración normal pasaron y el análisis dirigido terminó sin incidencias. Miren y Sara completaron la esquiva y la derrota con sus proyectiles. La prueba adicional del entrenador se detuvo también en la revisión base al cargar la escena. Detalle y enlaces en [estado del portero](PORTERO_RC7_ESTADO.md). Siguiente acción: probar el portero en la próxima APK en el Redmi Note 14.

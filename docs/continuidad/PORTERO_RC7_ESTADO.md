@@ -1,5 +1,9 @@
 # Portero — estado verificado 2026-11-10
 
+## Estado vigente — listo en la rama de la próxima APK
+
+El portero reconstruido está habilitado en la ruta normal del Campo de entrenamiento. El atlas final contiene 18 poses originales y seis reconstruidas. Las comprobaciones iniciales y el traspaso que figuran más abajo quedan como historial. Pendiente la prueba de la próxima APK en el Redmi Note 14.
+
 Repositorio: Creadordevida/Hermanas-Pixel
 Rama: work/revision-visual-20261028-continuidad
 Objetivo: reemplazar los cinco sprites antiguos por atlas SNES 4x6 de 24 fotogramas, sin alterar la mecánica aprobada.
@@ -128,3 +132,22 @@ El candidato se carga en el campo de entrenamiento mediante la entrada de QA. `S
 Flutter 3.47.8 pasó seis pruebas de contrato y una prueba de escena con ambas protagonistas. El widget comprobó el aviso, la transición por los cuatro fotogramas de estirada, el daño único, la esquiva por salto y la interrupción con balón de Miren y peine de Sara. El análisis de los cuatro archivos Dart modificados no encontró incidencias. Se revisaron doce capturas auténticas de 1000 × 450, seis por protagonista. Se comprobó el apoyo en la pista, el espejo y la pose tumbada completa.
 
 Siguiente microfase: habilitar la ruta normal, repetir las pruebas y conservar las capturas.
+
+## Microfase 19 — ruta normal y capturas archivadas (10/11/2026)
+
+Se habilitó el atlas por la puerta artística de la compilación normal y se retiró la excepción para QA. La prueba inicia una partida desde la portada, entra por el mapa al capítulo 5 y comprueba la aparición real del portero y la decodificación del atlas. En ese capítulo la ruta normal selecciona a Miren. La misma escena reproduce los combates en ambos sentidos con Miren y Sara en condiciones controladas.
+
+Ocho pruebas pasaron en Flutter 3.47.8 con la configuración normal. Incluyen el contrato de las 24 celdas, la prueba de escena y la comprobación de disponibilidad normal del entrenador. El análisis de los cuatro archivos Dart terminó sin incidencias. La prueba adicional de combate del entrenador se detiene en la espera de `resourcesReady` (línea 20). El mismo fallo se reprodujo en el commit de partida `4635068e899d32bf17e16a47512f8553cfe55a2c`. Queda registrado como incidencia previa fuera del alcance del portero.
+
+Las doce capturas son PNG originales de 1000 × 450 obtenidos del widget real con `GOALKEEPER_QA_OUTPUT`. Se revisaron los apoyos, el espejo de la silueta, la estirada y la pose final tendida.
+
+| Momento | Miren | Sara |
+| --- | --- | --- |
+| Reposo | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/miren_01_reposo.png) | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/sara_01_reposo.png) |
+| Desplazamiento | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/miren_02_desplazamiento.png) | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/sara_02_desplazamiento.png) |
+| Aviso | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/miren_03_aviso.png) | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/sara_03_aviso.png) |
+| Estirada | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/miren_04_estirada.png) | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/sara_04_estirada.png) |
+| Impacto del proyectil | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/miren_05_impacto.png) | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/sara_05_impacto.png) |
+| Derrota | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/miren_06_derrota.png) | [PNG](../../qa/goalkeeper_rebuild_20261109/stagepainter/sara_06_derrota.png) |
+
+Commits verificados de las microfases previas: reconstrucción `6f627427b0d29386f756f94e3beb70ce53526aa1`, atlas `092ed6bc2c66a667752d58db0c6e940d00a8455f`, integración en QA `adab15442a9d817cbc7b76a27c6081caff0ec684`. La activación y las evidencias se guardan juntas en el commit de esta entrada. Pendiente en Android: aspecto, cadencia, legibilidad del aviso y control táctil durante el combate.

@@ -12,6 +12,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   testWidgets('Portero: animación, esquiva, balón y peine en el campo',
       (tester) async {
+    expect(twcGameplayPlaytest, isFalse);
+    expect(hasApprovedEnemyArtwork('goalkeeper'), isTrue);
+    expect(
+      List.generate(twcChapterCount, (i) => i)
+          .where((i) => StageData(i).enemies.contains('goalkeeper')),
+      orderedEquals([4]),
+    );
     SharedPreferences.setMockInitialValues({});
     final output = Platform.environment['GOALKEEPER_QA_OUTPUT'];
     final imageKey = GlobalKey();
@@ -48,11 +55,12 @@ void main() {
       });
     }
 
+    final semantics = tester.ensureSemantics();
     try {
       await tester.pumpWidget(MaterialApp(
           home: RepaintBoundary(
         key: imageKey,
-        child: HermanasGame(key: gameKey, qaStage: 4),
+        child: HermanasGame(key: gameKey),
       )));
       final dynamic game = gameKey.currentState!;
       for (var i = 0; i < 500 && game.resourcesReady != true; i++) {
@@ -62,7 +70,17 @@ void main() {
         expect(game.loadError, isNull);
       }
       expect(game.resourcesReady, isTrue);
+      expect(game.screen, Screen.title);
+      await tester.tap(find.bySemanticsLabel('Nueva partida'));
+      await tick();
+      expect(game.screen, Screen.map);
+      await tester.tap(
+        find.bySemanticsLabel('Capítulo 5: Campo de entrenamiento'),
+      );
+      await tick();
       expect(game.stage, 4);
+      expect(game.screen, Screen.playing);
+      expect(game.selected, 0);
       expect((game.enemies as List<Enemy>).any((e) => e.kind == 'goalkeeper'),
           isTrue);
       final atlas =
@@ -193,6 +211,7 @@ void main() {
         await capture(selected, '06_derrota');
       }
     } finally {
+      semantics.dispose();
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.binding.setSurfaceSize(null);
     }

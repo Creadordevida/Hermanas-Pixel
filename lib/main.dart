@@ -54,7 +54,7 @@ const Map<String,bool> enemyArtValidated = {
   'comparsa_gigante': true,
   'comparsa_caravinagre': true,
   'comparsa_zaldiko': true,
-  'goalkeeper': false,
+  'goalkeeper': true,
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
@@ -698,7 +698,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       paths['enemy_four_slipper_neighbor'] = 'assets/images/enemies_new/slipper_neighbor_atlas.png';
       paths['enemy_four_rival_coach'] = 'assets/images/enemies_new/rival_coach_atlas.png';
       paths['enemy_rival_player_atlas'] = 'assets/images/enemies_new/rival_player_atlas.png';
-      if (hasApprovedEnemyArtwork('goalkeeper') || widget.qaStage == 4) {
+      if (hasApprovedEnemyArtwork('goalkeeper')) {
         paths['enemy_goalkeeper_atlas'] = 'assets/images/enemies_new/goalkeeper_atlas.png';
       }
       paths['slipper'] = 'assets/images/enemies_new/green_slipper.png';

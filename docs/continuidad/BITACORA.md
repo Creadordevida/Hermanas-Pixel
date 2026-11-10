@@ -392,3 +392,7 @@ Solicitud del usuario: identificar el botón circular para volver al mapa. Inspe
 
 Microfase de inspección de los cinco sprites `goalkeeper_0..4`, identificación de su ruta de dibujo y creación de propuesta SNES de seis poses, aislada en `qa/goalkeeper_rebuild_20261109/`. Sin reemplazo de activos, Flutter ni Actions. Continuidad: `docs/continuidad/PORTERO_RECONSTRUCCION_2026-11-09.md`.
 
+
+## 2026-11-10 — Portero habilitado para la próxima APK
+
+Integración candidata verificada en GitHub en `adab1544` (`lib/main.dart`, `lib/goalkeeper_animation.dart`, pruebas de contrato y escena). La microfase siguiente activa el atlas en el Campo de entrenamiento y archiva doce PNG auténticos de `StagePainter` 20:9 en `qa/goalkeeper_rebuild_20261109/stagepainter/`. Ocho pruebas Flutter de configuración normal pasaron y el análisis dirigido terminó sin incidencias. Miren y Sara completaron la esquiva y la derrota con sus proyectiles. La prueba adicional del entrenador se detuvo también en la revisión base al cargar la escena. Detalle y enlaces en [estado del portero](PORTERO_RC7_ESTADO.md). Siguiente acción: probar el portero en la próxima APK en el Redmi Note 14.
