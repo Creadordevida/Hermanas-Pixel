@@ -394,3 +394,7 @@ Inspeccionadas las cinco imágenes clásicas del portero y su carga/estirada en 
 ## 2026-11-10 — Portero habilitado para la próxima APK
 
 Integración candidata verificada en GitHub en `adab1544` (`lib/main.dart`, `lib/goalkeeper_animation.dart`, pruebas de contrato y escena). La microfase siguiente activa el atlas en el Campo de entrenamiento y archiva doce PNG auténticos de `StagePainter` 20:9 en `qa/goalkeeper_rebuild_20261109/stagepainter/`. Ocho pruebas Flutter de configuración normal pasaron y el análisis dirigido terminó sin incidencias. Miren y Sara completaron la esquiva y la derrota con sus proyectiles. La prueba adicional del entrenador se detuvo también en la revisión base al cargar la escena. Detalle y enlaces en [estado del portero](PORTERO_RC7_ESTADO.md). Siguiente acción: probar el portero en la próxima APK en el Redmi Note 14.
+
+## 2026-11-10 — Profesora del Colegio, diagnóstico
+
+Confirmada en Flutter la ruta normal, la goma y la derrota con ambas protagonistas. Detectados el espejo invertido, la falta de pose de suelta y la escasa diferencia entre los cinco sprites actuales. Contrato de 24 poses y siguiente microfase en [Profesora](PROFESORA_ESTADO.md).

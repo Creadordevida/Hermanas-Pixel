@@ -181,3 +181,7 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 - El test de versión normal confirma tres apariciones del entrenador en fútbol (stage 4; X=8760/21170/31390 para longitud 36500), exclusión en etapa 5 y que siguen habilitados limpiador, músico y vecina. Se conservan los cuatro atlas y la mecánica de ataque con pizarra; no se modificó arte.
 - **Conclusión técnica:** `rival_coach` **LISTO TÉCNICAMENTE PARA LA SIGUIENTE RC7**. Los cuatro enemigos están habilitados en la rama. Esto NO es una APK compilada ni una prueba manual en Redmi Note 14; queda pendiente realizar ambas junto con una verificación de coexistencia y rendimiento en el dispositivo.
 - **Siguiente acción exacta (fuera de esta microfase):** incluir los cuatro enemigos en la compilación privada RC7 cuando corresponda, instalarla y probar las tres apariciones del entrenador en fútbol, controles/esquiva/impactos, derrota y coexistencia con los anteriores. No hacer merge ni publicación por esta nota.
+
+## 2026-11-10 — Profesora del Colegio, diagnóstico
+
+Confirmada en Flutter la ruta normal, la goma y la derrota con ambas protagonistas. Detectados el espejo invertido, la falta de pose de suelta y la escasa diferencia entre los cinco sprites actuales. Contrato de 24 poses y siguiente microfase en [Profesora](PROFESORA_ESTADO.md).
