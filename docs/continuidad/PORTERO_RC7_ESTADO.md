@@ -33,3 +33,10 @@ No habilitar un recurso inexistente ni afirmar que una prueba no ejecutada ha pa
 - **Acción necesaria:** reparar o sustituir ese PNG con una imagen RGBA válida y conservar la fuente original para comparación. No activar `ImageFile.LOAD_TRUNCATED_IMAGES` ni silenciar errores de imagen: ocultaría defectos gráficos.
 - Después repetir el verificador completo de 24 imágenes y la generación del atlas. Pueden existir otros PNG corruptos posteriores aún no evaluados.
 - La integración Flutter y APK siguen pendientes; no afirmar éxito del QA.
+
+## Microfase 13 — QA de recuperación: bloqueo visual real (10/11/2026)
+
+- Diagnóstico completo run 42760445968: 18 PNG decodifican correctamente, 6 dañados: `shuffle_step_b`, `dive`, `dive_extension`, `hurt`, `defeat_side`, `defeated`. Se obtuvieron copias de recuperación **no aprobadas**.
+- Nueva prueba run 42760558813: diagnóstico exitoso, pero `tools/build_goalkeeper_atlas.py` detiene el montaje por `ValueError: Clipped source: shuffle_step_b`. La copia recuperada no conserva margen íntegro. No debe promoverse a arte final ni disimularse el recorte.
+- Workflow ajustado en `fa7d054` para subir diagnósticos incluso tras error. Se mantienen intactos los cinco sprites clásicos y las fuentes originales.
+- Pendiente de cierre: redibujar/reponer los seis PNG dañados desde las referencias artísticas, comprobar pivotes y halos, construir atlas, integrar en Flutter, ejecutar pruebas y capturas 20:9. **Portero NO finalizado.**
