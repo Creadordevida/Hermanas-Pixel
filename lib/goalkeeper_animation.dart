@@ -1,7 +1,8 @@
-/// Frame-selection contract for the proposed 4 x 6 goalkeeper atlas.
-///
-/// This module is deliberately isolated: the active goalkeeper keeps using
-/// its original five sprites until the candidate atlas passes visual QA.
+/// Frame-selection contract for the 4 x 6 goalkeeper atlas.
+const goalkeeperAtlasCell = 256.0;
+const goalkeeperAtlasFootY = 244.0;
+const goalkeeperDefeatImpactTime = .18;
+
 enum GoalkeeperPose { idle, shuffle, warning, dive, hurt, defeated }
 
 class GoalkeeperFrame {
@@ -26,8 +27,13 @@ GoalkeeperFrame goalkeeperAtlasFrame({
       (seconds.clamp(0.0, 100000.0) * fps).floor().clamp(0, 3).toInt();
 
   if (defeated) {
-    return GoalkeeperFrame(
-        GoalkeeperPose.defeated, boundedFrame(defeatElapsed, 7));
+    // One projectile defeats this enemy. Play the impact row before the fall.
+    if (defeatElapsed < goalkeeperDefeatImpactTime) {
+      return GoalkeeperFrame(
+          GoalkeeperPose.hurt, boundedFrame(defeatElapsed, 24));
+    }
+    return GoalkeeperFrame(GoalkeeperPose.defeated,
+        boundedFrame(defeatElapsed - goalkeeperDefeatImpactTime, 7));
   }
   if (stunned) {
     return GoalkeeperFrame(GoalkeeperPose.hurt, boundedFrame(elapsed, 8));
@@ -36,8 +42,7 @@ GoalkeeperFrame goalkeeperAtlasFrame({
     // Existing keeper attack: 0.00–0.27 anticipation, dive at 0.27,
     // active hit at 0.34–0.52, recovery until 0.75 seconds.
     if (elapsed < .27) {
-      return GoalkeeperFrame(
-          GoalkeeperPose.warning, boundedFrame(elapsed, 12));
+      return GoalkeeperFrame(GoalkeeperPose.warning, boundedFrame(elapsed, 12));
     }
     // The keeper's original attack lasts about .75 s. Map the full dive
     // window to four distinct frames, including landing/recovery. The old
@@ -47,8 +52,7 @@ GoalkeeperFrame goalkeeperAtlasFrame({
     return GoalkeeperFrame(GoalkeeperPose.dive, diveColumn);
   }
   if (moving) {
-    return GoalkeeperFrame(
-        GoalkeeperPose.shuffle, (elapsed * 8).floor() % 4);
+    return GoalkeeperFrame(GoalkeeperPose.shuffle, (elapsed * 8).floor() % 4);
   }
   return GoalkeeperFrame(GoalkeeperPose.idle, (elapsed * 3).floor() % 4);
 }

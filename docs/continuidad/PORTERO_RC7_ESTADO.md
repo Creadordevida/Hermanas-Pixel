@@ -120,3 +120,11 @@ Siguiente microfase: empaquetar las 18 originales y las 6 reconstruidas, revisar
 El atlas `assets/images/enemies_new/goalkeeper_atlas.png` tiene 1024 × 1536 píxeles y 24 celdas RGBA de 256 × 256. SHA-256 `568b3f5de285ac962b26d90ca4c2b3d62c469b4b517377a5d8c79a113320cd11`. Montado con `GOALKEEPER_USE_REBUILT_POSES=1 python tools/build_goalkeeper_atlas.py` y documentado en el manifiesto del atlas reconstruido. La auditoría obtuvo 24 fotogramas y cero pares duplicados. Los 24 conservan un margen de al menos 12 px, alfa binario y pivote (128, 244). Tres poses en vuelo están elevadas 9, 14 y 10 px. Se inspeccionó la hoja a escala de juego, incluidos guantes, calzado y caída tendida. Los clásicos y las fuentes originales siguen disponibles.
 
 Siguiente microfase: conectar carga y reloj del atlas en Flutter bajo la puerta de pruebas y comprobar el combate.
+
+## Microfase 18 — integración y combate en Flutter (10/11/2026)
+
+El candidato se carga en el campo de entrenamiento mediante la entrada de QA. `StagePainter` recorta la celda del controlador por estado y tiempo, conserva el pivote del suelo e invierte la imagen al cambiar el sentido. Las cuatro poses de impacto preceden a la caída cuando el primer proyectil agota la vida. Se mantiene la ventana de daño de 0,34 a 0,52 s, un golpe por embestida, el final a 0,75 s y el tiempo de recuperación anterior.
+
+Flutter 3.47.8 pasó seis pruebas de contrato y una prueba de escena con ambas protagonistas. El widget comprobó el aviso, la transición por los cuatro fotogramas de estirada, el daño único, la esquiva por salto y la interrupción con balón de Miren y peine de Sara. El análisis de los cuatro archivos Dart modificados no encontró incidencias. Se revisaron doce capturas auténticas de 1000 × 450, seis por protagonista. Se comprobó el apoyo en la pista, el espejo y la pose tumbada completa.
+
+Siguiente microfase: habilitar la ruta normal, repetir las pruebas y conservar las capturas.

@@ -34,6 +34,7 @@ import 'four_enemy_behaviors.dart';
 import 'new_enemy_hitboxes.dart';
 import 'classic_enemy_pose.dart';
 import 'rival_player_atlas.dart';
+import 'goalkeeper_animation.dart';
 import 'adaptive_title_screen.dart';
 
 // Puerta artística conservadora, evaluada en tiempo de ejecución para evitar
@@ -53,6 +54,7 @@ const Map<String,bool> enemyArtValidated = {
   'comparsa_gigante': true,
   'comparsa_caravinagre': true,
   'comparsa_zaldiko': true,
+  'goalkeeper': false,
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
@@ -696,6 +698,9 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       paths['enemy_four_slipper_neighbor'] = 'assets/images/enemies_new/slipper_neighbor_atlas.png';
       paths['enemy_four_rival_coach'] = 'assets/images/enemies_new/rival_coach_atlas.png';
       paths['enemy_rival_player_atlas'] = 'assets/images/enemies_new/rival_player_atlas.png';
+      if (hasApprovedEnemyArtwork('goalkeeper') || widget.qaStage == 4) {
+        paths['enemy_goalkeeper_atlas'] = 'assets/images/enemies_new/goalkeeper_atlas.png';
+      }
       paths['slipper'] = 'assets/images/enemies_new/green_slipper.png';
       paths['enemy_navarre_king_atlas'] = 'assets/images/enemies_new/navarre_king_atlas.png';
       for (final kind in ['estafeta_bull','sanfermin_runner']) {
@@ -2000,8 +2005,9 @@ class StagePainter extends CustomPainter {
     for(final foe in enemies) {
       final x=foe.x-cameraX;if(x< -110 || x>900)continue;
       if(foe.defeated && time-foe.deathAt>.85)continue;
-      // Keep the pigeon opaque until it reaches the ground after an air hit.
-      final fadeStart = foe.aerial ? .58 : .32;
+      // Give the final landing poses time to reach the floor before fading.
+      final keeperAtlas = foe.kind == 'goalkeeper' ? images['enemy_goalkeeper_atlas'] : null;
+      final fadeStart = keeperAtlas != null ? .62 : foe.aerial ? .58 : .32;
       final deathOpacity=foe.defeated
         ? (1-(time-foe.deathAt-fadeStart)/(.85-fadeStart)).clamp(0.0,1.0).toDouble()
         : 1.0;
@@ -2262,6 +2268,30 @@ class StagePainter extends CustomPainter {
             groundY - foe.flightAltitude - wildlifeGroundAnchorY,
             wildlifeCellWidth, wildlifeCellHeight,
           ),
+          Paint()..filterQuality = FilterQuality.none
+            ..color = Colors.white.withValues(alpha: deathOpacity),
+        );
+        canvas.restore();
+        continue;
+      }
+      if (keeperAtlas != null) {
+        final moving = (foe.x - foe.lastRenderedX).abs() > .12;
+        foe.lastRenderedX = foe.x;
+        final frame = goalkeeperAtlasFrame(
+          elapsed: foe.t, moving: moving, attacking: foe.launched,
+          stunned: foe.stunned > 0, defeated: foe.defeated,
+          defeatElapsed: foe.defeated ? time - foe.deathAt : 0,
+        );
+        const cell = goalkeeperAtlasCell;
+        canvas.save();
+        if (foe.facing < 0) {
+          canvas.translate(2 * x, 0);
+          canvas.scale(-1, 1);
+        }
+        canvas.drawImageRect(
+          keeperAtlas,
+          Rect.fromLTWH(frame.column * cell, frame.row * cell, cell, cell),
+          Rect.fromLTWH(x - cell / 2, groundY - goalkeeperAtlasFootY, cell, cell),
           Paint()..filterQuality = FilterQuality.none
             ..color = Colors.white.withValues(alpha: deathOpacity),
         );
