@@ -108,3 +108,9 @@ No habilitar un recurso inexistente ni afirmar que una prueba no ejecutada ha pa
 **Última acción guardada antes del traspaso:** workflow manual `aff1dd98`; auditoría artística integrada `9673fcfb`; corrección de controlador `3d39bb94` y prueba `29dcc4ab`. **Bloqueo principal: seis dibujos genuinos aún NO creados.**
 
 **Estado final del traspaso: EN PROGRESO / NO LISTO PARA RC8 O SIGUIENTE APK.**
+
+## Microfase 16 — seis poses reconstruidas (10/11/2026)
+
+Revisadas las 18 fuentes intactas antes de generar. Las seis poses nuevas de paso cruzado, arranque, extensión, impacto, caída de lado y derrota tendida conservan la equipación verde/blanca, el pelo castaño y los guantes. La hoja fuente tiene SHA-256 `4d660f5de1cdb1522adcef65e94cf0f976f011c26af3bdeea492e921bff079a4`. Los seis PNG RGBA y los hashes individuales están en [rebuilt_poses](../../qa/goalkeeper_rebuild_20261109/rebuilt_poses/manifest.json). Se aisló cada silueta por alfa, con una única escala relativa de 2,35 frente a las fuentes originales y margen transparente. Se revisaron los seis recortes completos. Se preservaron los maestros dañados y las 18 fuentes intactas.
+
+Siguiente microfase: empaquetar las 18 originales y las 6 reconstruidas, revisar pivote y auditar 24 fotogramas. Integración Flutter pendiente en este punto.

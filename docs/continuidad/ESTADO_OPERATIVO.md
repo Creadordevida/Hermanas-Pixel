@@ -1,3 +1,7 @@
+## 2026-11-10 — Portero: seis poses auténticas reconstruidas
+
+Se reconstruyeron los seis dibujos dañados y se conservaron las 18 poses válidas. Derivados RGBA y hashes en `qa/goalkeeper_rebuild_20261109/rebuilt_poses/`. Siguiente microfase: atlas de 24 celdas y auditoría. [Continuidad](PORTERO_RC7_ESTADO.md).
+
 ## 09/11/2026 — ocho separadores QA de la Plaza, sin activar
 
 - Se prepararon dos sprites de **pixel art** a tamaño de juego, un plátano de sombra (240×275) y una farola ornamental (98×285), con transparencia binaria para retirar halos. Los PNG fueron guardados en `qa/quiosco_inbox/separators/`, blobs verificados por Git, commit `6389a46`. El boceto de pilastra aislada se descartó para evitar columnas artificiales entre edificios.
