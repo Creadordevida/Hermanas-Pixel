@@ -8,6 +8,7 @@ on:
     paths:
       - 'tools/diagnose_goalkeeper_pngs.py'
       - 'tools/goalkeeper_visual_review.py'
+      - 'tools/goalkeeper_replacement_candidates.py'
       - '.github/workflows/goalkeeper-png-diagnostic.yml'
   pull_request:
     paths:
@@ -36,6 +37,8 @@ jobs:
         run: python tools/diagnose_goalkeeper_pngs.py
       - name: Create visual review sheet with damaged poses marked
         run: python tools/goalkeeper_visual_review.py
+      - name: Produce reversible substitutes for six damaged sources
+        run: python tools/goalkeeper_replacement_candidates.py
       - name: Build provisional atlas using isolated recovery copies
         continue-on-error: true
         run: python tools/build_goalkeeper_atlas.py
@@ -45,6 +48,7 @@ jobs:
         with:
           name: goalkeeper-png-diagnostic-unapproved
           path: |
+            qa/goalkeeper_rebuild_20261109/replacement_candidates/
             qa/goalkeeper_rebuild_20261109/history_audit.json
             qa/goalkeeper_rebuild_20261109/diagnostic_recovery/
             qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_rgba.png
