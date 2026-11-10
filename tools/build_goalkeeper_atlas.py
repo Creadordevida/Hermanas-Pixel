@@ -25,7 +25,7 @@ MARGIN = 12
 # Shared pixel scale for ALL frames; never independently fit each pose.
 # Large source poses are normalized against the tallest upright pose; a dive
 # may require review for horizontal reach and the chosen common scale.
-TARGET_UPRIGHT_HEIGHT = 164
+TARGET_UPRIGHT_HEIGHT = 120
 
 
 def silhouette(im):
@@ -38,8 +38,17 @@ def main():
     for row in ROWS:
         for name in row:
             path = ROOT / f"pose_{name}_rgba.png"
-            with Image.open(path) as src:
-                im = src.convert("RGBA")
+            try:
+                with Image.open(path) as src:
+                    im = src.convert("RGBA")
+                    im.load()
+            except OSError:
+                recovery = ROOT / "diagnostic_recovery" / path.name
+                if not recovery.exists():
+                    raise
+                with Image.open(recovery) as src:
+                    im = src.convert("RGBA")
+                    im.load()
             box = silhouette(im)
             if box is None:
                 raise ValueError(f"Empty pose: {name}")
