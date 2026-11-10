@@ -7,6 +7,7 @@ on:
       - work/revision-visual-20261028-continuidad
     paths:
       - 'tools/diagnose_goalkeeper_pngs.py'
+      - 'tools/goalkeeper_visual_review.py'
       - '.github/workflows/goalkeeper-png-diagnostic.yml'
   pull_request:
     paths:
@@ -28,7 +29,10 @@ jobs:
       - run: python -m pip install 'Pillow>=10,<13'
       - name: Inspect all masters and recover diagnostic copies
         run: python tools/diagnose_goalkeeper_pngs.py
+      - name: Create visual review sheet with damaged poses marked
+        run: python tools/goalkeeper_visual_review.py
       - name: Build provisional atlas using isolated recovery copies
+        continue-on-error: true
         run: python tools/build_goalkeeper_atlas.py
       - name: Upload diagnostics, never publish as game art
         if: always()
