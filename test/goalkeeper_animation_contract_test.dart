@@ -23,6 +23,12 @@ void main() {
     expect(frame(.51, attacking: true).pose, GoalkeeperPose.dive);
   });
 
+  test('all four dive frames are reachable before original attack ends', () {
+    final columns = [0.27, 0.40, 0.52, 0.66, 0.74].map((t) =>
+        frame(t, attacking: true).column).toList();
+    expect(columns, [0, 1, 2, 3, 3]);
+  });
+
   test('all four defeat frames remain reachable', () {
     expect([0.0, .16, .30, .48].map((d) =>
         frame(0, defeated: true, death: d).column).toList(), [0, 1, 2, 3]);
