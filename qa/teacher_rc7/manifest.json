@@ -1,0 +1,289 @@
+{
+  "approved_reference": "c0a5c281a0e27adc3122c5bfd512d6c6963407dd0696d5dfdafe82f3db660535",
+  "atlas_sha256": "6dc7a0f5f6309445d9cfe1b7e9bddd3808b858abeaced0cf6c1cc89d2c833019",
+  "grid": [
+    4,
+    6
+  ],
+  "cell": [
+    256,
+    256
+  ],
+  "pivot": [
+    128,
+    236
+  ],
+  "faces": "right",
+  "alpha_threshold": 210,
+  "sources": {
+    "throw": "c4c2e3dab751b5947db7a3a2ac3dd8e6fa7f68f265aa6fbe66fe2b5234265b19",
+    "recovery": "4d02070f437acac9729779e7953ac0e389629b1900004c1a8608da5d6fc6ebdd",
+    "impact_fall": "1e0ad851b9dadd34e48e75012bbbfd08dc026595ebcb9ae809b171092c687cd8"
+  },
+  "frames": [
+    {
+      "pose": "idle",
+      "column": 0,
+      "bounds": [
+        94,
+        95,
+        160,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "idle",
+      "column": 1,
+      "bounds": [
+        93,
+        97,
+        162,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "idle",
+      "column": 2,
+      "bounds": [
+        97,
+        96,
+        167,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "idle",
+      "column": 3,
+      "bounds": [
+        97,
+        96,
+        168,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "warning",
+      "column": 0,
+      "bounds": [
+        89,
+        97,
+        163,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "warning",
+      "column": 1,
+      "bounds": [
+        87,
+        100,
+        171,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "warning",
+      "column": 2,
+      "bounds": [
+        82,
+        103,
+        174,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "warning",
+      "column": 3,
+      "bounds": [
+        86,
+        100,
+        183,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "release",
+      "column": 0,
+      "bounds": [
+        79,
+        100,
+        188,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "release",
+      "column": 1,
+      "bounds": [
+        79,
+        100,
+        179,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "release",
+      "column": 2,
+      "bounds": [
+        87,
+        98,
+        175,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "release",
+      "column": 3,
+      "bounds": [
+        90,
+        97,
+        171,
+        236
+      ],
+      "source": "throw"
+    },
+    {
+      "pose": "recovery",
+      "column": 0,
+      "bounds": [
+        80,
+        93,
+        173,
+        236
+      ],
+      "source": "recovery"
+    },
+    {
+      "pose": "recovery",
+      "column": 1,
+      "bounds": [
+        93,
+        93,
+        166,
+        236
+      ],
+      "source": "recovery"
+    },
+    {
+      "pose": "recovery",
+      "column": 2,
+      "bounds": [
+        94,
+        89,
+        163,
+        236
+      ],
+      "source": "recovery"
+    },
+    {
+      "pose": "recovery",
+      "column": 3,
+      "bounds": [
+        97,
+        89,
+        163,
+        236
+      ],
+      "source": "recovery"
+    },
+    {
+      "pose": "hit",
+      "column": 0,
+      "bounds": [
+        77,
+        100,
+        180,
+        236
+      ],
+      "source": "impact_fall"
+    },
+    {
+      "pose": "hit",
+      "column": 1,
+      "bounds": [
+        80,
+        102,
+        170,
+        236
+      ],
+      "source": "impact_fall"
+    },
+    {
+      "pose": "hit",
+      "column": 2,
+      "bounds": [
+        93,
+        111,
+        185,
+        236
+      ],
+      "source": "impact_fall"
+    },
+    {
+      "pose": "hit",
+      "column": 3,
+      "bounds": [
+        81,
+        96,
+        174,
+        236
+      ],
+      "source": "impact_fall"
+    },
+    {
+      "pose": "defeat",
+      "column": 0,
+      "bounds": [
+        69,
+        112,
+        190,
+        236
+      ],
+      "source": "impact_fall"
+    },
+    {
+      "pose": "defeat",
+      "column": 1,
+      "bounds": [
+        80,
+        129,
+        176,
+        236
+      ],
+      "source": "impact_fall"
+    },
+    {
+      "pose": "defeat",
+      "column": 2,
+      "bounds": [
+        67,
+        151,
+        193,
+        236
+      ],
+      "source": "impact_fall"
+    },
+    {
+      "pose": "defeat",
+      "column": 3,
+      "bounds": [
+        57,
+        188,
+        204,
+        236
+      ],
+      "source": "impact_fall"
+    }
+  ]
+}

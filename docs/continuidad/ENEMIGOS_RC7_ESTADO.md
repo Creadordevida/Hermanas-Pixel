@@ -185,3 +185,7 @@ No APK, merge ni publicación. Diseños vinculantes: la referencia recuperada `q
 ## 2026-11-10 — Profesora del Colegio, diagnóstico
 
 Confirmada en Flutter la ruta normal, la goma y la derrota con ambas protagonistas. Detectados el espejo invertido, la falta de pose de suelta y la escasa diferencia entre los cinco sprites actuales. Contrato de 24 poses y siguiente microfase en [Profesora](PROFESORA_ESTADO.md).
+
+## 2026-11-10 — Profesora del Colegio, atlas candidato
+
+El diagnóstico y la tabla de poses se guardaron en `5377375`. Atlas de 24 celdas, pivotes y alfa auditados. Se conservan las fuentes y el montador reproducible. Siguiente acción en [Profesora](PROFESORA_ESTADO.md): comprobar la escena, el lanzamiento y la caída antes de habilitar la ruta normal.
