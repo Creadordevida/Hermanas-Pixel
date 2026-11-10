@@ -40,3 +40,17 @@ No habilitar un recurso inexistente ni afirmar que una prueba no ejecutada ha pa
 - Nueva prueba run 42760558813: diagnóstico exitoso, pero `tools/build_goalkeeper_atlas.py` detiene el montaje por `ValueError: Clipped source: shuffle_step_b`. La copia recuperada no conserva margen íntegro. No debe promoverse a arte final ni disimularse el recorte.
 - Workflow ajustado en `fa7d054` para subir diagnósticos incluso tras error. Se mantienen intactos los cinco sprites clásicos y las fuentes originales.
 - Pendiente de cierre: redibujar/reponer los seis PNG dañados desde las referencias artísticas, comprobar pivotes y halos, construir atlas, integrar en Flutter, ejecutar pruebas y capturas 20:9. **Portero NO finalizado.**
+
+## Microfase 14 — Inspección VISUAL de los 24 fotogramas (10/11/2026)
+
+- Workflow **42760772911** terminó correctamente, generó `diagnostic_recovery/goalkeeper_24_pose_review_contact_sheet.png` y subió artefacto **13737198668**. La lámina se descargó y examinó visualmente, no solo por logs.
+- Resultado visual: los 18 PNG válidos representan al mismo portero con pelo castaño, uniforme verde, pantalón blanco y guantes blancos; siluetas completas. **Seis imágenes están realmente cortadas y son inservibles como atlas final**:
+  - `shuffle_step_b` (índice 06): solo cabeza y parte superior del torso, corte horizontal.
+  - `dive` (índice 12): cabeza, brazos y parte superior del torso, falta cuerpo inferior.
+  - `dive_extension` (índice 13): cabeza y brazos, resto cortado.
+  - `hurt` (índice 16): primer plano de cabeza y torso, falta cuerpo inferior.
+  - `defeat_side` (índice 22): cuerpo horizontal cortado a la altura del tronco.
+  - `defeated` (índice 23): cuerpo horizontal cortado a la altura del tronco.
+- **Decisión QA:** no activar las seis recuperaciones. Se necesitan seis fotogramas completos redibujados a partir de las poses vecinas, manteniendo el mismo rostro, uniforme, guantes, escala, perspectiva, pivote y pie de apoyo. No utilizar una simple copia de poses adyacentes como sustitución definitiva.
+- Evidencia: [run 42760772911](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42760772911), artefacto `goalkeeper-png-diagnostic-unapproved`. La lámina fue inspeccionada en la conversación del 10/11/2026.
+- Estado: **18 poses visualmente aprovechables; 6 por redibujar; sin atlas definitivo, sin integración ni validación Flutter.**
