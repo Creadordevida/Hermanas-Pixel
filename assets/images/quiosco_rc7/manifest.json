@@ -1,0 +1,457 @@
+{
+  "tile_count": 39,
+  "tile_width": 960,
+  "tile_height": 390,
+  "world_width": 37440,
+  "landmark": {
+    "world_x": 17920,
+    "width": 1170,
+    "count": 1,
+    "sha256": "67a9c7455b3036268ea5cb283397c7c6486a9afb96d9c01fa16797e7dd827cd8"
+  },
+  "tiles": [
+    {
+      "tile": 0,
+      "filename": "quiosco_00.webp",
+      "world_start": 0,
+      "sha256": "d6779b6198c1de19b65094a6024b7bf90aa2d0cca1918be18dcc1ea084053e2a"
+    },
+    {
+      "tile": 1,
+      "filename": "quiosco_01.webp",
+      "world_start": 960,
+      "sha256": "fa056343748ac36194aeee224945721949e840b95f4be1785e2eadacb2f5f462"
+    },
+    {
+      "tile": 2,
+      "filename": "quiosco_02.webp",
+      "world_start": 1920,
+      "sha256": "79e53c39c6dd0b420ffa5e6f0b99c46d4a380eaad0ca8f51beb9136efc9806e4"
+    },
+    {
+      "tile": 3,
+      "filename": "quiosco_03.webp",
+      "world_start": 2880,
+      "sha256": "8ad9400102d5ea5292cf18b6cf82fc2708ec118a426fcadb1ca19f96d4817733"
+    },
+    {
+      "tile": 4,
+      "filename": "quiosco_04.webp",
+      "world_start": 3840,
+      "sha256": "96997457ed0fd148d4693cd3d6142c53c26036474d953d716282afcbe294b84d"
+    },
+    {
+      "tile": 5,
+      "filename": "quiosco_05.webp",
+      "world_start": 4800,
+      "sha256": "ef771b46acbbe9d660f75cfc8e12a876e75b12709f24f166bee51d12810f076a"
+    },
+    {
+      "tile": 6,
+      "filename": "quiosco_06.webp",
+      "world_start": 5760,
+      "sha256": "2959cd2791a1f98a7c16d8f8b4c7f9e1c6864d35e0601e46d92f634bca24d73a"
+    },
+    {
+      "tile": 7,
+      "filename": "quiosco_07.webp",
+      "world_start": 6720,
+      "sha256": "bfd046cf44b79d0d8a28b9661be13653f6e30ffbf2b9b1716e75eea64834dae6"
+    },
+    {
+      "tile": 8,
+      "filename": "quiosco_08.webp",
+      "world_start": 7680,
+      "sha256": "a5a6803640147f0de62ed3e069bfbb02dfe9d85492e6e175a5ed8d6391dfbbba"
+    },
+    {
+      "tile": 9,
+      "filename": "quiosco_09.webp",
+      "world_start": 8640,
+      "sha256": "02a0dc1e51314e32f26d11efc86b50c19fd2a0f06018d9cb57ca6929ac1f479f"
+    },
+    {
+      "tile": 10,
+      "filename": "quiosco_10.webp",
+      "world_start": 9600,
+      "sha256": "2d8d33a31b245aacb055cce00c6c3cccf2c3e6ff9000c25b4e64853a2d45ed19"
+    },
+    {
+      "tile": 11,
+      "filename": "quiosco_11.webp",
+      "world_start": 10560,
+      "sha256": "360834b69ed6519503528874d9299f35b248b7686ba44a7802cb5e5a4b81561d"
+    },
+    {
+      "tile": 12,
+      "filename": "quiosco_12.webp",
+      "world_start": 11520,
+      "sha256": "f89473a693e786284813c8493f6a82295f9b8da9831aec258964b82318bec3f8"
+    },
+    {
+      "tile": 13,
+      "filename": "quiosco_13.webp",
+      "world_start": 12480,
+      "sha256": "6e031c145b05d538c2990471507750e23b1f769e830e46c3d4bc5314b6dc7bc0"
+    },
+    {
+      "tile": 14,
+      "filename": "quiosco_14.webp",
+      "world_start": 13440,
+      "sha256": "5d3f507a092a009d2303beae9c62b61f3c054f700256b54b274cb7dac5da511f"
+    },
+    {
+      "tile": 15,
+      "filename": "quiosco_15.webp",
+      "world_start": 14400,
+      "sha256": "1738d0108bfbacd13b1bf8530cf01b1fe8dc63128b1a37bfdf003719a0dc1a4e"
+    },
+    {
+      "tile": 16,
+      "filename": "quiosco_16.webp",
+      "world_start": 15360,
+      "sha256": "2fa080b5cd3056ef59d5788f452568778414b14d4c90c7dac0f8f59e62e13777"
+    },
+    {
+      "tile": 17,
+      "filename": "quiosco_17.webp",
+      "world_start": 16320,
+      "sha256": "d0c26649b26addee66013ea60c1d17b81b491587ad84fceee9ea53318037949f"
+    },
+    {
+      "tile": 18,
+      "filename": "quiosco_18.webp",
+      "world_start": 17280,
+      "sha256": "9935a7ec0d5694f5e80730a3b59eeab2e7453d7ac0a5ca71fc0683bf05d82100"
+    },
+    {
+      "tile": 19,
+      "filename": "quiosco_19.webp",
+      "world_start": 18240,
+      "sha256": "5b1f9519b9676817d6a563c4a93e5b3ad1be2d2d076e574b885ba748ad12cf59"
+    },
+    {
+      "tile": 20,
+      "filename": "quiosco_20.webp",
+      "world_start": 19200,
+      "sha256": "333ffcefcabcd57a6b18c1e592b1b201cc8b777ae5ab1fde95246226d3305559"
+    },
+    {
+      "tile": 21,
+      "filename": "quiosco_21.webp",
+      "world_start": 20160,
+      "sha256": "9826c191b5a4579e738d0a35b76009bb16b80e9a417fddabcb236ee158312d0a"
+    },
+    {
+      "tile": 22,
+      "filename": "quiosco_22.webp",
+      "world_start": 21120,
+      "sha256": "4124683a18966d06837c96092856063011a4095aef2224152d102379388bc91e"
+    },
+    {
+      "tile": 23,
+      "filename": "quiosco_23.webp",
+      "world_start": 22080,
+      "sha256": "9df0d2877c35d3b6c8a6cf6801dcbb615c52a0a41fc873e3ce91b8fcac55326e"
+    },
+    {
+      "tile": 24,
+      "filename": "quiosco_24.webp",
+      "world_start": 23040,
+      "sha256": "535a059180784473529e9f5928458917a5d56fac9e4c4f19316ea8ec7c697a5b"
+    },
+    {
+      "tile": 25,
+      "filename": "quiosco_25.webp",
+      "world_start": 24000,
+      "sha256": "d803c1fa90294c94cad0de4934daedae5a67ea67a5032481f669d014007b33b3"
+    },
+    {
+      "tile": 26,
+      "filename": "quiosco_26.webp",
+      "world_start": 24960,
+      "sha256": "26380898b56719dd1c807a3996a5e7a93c09bf58f846c02045b618894a2db585"
+    },
+    {
+      "tile": 27,
+      "filename": "quiosco_27.webp",
+      "world_start": 25920,
+      "sha256": "ec72d0846ba8467737b9317e9d73d54c675f5d5a0342e2fe9d08dd91510e0cda"
+    },
+    {
+      "tile": 28,
+      "filename": "quiosco_28.webp",
+      "world_start": 26880,
+      "sha256": "ef6e6351b35ff64891193fce629fb1f53f28283f20a3fca99b0c2c6ffa7c2aca"
+    },
+    {
+      "tile": 29,
+      "filename": "quiosco_29.webp",
+      "world_start": 27840,
+      "sha256": "6a22863d709261cc1a2ae96260f00216426726fa8ef413642d224b9c9cb592c6"
+    },
+    {
+      "tile": 30,
+      "filename": "quiosco_30.webp",
+      "world_start": 28800,
+      "sha256": "420e5783bd4f37b5b90f5580028a6454c3ad7e4949cc660baa07efea0dda2206"
+    },
+    {
+      "tile": 31,
+      "filename": "quiosco_31.webp",
+      "world_start": 29760,
+      "sha256": "056cf1313d5485e59e6ce8fc47a9e6f2089741b25a61ac98949932442391e021"
+    },
+    {
+      "tile": 32,
+      "filename": "quiosco_32.webp",
+      "world_start": 30720,
+      "sha256": "1ef5f3bf2e09aa4b2ecd46d75cff57f4ba9afc42349d5193cb378a1271b0ff90"
+    },
+    {
+      "tile": 33,
+      "filename": "quiosco_33.webp",
+      "world_start": 31680,
+      "sha256": "c54e27d5cd58c95f1bc6800a450cc4e976f1b0d0c4f781b7c17c88c503575ea1"
+    },
+    {
+      "tile": 34,
+      "filename": "quiosco_34.webp",
+      "world_start": 32640,
+      "sha256": "8eefa9733c98d11c22b4441a707013a065b6273d35ebc98cba2cf001d451e900"
+    },
+    {
+      "tile": 35,
+      "filename": "quiosco_35.webp",
+      "world_start": 33600,
+      "sha256": "78bed47f8b6ec87e1515cd8509df1d11b6417d25b31b1221253d1619122f77b9"
+    },
+    {
+      "tile": 36,
+      "filename": "quiosco_36.webp",
+      "world_start": 34560,
+      "sha256": "aa93a42e284fca94fdedf24fc0c5d9512aa348e552baae0eb2c2e18c102bdcb5"
+    },
+    {
+      "tile": 37,
+      "filename": "quiosco_37.webp",
+      "world_start": 35520,
+      "sha256": "e5f083608e5e4b344881198426774e59c20509d032c3c76086df0da7e118d41e"
+    },
+    {
+      "tile": 38,
+      "filename": "quiosco_38.webp",
+      "world_start": 36480,
+      "sha256": "f3be2a93761a3a2fd70f751cd9ece53bcde9a151781b1cb7bba12879e8dfac42"
+    }
+  ],
+  "source_details": [
+    {
+      "part": "facade_candidate",
+      "source": "barrio_comercial",
+      "world_x": 0,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "mansiones_amarillas",
+      "world_x": 2076,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "biblioteca",
+      "world_x": 4152,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "arte_nuevo",
+      "world_x": 6228,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "hotel_mansarda",
+      "world_x": 8304,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "galeria_balcones",
+      "world_x": 10380,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "hotel_rosa",
+      "world_x": 12456,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "cafes_historicos",
+      "world_x": 14532,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "galeria_invierno",
+      "world_x": 16608,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "terraza_aristocratica",
+      "world_x": 18684,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "palacio",
+      "world_x": 20760,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "arcadas_siena",
+      "world_x": 22836,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "oriente",
+      "world_x": 24912,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "poniente",
+      "world_x": 26988,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "comercios",
+      "world_x": 29064,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "galeria",
+      "world_x": 31140,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "teatro",
+      "world_x": 33216,
+      "crop_x": 0,
+      "width": 2172
+    },
+    {
+      "part": "facade_candidate",
+      "source": "palacetes",
+      "world_x": 35292,
+      "crop_x": 0,
+      "width": 2172
+    }
+  ],
+  "separator_placements": [
+    {
+      "join": 1,
+      "status": "qa_overlay",
+      "kind": "lamppost",
+      "x": 2028,
+      "y": 104,
+      "width": 96,
+      "height": 278
+    },
+    {
+      "join": 3,
+      "status": "qa_overlay",
+      "kind": "tree",
+      "x": 6105,
+      "y": 100,
+      "width": 246,
+      "height": 282
+    },
+    {
+      "join": 6,
+      "status": "qa_overlay",
+      "kind": "tree",
+      "x": 12336,
+      "y": 107,
+      "width": 240,
+      "height": 275
+    },
+    {
+      "join": 7,
+      "status": "qa_overlay",
+      "kind": "lamppost",
+      "x": 14482,
+      "y": 90,
+      "width": 100,
+      "height": 292
+    },
+    {
+      "join": 10,
+      "status": "qa_overlay",
+      "kind": "lamppost",
+      "x": 20711,
+      "y": 97,
+      "width": 98,
+      "height": 285
+    },
+    {
+      "join": 12,
+      "status": "qa_overlay",
+      "kind": "tree",
+      "x": 24798,
+      "y": 121,
+      "width": 228,
+      "height": 261
+    },
+    {
+      "join": 15,
+      "status": "qa_overlay",
+      "kind": "tree",
+      "x": 31017,
+      "y": 100,
+      "width": 246,
+      "height": 282
+    },
+    {
+      "join": 16,
+      "status": "qa_overlay",
+      "kind": "lamppost",
+      "x": 33170,
+      "y": 111,
+      "width": 93,
+      "height": 271
+    }
+  ],
+  "stagepainter_verification": {
+    "workflow_run": 42680016537,
+    "result": "SUCCESS",
+    "screenshots": 64,
+    "source_commit": "42f1ed31367485c640146ae48dd64e86e80293a3",
+    "artistic_status": "RC7_PLAYTEST_CANDIDATE_ANDROID_PENDING"
+  }
+}

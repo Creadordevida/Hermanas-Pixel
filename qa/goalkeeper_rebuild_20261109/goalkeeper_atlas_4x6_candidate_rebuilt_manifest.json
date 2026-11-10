@@ -1,0 +1,373 @@
+{
+  "status": "CANDIDATE_NOT_APPROVED",
+  "cell": 256,
+  "size": [
+    1024,
+    1536
+  ],
+  "scale": 0.1238390092879257,
+  "atlas_sha256": "568b3f5de285ac962b26d90ca4c2b3d62c469b4b517377a5d8c79a113320cd11",
+  "poses": [
+    {
+      "name": "ready",
+      "row": 0,
+      "column": 0,
+      "source_sha256": "b888fe22a53319c860498b70f6e6be7b5c55ddabe8147ad093ed7dfb01f0e522",
+      "size": [
+        93,
+        116
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "idle_shift_a",
+      "row": 0,
+      "column": 1,
+      "source_sha256": "144fae187f90e61ccfcced5729ea3fddb434732331317eca5ae5bbed9a48a8ac",
+      "size": [
+        93,
+        116
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "idle_shift_b",
+      "row": 0,
+      "column": 2,
+      "source_sha256": "3847526e1941e7cf1e7a0de4e27f79a84a0506878fc6b0c7723d364d7ebd5a98",
+      "size": [
+        82,
+        116
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "idle_shift_c",
+      "row": 0,
+      "column": 3,
+      "source_sha256": "7374d6d4bad10e1baf33429b9577b9c4b9e593927922bbe955c7ed649e989832",
+      "size": [
+        71,
+        115
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "shuffle",
+      "row": 1,
+      "column": 0,
+      "source_sha256": "561a6b3ca2fd55a5df2996fdee91b4a0a2d9322d66b3d05fb3aee8fb90af99ab",
+      "size": [
+        104,
+        111
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "shuffle_step_a",
+      "row": 1,
+      "column": 1,
+      "source_sha256": "9f1468558decc8bb06caa63edeb7dc03f0cb40660709c18ec83102acb9bb63ef",
+      "size": [
+        87,
+        120
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "shuffle_step_b",
+      "row": 1,
+      "column": 2,
+      "source_sha256": "436f212050d6fd074bc0764bd6fd1ec5cc35872b94b9ea87cab2d041b9c656f5",
+      "size": [
+        73,
+        111
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "shuffle_step_c",
+      "row": 1,
+      "column": 3,
+      "source_sha256": "6b5e638ef5082b9925a01d93c7e352cbf8e13c6e0a23f244d0b0a247de952f64",
+      "size": [
+        82,
+        116
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "warning",
+      "row": 2,
+      "column": 0,
+      "source_sha256": "d706e14a209ae32f00a0331d6cbf0bf5e207da52f6354ee2e73ebc291111543c",
+      "size": [
+        94,
+        116
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "warning_crouch",
+      "row": 2,
+      "column": 1,
+      "source_sha256": "0a50e211cf57710387777b0708a5797c6027c1de90f13afdcd696dd94e649c32",
+      "size": [
+        95,
+        99
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "warning_reach",
+      "row": 2,
+      "column": 2,
+      "source_sha256": "d6c88f52f2267d7800101605c134aaa28294631d86dbccaaca8b3908cdc3e7ac",
+      "size": [
+        136,
+        111
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "warning_extend",
+      "row": 2,
+      "column": 3,
+      "source_sha256": "84906e0388e2c9e74f351e7e8f53232c30aa2a59491e82916ed30bd7621e9a8f",
+      "size": [
+        122,
+        115
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "dive",
+      "row": 3,
+      "column": 0,
+      "source_sha256": "d8e9bb4ace55cceba9290f4a9d2b1b160139100da0ec093aff287d13ef64577a",
+      "size": [
+        112,
+        104
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "dive_extension",
+      "row": 3,
+      "column": 1,
+      "source_sha256": "7f748464a6788a86636da050d9e79674c953832ea2851c297bd17b5070cbbca3",
+      "size": [
+        127,
+        94
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 9
+    },
+    {
+      "name": "dive_launch",
+      "row": 3,
+      "column": 2,
+      "source_sha256": "ec27a807f09f0486a257d77534b6a219b045446fd764d9617771e6303e07ce5a",
+      "size": [
+        163,
+        95
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 14
+    },
+    {
+      "name": "dive_full",
+      "row": 3,
+      "column": 3,
+      "source_sha256": "c05a78f054c0dfb65516b9ba8ab7a07df9b1405bcdaa31efd2edc70427885ce1",
+      "size": [
+        195,
+        90
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 10
+    },
+    {
+      "name": "hurt",
+      "row": 4,
+      "column": 0,
+      "source_sha256": "6b72690f979850fb5edcd5f11e1d3b0b6d747ec683924a9a18bd4aa40b729cb0",
+      "size": [
+        83,
+        115
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "hurt_recoil",
+      "row": 4,
+      "column": 1,
+      "source_sha256": "9be1c4c7aa226eedd8650173cb6a51a771f66fb4b578e5cafcf0e337d22f74c1",
+      "size": [
+        81,
+        121
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "hurt_side",
+      "row": 4,
+      "column": 2,
+      "source_sha256": "ab60af173933daac25c0a0297ef736b809f36199edd855796791ca093528e66a",
+      "size": [
+        104,
+        114
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "hurt_recover",
+      "row": 4,
+      "column": 3,
+      "source_sha256": "b92daa9a27aa2952dcafb1d52ee8dda1e89ee408d5f4812a1f4764df42ae0789",
+      "size": [
+        87,
+        113
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "defeat_knee",
+      "row": 5,
+      "column": 0,
+      "source_sha256": "3f82837d96346048f6530d3ad2d8f26e8b7801bbec560f99356751c825d24b70",
+      "size": [
+        103,
+        100
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "defeat_hands",
+      "row": 5,
+      "column": 1,
+      "source_sha256": "2c23ba108e29b847c5f39a0370047e25903d359683da9b47a7eea86a9dc5822c",
+      "size": [
+        102,
+        89
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "defeat_side",
+      "row": 5,
+      "column": 2,
+      "source_sha256": "7d391a37019c86c3a0744688e18e729092b1dcba7b0494bf07892e18357b0440",
+      "size": [
+        121,
+        73
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    },
+    {
+      "name": "defeated",
+      "row": 5,
+      "column": 3,
+      "source_sha256": "46ddb5c063b67150ed63075fc9bb4a47c62bacb7a2a0426367a18cf42ea7f541",
+      "size": [
+        141,
+        51
+      ],
+      "cell_pivot": [
+        128,
+        244
+      ],
+      "air_lift": 0
+    }
+  ],
+  "warning": "Inspect transparency, halos, animation and dive/defeat pivots before Flutter integration"
+}

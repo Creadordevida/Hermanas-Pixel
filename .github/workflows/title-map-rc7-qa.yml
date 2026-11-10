@@ -1,0 +1,32 @@
+name: QA portada y mapa RC7 - sin APK
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  title-map-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze --no-pub lib
+      - run: flutter test --no-pub test/adaptive_title_screen_test.dart
+      - name: Capturas portada y mapa autenticas - 16:9 19.5:9 20:9
+        run: flutter test --no-pub --reporter expanded test/title_map_rc7_real_render_test.dart
+      - name: Guardar muestras en Git
+        if: success()
+        run: |
+          git config user.name 'twc-qa[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa/title_map_rc7_flutter/title_*.png qa/title_map_rc7_flutter/map_*.png
+          git diff --cached --quiet || { git commit -m 'qa(title-map): save authentic 20:9 aspect screenshots'; git pull --rebase origin work/revision-visual-20261028-continuidad; git push; }

@@ -1,0 +1,73 @@
+name: Enemy verification only - NO APK
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: enemy-qa-only
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: python3 -m pip install --user pillow numpy
+      - name: Prepare exact game resources
+        run: |
+          python3 tools/build_interiors_parallax_twc.py
+          python3 tools/build_dance_panels_twc.py
+          python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
+          python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
+          python3 tools/export_sprite_bounds.py
+          python3 tools/verify_enemy_art.py
+      - run: flutter pub get
+      - run: flutter analyze --no-pub lib
+      - name: Behaviors and collisions
+        run: flutter test --no-pub test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart test/classic_enemy_pose_test.dart test/rival_player_atlas_test.dart test/enemy_gameplay_integration_test.dart
+      - name: Authentic StagePainter captures
+        run: flutter test --no-pub --reporter expanded test/qa_new_enemy_real_render_test.dart test/qa_four_classic_enemy_render_test.dart
+      - name: Save compact genuine render evidence to Git, no artifact quota
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image,ImageDraw
+          root=Path('qa/rendered_from_flutter')
+          out=Path('qa/enemy_verified_render');out.mkdir(exist_ok=True)
+          groups={}
+          for p in sorted(root.glob('*.png')):
+              kind=p.stem.rsplit('_',1)[0]
+              groups.setdefault(kind,[]).append(p)
+          for kind,paths in groups.items():
+              if kind.startswith(('nuevo_','classic_')):
+                  frames=[Image.open(p).convert('RGB') for p in paths]
+                  frames[0].save(out/(kind+'.webp'),save_all=True,append_images=frames[1:],duration=145,loop=0,lossless=True,method=4)
+                  palette=frames[0].quantize(colors=256)
+                  # One fixed palette prevents full-background rewrites per frame.
+                  indexed=[f.quantize(palette=palette,dither=Image.Dither.NONE) for f in frames]
+                  indexed[0].save(out/(kind+'.gif'),save_all=True,append_images=indexed[1:],duration=145,loop=0,optimize=True)
+                  paths=paths[::4]
+              sheet=Image.new('RGB',(800,250*((len(paths)+1)//2)),(30,30,35))
+              for i,p in enumerate(paths):
+                  im=Image.open(p).convert('RGB')
+                  im.thumbnail((400,225))
+                  sheet.paste(im,((i%2)*400,(i//2)*250))
+                  ImageDraw.Draw(sheet).text(((i%2)*400,(i//2)*250+230),p.stem,fill='white')
+              sheet.save(out/(kind+'.jpg'),quality=88)
+          PY
+          git config user.name "twc-enemy-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa/enemy_verified_render/
+          git diff --cached --quiet || git commit -m "qa: preserve actual enemy Flutter renders without Actions artifacts"
+          git restore .
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin HEAD:"$GITHUB_REF_NAME"

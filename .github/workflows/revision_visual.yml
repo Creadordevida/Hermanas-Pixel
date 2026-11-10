@@ -1,0 +1,69 @@
+name: Revision visual - recursos y controles (SIN APK)
+on:
+  # Revisión visual manual: no generar artefactos de 14 MB en cada commit.
+  workflow_dispatch:
+jobs:
+  graphics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preparar Pillow, NumPy y PyYAML
+        run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Regenerar paisajes de colegio y danza
+        run: |
+          set -e
+          python3 tools/build_interiors_parallax_twc.py
+          python3 qa/audit_school_visual_quality.py
+      - name: Regenerar unión de capas de fútbol y vistas multicámara
+        run: python3 tools/build_football_parallax_twc.py
+      - name: Generar atlas nuevos enemigos
+        run: |
+          python3 tools/generate_new_enemy_sprites.py
+          python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+          python3 qa/check_four_classic_enemies.py
+          python3 qa/check_new_enemy_artifacts.py
+          python3 qa/create_six_enemy_review.py
+          python3 tools/extract_twc_title_logo.py
+          python3 qa/verify_adaptive_title_art.py
+          python3 qa/next_version_preflight.py
+      - name: Generar contact sheets de 27 módulos del colegio (sin APK)
+        run: python3 qa/build_school_contact.py
+      - name: Probar contratos y recursos de interiores
+        run: |
+          python3 -m unittest qa/test_visual_revision_contract.py
+          python3 -m unittest qa/test_interiors_twc.py
+      - name: Preparar Flutter para analizar enemigos y pantallas (sin APK)
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Resolver dependencias Flutter
+        run: flutter pub get
+      - name: Comprobar Dart y lógica de los tres enemigos
+        run: |
+          flutter analyze --no-pub lib
+          flutter test test/new_enemy_behaviors_test.dart
+          flutter test test/classic_enemy_pose_test.dart
+          flutter test test/adaptive_title_screen_test.dart
+          flutter test test/school_interior_variety_test.dart
+      - name: Guardar todos los recursos y vistas para inspección
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          retention-days: 1
+          name: Revision-Visual-PR5-Recursos-Y-Capturas
+          path: |
+            assets/images/enemies_new/
+            qa/art_review/seis_enemigos_vs_miren_sara_RECURSOS.png
+            qa/art_review/*_original_vs_polished.png
+            assets/images/interiors_parallax/
+            assets/images/chapter45/football_parallax/
+            qa/interiors_twc_lab/
+            qa/football_twc_lab/CONTACTO_12_CAMARAS.jpg
+            qa/football_twc_lab/camera_*.jpg
+          if-no-files-found: warn

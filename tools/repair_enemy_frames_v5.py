@@ -27,28 +27,6 @@ seated.save(ROOT/'novice_4.png')
 full=Image.open(ROOT/'breakdancer_7.png').convert('RGBA')
 crop_alpha(full,pad=8).save(ROOT/'breakdancer_4.png')
 
-# Rebuild referee frames with complete original uniform. Black-kit erasure in
-# imported art affected attack frame 2 and 3, not just transparent padding.
-master=Image.open(ROOT/'referee_0.png').convert('RGBA')
-cardpose=Image.open(ROOT/'referee_2.png').convert('RGBA')
-# Reuse the authentic red card and bent forearm, not generated geometry.
-card_arm=cardpose.crop((26,0,47,47))
-for idx in (2,3):
- canvas=Image.new('RGBA',(97,128),(0,0,0,0))
- # Remove original right arm hanging down: attach arm in its raised position.
- base=np.array(master).copy()
- # The rightmost arm is at x=43..50 from y=48..82 in master.
- for yy in range(44,min(88,base.shape[0])):
-  for xx in range(44,base.shape[1]):
-   # Remove the original hanging arm, not the torso and legs.
-   if yy<84: base[yy,xx,3]=0
- canvas.alpha_composite(Image.fromarray(base,'RGBA'),(20,27))
- if idx==2:
-  canvas.alpha_composite(card_arm,(56,27))
- else:
-  # Slight rightward follow-through uses original card/arm, anchored to
-  # shoulder; the projectile itself is drawn by the game engine.
-  rotated=card_arm.rotate(-18,expand=True,resample=Image.Resampling.BICUBIC)
-  canvas.alpha_composite(rotated,(57,24))
- crop_alpha(canvas,pad=5).save(ROOT/f'referee_{idx}.png')
-print('Recovered original complete ballet/breakdance poses; rebuilt 2 referee actions.')
+# Referee complete illustrated poses are now committed. Never reconstruct them
+# from obsolete coordinate patches or erase their uniform.
+print("Recovered novice and breakdancer; preserved complete referee poses.")

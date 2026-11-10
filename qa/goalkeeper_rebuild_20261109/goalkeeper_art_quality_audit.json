@@ -1,0 +1,7 @@
+{
+  "atlas": "qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_rebuilt_rgba.png",
+  "atlas_sha256": "568b3f5de285ac962b26d90ca4c2b3d62c469b4b517377a5d8c79a113320cd11",
+  "cells": 24,
+  "exact_duplicate_pairs": [],
+  "artistic_approval": "REQUIRES_VISUAL_AND_FLUTTER_REVIEW"
+}

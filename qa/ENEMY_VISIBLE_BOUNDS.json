@@ -139,75 +139,103 @@
     "sha256": "0b637d26a8073e260794ae208c2f142c31e75199287d72055bcdd3d04f84c825",
     "canvas_edge_touch": true
   },
-  "referee_0": {
+  "rival_5": {
     "bounds": [
-      1,
       2,
-      49,
-      92
+      2,
+      118,
+      73
     ],
     "image_size": [
-      52,
-      96
+      122,
+      77
     ],
-    "sha256": "497c67fca89c3bc750d4914bd197bbd1340f6c533484980d5151098107df0bd5",
+    "sha256": "1541c82a4c9608e2928f76d7d0db7d64c788b5cbeb3a04d2cb7e4c9d48f8da31",
     "canvas_edge_touch": false
+  },
+  "referee_0": {
+    "bounds": [
+      0,
+      0,
+      70,
+      159
+    ],
+    "image_size": [
+      70,
+      159
+    ],
+    "sha256": "3647c9757aabb20e91ae228c0e51d057d6a7a27a6e08c21703040c848e697023",
+    "canvas_edge_touch": true
   },
   "referee_1": {
     "bounds": [
-      2,
-      2,
-      49,
-      104
+      0,
+      0,
+      85,
+      160
     ],
     "image_size": [
-      53,
-      106
+      85,
+      160
     ],
-    "sha256": "3db93c646292a285be50774bdcf5a797fe862e779a8fa57bdba0df98f709db18",
+    "sha256": "6b7cc681e8401a949e0d9136c41b4f32e8e222c5ce1aa1b0e7b5d2606d678499",
     "canvas_edge_touch": true
   },
   "referee_2": {
     "bounds": [
-      6,
-      6,
-      60,
-      94
+      0,
+      0,
+      85,
+      159
     ],
     "image_size": [
-      72,
-      106
+      85,
+      159
     ],
-    "sha256": "74d6bffd0a3af04e6c5fb551ffa977a8e9812aad255f11a4debfeff40799f38b",
-    "canvas_edge_touch": false
+    "sha256": "d2c2fbcfd021c62c837ecbe2df6e2a4dd9410dbb17adbf6313bfe6eba4a7a7b5",
+    "canvas_edge_touch": true
   },
   "referee_3": {
     "bounds": [
-      6,
-      6,
-      60,
-      96
+      0,
+      0,
+      84,
+      189
     ],
     "image_size": [
-      72,
-      108
+      84,
+      189
     ],
-    "sha256": "b8bb61dca5a9080fa44f53eccad0c5de7cacfa00b1d22b0c34f5038a8f528c1e",
-    "canvas_edge_touch": false
+    "sha256": "2f6cfc264eed9a592945aeac4254bd073721d775e011fb840119c4c41ed29ab0",
+    "canvas_edge_touch": true
   },
   "referee_4": {
     "bounds": [
-      7,
-      7,
-      94,
-      55
+      0,
+      0,
+      163,
+      54
     ],
     "image_size": [
-      108,
-      69
+      163,
+      54
     ],
-    "sha256": "b42ae52e371d9a2b6433d0a147f4189f5ece16dc319455aaf1cb728a2c10b515",
-    "canvas_edge_touch": false
+    "sha256": "eb63480f485a691d54c5f28ee22e066ab730d2be0504c37e06d15942a488198d",
+    "canvas_edge_touch": true
+  },
+  "referee_5": {
+    "bounds": [
+      0,
+      0,
+      75,
+      160
+    ],
+    "image_size": [
+      75,
+      160
+    ],
+    "sha256": "f384e335151ec7d9088a5685feb9080c4569cc5df0f50c703b11cb01f9abc721",
+    "canvas_edge_touch": true
   },
   "novice_0": {
     "bounds": [
@@ -295,45 +323,45 @@
   },
   "breakdancer_1": {
     "bounds": [
-      5,
-      2,
-      60,
-      119
+      0,
+      0,
+      76,
+      77
     ],
     "image_size": [
-      67,
-      123
+      76,
+      77
     ],
-    "sha256": "ec9bcff13464366a3085acd58f6f84e35610a96b1972b83a651deed0920ca3d7",
-    "canvas_edge_touch": false
+    "sha256": "307cdb1d561b1e3780c8c933633af5719dfed6e5f88870fd3d3e8c6f4a0850d5",
+    "canvas_edge_touch": true
   },
   "breakdancer_2": {
     "bounds": [
-      11,
-      4,
-      90,
-      119
+      0,
+      0,
+      92,
+      76
     ],
     "image_size": [
-      105,
-      129
+      92,
+      76
     ],
-    "sha256": "6bb2d7e82509a70766d02a7c8606515496c73a21b5547b05c45905c6f4a38502",
-    "canvas_edge_touch": false
+    "sha256": "a3feb38ca6904b55010c4ccb58fad91419a78165b1541c1b0674fa6ef6b38dfb",
+    "canvas_edge_touch": true
   },
   "breakdancer_3": {
     "bounds": [
-      4,
-      5,
-      119,
-      61
+      0,
+      0,
+      114,
+      70
     ],
     "image_size": [
-      125,
-      69
+      114,
+      70
     ],
-    "sha256": "3be9f6a413b7b9d02ee3f4a9d6a1845e98778b7150f886b331c79514ab30e8f0",
-    "canvas_edge_touch": false
+    "sha256": "db798f708f31afcf8e7020e5f70f3816f8349559f77d4d7b6f7260accab79ad0",
+    "canvas_edge_touch": true
   },
   "breakdancer_4": {
     "bounds": [
@@ -347,6 +375,20 @@
       80
     ],
     "sha256": "9dec031b3d973225ef0d4b8830cde53b8f8bfe1fea1e3ec3fe331cc9f3558ffb",
+    "canvas_edge_touch": false
+  },
+  "breakdancer_5": {
+    "bounds": [
+      2,
+      2,
+      85,
+      110
+    ],
+    "image_size": [
+      89,
+      114
+    ],
+    "sha256": "217ef728be4434d7cd415df57c312ff88b95feb8eb97a8605f9e8d91ad7a1769",
     "canvas_edge_touch": false
   },
   "pigeon_0": {
@@ -561,73 +603,87 @@
   },
   "bully_0": {
     "bounds": [
-      6,
-      6,
-      150,
-      147
-    ],
-    "image_size": [
-      162,
-      159
-    ],
-    "sha256": "5965e756036418497960f8d3bba80eb0132a4ac1544a9970fcae3f16a974a15c",
-    "canvas_edge_touch": false
-  },
-  "bully_1": {
-    "bounds": [
-      6,
-      6,
-      150,
-      147
-    ],
-    "image_size": [
-      162,
-      159
-    ],
-    "sha256": "ecc6039ef6c69f9f7e93a6783adced7de03ac607eac4f17a9ff7bf824bed2bd1",
-    "canvas_edge_touch": false
-  },
-  "bully_2": {
-    "bounds": [
-      6,
-      6,
-      149,
-      147
-    ],
-    "image_size": [
-      161,
-      159
-    ],
-    "sha256": "2a80a742420edd7639bd55e94565d7a3b5038a28146db7f550d2ec0b10169361",
-    "canvas_edge_touch": false
-  },
-  "bully_3": {
-    "bounds": [
-      6,
-      6,
-      150,
-      147
-    ],
-    "image_size": [
-      162,
-      159
-    ],
-    "sha256": "3de86e1d0113e1dcdff73027e08810aaea85ca55767b4c81cb06a6d4d252bfb2",
-    "canvas_edge_touch": false
-  },
-  "bully_4": {
-    "bounds": [
-      18,
-      23,
-      167,
+      0,
+      0,
+      114,
       153
     ],
     "image_size": [
-      188,
-      185
+      114,
+      153
     ],
-    "sha256": "c7e16a62bcbad664e6233ff0879d8863926b76951360e068027004153909a21e",
-    "canvas_edge_touch": false
+    "sha256": "e3621d296f68dc2047fa228e2a684eabe369b7ee35b4b1af798dc300e4c828d3",
+    "canvas_edge_touch": true
+  },
+  "bully_1": {
+    "bounds": [
+      0,
+      0,
+      120,
+      153
+    ],
+    "image_size": [
+      120,
+      153
+    ],
+    "sha256": "50d055b419ec04cfcb7d8e9563a1b4400bb5a061460a7efbb995c81d8bfe4b5d",
+    "canvas_edge_touch": true
+  },
+  "bully_2": {
+    "bounds": [
+      0,
+      0,
+      131,
+      153
+    ],
+    "image_size": [
+      131,
+      153
+    ],
+    "sha256": "ef5e5ece16b7b5777b54275e0304e57dc64f0f5f5f213b0a17356dac6f9fbf32",
+    "canvas_edge_touch": true
+  },
+  "bully_3": {
+    "bounds": [
+      0,
+      0,
+      154,
+      153
+    ],
+    "image_size": [
+      154,
+      153
+    ],
+    "sha256": "ea2baf253010a90498f031caefedfdfb82b5e33cebde04f49479668f742e6d5d",
+    "canvas_edge_touch": true
+  },
+  "bully_4": {
+    "bounds": [
+      0,
+      0,
+      170,
+      73
+    ],
+    "image_size": [
+      170,
+      73
+    ],
+    "sha256": "a806efcfefbff57bd6654cc2018aec5de21c36d3e9fdc94d0b4dcd29c256103e",
+    "canvas_edge_touch": true
+  },
+  "bully_5": {
+    "bounds": [
+      0,
+      0,
+      94,
+      141
+    ],
+    "image_size": [
+      94,
+      141
+    ],
+    "sha256": "8f93b8a3ef0e77fcbeacfc1f340d0ab4593fbaee207795bb0856f66bff751312",
+    "canvas_edge_touch": true
   },
   "teacher_0": {
     "bounds": [

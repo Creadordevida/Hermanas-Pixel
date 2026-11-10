@@ -34,6 +34,18 @@ class FootballTWCContract(unittest.TestCase):
         self.assertEqual(M['near']['count'],6)
         self.assertEqual(M['near']['tile_width'],1100)
         self.assertEqual(M['near']['cycle_width'],6600)
+        # Fencing must mix all three real sports masters, not repeated
+        # copies of the same stands image under different hashes.
+        seq=M['near']['source_sequence']
+        self.assertEqual(len(seq),8)
+        self.assertEqual(set(seq),{'football_arrival','football_drills','football_stands'})
+        self.assertEqual(M['near']['source_crop'],[870,130])
+        self.assertEqual(M['near']['source_resize'],[950,142])
+        self.assertLess(abs((950/870)/(142/130)-1),.001)
+        self.assertEqual(len({
+            hashlib.sha256((DIR/'near_world_tiles'/f'near_{i}.png').read_bytes()).digest()
+            for i in range(6)}),6)
+
         files=sorted((DIR/'near_world_tiles').glob('near_*.png'))
         self.assertEqual(len(files),6)
         for f in files:

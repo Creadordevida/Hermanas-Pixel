@@ -1,0 +1,8 @@
+Ejecución única autorizada el 2026-11-08: comprobar si QA Flutter de Río Arga puede iniciar en GitHub Actions público, sin APK.
+Segunda ejecución controlada: revalidar corrección Flutter analyze commit 9021548 y capturas reales del Arga. Sin APK.
+Tercera ejecución controlada: verificar corrección del checkpoint commit 1b2c739, tests físicos y ocho capturas StagePainter 20:9. Sin APK.
+Cuarta QA controlada: comprobar inclusión de seis poses del pescador en el cargador Stage7 commit 9752f46 y ocho capturas. Sin APK.
+Quinta QA aislada: prueba de niño gamberro, piedra, seis poses y dos impactos en StagePainter. Sin APK.
+Sexta QA controlada: revalidar test de derrota del niño tras corrección de enum y preservar ocho PNG. Sin APK.
+Séptima QA controlada: trucha en agua, salto y seis poses auténticas Flutter. Sin APK.
+QA trout leap frame 2026-11-08 #61

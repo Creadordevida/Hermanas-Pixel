@@ -1,0 +1,100 @@
+name: Miren Sara RC5 - SOLUCION pantalla completa 16a9 20a9
+# One-shot authorized trigger file; all other pushes do NOT build.
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+
+jobs:
+  playtest:
+    name: Verificar viewport y compilar RC5 Android
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - name: Checkout exacto
+        uses: actions/checkout@v4
+      - name: Flutter estable fijado
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.47.8'
+          cache: true
+      - name: Dependencias imagen
+        run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Regenerar dibujos desde originales sin sustituirlos
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/build_interiors_parallax_twc.py
+          python3 tools/build_dance_panels_twc.py
+          python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
+          python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+      - name: Comprobacion estricta recursos jugables y seis atlas
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 qa/playtest_091_asset_gate.py
+          python3 -m unittest qa.test_dance_proportions
+          python3 qa/check_new_enemy_artifacts.py
+          python3 qa/check_four_classic_enemies.py
+      - name: Crear plantilla Flutter para Android
+        run: flutter create --no-overwrite --platforms=android --project-name hermanas_aventura .
+      - name: Forzar orientación landscape nativa, proporción 2.8, comprobación de manifest
+        run: python3 tools/configure_android_landscape_twc.py
+      - name: Icono y nombre del videojuego
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -R launcher/res/. android/app/src/main/res/
+          test -s android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
+      - name: Dependencias
+        run: flutter pub get
+      - name: Analisis de codigo Dart
+        run: flutter analyze --no-pub lib
+      - name: Probar IA colisiones animacion y titulo
+        run: flutter test --no-pub test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart test/classic_enemy_pose_test.dart
+      - name: Geometria real 16:9 19.5:9 20:9 sin bandas
+        run: flutter test --no-pub test/game_viewport_twc_test.dart
+      - name: Prueba render REAL Flutter de mapa portada siete capitulos en tres proporciones
+        timeout-minutes: 12
+        run: flutter test --no-pub test/fullscreen_real_render_rc5_test.dart
+      - name: Generar ZIP con capturas auténticas de comprobación
+        run: |
+          test -s qa/fullscreen_rc5_flutter/title_20_9.png
+          test -s qa/fullscreen_rc5_flutter/chapter7_20_9.png
+          zip -q -r qa/FULLSCREEN_RC5_FLUTTER_REAL.zip qa/fullscreen_rc5_flutter
+      - name: Construir APK real con 6 enemigos provisionales
+        timeout-minutes: 20
+        run: flutter build apk --release --dart-define=TWC_GAMEPLAY_PLAYTEST=true
+      - name: Comprobar APK de 0.9.1 RC5
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s build/app/outputs/flutter-apk/app-release.apk
+          sha256sum build/app/outputs/flutter-apk/app-release.apk > qa/FULLSCREEN_RC5_APK.sha256
+      - name: Entregar APK como GitHub Release PRELIMINAR del repositorio privado
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="playtest-0.9.1-rc5-fullscreen"
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK#Miren_y_Sara_0.9.1_RC5_PANTALLA_COMPLETA.apk" --clobber
+            gh release upload "$TAG" qa/FULLSCREEN_RC5_APK.sha256 qa/PLAYTEST_RC4_ASSETS.json qa/FULLSCREEN_RC5_FLUTTER_REAL.zip --clobber
+          else
+            gh release create "$TAG" "$APK#Miren_y_Sara_0.9.1_RC5_PANTALLA_COMPLETA.apk" qa/FULLSCREEN_RC5_APK.sha256 qa/PLAYTEST_RC4_ASSETS.json qa/FULLSCREEN_RC5_FLUTTER_REAL.zip \
+              --target "$GITHUB_SHA" \
+              --title "0.9.1 RC5 - Correccion fullscreen 16:9/20:9" \
+              --notes "Correccion exclusiva de pantalla completa. Capturas reales Flutter y configuracion landscape nativa. Mismo contenido RC4, enemigos provisionales. PR 5 no fusionada." \
+              --prerelease
+          fi
+          gh release view "$TAG" --json url -q .url

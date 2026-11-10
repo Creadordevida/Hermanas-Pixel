@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'game_viewport_twc.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'sprite_bounds.g.dart';
@@ -14,14 +15,81 @@ import 'chapter_one_world_tiles.dart';
 import 'chapter_one_camera_v3.dart';
 import 'creature_sheet_bounds.dart';
 import 'animal_sprite_bounds.dart';
+import 'wildlife_animation.dart';
+import 'comparsa_enemy.dart';
 import 'jump_visuals.dart';
+import 'arga_platform_rules.dart';
+import 'arga_crab_behavior.dart';
+import 'arga_fisher_behavior.dart';
+import 'arga_hook_projectile.dart';
+import 'arga_boy_behavior.dart';
+import 'arga_stone_projectile.dart';
+import 'arga_trout_behavior.dart';
+import 'arga_sprite_atlas.dart';
 import 'activity_chapters.dart';
 import 'football_parallax_twc.dart';
 import 'interiors_parallax_twc.dart';
+import 'new_enemy_behaviors.dart';
+import 'four_enemy_behaviors.dart';
+import 'new_enemy_hitboxes.dart';
+import 'classic_enemy_pose.dart';
+import 'rival_player_atlas.dart';
+import 'goalkeeper_animation.dart';
+import 'teacher_animation.dart';
+import 'adaptive_title_screen.dart';
 
-const double viewW = 800;
+// Puerta artística conservadora, evaluada en tiempo de ejecución para evitar
+// ramas muertas en flutter analyze. Cambiar un valor exige evidencia de
+// captura auténtica del juego y pruebas por enemigo.
+const Map<String,bool> enemyArtValidated = {
+  'cleaning_robot': false,
+  'rival_supporter': false,
+  'tipsy_tourist': false,
+  'navarre_king': false,
+  'estafeta_bull': false,
+  'sanfermin_runner': false,
+  'dance_cleaner': true, // RC7: gameplay y seis capturas StagePainter QA verificadas
+  'guitar_musician': true, // RC7: seis capturas StagePainter y gameplay QA verificados
+  'slipper_neighbor': true, // RC7: chancla, gameplay y seis capturas StagePainter verificados
+  'rival_coach': true, // atlas, jugabilidad y capturas StagePainter validados para RC7
+  'comparsa_gigante': true,
+  'comparsa_caravinagre': true,
+  'comparsa_zaldiko': true,
+  'goalkeeper': true,
+  'teacher': true,
+};
+bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
+// A gameplay-only playtest does NOT constitute artistic approval.
+const bool twcGameplayPlaytest = bool.fromEnvironment('TWC_GAMEPLAY_PLAYTEST',
+    defaultValue: false);
+bool isEnemyPlayableInBuild(String kind) =>
+    twcGameplayPlaytest || hasApprovedEnemyArtwork(kind);
+
+// Landscape world width tracks the physical phone aspect, preserving height/physics.
+double viewW = 800;
 const double viewH = 450;
 const double groundY = 390;
+// Candidate Estafeta 16-bit environment: enable ONLY with all 39 verified WebP
+// tiles committed. Default false prevents broken builds until binary transfer.
+// Ayuntamiento candidate remains off until the ZIP has passed real Flutter QA.
+// Release importer promotes the default only AFTER validated binary transfer.
+// The Ayuntamiento art is bundled and validated: no CLI flag may hide it in RC7.
+const bool twcAyuntamientoRC7ArtworkEnabled = true;
+// Plaza del Castillo / Quiosco RC7: protected until complete verified artwork.
+// RC7 plaza art verified in StagePainter, always displayed in normal builds.
+const bool twcQuioscoRC7ArtworkEnabled = true;
+const int twcQuioscoRC7TileCount = 39;
+const double twcQuioscoRC7TileWidth = 960.0;
+
+const int twcAyuntamientoRC7TileCount = 39;
+const double twcAyuntamientoRC7TileWidth = 960.0;
+const bool twcEstafetaRC7ArtworkEnabled = true;
+const int twcEstafetaRC7TileCount = 39;
+const double twcEstafetaRC7TileWidth = 960.0;
+// Arga is prepared for the next candidate release on this feature branch.
+// No APK is built or published by enabling it here.
+const bool twcArgaNextVersionEnabled = true;
+const int twcChapterCount = twcArgaNextVersionEnabled ? 8 : 7;
 const double stageWidth = 36500; // ~3.6 minutes walking, closer to 5 including obstacles and enemies.
 const double actorRadius = 14;
 const double actorHeight = 118;
@@ -30,17 +98,17 @@ const String oldSaveKey = 'miren_sara_v080_save';
 const List<String> chapterNames = [
   'La salida de casa', 'Ayuntamiento de Pamplona', 'Calle Estafeta',
   'Plaza del Castillo', 'Campo de entrenamiento', 'Escuela de danza',
-  'El colegio',
+  'El colegio', 'Río Arga',
 ];
 const List<String> chapterScenes = [
   'level_pixel', 'level_ayuntamiento', 'level_estafeta',
-  'level_plaza_castillo', 'football', 'ballet', 'school',
+  'level_plaza_castillo', 'football', 'ballet', 'school', 'arga',
 ];
 const List<String> chapterProps = [
-  'crate', 'crate', 'crate', 'planter', 'cone', 'gym_bench', 'backpack',
+  'crate', 'crate', 'crate', 'planter', 'cone', 'gym_bench', 'backpack', 'crate',
 ];
 const List<String> enemyKinds = [
-  'dog_dalmatian', 'dog_brown', 'dog_doberman', 'pigeon', 'cat', 'statue',
+  'dog_dalmatian', 'dog_brown', 'dog_doberman', 'pigeon', 'cat', 'navarre_king',
   'rat', 'rival', 'goalkeeper', 'referee', 'novice', 'breakdancer', 'bully', 'teacher',
 ];
 const List<String> poses = ['idle', 'walk', 'attack', 'hit', 'defeated'];
@@ -67,12 +135,13 @@ class Obstacle {
 }
 
 class Enemy {
-  Enemy(this.id, this.kind, this.x) : home = x,
+  Enemy(this.id, this.kind, this.x) : home = x, lastRenderedX = x,
     animalMode = kind == 'pigeon' ? 'perch' : 'idle';
   final int id;
   final String kind;
   final double home;
   double x;
+  double lastRenderedX; // Detectar movimiento real para animación, sin moonwalking.
   int facing = -1, hits = 0;
   double t = 0, attackCooldown = 1, stunned = 0, deathAt = -1;
   // Explicit animation/behaviour state: the art must reflect actual movement.
@@ -80,14 +149,43 @@ class Enemy {
   double animalTime = 0, flightAltitude = 0, flightDuration = 0;
   bool biteApplied = false;
   bool launched = false;
+  // Separate charge warning from lifetime animation: avoid instant bull rush
+  // when the hero first enters detection range.
+  double bullWarnedAt = -1;
+  // San Fermín runner: independent, visible stumble warning; never instant damage.
+  double runnerWarningAt = -1;
+  double runnerImpactUntil = -1;
+  // Visible melee warning for bully and rival soccer player.
+  double meleeWarning = 0;
+  NewEnemyMotion? newMotion;
+  late final ComparsaMotion? comparsaMotion = switch (ComparsaKind.byId[kind]) {
+    final type? => ComparsaMotion(type, home),
+    null => null,
+  };
+  FourEnemyMotion? cleanerMotion;
+  bool get danceCleaner => kind == 'dance_cleaner';
+  FourEnemyMotion? musicianMotion;
+  bool get guitarMusician => kind == 'guitar_musician';
+  FourEnemyMotion? neighborMotion;
+  bool get slipperNeighbor => kind == 'slipper_neighbor';
+  FourEnemyMotion? coachMotion;
+  bool get rivalCoach => kind == 'rival_coach';
+  double kingAwakeAt = -1;
+  double kingAttackAt = -1;
+  bool kingImpactDelivered = false;
+  bool get estafetaNew => kind == 'estafeta_bull' || kind == 'sanfermin_runner';
+  bool get newArchetype => ['cleaning_robot','rival_supporter','tipsy_tourist'].contains(kind);
   bool get defeated => deathAt >= 0;
-  bool get ranged => ['referee','breakdancer','teacher','statue'].contains(kind);
+  bool get ranged => ['referee','breakdancer','teacher'].contains(kind);
   bool get dog => kind.startsWith('dog_');
   bool get aerial => kind == 'pigeon';
-  int get hp => kind == 'dog_doberman' ? 2 : ranged ? 3 : 1;
+  int get hp => comparsaMotion?.kind.hp ?? ((danceCleaner || guitarMusician) || kind == 'dog_doberman' || kind == 'cleaning_robot' ||
+    kind == 'rival_supporter' || kind == 'estafeta_bull' ? 2 :
+    (ranged || slipperNeighbor || rivalCoach || kind == 'navarre_king') ? 3 : 1);
   double get speed => switch(kind) {
     'dog_dalmatian' => 56, 'dog_doberman' => 112,
     'rat' => 118, 'cat' => 92, 'pigeon' => 84,
+    'estafeta_bull' => 185, 'sanfermin_runner' => 110,
     'rival' => 90, 'goalkeeper' => 80, 'novice' => 94, 'bully' => 90,
     _ => 72,
   };
@@ -116,9 +214,11 @@ class Enemy {
       }
       if (animalMode == 'bite') {
         // Bite must be shown BEFORE damage; no invisible instant contact.
-        if (!biteApplied && animalTime >= .24) {
+        if (!biteApplied && animalTime >= dogBiteContactTime) {
           biteApplied = true;
-          if (absDist < 61 && heroY > groundY - 48) return true;
+          if (distance * facing > 0 && absDist < 61 && heroY > groundY - 48) {
+            return true;
+          }
         }
         if (animalTime >= .62) _animalState('alert');
         return false;
@@ -171,37 +271,54 @@ class Enemy {
     }
     if (animalMode == 'takeoff') {
       flightDuration += dt;
-      flightAltitude = math.min(82, flightAltitude + 158 * dt);
-      x += facing * speed * .64 * dt;
+      // The crouch and opening wings start at the last ground position.
+      final liftTime = flightAltitude > 0 ? dt : (animalTime - .08).clamp(0.0, dt);
+      flightAltitude = math.min(82, flightAltitude + 158 * liftTime);
+      x += facing * speed * .64 * liftTime;
       if (flightAltitude >= 82) _animalState('flap');
       return false;
     }
     if (animalMode == 'landing') {
       flightDuration += dt;
       if (absDist < 188) {
+        facing = distance >= 0 ? -1 : 1;
         _animalState('takeoff');
       } else {
         flightAltitude = math.max(0.0, flightAltitude - 82 * dt);
         final towardHome = (home - x).clamp(-speed * dt, speed * dt).toDouble();
+        if (towardHome.abs() > .01) facing = towardHome > 0 ? 1 : -1;
         x += towardHome;
         if (flightAltitude <= 0) _animalState('perch');
       }
       return false;
     }
+    if (animalMode == 'dive_warning') {
+      flightDuration += dt;
+      if (animalTime >= pigeonDiveWarningTime) _animalState('dive');
+      return false;
+    }
     if (animalMode == 'dive') {
       flightDuration += dt;
-      facing = distance >= 0 ? 1 : -1;
       flightAltitude = math.max(34, flightAltitude - 105 * dt);
       x += facing * speed * 1.35 * dt;
-      if (absDist < 48 && flightAltitude <= 50 && heroY > groundY - 50) {
+      final forwardDistance = (heroX - x) * facing;
+      if (forwardDistance > 0 && forwardDistance < 48 &&
+          flightAltitude <= 50 && heroY > groundY - 50) {
         attackCooldown = 2.7;
-        _animalState('flap');
+        _animalState('recover');
         return true;
       }
       if (animalTime > 1.18) {
         attackCooldown = 2.3;
-        _animalState('flap');
+        _animalState('recover');
       }
+      return false;
+    }
+    if (animalMode == 'recover') {
+      flightDuration += dt;
+      flightAltitude = math.min(83, flightAltitude + 80 * dt);
+      x += facing * speed * .55 * dt;
+      if (animalTime >= .28) _animalState('flap');
       return false;
     }
     // Smooth, bounded flight around the nesting point, alternating wing beats
@@ -213,7 +330,8 @@ class Enemy {
     if (vx.abs() > .01) facing = vx > 0 ? 1 : -1;
     x += vx;
     if (absDist < 224 && attackCooldown <= 0 && flightAltitude > 60) {
-      _animalState('dive');
+      facing = heroX >= x ? 1 : -1;
+      _animalState('dive_warning');
     } else if (absDist > 320 && flightDuration > 1.5) {
       _animalState('landing');
     } else if (animalMode == 'flap' && animalTime > 1.12) {
@@ -245,9 +363,9 @@ class StageData {
   String get sceneKey => chapterScenes[index];
   List<String> get enemies => switch (index) {
     0 => ['dog_dalmatian','dog_brown','rat','pigeon'],
-    1 => ['dog_brown','pigeon','statue','dog_dalmatian'],
+    1 => ['dog_brown','pigeon','rat','dog_dalmatian'],
     2 => ['dog_brown','cat','rat','dog_doberman'],
-    3 => ['pigeon','cat','statue','dog_doberman','rat'],
+    3 => ['pigeon','cat','dog_brown','dog_doberman','rat'],
     4 => ['rival','goalkeeper','referee'],
     5 => ['novice','breakdancer'],
     _ => ['bully','teacher'],
@@ -263,12 +381,19 @@ void main() async {
 }
 
 class HermanasGame extends StatefulWidget {
-  const HermanasGame({super.key, this.qaStage, this.qaMap = false, this.qaWorldX});
+  const HermanasGame({super.key, this.qaStage, this.qaMap = false, this.qaTitle = false, this.qaWorldX, this.qaSelected, this.qaQuioscoPrototype});
   /// Entradas de diagnóstico usadas solo por testWidgets; en Android son null/false.
   final int? qaStage;
   final bool qaMap;
+  /// Lightweight title QA: same production UI, skips unrelated stage assets.
+  final bool qaTitle;
   /// Posición del recorrido utilizada por capturas de QA, nunca por el juego Android.
   final double? qaWorldX;
+  /// QA-only injected image; null in all actual Android builds.
+  final ui.Image? qaQuioscoPrototype;
+  /// Opcional exclusivo de capturas de test: 0 Miren, 1 Sara.
+  /// No se utiliza durante el juego normal.
+  final int? qaSelected;
   @override
   State<HermanasGame> createState() => _HermanasGameState();
 }
@@ -285,6 +410,19 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   Character otherSister = Character(190);
   final List<Obstacle> obstacles = [];
   final List<Rect> platforms = [];
+  final ArgaCourse argaCourse = const ArgaCourse();
+  ArgaSurface? argaSupport;
+  ArgaCrabMotion? argaCrab;
+  int argaCrabHits = 0;
+  ArgaFisherMotion? argaFisher;
+  ArgaHookProjectile? argaHook;
+  int argaFisherHits = 0;
+  ArgaBoyMotion? argaBoy;
+  ArgaStoneProjectile? argaStone;
+  int argaBoyHits = 0;
+  ArgaTroutMotion? argaTrout;
+  int argaTroutHits = 0;
+  double argaSupportSince = 0;
   final List<Offset> coins = [];
   final List<Enemy> enemies = [];
   final List<Projectile> shots = [];
@@ -317,16 +455,17 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     if (!resourcesReady ||
         (oldWidget.qaStage == widget.qaStage &&
          oldWidget.qaMap == widget.qaMap &&
-         oldWidget.qaWorldX == widget.qaWorldX)) {
+         oldWidget.qaWorldX == widget.qaWorldX &&
+         oldWidget.qaSelected == widget.qaSelected)) {
       return;
     }
     if (widget.qaStage != null) {
-      stage = widget.qaStage!.clamp(0, 6);
-      selected = level.forcedSara ? 1 : 0;
+      stage = widget.qaStage!.clamp(0, 7);
+      selected = widget.qaSelected == 1 ? 1 : (level.forcedSara ? 1 : 0);
       _layoutStage();
       if (widget.qaWorldX != null) {
         hero.x = widget.qaWorldX!.clamp(actorRadius, stageWidth - actorRadius).toDouble();
-        cameraX = (hero.x - 327).clamp(0.0, stageWidth - viewW).toDouble();
+        cameraX = (hero.x - viewW*.41).clamp(0.0, stageWidth - viewW).toDouble();
       }
       screen = Screen.playing;
     } else if (widget.qaMap) {
@@ -341,6 +480,16 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     try {
       storage = await SharedPreferences.getInstance();
       savedAvailable = storage?.getString(saveKey) != null || storage?.getString(oldSaveKey) != null;
+      // This path is reachable only through explicit test-only constructor
+      // arguments. Render the genuine app title/map without loading hundreds
+      // of irrelevant stage tiles, which timed out the 20:9 QA runner.
+      if (widget.qaTitle || widget.qaMap) {
+        if (mounted) setState(() {
+          screen = widget.qaMap ? Screen.map : Screen.title;
+          resourcesReady = true;
+        });
+        return;
+      }
       final paths = <String,String>{
         'title':'assets/images/title_cars_fixed_091.png',
         'logo':'assets/images/twc_corporate_verified_091.png',
@@ -351,11 +500,61 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         'comb':'assets/images/comb.png',
       };
       for (int i=0;i<7;i++) {
-        paths['scene_$i'] = i<4 ? 'assets/images/${chapterScenes[i]}.png'
-          : 'assets/images/scenes/${i==5 ? 'ballet_refined' : chapterScenes[i]}.png';
-        paths['ground_$i'] = 'assets/images/ground/stage_$i.png';
-        paths['mid_$i'] = 'assets/images/mid/stage_$i.png';
+        // Estafeta RC7 has its own verified facade tiles; do not decode the
+        // discarded level_estafeta panorama a second time at app startup.
+        if (i != 2 && !(i == 1 && twcAyuntamientoRC7ArtworkEnabled) &&
+            !(i == 3 && twcQuioscoRC7ArtworkEnabled)) {
+          paths['scene_$i'] = i<4 ? 'assets/images/${chapterScenes[i]}.png'
+            : 'assets/images/scenes/${i==5 ? 'ballet_refined' : chapterScenes[i]}.png';
+        }
+        paths['ground_$i'] = i==6 && schoolHifiArtworkEnabled
+          ? 'assets/images/ground/stage_6_hifi.png'
+          : 'assets/images/ground/stage_$i.png';
+        // The legacy repeating Estafeta midstrip is not used by RC7.
+        if (i != 2 && !(i == 1 && twcAyuntamientoRC7ArtworkEnabled) &&
+            !(i == 3 && twcQuioscoRC7ArtworkEnabled)) {
+          paths['mid_$i'] = 'assets/images/mid/stage_$i.png';
+        }
         if (i == 4) paths['mid_4_plain'] = 'assets/images/mid/stage_4_plain.png';
+      }
+      // El prototipo Arga se carga solo en QA, nunca en el juego Android normal.
+      if (widget.qaStage == 7 || twcArgaNextVersionEnabled) {
+        // Atlas candidates are now staged for the next-version Arga chapter;
+        // QA may also force-enable them independently for controlled tests.
+        const atlasPlaytest = bool.fromEnvironment('TWC_ARGA_ATLAS_QA') ||
+            twcArgaNextVersionEnabled;
+        if (atlasPlaytest) {
+          paths['arga_crab_atlas'] =
+            'assets/images/arga_rc7/enemies_candidates/cangrejo_atlas_4x6_v1_candidate_q95.webp';
+          paths['arga_fisher_atlas'] =
+            'assets/images/arga_rc7/enemies_candidates/pescador_atlas_4x6_v2_candidate_q95.webp';
+          paths['arga_boy_atlas'] =
+            'assets/images/arga_rc7/enemies_candidates/gamberro_atlas_4x6_v2_candidate_lossless.webp';
+          paths['arga_trout_atlas'] =
+            'assets/images/arga_rc7/enemies_candidates/trucha_atlas_4x6_v3_candidate_lossless.webp';
+        }
+        paths['arga_far'] = 'assets/images/arga_rc7/arga_far_rc7_candidate.webp';
+        paths['arga_mid'] = 'assets/images/arga_rc7/arga_mid_rc7_candidate.webp';
+        paths['arga_far_wild'] = 'assets/images/arga_rc7/arga_far_wild_candidate.webp';
+        paths['arga_mid_wild'] = 'assets/images/arga_rc7/arga_mid_wild_candidate.webp';
+        paths['arga_far_mill'] = 'assets/images/arga_rc7/arga_far_mill_candidate.webp';
+        paths['arga_mid_mill'] = 'assets/images/arga_rc7/arga_mid_mill_candidate.webp';
+        paths['arga_supports'] = 'assets/images/arga_rc7/arga_supports_rc7_v1.webp';
+        paths['arga_supports_v2'] = 'assets/images/arga_rc7/arga_supports_rc7_v2_candidate.webp';
+        for (final pose in ['reposo','caminar','alerta','ataque','impacto','derrota']) {
+          paths['arga_crab_$pose'] =
+            'assets/images/arga_rc7/enemies_candidates/cangrejo_${pose}_aislado_candidate.webp';
+        }
+        for (final pose in ['reposo','caminar','alerta','lanzamiento','impacto','derrota']) {
+          paths['arga_fisher_$pose'] =
+            'assets/images/arga_rc7/enemies_candidates/pescador_${pose}_aislado_candidate.webp';
+        }
+        for(final pose in ['reposo','correr','alerta','lanzamiento','impacto','derrota']) {
+          paths['arga_boy_$pose']='assets/images/arga_rc7/enemies_candidates/gamberro_${pose}_aislado_candidate.webp';
+        }
+        for(final pose in ['nado','acelerar','alerta','salto','impacto','derrota']) {
+          paths['arga_trout_$pose']='assets/images/arga_rc7/enemies_candidates/trucha_${pose}_aislado_candidate.webp';
+        }
       }
       // El nuevo capítulo 1 carga recursos que el juego realmente dibuja.
       // No son renders ilustrativos ni sustituyen a los originales protegidos.
@@ -369,6 +568,29 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         'assets/images/chapter1/ch1_parallax/montanas_ciudad_ciclo.png';
       paths['ch1_mid_woodland_loop'] =
         'assets/images/chapter1/ch1_parallax/arbolado_medio_ciclo.png';
+      // Estafeta RC7: 39 authored candidate facade panels. The optional
+      // flag keeps existing builds safe until all WebP bytes are committed.
+      if (twcEstafetaRC7ArtworkEnabled) {
+        for (var n = 0; n < twcEstafetaRC7TileCount; n++) {
+          paths['estafeta_rc7_$n'] =
+              'assets/images/estafeta_rc7/estafeta_${n.toString().padLeft(2,'0')}.webp';
+        }
+      }
+      // Ayuntamiento: separate 1:1 world panels, with the town hall only once.
+      // Do not fetch until the full 39-tile asset set has been imported.
+      if (twcAyuntamientoRC7ArtworkEnabled) {
+        for (var n=0;n<twcAyuntamientoRC7TileCount;n++) {
+          paths['ayuntamiento_rc7_$n'] =
+              'assets/images/ayuntamiento_rc7/ayuntamiento_${n.toString().padLeft(2,'0')}.webp';
+        }
+      }
+      // Quiosco stage 3: independent assets; do not load before ZIP verified.
+      if (twcQuioscoRC7ArtworkEnabled) {
+        for (var n=0;n<twcQuioscoRC7TileCount;n++) {
+          paths['quiosco_rc7_$n'] =
+            'assets/images/quiosco_rc7/quiosco_${n.toString().padLeft(2,'0')}.webp';
+        }
+      }
       // FÚTBOL: mismo movimiento aprobado que el capítulo 1; arte propio.
       paths['football_far_twc'] = footballFarAssetTWC;
       paths['football_mid_twc'] = footballMidAssetTWC;
@@ -385,14 +607,22 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         paths['interior_${theme}_passage'] =
           interiorAssetTWC(theme,'marco_paso');
         for (var room=0;room<3;room++) {
-          for (var variant=0;variant<interiorVariantsPerRoomTWC;variant++) {
+          final count=theme=='school'
+              ? interiorSchoolVariantsTWC : interiorVariantsPerRoomTWC;
+          for (var variant=0;variant<count;variant++) {
             paths['interior_${theme}_z${room}_panel_$variant'] =
                 interiorPanelAssetTWC(theme,room,variant);
           }
         }
       }
-      for (final name in ['pizarra_matematicas','pizarra_informatica',
-          'estanteria_biblioteca','mesa_aula','ordenador_aula']) {
+      if (danceFiveSceneArtworkEnabled) {
+        for (var i=0;i<interiorDanceFiveSceneFilesTWC.length;i++) {
+          paths['dance_hifi_$i'] = interiorDanceFiveSceneAssetTWC(i);
+        }
+      }
+      // Pizarras y biblioteca están integradas en los murales originales.
+      // Sólo cargar objetos físicos independientes que se dibujan en 1:1.
+      for (final name in ['mesa_aula','ordenador_aula']) {
         paths['interior_school_$name'] = interiorAssetTWC('school',name);
       }
       // 72 teselas de mundo FISICO, generadas una sola vez fuera del juego.
@@ -444,31 +674,126 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           paths['dog_${v}_$pose'] = 'assets/images/dog/$v/$pose.png';
         }
       }
-      for (final v in ['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue']) {
+      for (final entry in dogAtlasAssets.entries) {
+        paths['${entry.key}_atlas'] = entry.value;
+      }
+      for (final entry in comparsaAtlases.entries) {
+        paths['enemy_comparsa_${entry.key.name}'] = entry.value;
+      }
+      for (final v in ['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher']) {
         if (v=='cat' || v=='rat') {
           // Se carga la hoja nueva única, con cinco poses coherentes y
           // recortes medidos; no se usan los cinco dibujos planos originales.
           paths['enemy_${v}_sheet'] = 'assets/images/enemies_hifi/${v}_sheet.png';
         } else {
-          for (int j=0;j<5;j++) paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
+          final amount=(v=='referee' || v=='breakdancer' || v=='rival' || v=='bully')?6:5;
+          for (int j=0;j<amount;j++) {
+            paths['enemy_${v}_$j'] = 'assets/images/enemies/${v}_$j.png';
+          }
         }
+      }
+      for (final kind in ['robot','supporter','tourist']) {
+        paths['enemy_new_$kind'] = 'assets/images/enemies_new/${kind}_atlas.png';
+      }
+      paths['enemy_four_dance_cleaner'] = 'assets/images/enemies_new/dance_cleaner_atlas.png';
+      paths['enemy_four_guitar_musician'] = 'assets/images/enemies_new/guitar_musician_atlas.png';
+      paths['enemy_four_slipper_neighbor'] = 'assets/images/enemies_new/slipper_neighbor_atlas.png';
+      paths['enemy_four_rival_coach'] = 'assets/images/enemies_new/rival_coach_atlas.png';
+      paths['enemy_rival_player_atlas'] = 'assets/images/enemies_new/rival_player_atlas.png';
+      if (hasApprovedEnemyArtwork('goalkeeper')) {
+        paths['enemy_goalkeeper_atlas'] = 'assets/images/enemies_new/goalkeeper_atlas.png';
+      }
+      if (hasApprovedEnemyArtwork('teacher')) {
+        paths['enemy_teacher_atlas'] = 'assets/images/enemies_new/teacher_atlas.png';
+      }
+      paths['slipper'] = 'assets/images/enemies_new/green_slipper.png';
+      paths['enemy_navarre_king_atlas'] = 'assets/images/enemies_new/navarre_king_atlas.png';
+      for (final kind in ['estafeta_bull','sanfermin_runner']) {
+        paths['enemy_$kind'] = 'assets/images/enemies_new/${kind}_atlas.png';
       }
       // Eight true flight silhouettes (upstroke, downstroke, glide, hit, fall).
       // The old pigeon frames remain for genuine ground walking/pecking.
       paths['pigeon_flight_sheet'] = 'assets/images/enemies_hifi/pigeon_flight_sheet.png';
+      paths['pigeon_flight_atlas'] = 'assets/images/enemies_hifi/pigeon_atlas.png';
+      // Test-only StagePainter capture optimization: a school screenshot must
+      // decode the ACTUAL school + hero sprites, not all 72 chapter-one tiles,
+      // football/dance scenes and six other stages. In Android qaStage is null,
+      // so the complete original asset loading and gameplay are untouched.
+      bool neededForSchoolQA(String key) {
+        // Only the opt-in Quiosco candidate QA needs a small scene-3 asset set.
+        // Full Android/standard StagePainter loading remains unchanged.
+        // Avoid decoding several hundred MB of unrelated chapter-one tiles
+        // before capturing the 5,782px candidate slice.
+        if (widget.qaStage == 3 && widget.qaQuioscoPrototype != null) {
+          return key == 'ground_3' || key == 'coin' ||
+              key == 'ball' || key == 'comb' ||
+              key == 'crate' || key == 'logo' ||
+              key.startsWith('futbolista_') ||
+              key.startsWith('bailarina_') ||
+              key.startsWith('costume_') ||
+              key.startsWith('padre_');
+        }
+        if (widget.qaStage == 7) {
+          return key == 'arga_far' ||
+            key == 'arga_mid' || key == 'arga_far_wild' ||
+            key == 'arga_mid_wild' || key == 'arga_far_mill' ||
+            key == 'arga_mid_mill' || key == 'arga_supports' ||
+            key == 'arga_supports_v2' ||
+            key.startsWith('arga_crab_') ||
+            key.startsWith('arga_fisher_') ||
+            key.startsWith('arga_boy_') ||
+            key.startsWith('arga_trout_') ||
+            ['coin','ball','comb'].contains(key) ||
+            key.startsWith('futbolista_') || key.startsWith('bailarina_') ||
+            key.startsWith('costume_') || key.startsWith('padre_');
+        }
+        // El QA de danza carga solo sus recursos reales y los sprites
+        // compartidos. No exige atlas de enemigos de otros capitulos.
+        // Esto NO cambia el cargador normal ni las reglas de enemigos.
+        if (widget.qaStage == 5) {
+          if (key.startsWith('ch1_') || key.startsWith('neighborhood_') ||
+              key.startsWith('football_') || key.startsWith('activity_') ||
+              key.startsWith('interior_school_') || key.startsWith('dog_') ||
+              key.startsWith('pigeon_flight_') ||
+              key.startsWith('enemy_new_') ||
+              key == 'enemy_navarre_king_atlas' ||
+              key == 'enemy_estafeta_bull' ||
+              key == 'enemy_sanfermin_runner') return false;
+          if (key.startsWith('scene_') && key != 'scene_5') return false;
+          if (key.startsWith('ground_') && key != 'ground_5') return false;
+          if (key.startsWith('mid_') && key != 'mid_5') return false;
+          return true;
+        }
+        if (widget.qaStage != 6) return true;
+        if (key.startsWith('ch1_') || key.startsWith('neighborhood_') ||
+            key.startsWith('football_') || key.startsWith('activity_') ||
+            key.startsWith('interior_dance_') || key.startsWith('dog_') ||
+            key.startsWith('pigeon_flight_') ||
+            key.startsWith('enemy_new_') ||
+            key == 'enemy_navarre_king_atlas' ||
+            key == 'enemy_estafeta_bull' ||
+            key == 'enemy_sanfermin_runner') return false;
+        if (key.startsWith('scene_') &&
+            key != 'scene_6' && !key.startsWith('scene_school_')) return false;
+        if (key.startsWith('ground_') && key != 'ground_6') return false;
+        if (key.startsWith('mid_') &&
+            key != 'mid_6' && !key.startsWith('mid_school_')) return false;
+        return true;
+      }
       for (final item in paths.entries) {
+        if (!neededForSchoolQA(item.key)) continue;
         final blob = await rootBundle.load(item.value);
         final codec = await ui.instantiateImageCodec(blob.buffer.asUint8List());
         images[item.key] = (await codec.getNextFrame()).image;
         codec.dispose();
       }
       if (widget.qaStage != null) {
-        stage = widget.qaStage!.clamp(0, 6);
-        selected = level.forcedSara ? 1 : 0;
+        stage = widget.qaStage!.clamp(0, 7);
+        selected = widget.qaSelected == 1 ? 1 : (level.forcedSara ? 1 : 0);
         _layoutStage();
         if(widget.qaWorldX != null) {
           hero.x=widget.qaWorldX!.clamp(actorRadius,stageWidth-actorRadius).toDouble();
-          cameraX=(hero.x-327).clamp(0.0,stageWidth-viewW).toDouble();
+          cameraX=(hero.x - viewW*.41).clamp(0.0,stageWidth-viewW).toDouble();
         }
         screen = Screen.playing;
       } else {
@@ -485,8 +810,41 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _layoutStage() {
     obstacles.clear(); platforms.clear(); coins.clear(); enemies.clear();
     collected.clear(); shots.clear();
+    argaSupport=null;
+    argaCrab=null;
+    argaCrabHits=0;
+    argaFisher=null;
+    argaHook=null;
+    argaFisherHits=0;
+    argaBoy=null;argaStone=null;argaBoyHits=0;
+    argaTrout=null;argaTroutHits=0;
+    if (stage == 7) {
+      // Independent playable collision prototype; release remains art-gated.
+      hero=Character(ArgaCourse.startX,y:ArgaCourse.surfaces.first.top);
+      argaSupport=ArgaCourse.surfaces.first;
+      argaSupportSince=time;
+      // Single crab QA specimen on the second safe stone, never on a gap.
+      argaCrab=ArgaCrabMotion(375,minX:320,maxX:420);
+      argaFisher=ArgaFisherMotion(1300);
+      argaBoy=ArgaBoyMotion(2035);
+      argaTrout=ArgaTroutMotion(952,waterY:417);
+      // Coins reward controlled leaps; none are placed in an unrecoverable gap.
+      for(var i=2;i<ArgaCourse.allSurfaces.length;i+=3) {
+        final footing=ArgaCourse.allSurfaces[i];
+        coins.add(Offset(footing.x+footing.width/2,footing.top-65));
+      }
+      otherSister=Character(230);father=Character(67);
+      cameraX=0;checkpointX=ArgaCourse.startX;hearts=maxHeroHearts;lastAttackTime=-10;
+      levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
+      return;
+    }
     if (stage == 0) {
       _layoutNeighborhood();
+      if(isEnemyPlayableInBuild('slipper_neighbor')) {
+        for(final x in fourEnemySpawns('slipper_neighbor',stage,stageWidth)) {
+          enemies.add(Enemy(enemies.length,'slipper_neighbor',x));
+        }
+      }
       hero=Character(145);otherSister=Character(230);father=Character(67);
       cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
       levelTime=0;exitTime=-1;leftHeld=false;rightHeld=false;
@@ -512,12 +870,73 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     for (double x=820; x<stageWidth-300; x+=930+rng.nextInt(300)) {
       final prog=x/stageWidth;
       String type=kinds[rng.nextInt(kinds.length)];
-      if (prog<.3 && ['goalkeeper','referee','breakdancer','teacher','statue','dog_doberman'].contains(type)) {
+      if (prog<.3 && ['goalkeeper','referee','breakdancer','teacher','dog_doberman'].contains(type)) {
         type=kinds.first;
       }
       enemies.add(Enemy(enemies.length,type,x));
     }
+    // Hito único: el antiguo rey se encuentra solamente en Plaza del Castillo,
+    // jamás repetido aleatoriamente como una rata o una paloma.
+    // Calidad bloqueada: no activar al rey hasta revisar su captura REAL.
+    // El comportamiento y el atlas candidato permanecen disponibles para QA.
+    if (isEnemyPlayableInBuild('navarre_king') && stage == 3) {
+      enemies.add(Enemy(enemies.length,'navarre_king',stageWidth*.54));
+    }
+    // Tres nuevos enemigos aprobados: colocación por capítulo, separados.
+    const newKinds = <int, String>{0:'tipsy_tourist', 1:'tipsy_tourist', 2:'tipsy_tourist', 3:'tipsy_tourist', 4:'rival_supporter', 6:'cleaning_robot'};
+    final newKind = newKinds[stage];
+    // Los cuatro diseños candidatos han sido rechazados artísticamente.
+    // No introducirlos en partidas hasta contar con capturas reales aprobadas.
+    if (newKind != null && isEnemyPlayableInBuild(newKind)) {
+      final typ = switch (newKind) {
+        'tipsy_tourist' => NewEnemyKind.tipsyTourist,
+        'rival_supporter' => NewEnemyKind.rivalSupporter,
+        _ => NewEnemyKind.cleaningRobot,
+      };
+      for (final wx in plannedNewEnemySpawns(typ, stage, stageWidth)) {
+        enemies.add(Enemy(enemies.length,newKind,wx));
+      }
+    }
+    if (stage == 4 && isEnemyPlayableInBuild('rival_coach')) {
+      for (final x in fourEnemySpawns('rival_coach',stage,stageWidth)) {
+        enemies.add(Enemy(enemies.length,'rival_coach',x));
+      }
+    }
+    if (stage == 5 && isEnemyPlayableInBuild('dance_cleaner')) {
+      for (final x in fourEnemySpawns('dance_cleaner',stage,stageWidth)) {
+        enemies.add(Enemy(enemies.length,'dance_cleaner',x));
+      }
+    }
+    if (stage == 5 && isEnemyPlayableInBuild('guitar_musician')) {
+      for (final x in fourEnemySpawns('guitar_musician',stage,stageWidth)) {
+        enemies.add(Enemy(enemies.length,'guitar_musician',x));
+      }
+    }
     // The chapter's strong thematic opponent always appears near its last segment.
+    // Encierro Estafeta: dos tipos nuevos, pendientes de arte real aprobado.
+    // No apareceran hasta superar inspeccion de capturas del StagePainter.
+    if (stage == 2) {
+      if (isEnemyPlayableInBuild('sanfermin_runner')) {
+        for (final x in [stageWidth*.32,stageWidth*.68]) {
+          enemies.add(Enemy(enemies.length,'sanfermin_runner',x));
+        }
+      }
+      if (isEnemyPlayableInBuild('estafeta_bull')) {
+        for (final x in [stageWidth*.42,stageWidth*.79]) {
+          enemies.add(Enemy(enemies.length,'estafeta_bull',x));
+        }
+      }
+    }
+    if (stage == comparsaStage) {
+      var comparsaId = enemies.length;
+      for (final kind in comparsaAtlases.keys) {
+        if (!isEnemyPlayableInBuild(kind.id)) continue;
+        final x = comparsaPositions[kind]!;
+        enemies.removeWhere((foe) => (foe.x - x).abs() < 320);
+        obstacles.removeWhere((obstacle) => (obstacle.x - x).abs() < 210);
+        enemies.add(Enemy(comparsaId++, kind.id, x));
+      }
+    }
     if (stage>=4) enemies.add(Enemy(enemies.length,level.enemies.last,stageWidth-980));
     hero=Character(145);otherSister=Character(230);father=Character(67);
     cameraX=0;checkpointX=145;hearts=maxHeroHearts;lastAttackTime=-10;
@@ -583,11 +1002,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     if (raw==null) return;
     try {
       final s=jsonDecode(raw) as Map<String,dynamic>;
-      stage=((s['stage'] as num?)?.toInt()??0).clamp(0,6).toInt();
+      stage=((s['stage'] as num?)?.toInt()??0).clamp(0,twcChapterCount-1).toInt();
       selected=((s['selected'] as num?)?.toInt()??0).clamp(0,1).toInt();
       totalCoins=((s['totalCoins'] as num?)?.toInt()??0).clamp(0,99999).toInt();
       completed..clear()..addAll((s['completed'] as List<dynamic>? ?? [])
-        .whereType<num>().map((e)=>e.toInt()).where((i)=>i>=0 && i<7));
+        .whereType<num>().map((e)=>e.toInt()).where((i)=>i>=0 && i<twcChapterCount));
       introPlayed=s['introPlayed']==true || (s['version'] as num? ?? 0)<3;
       if((s['version'] as num? ?? 0)<3) {
         for(int i=0;i<stage;i++)completed.add(i);
@@ -634,7 +1053,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
 
   void _introNext() {
     introLine++;
-    if(introLine>=4) {
+    if(introLine>=6) {
       introPlayed=true;exitTime=time;screen=Screen.playing;
       hero.x=205;otherSister.x=95;father.x=75;
       _save();
@@ -666,6 +1085,11 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     if(input!=0)hero.facing=input;
     final prevX=hero.x,prevY=hero.y;
     final wasGrounded=hero.grounded;
+    // Carry a standing hero with a moving log, but never during a jump.
+    if(stage==7 && wasGrounded &&
+        argaSupport?.kind==ArgaSurfaceKind.movingLog) {
+      hero.x+=argaSupport!.leftAt(time)-argaSupport!.leftAt(time-dt);
+    }
     hero.x=(hero.x+hero.vx*dt).clamp(actorRadius,stageWidth-actorRadius).toDouble();
     // Solid platforms and themed obstacles share one tested collision routine.
     final solids=<Rect>[...platforms,...obstacles.where((o)=>!o.destroyed).map((o)=>o.rect)];
@@ -689,12 +1113,119 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         hero.y=box.bottom+actorHeight;hero.vy=0;
       }
     }
-    if(hero.y>=groundY){hero.y=groundY;hero.vy=0;hero.grounded=true;}
+    if(stage == 7) {
+      // Solid footing exists only over the authored rocks, wood and banks.
+      ArgaSurface? support;
+      // A sinking rock physically carries the hero downward after warning.
+      if(wasGrounded && argaSupport!=null &&
+          hero.x+actorRadius>argaSupport!.leftAt(time) &&
+          hero.x-actorRadius<argaSupport!.rightAt(time)) {
+        final y=argaSupport!.topAt(time,time-argaSupportSince);
+        if(y<=ArgaCourse.waterDeathY) {
+          hero.y=y;hero.vy=0;hero.grounded=true;
+          support=argaSupport;
+        }
+      }
+      if(support==null && hero.vy>=0) {
+        for(final item in ArgaCourse.allSurfaces) {
+          final elapsed=identical(argaSupport,item)
+              ? time-argaSupportSince : 0.0;
+          final top=item.topAt(time,elapsed);
+          if(prevY<=top+2 && hero.y>=top &&
+              hero.x+actorRadius>item.leftAt(time) &&
+              hero.x-actorRadius<item.rightAt(time)) {
+            support=item;
+            hero.y=top;hero.vy=0;hero.grounded=true;
+            break;
+          }
+        }
+      }
+      if(support==null) {
+        argaSupport=null;
+      } else if(!identical(argaSupport,support)) {
+        argaSupport=support;
+        argaSupportSince=time;
+      }
+      checkpointX=argaCourse.checkpointBefore(hero.x);
+      if(argaCourse.drowned(hero.y)) {
+        hearts=heartsAfterDamage(hearts);
+        if(hearts==0) {
+          screen=Screen.gameOver;leftHeld=false;rightHeld=false;
+        } else {
+          argaSupport=ArgaCourse.allSurfaces.firstWhere(
+            (s)=>s.checkpoint && (s.x+55-checkpointX).abs()<.01,
+            orElse:()=>ArgaCourse.surfaces.first);
+          hero=Character(checkpointX,y:argaSupport!.topAt(time,0));
+          argaSupportSince=time;
+          cameraX=(checkpointX-viewW*.375).clamp(0.0,stageWidth-viewW).toDouble();
+          hero.hurtUntil=time+1.0;
+        }
+        _save();
+        // Do not apply another frame of pickups, combat or chapter completion
+        // after a lethal fall and teleport to a checkpoint.
+        if(mounted)setState((){});
+        return;
+      }
+    } else if(hero.y>=groundY){hero.y=groundY;hero.vy=0;hero.grounded=true;}
     if(!wasGrounded && hero.grounded && speedBeforeLanding > 65) {
       hero.landedAt=time;
       hero.landingStrength=(speedBeforeLanding/440).clamp(.45,1.0).toDouble();
     }
     hero.travelled+=(hero.x-prevX).abs();
+    if(stage==7 && argaCrab!=null) {
+      // Both player and crab must occupy the same second rock; never attack
+      // across an open water gap or from an unrelated stepping stone.
+      final rock=ArgaCourse.surfaces[1];
+      final sameRock=hero.grounded && identical(argaSupport,rock) &&
+          hero.x>rock.leftAt(time) && hero.x<rock.rightAt(time);
+      final impact=argaCrab!.update(dt,hero.x,hero.y,rock.top,
+          onSameSupport:sameRock);
+      if(impact==ArgaCrabImpact.pincers) _receiveDamage(argaCrab!.facing);
+    }
+    if(stage==7 && argaFisher!=null) {
+      final fisher=argaFisher!;
+      final visible=(hero.x-fisher.x).abs()<ArgaFisherMotion.detection &&
+          hero.y<ArgaCourse.waterDeathY;
+      if(fisher.update(dt,hero.x,playerVisible:visible)) {
+        argaHook=ArgaHookProjectile(originX:fisher.x+fisher.facing*22,
+            originY:ArgaCourse.surfaces[5].top-100,
+            facing:fisher.facing,targetX:hero.x);
+      }
+      final hook=argaHook;
+      if(hook!=null && hook.active) {
+        hook.update(dt,waterY:ArgaCourse.waterDeathY);
+        if(hook.overlaps(centerX:hero.x,halfWidth:actorRadius,
+            top:hero.y-actorHeight,bottom:hero.y-8)) {
+          _receiveDamage(hook.facing);
+        }
+      }
+    }
+    if(stage==7 && argaTrout!=null) {
+      final trout=argaTrout!;
+      trout.update(dt,hero.x,
+        playerVisible:hero.y<ArgaCourse.waterDeathY &&
+          (hero.x-trout.x).abs()<ArgaTroutMotion.detection);
+      if(trout.touchesHero(centerX:hero.x,halfWidth:actorRadius,
+          top:hero.y-actorHeight,bottom:hero.y-8)) {
+        _receiveDamage(trout.facing);
+      }
+    }
+    if(stage==7 && argaBoy!=null) {
+      final boy=argaBoy!;
+      final visible=(hero.x-boy.x).abs()<ArgaBoyMotion.sight &&
+          hero.y<ArgaCourse.waterDeathY;
+      if(boy.update(dt,hero.x,playerVisible:visible)) {
+        argaStone=ArgaStoneProjectile(originX:boy.x+boy.facing*20,
+          originY:ArgaCourse.surfaces[8].top-77,targetX:hero.x);
+      }
+      final stone=argaStone;
+      if(stone!=null && stone.active && stone.advance(dt,
+        waterY:ArgaCourse.waterDeathY,heroCenterX:hero.x,
+        heroHalfWidth:actorRadius,heroTop:hero.y-actorHeight,
+        heroBottom:hero.y-8)) {
+        _receiveDamage(stone.vx.sign.toInt());
+      }
+    }
     for(int i=0;i<coins.length;i++) {
       if(collected.contains(i))continue;
       if((coins[i].dx-hero.x).abs()<23 && (coins[i].dy-(hero.y-46)).abs()<41) {
@@ -704,6 +1235,47 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     for(final shot in shots) {
       if(!shot.active)continue;
       shot.x+=shot.vx*dt;shot.y+=shot.vy*dt;shot.life+=dt;
+      if(stage==7 && !shot.fromEnemy && argaCrab!=null &&
+          argaCrab!.pose!=ArgaCrabPose.defeated &&
+          (shot.x-argaCrab!.x).abs()<47 &&
+          (shot.y-(ArgaCourse.surfaces[1].top-35)).abs()<42) {
+        shot.active=false;
+        argaCrabHits++;
+        if(argaCrabHits>=2) {argaCrab!.defeat();}
+        else {argaCrab!.hit();}
+        particlesUntil=time+.35;
+        continue;
+      }
+      if(stage==7 && !shot.fromEnemy && argaFisher!=null &&
+          argaFisher!.pose!=ArgaFisherPose.defeated &&
+          (shot.x-argaFisher!.x).abs()<38 &&
+          (shot.y-(ArgaCourse.surfaces[5].top-58)).abs()<61) {
+        shot.active=false;
+        argaFisherHits++;
+        argaHook?.cancel();
+        if(argaFisherHits>=2) {argaFisher!.defeat();}
+        else {argaFisher!.hit();}
+        particlesUntil=time+.35;
+        continue;
+      }
+      if(stage==7 && !shot.fromEnemy && argaBoy!=null &&
+          argaBoy!.pose!=ArgaBoyPose.defeated &&
+          (shot.x-argaBoy!.x).abs()<40 &&
+          (shot.y-(ArgaCourse.surfaces[8].top-55)).abs()<57) {
+        shot.active=false;argaBoyHits++;argaStone?.cancel();
+        if(argaBoyHits>=2) {argaBoy!.defeat();}
+        else {argaBoy!.hit();}
+        particlesUntil=time+.35;continue;
+      }
+      if(stage==7 && !shot.fromEnemy && argaTrout!=null &&
+          argaTrout!.airborne && !argaTrout!.defeated &&
+          (shot.x-argaTrout!.x).abs()<35 &&
+          (shot.y-argaTrout!.y).abs()<30) {
+        shot.active=false;argaTroutHits++;
+        if(argaTroutHits>=2) {argaTrout!.defeat();}
+        else {argaTrout!.hit();}
+        particlesUntil=time+.35;continue;
+      }
       if(shot.fromEnemy) {
         shot.vy+=210*dt;
         if((shot.x-hero.x).abs()<24 && (shot.y-(hero.y-46)).abs()<48) {
@@ -720,11 +1292,80 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         if(!shot.active) continue;
         for(final foe in enemies) {
           if(foe.defeated || foe.stunned>0)continue;
-          final ey=groundY-(foe.aerial?foe.flightAltitude+24:foe.kind=='rat'?24:64);
-          if((shot.x-foe.x).abs()<37 && (shot.y-ey).abs()<(foe.aerial?42:51)) {
+          // New art uses a different physical silhouette for each enemy:
+          // the bull is 168 px wide but used the 37px hit area of a pigeon.
+          final profile=newEnemyHitProfiles[foe.kind];
+          final comparsa = foe.comparsaMotion;
+          final intersects = comparsa != null
+            ? comparsa.acceptsProjectile(shot.x, groundY - shot.y)
+            : profile != null
+            ? profile.projectileHits(foeX:foe.x, groundY:groundY,
+                shotX:shot.x, shotY:shot.y)
+            : dogAtlasAssets.containsKey(foe.kind)
+            ? dogProjectileHits(
+                kind: foe.kind,
+                relativeX: (shot.x - foe.x) * foe.facing,
+                height: groundY - shot.y,
+                lunging: foe.animalMode == 'bite' &&
+                    foe.animalTime >= dogBiteContactTime && foe.animalTime < .40,
+              )
+            : foe.aerial
+            ? pigeonProjectileHits(
+                relativeX: (shot.x - foe.x) * foe.facing,
+                height: groundY - foe.flightAltitude - shot.y,
+                diving: foe.animalMode == 'dive',
+              )
+            : (() {
+                final ey=groundY-(foe.kind=='rat'?24:64);
+                return (shot.x-foe.x).abs()<37 && (shot.y-ey).abs()<51;
+              })();
+          if(intersects) {
             foe.hits++;foe.stunned=.66;foe.t=0;shot.active=false;
+            comparsa?.receiveHit(defeated: foe.hits >= foe.hp);
+            // Cancel Estafeta warning and attack without a delayed hit.
+            if(foe.kind=='sanfermin_runner') {
+              foe.runnerWarningAt=-1;foe.runnerImpactUntil=-1;
+              foe.attackCooldown=2.2;
+            }
+            // Interrupt the active attack when a character is struck.
+            if(foe.kind=='estafeta_bull') {
+              foe.launched=false;foe.bullWarnedAt=-1;
+              foe.biteApplied=false;foe.attackCooldown=2.2;
+            }
+            if(foe.kind=='navarre_king') {
+              foe.kingAttackAt=-1;foe.kingImpactDelivered=false;
+              foe.attackCooldown=2.2;
+            }
+            if(foe.kind=='breakdancer' || foe.kind=='referee' ||
+                foe.kind=='rival' || foe.kind=='bully') {
+              // A successful ball/comb hit cancels the wind-up, including
+              // the referee card throw and the breakdancer shoe projectile.
+              foe.launched=false;foe.meleeWarning=0;
+              foe.attackCooldown=math.max(foe.attackCooldown,1.0);
+            }
+            if (foe.kind == 'teacher' && images.containsKey('enemy_teacher_atlas')) {
+              foe.launched = false;
+              foe.attackCooldown = math.max(foe.attackCooldown, 1.0);
+            }
             particlesUntil=time+.4;
-            if(foe.hits>=foe.hp)foe.deathAt=time;
+            if(foe.rivalCoach) {
+              final motion=foe.coachMotion ??= FourEnemyMotion('rival_coach',foe.home);
+              if(foe.hits>=foe.hp) {motion.defeat();} else {motion.hit();}
+            }
+            if(foe.slipperNeighbor) {
+              final motion=foe.neighborMotion ??= FourEnemyMotion('slipper_neighbor',foe.home);
+              if(foe.hits>=foe.hp) {motion.defeat();} else {motion.hit();}
+            }
+            if(foe.guitarMusician) {
+              final motion=foe.musicianMotion ??= FourEnemyMotion('guitar_musician',foe.home);
+              if(foe.hits>=foe.hp) {motion.defeat();} else {motion.hit();}
+            }
+            if(foe.danceCleaner) {
+              final motion=foe.cleanerMotion ??= FourEnemyMotion('dance_cleaner',foe.home);
+              if(foe.hits>=foe.hp) {motion.defeat();} else {motion.hit();}
+            }
+            if(foe.hits>=foe.hp){foe.deathAt=time;foe.newMotion?.defeat();}
+            else if(foe.newArchetype){foe.newMotion?.hit();}
             if(foe.dog || foe.aerial) foe.animalHit();
             break;
           }
@@ -741,6 +1382,148 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         continue;
       }
       if(foe.stunned>0){foe.stunned=math.max(0,foe.stunned-dt);continue;}
+      final comparsa = foe.comparsaMotion;
+      if (comparsa != null) {
+        final impact = comparsa.update(dt, hero.x, groundY - hero.y);
+        foe.x = comparsa.x;
+        foe.facing = comparsa.facing;
+        if (impact != null) _receiveDamage(impact);
+        continue;
+      }
+      if (foe.estafetaNew) {
+        // Encierro: el toro anuncia el arranque antes de embestir.
+        // El corredor se aparta de la protagonista, sin armas ni proyectiles.
+        final dx=hero.x-foe.x,near=dx.abs();
+        if(foe.kind=='estafeta_bull') {
+          if(foe.launched) {
+            foe.x+=foe.facing*185*dt;
+            if(foe.t>=.18 && near<52 && hero.y>groundY-68
+                && !foe.biteApplied) {
+              foe.biteApplied=true;
+              _receiveDamage(foe.facing);
+            }
+            if(foe.t>.9 || (foe.x-foe.home).abs()>310) {
+              foe.launched=false;foe.biteApplied=false;foe.t=0;
+              foe.bullWarnedAt=-1;foe.attackCooldown=2.2;
+            }
+          } else if(near<250 && foe.attackCooldown<=0) {
+            foe.facing=dx>=0?1:-1;
+            // Use an explicit warning timestamp, never the general frame timer.
+            if(foe.bullWarnedAt<0)foe.bullWarnedAt=time;
+            if(time-foe.bullWarnedAt>=.55) {
+              foe.launched=true;foe.t=0;foe.bullWarnedAt=-1;
+            }
+          } else {
+            foe.bullWarnedAt=-1;
+          }
+        } else {
+          // Corredor: se aparta, avisa de un tropiezo y SOLO tras
+          // 0.34s puede impactar una vez si sigue cerca y a ras de suelo.
+          foe.facing=dx>=0?-1:1;
+          if(foe.runnerWarningAt>=0) {
+            if(near>80 || hero.y<=groundY-55) {
+              // Esquiva y salto cancelan el tropiezo, no golpe fantasma.
+              foe.runnerWarningAt=-1;
+              foe.attackCooldown=math.max(foe.attackCooldown,.65);
+            } else if(time-foe.runnerWarningAt>=.34) {
+              if(near<42 && hero.y>groundY-43) {
+                _receiveDamage(-foe.facing);
+              }
+              foe.runnerImpactUntil=time+.24;
+              foe.runnerWarningAt=-1;
+              foe.attackCooldown=2.2;
+            }
+          } else if(near<240) {
+            if(near<45 && foe.attackCooldown<=0 && hero.y>groundY-43) {
+              foe.runnerWarningAt=time;
+            } else {
+              foe.x+=foe.facing*110*dt;
+            }
+          } else if((foe.x-foe.home).abs()>145) {
+            foe.facing=foe.x>foe.home?-1:1;
+            foe.x+=foe.facing*40*dt;
+          }
+        }
+        foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
+        continue;
+      }
+      if(foe.kind=='navarre_king') {
+        // Una estatua histórica: quieta hasta acercarse, se despierta y
+        // camina despacio; ataca con onda cercana, NUNCA lanza monedas.
+        final distance=hero.x-foe.x,near=distance.abs();
+        if(foe.kingAwakeAt<0 && near<170)foe.kingAwakeAt=time;
+        if(foe.kingAwakeAt>=0) {
+          foe.facing=distance>=0?1:-1;
+          if(time-foe.kingAwakeAt>.85) {
+            if(foe.kingAttackAt>=0) {
+              final elapsed=time-foe.kingAttackAt;
+              if(elapsed>=.42 && !foe.kingImpactDelivered) {
+                foe.kingImpactDelivered=true;
+                if(near<83 && hero.y>groundY-55)_receiveDamage(foe.facing);
+              }
+              if(elapsed>.9)foe.kingAttackAt=-1;
+            } else if(near<105 && foe.attackCooldown<=0) {
+              foe.kingAttackAt=time;
+              foe.kingImpactDelivered=false;
+              foe.attackCooldown=2.8;
+            } else if(near>95 && near<225) {
+              foe.x+=foe.facing*36*dt;
+            }
+          }
+        }
+        foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
+        continue;
+      }
+      if(foe.rivalCoach) {
+        final motion=foe.coachMotion ??= FourEnemyMotion('rival_coach',foe.home);
+        motion.x=foe.x;
+        final impact=motion.update(dt,hero.x,hero.y,groundY);
+        if(impact==FourEnemyImpact.melee) _receiveDamage(motion.facing);
+        foe.x=motion.x;foe.facing=motion.facing;
+        continue;
+      }
+      if(foe.slipperNeighbor) {
+        final motion=foe.neighborMotion ??= FourEnemyMotion('slipper_neighbor',foe.home);
+        motion.x=foe.x;
+        final impact=motion.update(dt,hero.x,hero.y,groundY);
+        if(impact==FourEnemyImpact.slipper) {
+          shots.add(Projectile(x:foe.x+motion.facing*30,y:groundY-86,
+            vx:motion.facing*215.0,kind:'slipper',fromEnemy:true));
+        }
+        foe.x=motion.x;foe.facing=motion.facing;
+        continue;
+      }
+      if(foe.guitarMusician) {
+        final motion=foe.musicianMotion ??= FourEnemyMotion('guitar_musician',foe.home);
+        motion.x=foe.x;
+        final impact=motion.update(dt,hero.x,hero.y,groundY);
+        if(impact==FourEnemyImpact.melee) _receiveDamage(motion.facing);
+        foe.x=motion.x;foe.facing=motion.facing;
+        continue;
+      }
+      if(foe.danceCleaner) {
+        final motion=foe.cleanerMotion ??= FourEnemyMotion('dance_cleaner',foe.home);
+        motion.x=foe.x;
+        final impact=motion.update(dt,hero.x,hero.y,groundY);
+        if(impact==FourEnemyImpact.melee) _receiveDamage(motion.facing);
+        foe.x=motion.x;foe.facing=motion.facing;
+        continue;
+      }
+      if(foe.newArchetype) {
+        final typ = switch(foe.kind) {
+          'cleaning_robot' => NewEnemyKind.cleaningRobot,
+          'rival_supporter' => NewEnemyKind.rivalSupporter,
+          _ => NewEnemyKind.tipsyTourist,
+        };
+        final motion=foe.newMotion ??= NewEnemyMotion(kind:typ,home:foe.home,x:foe.x);
+        motion.x=foe.x;
+        if(motion.update(dt,hero.x) && hero.y>groundY-48) {
+          _receiveDamage(motion.direction);
+        }
+        foe.x=motion.x.clamp(70.0,stageWidth-70).toDouble();
+        foe.facing=motion.direction;
+        continue;
+      }
       if(foe.dog || foe.aerial) {
         if(foe.advanceAnimal(dt,hero.x,hero.y))_receiveDamage(foe.facing);
         foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
@@ -770,19 +1553,54 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           if((foe.x-foe.home).abs()>95)foe.facing=-foe.facing;
         }
       } else if(foe.ranged) {
+        final usesTeacherAtlas =
+            foe.kind == 'teacher' && images.containsKey('enemy_teacher_atlas');
         if(absDist<390 && foe.attackCooldown<=0) {
           // No machine-gun projectiles: one visible wind-up, one projectile, long recovery.
           if(!foe.launched){foe.launched=true;foe.t=0;foe.facing=distance>=0?1:-1;}
-          if(foe.t>=.75) {
+          if(foe.t >= (usesTeacherAtlas ? teacherThrowTime : .75)) {
             final kind=switch(foe.kind){'referee'=>'red_card','breakdancer'=>'shoe','teacher'=>'eraser',_=>'coin'};
             // Do not overlap a second projectile of the same kind.
             if(!shots.any((s)=>s.fromEnemy && s.kind==kind)) {
-              shots.add(Projectile(x:foe.x+foe.facing*27,y:groundY-71,
-                vx:foe.facing*195.0,kind:kind,fromEnemy:true));
+              final handX = usesTeacherAtlas ? teacherReleaseX : 27.0;
+              final handHeight = usesTeacherAtlas ? teacherReleaseHeight : 71.0;
+              final shot = Projectile(
+                x: foe.x + foe.facing * handX,
+                y: groundY - handHeight,
+                vx: foe.facing * 195.0,
+                kind: kind,
+                fromEnemy: true,
+              );
+              if (usesTeacherAtlas) shot.vy = teacherReleaseVerticalSpeed;
+              shots.add(shot);
             }
-            foe.launched=false;foe.t=0;foe.attackCooldown=3.6;
+            foe.launched=false;foe.t=0;
+            foe.attackCooldown=usesTeacherAtlas ? teacherAttackCooldown : 3.6;
           }
         } else if(absDist>390)foe.launched=false;
+      } else if(foe.kind=='rival' || foe.kind=='bully') {
+        // Telegraph close-quarters contact before damage; a jump or a hit
+        // during the warning window cancels the player's exposure.
+        if(foe.meleeWarning>0) {
+          foe.meleeWarning=math.max(0.0,foe.meleeWarning-dt);
+          if(foe.meleeWarning<=0) {
+            if(absDist<54 && hero.y>groundY-55) {
+              _receiveDamage(foe.facing);
+            }
+            foe.attackCooldown=1.9;
+            foe.t=0;
+          }
+        } else if(absDist<54 && foe.attackCooldown<=0) {
+          foe.facing=distance>=0?1:-1;
+          foe.meleeWarning=.36;
+          foe.t=0;
+        } else if(absDist<foe.detection) {
+          foe.facing=distance>=0?1:-1;
+          if(absDist>50)foe.x+=foe.facing*foe.speed*dt;
+        } else {
+          foe.x+=foe.facing*foe.speed*.36*dt;
+          if((foe.x-foe.home).abs()>87)foe.facing=-foe.facing;
+        }
       } else if(absDist<foe.detection) {
         foe.facing=distance>=0?1:-1;
         if(absDist>34)foe.x+=foe.facing*foe.speed*dt;
@@ -795,8 +1613,8 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       }
       foe.x=foe.x.clamp(70.0,stageWidth-70).toDouble();
     }
-    cameraX=_ease(cameraX,(hero.x-327).clamp(0.0,stageWidth-viewW).toDouble(),dt*600);
-    if(hero.x>checkpointX+2800){checkpointX=hero.x;_save();}
+    cameraX=_ease(cameraX,(hero.x - viewW*.41).clamp(0.0,stageWidth-viewW).toDouble(),dt*600);
+    if(stage!=7 && hero.x>checkpointX+2800){checkpointX=hero.x;_save();}
     if(time>lastSaveTime+12){lastSaveTime=time;_save();}
     if(hero.x>=stageWidth-90)_finishChapter();
     if(mounted)setState((){});
@@ -814,6 +1632,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _jump() {
     if(screen==Screen.playing && hero.grounded) {
       hero.vy=-423;hero.grounded=false;
+      if(stage==7) argaSupport=null;
       hero.jumpedAt=time;
       hero.landedAt=-100;
     }
@@ -832,7 +1651,14 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   void _retry() {
     final cp=checkpointX;
     _layoutStage();hero.x=cp;hearts=maxHeroHearts;
-    cameraX=(cp-300).clamp(0.0,stageWidth-viewW).toDouble();
+    if(stage==7) {
+      argaSupport=ArgaCourse.allSurfaces.firstWhere(
+        (s)=>s.checkpoint && (s.x+55-cp).abs()<.01,
+        orElse:()=>ArgaCourse.surfaces.first);
+      hero.y=argaSupport!.topAt(time,0);
+      argaSupportSince=time;
+    }
+    cameraX=(cp-viewW*.375).clamp(0.0,stageWidth-viewW).toDouble();
     // Reset only the unfinished part of the chapter after checkpoint.
     screen=Screen.playing;_save();setState((){});
   }
@@ -874,32 +1700,20 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: const Color(0xff0d2943),
-    body: LayoutBuilder(builder: (context, constraints) => Stack(
-      fit: StackFit.expand,
-      children: [
-        // Extra-wide Android displays get illustrated, not black, gutters.
-        // Crucially the playable 800×450 image remains at its CORRECT aspect
-        // ratio: no stretching of characters or hidden touch buttons.
-        if (screen == Screen.title)
-          // The external bleed is BLURRED. Never display an extra readable
-          // copy of the title, protagonists or parked cars at the side edges.
-          ImageFiltered(
-            imageFilter: ui.ImageFilter.blur(sigmaX: 32, sigmaY: 32),
-            child: Image.asset('assets/images/title_cars_fixed_091.png',
-                fit: BoxFit.cover),
-          )
-        else
-          DecoratedBox(decoration: BoxDecoration(gradient: LinearGradient(
-            begin: Alignment.topCenter, end: Alignment.bottomCenter,
-            colors: stage == 5
-                ? const [Color(0xffcaac8d), Color(0xffba8c67), Color(0xff68462c)]
-                : const [Color(0xff53a9ed), Color(0xffa7d3ee), Color(0xff557c48)],
-          ))),
-        Center(child: FittedBox(fit: BoxFit.contain,
-          child: SizedBox(width:viewW,height:viewH,child:_screen()))),
-      ],
-    )),
+    backgroundColor:const Color(0xff0d2943),
+    body:LayoutBuilder(builder:(context, constraints) {
+      final viewport=GameViewportTWC(
+          Size(constraints.maxWidth,constraints.maxHeight));
+      viewW=viewport.worldWidth;
+      if(screen==Screen.title && resourcesReady && loadError==null){
+        return AdaptiveTitleScreen(onNewGame:_startNew,
+          onContinue:_continue,hasSavedGame:savedAvailable);
+      }
+      return SizedBox.expand(child:FittedBox(
+        fit:BoxFit.contain,child:SizedBox(
+          width:viewW,height:viewH,child:_screen()),
+      ));
+    }),
   );
 
   Widget _screen() {
@@ -923,19 +1737,12 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     }
   }
 
-  Widget _title() => Stack(children:[
-    Positioned.fill(child:Image.asset('assets/images/title_cars_fixed_091.png',fit:BoxFit.fill)),
-    Positioned(left:551,top:183,width:208,height:59,child:Material(color:Colors.transparent,
-      child:InkWell(onTap:_startNew))),
-    Positioned(left:557,top:249,width:203,height:61,child:Material(
-      color:savedAvailable?Colors.transparent:const Color(0x99505b67),
-      child:InkWell(onTap:savedAvailable?_continue:null))),
-    if(!savedAvailable)const Positioned(left:579,top:299,child:Text('Sin partida guardada',
-      style:TextStyle(color:Colors.white,fontSize:11,shadows:[Shadow(color:Colors.black,blurRadius:3)]))),
-    Positioned(left:303,bottom:4,width:194,height:43,child:Container(padding:const EdgeInsets.all(4),
-      decoration:BoxDecoration(color:const Color(0xa0092749),borderRadius:BorderRadius.circular(9)),
-      child:Image.asset('assets/images/twc_corporate_verified_091.png',fit:BoxFit.contain))),
-  ]);
+  // El mismo componente adaptable se usa también en pruebas aisladas.
+  Widget _title() => AdaptiveTitleScreen(
+    onNewGame:_startNew,
+    onContinue:_continue,
+    hasSavedGame:savedAvailable,
+  );
 
   // Las coordenadas de esta imagen proceden de la ilustración EXACTA aprobada
   // (1672 x 941). No generar carteles ni duplicar títulos encima del arte.
@@ -951,38 +1758,77 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
     Rect.fromLTWH(1299,475,197,81), // Danza
     Rect.fromLTWH(240,534,220,88),  // Colegio
   ];
-  Widget _map() => Stack(children:[
-    // Ajuste 1672/941 ≃ 800/450, sin estirar un fondo antiguo del Ayuntamiento.
-    const Positioned.fill(child:Image(image:AssetImage(
-      'assets/images/worldmap/pamplona_aprobado.png'),fit:BoxFit.fill)),
-    for(int i=0;i<mapHitboxesOriginal.length;i++)
-      Positioned(
-        left: mapHitboxesOriginal[i].left*viewW/mapArtWidth,
-        top: mapHitboxesOriginal[i].top*viewH/mapArtHeight,
-        width: mapHitboxesOriginal[i].width*viewW/mapArtWidth,
-        height: mapHitboxesOriginal[i].height*viewH/mapArtHeight,
-        child:Semantics(label:'Capítulo ${i+1}: ${chapterNames[i]}',button:true,
-          child:Material(color:Colors.transparent,
-            child:InkWell(onTap:()=>_selectChapter(i),splashColor:Colors.white24,
-              child:const SizedBox.expand()))),
+  Widget _map() {
+    // Viewport is always viewW x 450: gameplay keeps its existing camera.
+    // This 20:9 scene has exactly one canonical image. A 16:9 viewport crops
+    // only the newly painted side extensions, never the original 16:9 map.
+    const double scale = viewH / mapArtHeight;
+    final double originalLeft = (viewW - mapArtWidth * scale) / 2;
+    Rect area(Rect source) => Rect.fromLTWH(
+      originalLeft + source.left * scale,
+      source.top * scale,
+      source.width * scale,
+      source.height * scale,
+    );
+    Widget transparentTap(Rect source, VoidCallback action, String label) =>
+      Positioned.fromRect(rect:area(source),child:Semantics(
+        label:label,button:true,
+        child:Material(color:Colors.transparent,
+          child:InkWell(onTap:action,splashColor:Colors.white24,
+            child:const SizedBox.expand()))));
+    return Stack(fit:StackFit.expand,children:[
+      const Positioned.fill(child:Image(
+        image:AssetImage('assets/images/worldmap/pamplona_wide_20x9_approved.webp'),
+        fit:BoxFit.cover,alignment:Alignment.center,
+        filterQuality:FilterQuality.high,
+      )),
+      for(int i=0;i<mapHitboxesOriginal.length;i++)
+        transparentTap(mapHitboxesOriginal[i],()=>_selectChapter(i),
+          'Capítulo ${i+1}: ${chapterNames[i]}'),
+      // MENU is already part of the original image, not another overlay.
+      transparentTap(const Rect.fromLTWH(45,790,255,145),_returnTitle,'Menú'),
+      // Replace only the baked-in example counter; position relative to the
+      // original 1672px illustration rather than to the panorama edge.
+      Positioned.fromRect(
+        rect:area(const Rect.fromLTWH(1160,879,500,51)),
+        child:Container(
+          alignment:Alignment.centerRight,
+          padding:const EdgeInsets.symmetric(horizontal:8),
+          decoration:BoxDecoration(color:const Color(0xff08335c),
+            borderRadius:BorderRadius.circular(5)),
+          child:Text('COMPLETADOS: ${completed.length}/$twcChapterCount  ·  MONEDAS: $totalCoins',
+            style:const TextStyle(color:Colors.white,fontSize:10,
+              fontWeight:FontWeight.w900)),
+        ),
       ),
-    // Botón MENÚ que está DIBUJADO en la propia imagen aprobada.
-    Positioned(left:22,top:396,width:122,height:43,
-      child:Material(color:Colors.transparent,child:InkWell(onTap:_returnTitle))),
-    // El contador de la ilustración era de ejemplo (123 monedas): actualizaremos
-    // solo esa cifra dinámica con un recuadro del mismo color y tipografía.
-    Positioned(bottom:5,right:9,child:Container(
-      width:250,height:27,alignment:Alignment.centerRight,
-      padding:const EdgeInsets.symmetric(horizontal:8),
-      decoration:BoxDecoration(color:const Color(0xff08335c),
-        borderRadius:BorderRadius.circular(5)),
-      child:Text('COMPLETADOS: ${completed.length}/7  ·  MONEDAS: $totalCoins',
-        style:const TextStyle(color:Colors.white,fontSize:10,fontWeight:FontWeight.w900)))),
-  ]);
+      // New stage entry sits over the river, clear of the baked-in menu
+      // and the dynamic completion counter. It is painted last so it cannot
+      // be hidden behind either overlay.
+      if (twcArgaNextVersionEnabled)
+        Positioned(left:viewW*.48,bottom:12,child:OutlinedButton(
+          onPressed:()=>_selectChapter(7),
+          style:OutlinedButton.styleFrom(
+            backgroundColor:const Color(0xee08335c),
+            foregroundColor:Colors.white,
+            side:const BorderSide(color:Color(0xffffdb72),width:2),
+            padding:const EdgeInsets.symmetric(horizontal:16,vertical:10)),
+          child:const Text('8 · RÍO ARGA',
+            style:TextStyle(fontWeight:FontWeight.w900,fontSize:13)),
+        )),
+    ]);
+  }
 
   Widget _chooseScreen()=>Stack(children:[
-    Positioned.fill(child:Image.asset(stage<4?'assets/images/${chapterScenes[stage]}.png':
-      'assets/images/scenes/${chapterScenes[stage]}.png',fit:BoxFit.cover)),
+    Positioned.fill(child:Image.asset(stage==7 && twcArgaNextVersionEnabled
+      ? 'assets/images/arga_rc7/arga_far_rc7_candidate.webp'
+      : stage==3 && twcQuioscoRC7ArtworkEnabled
+      ? 'assets/images/quiosco_rc7/quiosco_unico.webp'
+      : stage==1 && twcAyuntamientoRC7ArtworkEnabled
+      ? 'assets/images/ayuntamiento_rc7/consistorial_unico.webp'
+      : stage==2
+      ? 'assets/images/estafeta_rc7/estafeta_00.webp'
+      : stage<4?'assets/images/${chapterScenes[stage]}.png'
+      : 'assets/images/scenes/${chapterScenes[stage]}.png',fit:BoxFit.cover)),
     Positioned.fill(child:ColoredBox(color:Colors.black.withValues(alpha:.60))),
     Positioned(left:0,right:0,top:18,child:Text('CAPÍTULO ${stage+1} · ${chapterNames[stage]}',
       textAlign:TextAlign.center,style:const TextStyle(color:Color(0xffffde88),fontSize:24,fontWeight:FontWeight.w900))),
@@ -992,7 +1838,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   Widget _chooseCard(int index,double x) {
     final role=index==0?'futbolista':'bailarina';
     final folder=((stage==4 && index==0)||(stage==5 && index==1))?'outfits':'frames';
-    return Positioned(left:x,top:74,width:242,height:346,child:GestureDetector(onTap:()=>_choose(index),
+    return Positioned(left:x+(viewW-800)/2,top:74,width:242,height:346,child:GestureDetector(onTap:()=>_choose(index),
       child:Container(decoration:BoxDecoration(color:const Color(0xee0b305a),borderRadius:BorderRadius.circular(11),
         border:Border.all(color:index==0?const Color(0xffffc748):const Color(0xffffa6d1),width:4)),
         child:Column(children:[const SizedBox(height:9),Text(index==0?'MIREN':'SARA',
@@ -1007,8 +1853,12 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
   Widget _play({bool showFamily=false,Widget? overlay}) => Stack(children:[
     Positioned.fill(child:CustomPaint(painter:StagePainter(
       images:images,stage:stage,cameraX:cameraX,time:time,lastAttackTime:lastAttackTime,hero:hero,
+      qaQuioscoPrototype:widget.qaQuioscoPrototype,
       otherSister:otherSister,father:father,showFamily:showFamily || exitTime>=0,
       selected:selected,obstacles:obstacles,platforms:platforms,
+      argaSupport:argaSupport,argaSupportSince:argaSupportSince,
+      argaCrab:argaCrab,argaFisher:argaFisher,argaHook:argaHook,
+      argaBoy:argaBoy,argaStone:argaStone,argaTrout:argaTrout,
       coins:coins,collected:collected,enemies:enemies,shots:shots,particlesUntil:particlesUntil))),
     Positioned(left:10,top:9,child:Container(padding:const EdgeInsets.all(8),
       decoration:BoxDecoration(color:const Color(0xdd0d3050),borderRadius:BorderRadius.circular(7)),
@@ -1028,20 +1878,40 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
         const SizedBox(width:12),
         _control(const Icon(Icons.arrow_upward_rounded,color:Colors.white,size:33),_jump,(){}),
       ])),
-      Positioned(right:12,top:10,child:IconButton(onPressed:(){leftHeld=false;rightHeld=false;
-        screen=Screen.paused;_save();setState((){});},
-        icon:const Icon(Icons.pause_circle_filled,color:Colors.white,size:29))),
+      Positioned(right:12,top:10,child:Row(mainAxisSize:MainAxisSize.min,children:[
+        Tooltip(message:'Volver al mapa de Pamplona',child:Semantics(
+          button:true,label:'Volver al mapa',child:Container(
+            width:49,height:49,
+            decoration:BoxDecoration(color:const Color(0xee0d3050),shape:BoxShape.circle,
+              border:Border.all(color:const Color(0xffffd875),width:2)),
+            child:IconButton(
+              padding:EdgeInsets.zero,
+              onPressed:_returnMap,
+              icon:const Column(mainAxisAlignment:MainAxisAlignment.center,children:[
+                Icon(Icons.arrow_back_rounded,color:Colors.white,size:25),
+                Text('MAPA',style:TextStyle(color:Colors.white,fontSize:9,fontWeight:FontWeight.w900,height:1)),
+              ]))))),
+        const SizedBox(width:5),
+        IconButton(tooltip:'Pausar partida',onPressed:(){leftHeld=false;rightHeld=false;
+          screen=Screen.paused;_save();setState((){});},
+          icon:const Icon(Icons.pause_circle_filled,color:Colors.white,size:29)),
+      ])),
     ],
-    if(screen==Screen.introduction)Positioned(left:310,right:13,top:245,height:142,
+    if(screen==Screen.introduction)Positioned(left:255,right:13,top:199,height:190,
       child:GestureDetector(onTap:_introNext,child:Container(padding:const EdgeInsets.all(14),
         decoration:BoxDecoration(color:const Color(0xf00b2948),border:Border.all(color:const Color(0xffffd875),width:3),
           borderRadius:BorderRadius.circular(9)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[
-        Text(['PAPÁ','MIREN','SARA','PAPÁ'][introLine],
-          style:TextStyle(color:[Colors.lightBlueAccent,Colors.yellowAccent,Colors.purpleAccent,Colors.lightBlueAccent][introLine],
+        Text(['PAPÁ','MIREN','SARA','PAPÁ','MIREN','SARA'][introLine],
+          style:TextStyle(color:[Colors.lightBlueAccent,Colors.yellowAccent,Colors.purpleAccent,Colors.lightBlueAccent,Colors.yellowAccent,Colors.purpleAccent][introLine],
             fontSize:19,fontWeight:FontWeight.w900)),
-        const SizedBox(height:6),Text(['¡Venga, chicas! ¿Estáis listas?','¡Yo sí! ¡Vamos!',
-          '¡Espérame, que voy!','¡Pues en marcha!'][introLine],
-          style:const TextStyle(color:Colors.white,fontSize:17)),
+        const SizedBox(height:6),Expanded(child:SingleChildScrollView(child:Text([
+          'Chicas, tengo una tarea para vosotras. Se me ha caído la cartera y he perdido todo el dinero que tenía dentro. Necesito que lo busquéis por toda la ciudad.',
+          'Yo me iba a ir al parque...',
+          'Yo quería escuchar a KATSEYE...',
+          'Venga, chicas, echadme una mano con algunas tareas y luego nos iremos a merendar. Repartíos las zonas por donde he pasado para buscar el dinero perdido.',
+          '¡Vamos allá!',
+          '¡Adelante!'
+        ][introLine],style:const TextStyle(color:Colors.white,fontSize:16)))),
         const Spacer(),const Align(alignment:Alignment.bottomRight,child:Text('TOCA PARA SEGUIR  ▶',
           style:TextStyle(color:Color(0xffffdd83),fontSize:11))),
       ])))),
@@ -1074,10 +1944,22 @@ class StagePainter extends CustomPainter {
     required this.hero,required this.otherSister,required this.father,required this.showFamily,
     required this.selected,required this.obstacles,required this.platforms,
     required this.coins,required this.collected,required this.enemies,required this.shots,
-    required this.particlesUntil});
+    required this.particlesUntil,
+    this.argaSupport,this.argaSupportSince=0,this.argaCrab,this.argaFisher,this.argaHook,
+    this.argaBoy,this.argaStone,this.argaTrout,this.qaQuioscoPrototype});
   final Map<String,ui.Image> images;
+  /// QA-only provisional Plaza panorama; zero effect on normal game rendering.
+  final ui.Image? qaQuioscoPrototype;
   final int stage,selected;
   final double cameraX,time,particlesUntil,lastAttackTime;
+  final ArgaSurface? argaSupport;
+  final ArgaCrabMotion? argaCrab;
+  final ArgaFisherMotion? argaFisher;
+  final ArgaHookProjectile? argaHook;
+  final ArgaBoyMotion? argaBoy;
+  final ArgaStoneProjectile? argaStone;
+  final ArgaTroutMotion? argaTrout;
+  final double argaSupportSince;
   final Character hero,otherSister,father;
   final bool showFamily;
   final List<Obstacle> obstacles;
@@ -1089,14 +1971,14 @@ class StagePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas,Size size) {
-    canvas.save();canvas.clipRect(const Rect.fromLTWH(0,0,viewW,viewH));
+    canvas.save();canvas.clipRect( Rect.fromLTWH(0,0,viewW,viewH));
     canvas.drawColor(const Color(0xff79a9d5),BlendMode.src);
     _background(canvas); // Includes the APPROVED original street pavement; never add a fake second floor.
     // Low, reachable elevated surfaces made of integrated benches/platform props.
     // Exact collision rectangles and visible surfaces share the same coordinates.
     for (final p in platforms) {
       final x = p.left - cameraX;
-      if (x < -225 || x > 850) continue;
+      if (x < -225 || x > viewW+50) continue;
       final prop = images[stage == 5 ? 'gym_bench' : stage == 6 ? 'backpack' : stage == 4 ? 'cone' : 'crate'];
       if (prop != null) {
         if (stage >= 4 && stage <= 6) {
@@ -1111,7 +1993,7 @@ class StagePainter extends CustomPainter {
       }
     }
     for(final o in obstacles) {
-      final x=o.x-cameraX;if(x< -90 || x>880)continue;
+      final x=o.x-cameraX;if(x< -90 || x>viewW+80)continue;
       if(o.destroyed) {
         if(time-o.smashedAt<.48) {
           final elapsed=time-o.smashedAt;
@@ -1144,10 +2026,335 @@ class StagePainter extends CustomPainter {
     for(final foe in enemies) {
       final x=foe.x-cameraX;if(x< -110 || x>900)continue;
       if(foe.defeated && time-foe.deathAt>.85)continue;
+      // Give the final landing poses time to reach the floor before fading.
+      final keeperAtlas = foe.kind == 'goalkeeper' ? images['enemy_goalkeeper_atlas'] : null;
+      final teacherAtlas = foe.kind == 'teacher' ? images['enemy_teacher_atlas'] : null;
+      final fadeStart = teacherAtlas != null
+        ? .68 : keeperAtlas != null ? .62 : foe.aerial ? .58 : .32;
+      final deathOpacity=foe.defeated
+        ? (1-(time-foe.deathAt-fadeStart)/(.85-fadeStart)).clamp(0.0,1.0).toDouble()
+        : 1.0;
       final shadowAlpha=foe.aerial ? (0x55*(1-foe.flightAltitude/190)).round().clamp(12,85).toInt() : 0x55;
       canvas.drawOval(Rect.fromCenter(center:Offset(x,groundY+2),
         width:foe.aerial?39+foe.flightAltitude*.13:53,height:7),
         Paint()..color=Color.fromARGB(shadowAlpha,9,23,35));
+      final comparsa = foe.comparsaMotion;
+      if (comparsa != null) {
+        final atlas = images['enemy_comparsa_${comparsa.kind.name}'];
+        if (atlas != null) {
+          final frame = comparsa.frame(
+            stunRemaining: foe.stunned,
+            defeatElapsed: foe.defeated ? time - foe.deathAt : null,
+          );
+          canvas.save();
+          if (comparsa.facing < 0) {
+            canvas.translate(2 * x, 0);
+            canvas.scale(-1, 1);
+          }
+          canvas.drawImageRect(
+            atlas,
+            comparsaFrameSource(frame),
+            Rect.fromLTWH(
+              x - comparsaPivot.dx, groundY - comparsaPivot.dy,
+              comparsaCell.width, comparsaCell.height,
+            ),
+            Paint()..filterQuality = FilterQuality.none
+              ..color = Colors.white.withValues(alpha: deathOpacity),
+          );
+          canvas.restore();
+        }
+        continue;
+      }
+      if (foe.estafetaNew) {
+        final art=images['enemy_${foe.kind}'];
+        if(art!=null) {
+          final bull=foe.kind=='estafeta_bull';
+          // Cada acción dibuja su propia pose. La embestida inicia con
+          // carrera y pasa al golpe; durante el cooldown se ve recuperación.
+          final near=(hero.x-foe.x).abs();
+          final pose=foe.defeated?5:foe.stunned>0?4:
+            bull ? (foe.launched
+              ? (foe.t<.28?2:3)
+              : foe.bullWarnedAt>=0 ? 1
+              : 0)
+            : (foe.runnerWarningAt>=0 ? 1
+              : foe.runnerImpactUntil>time ? 3
+              : near<240 ? 2 : 0);
+          final col=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : bull && foe.launched
+              ? (foe.t<.28 ? foe.t/.28*4 : (foe.t-.28)/.62*4).floor().clamp(0,3)
+              : bull && foe.bullWarnedAt>=0
+              ? ((time-foe.bullWarnedAt)/.55*4).floor().clamp(0,3)
+              : !bull && foe.runnerWarningAt>=0
+              ? ((time-foe.runnerWarningAt)/.34*4).floor().clamp(0,3)
+              : !bull && foe.runnerImpactUntil>time
+              ? ((1-(foe.runnerImpactUntil-time)/.24)*4).floor().clamp(0,3)
+              : (foe.t*8).floor()%4;
+          final cw=bull?270.0:156.0, ch=bull?192.0:210.0;
+          // Canonical opaque idle heights: bull 154px, runner 150px.
+          // Scale the entire cell uniformly; transparent headroom is not body height.
+          final h=bull?110.0*ch/154.0:140.0*ch/150.0;
+          final w=h*cw/ch;
+          canvas.save();
+          if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(art,Rect.fromLTWH(col*cw,pose*ch,cw,ch),
+            Rect.fromLTWH(x-w/2,groundY-h,w,h),
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
+          canvas.restore();
+        }
+        continue;
+      }
+      if(foe.kind=='navarre_king') {
+        final art=images['enemy_navarre_king_atlas'];
+        if(art!=null) {
+          final row=foe.defeated?5:foe.stunned>0?4:
+            foe.kingAwakeAt<0?0:time-foe.kingAwakeAt<.85?1:
+            foe.kingAttackAt>=0?3:
+              (hero.x-foe.x).abs()>95 && (hero.x-foe.x).abs()<225?2:0;
+          final col=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : row==1 ? ((time-foe.kingAwakeAt)/.85*4).floor().clamp(0,3)
+              : foe.kingAttackAt>=0
+              ? ((time-foe.kingAttackAt)/.9*4).floor().clamp(0,3)
+              : (foe.t*6).floor()%4;
+          const cw=168.0,ch=216.0;
+          canvas.save();
+          if(foe.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(art,Rect.fromLTWH(col*cw,row*ch,cw,ch),
+            Rect.fromLTWH(x-(150.0*cw/147.0)/2,
+                groundY-150.0*ch/147.0,150.0*cw/147.0,150.0*ch/147.0),
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
+          canvas.restore();
+          // Impacto visible y anticipado: onda baja nacida de los pies de
+          // piedra. El daño SOLO se aplica por la lógica al final del golpe.
+          if(foe.kingAttackAt>=0) {
+            final e=time-foe.kingAttackAt;
+            if(e>=.35 && e<.70) {
+              final radius=(e-.35)*210;
+              final opacity=((.70-e)/.35*160).round().clamp(0,160).toInt();
+              final p=Paint()
+                ..color=Color.fromARGB(opacity,193,181,144)
+                ..style=PaintingStyle.stroke..strokeWidth=3;
+              canvas.drawOval(Rect.fromCenter(
+                center:Offset(x,groundY-2),
+                width:radius*2+28,height:8+radius*.07),p);
+            }
+          }
+        }
+        continue;
+      }
+      if(foe.rivalCoach) {
+        final img=images['enemy_four_rival_coach'];
+        if(img!=null) {
+          final motion=foe.coachMotion;
+          final pose=foe.defeated?5:foe.stunned>0?4:motion?.pose.index??0;
+          final frame=foe.defeated?((time-foe.deathAt)/.48*4).floor().clamp(0,3)
+            :foe.stunned>0?((.66-foe.stunned)/.66*4).floor().clamp(0,3)
+            :motion?.frame??0;
+          const side=174.0;
+          canvas.save();
+          if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(img,Rect.fromLTWH(frame*192.0,pose*192.0,192,192),
+            Rect.fromLTWH(x-side/2,groundY-side,side,side),
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
+          canvas.restore();
+        }
+        continue;
+      }
+      if(foe.slipperNeighbor) {
+        final img=images['enemy_four_slipper_neighbor'];
+        if(img!=null) {
+          final motion=foe.neighborMotion;
+          final pose=foe.defeated?5:foe.stunned>0?4:motion?.pose.index??0;
+          final frame=foe.defeated?((time-foe.deathAt)/.48*4).floor().clamp(0,3)
+            :foe.stunned>0?((.66-foe.stunned)/.66*4).floor().clamp(0,3)
+            :motion?.frame??0;
+          final side=192.0*(143.0/166.0);
+          canvas.save();
+          if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(img,Rect.fromLTWH(frame*192.0,pose*192.0,192,192),
+            Rect.fromLTWH(x-side/2,groundY-side,side,side),
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
+          canvas.restore();
+        }
+        continue;
+      }
+      if(foe.guitarMusician) {
+        final img=images['enemy_four_guitar_musician'];
+        if(img!=null) {
+          final motion=foe.musicianMotion;
+          final pose=foe.defeated?5:foe.stunned>0?4:motion?.pose.index??0;
+          final frame=foe.defeated?((time-foe.deathAt)/.48*4).floor().clamp(0,3)
+            :foe.stunned>0?((.66-foe.stunned)/.66*4).floor().clamp(0,3)
+            :motion?.frame??0;
+          final scale=138.0/159.0;
+          final side=192.0*scale;
+          canvas.save();
+          if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(img,Rect.fromLTWH(frame*192.0,pose*192.0,192,192),
+            Rect.fromLTWH(x-side/2,groundY-side,side,side),
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
+          canvas.restore();
+        }
+        continue;
+      }
+      if(foe.danceCleaner) {
+        final img=images['enemy_four_dance_cleaner'];
+        if(img!=null) {
+          final motion=foe.cleanerMotion;
+          final pose=foe.defeated?5:foe.stunned>0?4:motion?.pose.index??0;
+          final frame=foe.defeated?((time-foe.deathAt)/.48*4).floor().clamp(0,3)
+            :foe.stunned>0?((.66-foe.stunned)/.66*4).floor().clamp(0,3)
+            :motion?.frame??0;
+          final scale=138.0/151.0;
+          final side=192.0*scale;
+          canvas.save();
+          if(foe.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+          canvas.drawImageRect(img,Rect.fromLTWH(frame*192.0,pose*192.0,192,192),
+            Rect.fromLTWH(x-side/2,groundY-side,side,side),
+            Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
+          canvas.restore();
+        }
+        continue;
+      }
+      if(foe.newArchetype) {
+        final kind=switch(foe.kind) {
+          'cleaning_robot'=>'robot',
+          'rival_supporter'=>'supporter',
+          _=>'tourist',
+        };
+        final img=images['enemy_new_$kind'];
+        if(img!=null) {
+          final motion=foe.newMotion;
+          final pose=foe.defeated ? 5 : foe.stunned>0 ? 4 : switch(motion?.pose) {
+            NewEnemyPose.patrol => 1,
+            NewEnemyPose.alert => 2,
+            NewEnemyPose.attack => 3,
+            NewEnemyPose.hit => 4,
+            NewEnemyPose.defeated => 5,
+            _ => 0,
+          };
+          final frame=foe.defeated ? ((time-foe.deathAt)*8).floor().clamp(0,3)
+              : motion!=null && motion.pose==NewEnemyPose.attack
+              ? ((1-motion.windup/motion.attackDelay)*3).floor().clamp(0,3)
+              : ((foe.t*7).floor()%4);
+          const cellW=144.0,cellH=192.0;
+          final source=Rect.fromLTWH(frame*cellW,pose*cellH,cellW,cellH);
+          final visibleHeight=kind=='robot'?83.0:kind=='supporter'?135.0:132.0;
+          final targetHeight=kind=='robot'?80.0:140.0;
+          final h=targetHeight*cellH/visibleHeight;
+          final w=h*cellW/cellH;
+          canvas.save();
+          if(foe.facing<0) { canvas.translate(2*x,0);canvas.scale(-1,1); }
+          canvas.drawImageRect(img,source,
+              Rect.fromLTWH(x-w/2,groundY-h,w,h),
+              Paint()..filterQuality=FilterQuality.none
+              ..color=Colors.white.withValues(alpha:deathOpacity));
+          canvas.restore();
+        }
+        continue;
+      }
+      final wildlifeAtlas = foe.aerial
+          ? images['pigeon_flight_atlas']
+          : foe.dog ? images['${foe.kind}_atlas'] : null;
+      if (wildlifeAtlas != null) {
+        final defeatElapsed = foe.defeated ? time - foe.deathAt : null;
+        final frame = foe.aerial
+            ? pigeonAtlasFrame(
+                mode: foe.animalMode,
+                elapsed: foe.animalTime,
+                altitude: foe.flightAltitude,
+                defeatElapsed: defeatElapsed,
+              )
+            : dogAtlasFrame(
+                kind: foe.kind,
+                mode: foe.animalMode,
+                elapsed: foe.animalTime,
+                stunRemaining: foe.stunned,
+                defeatElapsed: defeatElapsed,
+              );
+        canvas.save();
+        if (foe.facing < 0) {
+          canvas.translate(2 * x, 0);
+          canvas.scale(-1, 1);
+        }
+        canvas.drawImageRect(
+          wildlifeAtlas,
+          wildlifeFrameSource(frame),
+          Rect.fromLTWH(
+            x - wildlifeAnchorX,
+            groundY - foe.flightAltitude - wildlifeGroundAnchorY,
+            wildlifeCellWidth, wildlifeCellHeight,
+          ),
+          Paint()..filterQuality = FilterQuality.none
+            ..color = Colors.white.withValues(alpha: deathOpacity),
+        );
+        canvas.restore();
+        continue;
+      }
+      if (teacherAtlas != null) {
+        final frame = teacherAtlasFrame(
+          elapsed: foe.t,
+          preparing: foe.launched,
+          cooldown: foe.attackCooldown,
+          stunned: foe.stunned > 0,
+          defeatElapsed: foe.defeated ? time - foe.deathAt : null,
+        );
+        const cell = teacherAtlasCell;
+        canvas.save();
+        if (foe.facing < 0) {
+          canvas.translate(2 * x, 0);
+          canvas.scale(-1, 1);
+        }
+        canvas.drawImageRect(
+          teacherAtlas,
+          Rect.fromLTWH(frame.column * cell, frame.row * cell, cell, cell),
+          Rect.fromLTWH(x - cell / 2, groundY - teacherAtlasFootY, cell, cell),
+          Paint()..filterQuality = FilterQuality.none
+            ..color = Colors.white.withValues(alpha: deathOpacity),
+        );
+        canvas.restore();
+        if (foe.launched && foe.stunned <= 0 && !foe.defeated) {
+          final left = x.roundToDouble() - 3;
+          const top = groundY - 168;
+          final outline = Paint()..color = const Color(0xff382136);
+          final gold = Paint()..color = const Color(0xffffdc58);
+          canvas.drawRect(Rect.fromLTWH(left - 1, top - 1, 8, 13), outline);
+          canvas.drawRect(Rect.fromLTWH(left, top, 6, 11), gold);
+          canvas.drawRect(Rect.fromLTWH(left - 1, top + 13, 8, 7), outline);
+          canvas.drawRect(Rect.fromLTWH(left, top + 14, 6, 5), gold);
+        }
+        continue;
+      }
+      if (keeperAtlas != null) {
+        final moving = (foe.x - foe.lastRenderedX).abs() > .12;
+        foe.lastRenderedX = foe.x;
+        final frame = goalkeeperAtlasFrame(
+          elapsed: foe.t, moving: moving, attacking: foe.launched,
+          stunned: foe.stunned > 0, defeated: foe.defeated,
+          defeatElapsed: foe.defeated ? time - foe.deathAt : 0,
+        );
+        const cell = goalkeeperAtlasCell;
+        canvas.save();
+        if (foe.facing < 0) {
+          canvas.translate(2 * x, 0);
+          canvas.scale(-1, 1);
+        }
+        canvas.drawImageRect(
+          keeperAtlas,
+          Rect.fromLTWH(frame.column * cell, frame.row * cell, cell, cell),
+          Rect.fromLTWH(x - cell / 2, groundY - goalkeeperAtlasFootY, cell, cell),
+          Paint()..filterQuality = FilterQuality.none
+            ..color = Colors.white.withValues(alpha: deathOpacity),
+        );
+        canvas.restore();
+        continue;
+      }
       canvas.save();
       if(foe.defeated) {
         final alpha=(1-(time-foe.deathAt-.32)/.53).clamp(0.0,1.0).toDouble();
@@ -1200,19 +2407,61 @@ class StagePainter extends CustomPainter {
             groundY-foe.flightAltitude-pigeonFlightFootY[frame]*flightScale+bob,
             pigeonAtlasWorldCell,pigeonAtlasWorldCell),
           source:pigeonFlightSource(frame));
-      } else if(['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue'].contains(foe.kind)) {
+      } else if(foe.kind=='rival' && images['enemy_rival_player_atlas']!=null) {
+        // Twenty-four genuinely distinct authored poses for the original
+        // training-field rival. The six original PNGs remain untouched.
+        final moving=(foe.x-foe.lastRenderedX).abs()>.12;
+        foe.lastRenderedX=foe.x;
+        final frame=rivalPlayerAtlasFrame(
+          elapsed:foe.t,moving:moving,
+          attacking:foe.launched || foe.meleeWarning>0,
+          stunned:foe.stunned>0,defeated:foe.defeated,
+          attackCooldown:foe.attackCooldown,
+          heroDistance:(hero.x-foe.x).abs(),
+          deathElapsed:foe.defeated ? time-foe.deathAt : 0,
+          stunRemaining:foe.stunned,
+          warningRemaining:foe.meleeWarning);
+        final source=rivalPlayerAtlasSource(frame);
+        final scale=rivalPlayerWorldHeight/rivalPlayerSilhouettes[0].height;
+        _sprite(canvas,images['enemy_rival_player_atlas'],
+          Rect.fromLTWH(x-source.width*scale/2,
+            groundY-source.height*scale,
+            source.width*scale,source.height*scale),source:source);
+      } else if(['rival','goalkeeper','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher'].contains(foe.kind)) {
         // Distinct combat states: a teacher must not run while throwing an exam,
         // and a referee must actually show his raised red card in wind-up.
+        // El bully mostraba pasos mientras estaba detenido: todos los
+        // fotogramas 0-2 se alternaban usando solo el reloj global.
+        // Elegir marcha únicamente si hubo movimiento físico desde el
+        // último render. Reposo y ataque tienen poses específicas.
+        final walkingNow=(foe.x-foe.lastRenderedX).abs() > .12;
+        foe.lastRenderedX=foe.x;
         final int frame;
-        if (foe.defeated) {
+        if (foe.kind=='rival' || foe.kind=='referee' ||
+            foe.kind=='breakdancer' || foe.kind=='bully') {
+          // Original, detailed art is preserved. Never loop a run frame while idle;
+          // a hit never accidentally plays the throwing animation.
+          frame=classicEnemyFrame(
+            kind:foe.kind,elapsed:foe.t,moving:walkingNow,
+            attacking:foe.launched || foe.meleeWarning>0,
+            stunned:foe.stunned>0,
+            defeated:foe.defeated,
+            heroDistance:(hero.x-foe.x).abs(),
+            attackCooldown:foe.attackCooldown,
+          );
+        } else if (foe.defeated) {
           frame=4;
         } else if (foe.stunned>0) {
           frame=foe.ranged ? 1 : 3;
         } else if (foe.launched) {
-          frame=foe.kind=='goalkeeper' ? (foe.t < .15 ? 0 : foe.t < .27 ? 2 : foe.t < .34 ? 3 : foe.t < .56 ? 4 : 1) : foe.kind=='referee' ? 2 : foe.kind=='breakdancer' ? 3
-              : foe.kind=='teacher' ? 2 : 3;
+          frame=foe.kind=='goalkeeper'
+            ? (foe.t < .15 ? 0 : foe.t < .27 ? 2
+                : foe.t < .34 ? 3 : foe.t < .56 ? 4 : 1)
+            : foe.kind=='teacher' ? 2 : 3;
         } else {
-          frame=foe.ranged ? ((foe.t*2).floor()%2) : ((foe.t*6).floor()%3);
+          frame=foe.ranged
+            ? ((foe.t*2).floor()%2)
+            : walkingNow ? 1+((foe.t*6).floor()%2) : 0;
         }
         final hiFiCreature=foe.kind=='rat' || foe.kind=='cat';
         final img=images[hiFiCreature ? 'enemy_${foe.kind}_sheet' : 'enemy_${foe.kind}_$frame'];
@@ -1222,12 +2471,17 @@ class StagePainter extends CustomPainter {
           final targetHeight = switch(foe.kind) {
             'rival' => 124.0, 'goalkeeper' => 121.0, 'novice' => 117.0, 'bully' => 137.0,
             'referee' => 143.0, 'teacher' => 145.0, 'breakdancer' => 126.0,
-            'statue' => 139.0, 'pigeon' => 64.0,
+             'pigeon' => 64.0,
             'rat' => creatureIdleHeights['rat']!,
             'cat' => creatureIdleHeights['cat']!, _ => 105.0,
           };
-          final visible=hiFiCreature ? creatureFrameBounds['${foe.kind}_$frame']
+          final recorded=hiFiCreature ? creatureFrameBounds['${foe.kind}_$frame']
             : enemyVisibleBounds['${foe.kind}_$frame'];
+          // Local checkout may not have regenerated the precise extra hit
+          // bounds yet; the manual release pipeline always recalculates them.
+          final visible=recorded ?? (frame==5
+            ? Rect.fromLTWH(0,0,img.width.toDouble(),img.height.toDouble())
+            : null);
           final canonical=hiFiCreature ? creatureFrameBounds['${foe.kind}_0']
             : enemyVisibleBounds['${foe.kind}_0'];
           if(visible != null && canonical != null){
@@ -1241,8 +2495,9 @@ class StagePainter extends CustomPainter {
             // The pivot is the feet, so a wind-up never slides the enemy off the floor.
             // Small movement for large characters whose source sheets have
             // nearly identical waiting/walking poses (not a sprite-scale hack).
-            final lean=foe.launched && foe.kind!='goalkeeper' ? -0.085 :
-              (foe.kind=='bully' && !foe.defeated ? .028*math.sin(foe.t*8) : 0.0);
+            final lean=foe.launched && foe.kind!='goalkeeper' &&
+                foe.kind!='breakdancer' && foe.kind!='referee'
+                ? -0.085 : 0.0;
             canvas.save();
             if(lean != 0){
               canvas.translate(x,groundY+airborne);
@@ -1257,7 +2512,8 @@ class StagePainter extends CustomPainter {
       }
       if(foe.defeated)canvas.restore();
       canvas.restore();
-      if(foe.launched)_outlined(canvas,'!',Offset(x,groundY-126),const Color(0xffffdc58),23);
+      if(foe.launched || foe.meleeWarning>0)
+        _outlined(canvas,'!',Offset(x,groundY-126),const Color(0xffffdc58),23);
       if(foe.stunned>0 || foe.defeated) {
         for(int j=0;j<3;j++) {
           final a=time*7+j*math.pi*2/3;
@@ -1265,6 +2521,10 @@ class StagePainter extends CustomPainter {
         }
       }
     }
+    if(stage==7 && argaCrab!=null) _paintArgaCrab(canvas);
+    if(stage==7 && argaFisher!=null) _paintArgaFisher(canvas);
+    if(stage==7 && argaBoy!=null) _paintArgaBoy(canvas);
+    if(stage==7 && argaTrout!=null) _paintArgaTrout(canvas);
     if(showFamily) {
       _actor(canvas,father,'padre',2,false);
       _actor(canvas,otherSister,selected==0?'bailarina':'futbolista',1-selected,false);
@@ -1284,6 +2544,213 @@ class StagePainter extends CustomPainter {
           Paint()..color=const Color(0xffffdb66));
       }
     }
+    canvas.restore();
+  }
+
+  // Strictly QA-only crab art. Each approved pose is an independent candidate
+  // with generous transparent padding; align the visible foot, not canvas bottom.
+  void _paintArgaCrab(Canvas canvas) {
+    final crab=argaCrab!;
+    final pose=crab.pose;
+    final key=switch(pose) {
+      ArgaCrabPose.idle => 'reposo',
+      ArgaCrabPose.sideways => 'caminar',
+      ArgaCrabPose.warning => 'alerta',
+      ArgaCrabPose.pinch => 'ataque',
+      ArgaCrabPose.hurt => 'impacto',
+      ArgaCrabPose.defeated => 'derrota',
+    };
+    // When the approved 4x6 atlas is bundled, advance real source frames.
+    // Until then use the preserved single-pose candidate with no fabrication.
+    final atlas=images['arga_crab_atlas'];
+    final art=atlas ?? images['arga_crab_$key'];
+    if(art==null) return;
+    final row=switch(pose) {
+      ArgaCrabPose.idle => 0,
+      ArgaCrabPose.sideways => 1,
+      ArgaCrabPose.warning => 2,
+      ArgaCrabPose.pinch => 3,
+      ArgaCrabPose.hurt => 4,
+      ArgaCrabPose.defeated => 5,
+    };
+    final source=atlas==null
+      ? Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble())
+      : Rect.fromLTWH(
+          ArgaSpriteAtlas.frame(poseRow:row,elapsed:crab.elapsed) *
+              atlas.width / ArgaSpriteAtlas.columns,
+          row * atlas.height / ArgaSpriteAtlas.rows,
+          atlas.width / ArgaSpriteAtlas.columns,
+          atlas.height / ArgaSpriteAtlas.rows);
+    final x=crab.x-cameraX;
+    if(x< -100 || x>viewW+100) return;
+    // Measured alpha bboxes, all images 1254x1254. Preserve the exact
+    // art aspect and place the opaque support point on the second rock.
+    final bottom=switch(pose) {
+      ArgaCrabPose.idle => 914.0,
+      ArgaCrabPose.sideways => 930.0,
+      ArgaCrabPose.warning => 967.0,
+      ArgaCrabPose.pinch => 899.0,
+      ArgaCrabPose.hurt => 925.0,
+      ArgaCrabPose.defeated => 929.0,
+    };
+    const size=132.0;
+    final dest=Rect.fromLTWH(x-size/2,
+      ArgaCourse.surfaces[1].top-size*(atlas==null ? bottom/1254.0 : .84),size,size);
+    canvas.save();
+    if(crab.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+    canvas.drawImageRect(art,source,
+      dest,Paint()..filterQuality=FilterQuality.none);
+    canvas.restore();
+  }
+
+  // QA-only fisherman candidate. Original approved art is never overwritten.
+  void _paintArgaFisher(Canvas canvas) {
+    final fisher=argaFisher!;
+    final pose=switch(fisher.pose) {
+      ArgaFisherPose.idle => 'reposo',
+      ArgaFisherPose.walk => 'caminar',
+      ArgaFisherPose.warning => 'alerta',
+      ArgaFisherPose.cast => 'lanzamiento',
+      ArgaFisherPose.hurt => 'impacto',
+      ArgaFisherPose.defeated => 'derrota',
+    };
+    final atlas=images['arga_fisher_atlas'];
+    final art=atlas ?? images['arga_fisher_$pose'];
+    if(art==null) return;
+    final row=switch(fisher.pose) {
+      ArgaFisherPose.idle => 0,
+      ArgaFisherPose.walk => 1,
+      ArgaFisherPose.warning => 2,
+      ArgaFisherPose.cast => 3,
+      ArgaFisherPose.hurt => 4,
+      ArgaFisherPose.defeated => 5,
+    };
+    final source=atlas==null
+      ? Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble())
+      : Rect.fromLTWH(
+          ArgaSpriteAtlas.frame(poseRow:row,elapsed:fisher.elapsed) *
+              atlas.width / ArgaSpriteAtlas.columns,
+          row * atlas.height / ArgaSpriteAtlas.rows,
+          atlas.width / ArgaSpriteAtlas.columns,
+          atlas.height / ArgaSpriteAtlas.rows);
+    final bottom=switch(fisher.pose) {
+      ArgaFisherPose.idle => 1093.0,
+      ArgaFisherPose.walk => 1094.0,
+      ArgaFisherPose.warning => 1141.0,
+      ArgaFisherPose.cast => 1076.0,
+      ArgaFisherPose.hurt => 1130.0,
+      ArgaFisherPose.defeated => 1018.0,
+    };
+    const size=156.0;
+    final x=fisher.x-cameraX;
+    if(x< -160 || x>viewW+160) return;
+    final dest=Rect.fromLTWH(x-size/2,
+      ArgaCourse.surfaces[5].top-size*(atlas==null ? bottom/1254.0 : .72),size,size);
+    canvas.save();
+    if(fisher.facing<0) {canvas.translate(2*x,0);canvas.scale(-1,1);}
+    canvas.drawImageRect(art,source,
+      dest,Paint()..filterQuality=FilterQuality.none);
+    canvas.restore();
+    final hook=argaHook;
+    if(hook!=null && hook.active) {
+      // Temporary QA collision marker, never final approved hook artwork.
+      final marker=Offset(hook.x-cameraX,hook.y);
+      canvas.drawCircle(marker,ArgaHookProjectile.radius,
+        Paint()..color=const Color(0xffd4d7b3));
+      canvas.drawCircle(marker,ArgaHookProjectile.radius,
+        Paint()..style=PaintingStyle.stroke..strokeWidth=2
+          ..color=const Color(0xff33495b));
+    }
+  }
+
+  // Experimental candidate, only in inaccessible Stage 7 QA.
+  void _paintArgaBoy(Canvas canvas) {
+    final boy=argaBoy!;
+    final pose=switch(boy.pose) {
+      ArgaBoyPose.idle=>'reposo',
+      ArgaBoyPose.run=>'correr',
+      ArgaBoyPose.warning=>'alerta',
+      ArgaBoyPose.throwStone=>'lanzamiento',
+      ArgaBoyPose.hurt=>'impacto',
+      ArgaBoyPose.defeated=>'derrota',
+    };
+    final atlas=images['arga_boy_atlas'];
+    final art=atlas ?? images['arga_boy_$pose'];
+    if(art==null)return;
+    final row=switch(boy.pose) {
+      ArgaBoyPose.idle => 0,
+      ArgaBoyPose.run => 1,
+      ArgaBoyPose.warning => 2,
+      ArgaBoyPose.throwStone => 3,
+      ArgaBoyPose.hurt => 4,
+      ArgaBoyPose.defeated => 5,
+    };
+    final source=atlas==null
+      ? Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble())
+      : Rect.fromLTWH(
+          ArgaSpriteAtlas.frame(poseRow:row,elapsed:boy.elapsed) *
+              atlas.width / ArgaSpriteAtlas.columns,
+          row * atlas.height / ArgaSpriteAtlas.rows,
+          atlas.width / ArgaSpriteAtlas.columns,
+          atlas.height / ArgaSpriteAtlas.rows);
+    final x=boy.x-cameraX;
+    if(x < -160 || x > viewW+160)return;
+    const size=144.0;
+    final dest=Rect.fromLTWH(x-size/2,ArgaCourse.surfaces[8].top-123,size,size);
+    canvas.save();
+    if(boy.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
+    canvas.drawImageRect(art,source,
+      dest,Paint()..filterQuality=FilterQuality.none);
+    canvas.restore();
+    final stone=argaStone;
+    if(stone!=null && stone.active) {
+      final center=Offset(stone.x-cameraX,stone.y);
+      canvas.drawCircle(center,ArgaStoneProjectile.radius,Paint()..color=const Color(0xff94877a));
+      canvas.drawCircle(center,ArgaStoneProjectile.radius,
+        Paint()..style=PaintingStyle.stroke..strokeWidth=2..color=const Color(0xff564940));
+    }
+  }
+
+  // QA-only trout: waterline and leap share physical coordinates.
+  void _paintArgaTrout(Canvas canvas) {
+    final trout=argaTrout!;
+    final pose=switch(trout.pose) {
+      ArgaTroutPose.swim=>'nado',
+      ArgaTroutPose.accelerate=>'acelerar',
+      ArgaTroutPose.warning=>'alerta',
+      ArgaTroutPose.leap=>'salto',
+      ArgaTroutPose.hurt=>'impacto',
+      ArgaTroutPose.defeated=>'derrota',
+    };
+    final atlas=images['arga_trout_atlas'];
+    final art=atlas ?? images['arga_trout_$pose'];
+    if(art==null)return;
+    final row=switch(trout.pose) {
+      ArgaTroutPose.swim => 0,
+      ArgaTroutPose.accelerate => 1,
+      ArgaTroutPose.warning => 2,
+      ArgaTroutPose.leap => 3,
+      ArgaTroutPose.hurt => 4,
+      ArgaTroutPose.defeated => 5,
+    };
+    final source=atlas==null
+      ? Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble())
+      : Rect.fromLTWH(
+          ArgaSpriteAtlas.frame(poseRow:row,elapsed:trout.elapsed) *
+              atlas.width / ArgaSpriteAtlas.columns,
+          row * atlas.height / ArgaSpriteAtlas.rows,
+          atlas.width / ArgaSpriteAtlas.columns,
+          atlas.height / ArgaSpriteAtlas.rows);
+    final x=trout.x-cameraX;
+    if(x < -140 || x > viewW+140)return;
+    // Keep more of the approved trout silhouette above the waterline;
+    // the physical collision center remains at trout.y (unchanged).
+    const size=105.0;
+    final dest=Rect.fromLTWH(x-size/2,trout.y-size*.78,size,size);
+    canvas.save();
+    if(trout.facing<0){canvas.translate(2*x,0);canvas.scale(-1,1);}
+    canvas.drawImageRect(art,source,
+      dest,Paint()..filterQuality=FilterQuality.none);
     canvas.restore();
   }
 
@@ -1313,7 +2780,7 @@ class StagePainter extends CustomPainter {
     final tileW=tile.width.toDouble();
     final y=_midArtTop[stage];
     final first=(cameraX/tileW).floor();
-    for(int n=first;n<=first+2;n++) {
+    for(int n=first;n<=first+(viewW/tileW).ceil()+2;n++) {
       final dx=n*tileW-cameraX;
       // The dugout is a UNIQUE recognizable landmark, not an infinite fence
       // tile. The practice dummies and fence are intentionally repeatable.
@@ -1339,7 +2806,7 @@ class StagePainter extends CustomPainter {
     }
     final maxPan = math.max(0.0, art.width.toDouble() - sw);
     final sx = maxPan * neighborhoodPanFraction(panel, cameraX);
-    _sprite(canvas, art, const Rect.fromLTWH(0, 0, viewW, 380),
+    _sprite(canvas, art,  Rect.fromLTWH(0, 0, viewW, 380),
       pixelated:false, source:Rect.fromLTWH(sx, 0, sw, sh));
   }
 
@@ -1412,7 +2879,7 @@ class StagePainter extends CustomPainter {
 
   void _neighborhoodWorldV3Lab(Canvas canvas) {
     const sceneH = 380.0;
-    canvas.drawRect(const Rect.fromLTWH(0, 0, viewW, sceneH),
+    canvas.drawRect( Rect.fromLTWH(0, 0, viewW, sceneH),
         Paint()..color=const Color(0xff4da9ed));
     final piece = curvedBuildingPilot;
     final img = images['neighborhood_${piece.asset}'];
@@ -1564,7 +3031,7 @@ class StagePainter extends CustomPainter {
   }
 
   void _neighborhoodPhysicalWorld(Canvas canvas) {
-    canvas.drawRect(const Rect.fromLTWH(0,0,viewW,380),
+    canvas.drawRect( Rect.fromLTWH(0,0,viewW,380),
       Paint()..color=const Color(0xff4b9fe8));
     _drawCh1Loop(canvas,images['ch1_far_city_loop'],ch1FarSpeed);
     _drawCh1Loop(canvas,images['ch1_mid_woodland_loop'],ch1MidSpeed);
@@ -1599,7 +3066,7 @@ class StagePainter extends CustomPainter {
       return;
     }
     // Solid sky behind the scene for safe viewport edges even during joins.
-    canvas.drawRect(const Rect.fromLTWH(0, 0, viewW, 380),
+    canvas.drawRect( Rect.fromLTWH(0, 0, viewW, 380),
       Paint()..color=const Color(0xff4da9ed));
     for (final panel in neighborhoodBackdropPanels) {
       final worldLeft=panel.start-cameraX;
@@ -1667,7 +3134,7 @@ class StagePainter extends CustomPainter {
   }
 
   void _footballBackgroundTWC(Canvas canvas) {
-    canvas.drawRect(const Rect.fromLTWH(0,0,viewW,footballBackdropHeightTWC),
+    canvas.drawRect( Rect.fromLTWH(0,0,viewW,footballBackdropHeightTWC),
       Paint()..color=const Color(0xff54a4ed));
     _footballLoopTWC(canvas,images['football_far_twc'],footballFarSpeedTWC);
     _footballLoopTWC(canvas,images['football_mid_twc'],footballMidSpeedTWC);
@@ -1709,6 +3176,67 @@ class StagePainter extends CustomPainter {
         interiorFarSpeedTWC,height);
     _interiorLoopTWC(canvas,images['interior_${theme}_mid'],
         interiorMidSpeedTWC,height);
+    if (stage == 5 && danceFiveSceneArtworkEnabled) {
+      // Continuity safeguard: while unique extended five-room modules
+      // are being authored, retain the existing physical interior panels
+      // beneath the approved single-shot HIFI compositions. Never expose
+      // the outdoor placeholder sky across entire empty academy halls.
+      // This is a QA candidate, not a declaration of artistic completion.
+      // Historical architectural filler is grouped by the FIVE dance zones,
+      // not by the unrelated legacy 3-zone map. The approved 5 scenes remain
+      // unique physical landmarks and are never duplicated or mirrored.
+      const legacyZoneForDance = <int>[0,0,1,1,2];
+      for (var zone=0;zone<5;zone++) {
+        final start=interiorDanceFiveSceneEdgesTWC[zone];
+        final end=interiorDanceFiveSceneEdgesTWC[zone+1];
+        if (end<=cameraX || start>=cameraX+viewW) continue;
+        canvas.save();
+        canvas.clipRect(Rect.fromLTRB(
+          math.max(0.0,start-cameraX),0,
+          math.min(viewW,end-cameraX),height));
+        final first=(((cameraX-start)/interiorModuleWidthTWC).floor()-1)
+            .clamp(0,999999).toInt();
+        final last=(((cameraX+viewW-start)/interiorModuleWidthTWC).floor()+1)
+            .clamp(0,999999).toInt();
+        final oldZone=legacyZoneForDance[zone];
+        for(var index=first;index<=last;index++) {
+          final worldX=start+index*interiorModuleWidthTWC;
+          if(worldX>=end)break;
+          final variant=index%interiorVariantsPerRoomTWC;
+          final panel=images['interior_dance_z${oldZone}_panel_$variant'];
+          if(panel==null)continue;
+          canvas.drawImageRect(panel,
+            Rect.fromLTWH(0,0,panel.width.toDouble(),panel.height.toDouble()),
+            Rect.fromLTWH(worldX-cameraX,0,interiorModuleWidthTWC,height),
+            Paint()..filterQuality=FilterQuality.none);
+        }
+        canvas.restore();
+      }
+      // Each approved composition is anchored to the world at 1:1 speed.
+      // No mirrored approved scenes, no alpha room crossfades.
+      for (var zone=0; zone<5; zone++) {
+        final left=interiorDanceFiveSceneEdgesTWC[zone];
+        final right=interiorDanceFiveSceneEdgesTWC[zone+1];
+        if (right<=cameraX || left>=cameraX+viewW) continue;
+        final img=images['dance_hifi_$zone'];
+        if(img==null) continue;
+        final naturalH=img.height.toDouble();
+        final naturalW=img.width.toDouble();
+        final scale=height/naturalH;
+        final width=naturalW*scale;
+        final zoneClip=Rect.fromLTRB(
+            math.max(0,left-cameraX),0,
+            math.min(viewW,right-cameraX),height);
+        canvas.save(); canvas.clipRect(zoneClip);
+        // Do not tile unique ballet-room furnishings / doors.
+        canvas.drawImageRect(img,
+            Rect.fromLTWH(0,0,naturalW,naturalH),
+            Rect.fromLTWH(left-cameraX,0,width,height),
+            Paint()..filterQuality=FilterQuality.none);
+        canvas.restore();
+      }
+      return;
+    }
     for (var zone=0;zone<3;zone++) {
       final start=interiorZoneEdgesTWC[zone];
       final end=interiorZoneEdgesTWC[zone+1];
@@ -1719,7 +3247,7 @@ class StagePainter extends CustomPainter {
       canvas.save();canvas.clipRect(clip);
       for (final index in interiorVisibleModulesTWC(zone,cameraX,
           viewportWidth:viewW)) {
-        final variant=interiorModuleVariantTWC(zone,index);
+        final variant=interiorModuleVariantTWC(zone,index,theme:theme);
         final image=images['interior_${theme}_z${zone}_panel_$variant'];
         if(image==null)continue;
         final x=interiorModuleXWorldTWC(zone,index)-cameraX;
@@ -1730,27 +3258,36 @@ class StagePainter extends CustomPainter {
       }
       canvas.restore();
     }
-    // Pizarras y biblioteca: Hitos ÚNICOS. No forman parte del panel
-    // repetible; su posición es 100% mundo, no fade ni parallax.
-    if(stage==6) {
-      for(final item in <(String,double,double)>[
-        ('estanteria_biblioteca',1720,0),
-        ('pizarra_matematicas',15320,52),
-        ('pizarra_informatica',29820,51)]) {
-        final art=images['interior_school_${item.$1}'];
-        if(art==null)continue;
-        final x=item.$2-cameraX;
-        if(x+art.width<0 || x>=viewW)continue;
-        canvas.drawImageRect(art,
-          Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
-          Rect.fromLTWH(x,item.$3,art.width.toDouble(),art.height.toDouble()),
-          Paint()..filterQuality=FilterQuality.none);
-      }
-    }
-    // Marcos de paso colocados en x absoluto. No crossfade de habitaciones.
+    // Las ilustraciones aprobadas del colegio ya incluyen su pizarra,
+// estantería y señalética. NO dibujar encima una segunda copia:
+// duplicaba la biblioteca en x=1720 y las pizarras en x=15320/29820,
+// creando pegotes superpuestos y una composición incoherente.
+    // Sólo se añaden mesas RECORTADAS con alpha y mobiliario real
+    // independiente en la capa física, a velocidad mundial 1:1.
+    // El colegio HIFI ya incluye puertas y juntas en los paneles aprobados.
+    // El marco genérico de 120 px tapaba el mural en ambas transiciones.
+    // Conservarlo solo para academia y colegio anterior; sin crossfade.
     final passage=images['interior_${theme}_passage'];
-    if(passage!=null) {
-      for (final edge in [interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2]]) {
+    if(passage!=null && !(stage==6 && schoolHifiArtworkEnabled)) {
+      final transitions=<double>[
+        interiorZoneEdgesTWC[1],interiorZoneEdgesTWC[2],
+      ];
+      if(stage==6) {
+        // Marcos auténticamente situados donde el tramo siguiente
+        // pasa de pasillo a clase, o de clase a informática.
+        // No dibujar un arco cada cuatro módulos por costumbre:
+        // la puerta tiene razón arquitectónica y está fijada al mundo.
+        for(var zone=0;zone<3;zone++) {
+          final start=interiorZoneEdgesTWC[zone];
+          final end=interiorZoneEdgesTWC[zone+1];
+          for(var n=1;start+n*interiorModuleWidthTWC<end-120;n++) {
+            if(interiorSchoolDoorAtModuleTWC(zone,n)) {
+              transitions.add(start+n*interiorModuleWidthTWC);
+            }
+          }
+        }
+      }
+      for(final edge in transitions) {
         final x=edge-cameraX-60;
         if(x+120<=0 || x>=viewW) continue;
         canvas.drawImageRect(passage,
@@ -1760,12 +3297,192 @@ class StagePainter extends CustomPainter {
     }
   }
 
+  // RC7 ESTAFETA: buildings and storefronts are PHYSICAL world geometry,
+  // never almost-static panoramic scenery (the legacy factor was 0.014).
+  // Tile widths are native world units. Their source art contains the street
+  // frontage, not a second playable floor: ground_2 remains the floor layer.
+  // Chapter 2 (Ayuntamiento) has no infinitely repeated static buildings.
+  // The complete candidate world is sliced after continuous composition.
+  // The landmark is included ONCE in its panel source (world x=17920).
+  void _ayuntamientoBackgroundRC7(Canvas canvas) {
+    canvas.drawRect(Rect.fromLTWH(0,0,viewW,groundY),
+        Paint()..color=const Color(0xff6eadee));
+    final first=math.max(0,(cameraX/twcAyuntamientoRC7TileWidth).floor());
+    final last=math.min(twcAyuntamientoRC7TileCount-1,
+        ((cameraX+viewW)/twcAyuntamientoRC7TileWidth).ceil());
+    for (var i=first;i<=last;i++) {
+      final art=images['ayuntamiento_rc7_$i'];
+      if (art==null) throw StateError('Missing Ayuntamiento RC7 tile $i');
+      final x=i*twcAyuntamientoRC7TileWidth-cameraX;
+      canvas.drawImageRect(art,
+          Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+          Rect.fromLTWH(x,0,twcAyuntamientoRC7TileWidth,groundY),
+          Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
+  // Plaza del Castillo: physically anchored facades and a SINGLE quiosco.
+  // The candidate remains gated until all 39 images are uploaded and QA passes.
+  void _quioscoBackgroundRC7(Canvas canvas) {
+    canvas.drawRect(Rect.fromLTWH(0,0,viewW,groundY),
+        Paint()..color=const Color(0xff78b4ed));
+    final first=math.max(0,(cameraX/twcQuioscoRC7TileWidth).floor());
+    final last=math.min(twcQuioscoRC7TileCount-1,
+        ((cameraX+viewW)/twcQuioscoRC7TileWidth).ceil());
+    for (var i=first;i<=last;i++) {
+      final tile=images['quiosco_rc7_$i'];
+      if (tile==null) throw StateError('Missing Quiosco RC7 tile $i');
+      final x=i*twcQuioscoRC7TileWidth-cameraX;
+      canvas.drawImageRect(tile,
+          Rect.fromLTWH(0,0,tile.width.toDouble(),tile.height.toDouble()),
+          Rect.fromLTWH(x,0,twcQuioscoRC7TileWidth,groundY),
+          Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
+  void _estafetaBackgroundRC7(Canvas canvas) {
+    canvas.drawRect(Rect.fromLTWH(0,0,viewW,390),
+        Paint()..color=const Color(0xff64a9ed));
+    final first = math.max(0,(cameraX / twcEstafetaRC7TileWidth).floor());
+    final last = math.min(twcEstafetaRC7TileCount-1,
+        ((cameraX + viewW) / twcEstafetaRC7TileWidth).ceil());
+    for (var i = first; i <= last; i++) {
+      final art = images['estafeta_rc7_$i'];
+      if (art == null) {
+        throw StateError('Missing required Estafeta RC7 image $i');
+      }
+      final x = i*twcEstafetaRC7TileWidth-cameraX;
+      canvas.drawImageRect(art,
+          Rect.fromLTWH(0,0,art.width.toDouble(),art.height.toDouble()),
+          Rect.fromLTWH(x,0,twcEstafetaRC7TileWidth,390),
+          Paint()..filterQuality=FilterQuality.none);
+    }
+  }
+
+  /// QA-only prototype. Visual supports share the existing ArgaCourse world coordinates.
+  /// The flattened river concept remains a candidate, not final parallax.
+  void _argaPrototypeBackground(Canvas canvas) {
+    // Three independent speeds: far skyline, middle vegetation, world props.
+    // QA candidate art only; the user-approved concept remains the reference.
+    // Crossfade between the original urban candidate and the wild river
+    // candidate over 1,200 world units; no abrupt skyline teleport.
+    final wildAlpha=((cameraX-10800)/1200).clamp(0.0,1.0).toDouble();
+    final millAlpha=((cameraX-22800)/1200).clamp(0.0,1.0).toDouble();
+    void farLayer(String key,double opacity) {
+      final source=images[key];
+      if(source==null || opacity<=0)return;
+      canvas.drawImageRect(source,
+        Rect.fromLTWH(0,0,source.width.toDouble(),source.height.toDouble()),
+        Rect.fromLTWH(-math.min(cameraX*.035,viewW*.35),0,viewW*1.35,viewH),
+        Paint()..filterQuality=FilterQuality.none
+          ..color=Colors.white.withValues(alpha:opacity));
+    }
+    farLayer('arga_far',1);
+    farLayer('arga_far_wild',wildAlpha);
+    farLayer('arga_far_mill',millAlpha);
+    // Small moving glints over the authored blue-green river texture.
+    // Decorative only: cannot affect platform collision or obscure holes.
+    for(var row=0;row<5;row++) {
+      final baseY=340.0+row*23;
+      final line=Path();
+      for(var x=0.0;x<=viewW;x+=8) {
+        final y=baseY+1.4*math.sin(x*.035+time*1.65+row*.8);
+        if(x==0) {line.moveTo(x,y);} else {line.lineTo(x,y);}
+      }
+      canvas.drawPath(line,Paint()
+        ..color=const Color(0x35d6f9fa)
+        ..style=PaintingStyle.stroke..strokeWidth=1.15);
+    }
+    void middleLayer(String key,double opacity) {
+      final source=images[key];
+      if(source==null || opacity<=0)return;
+      final width=viewW*1.8;
+      canvas.drawImageRect(source,
+        Rect.fromLTWH(0,0,source.width.toDouble(),source.height.toDouble()),
+        Rect.fromLTWH(-math.min(cameraX*.20,width-viewW),0,width,viewH),
+        Paint()..filterQuality=FilterQuality.none
+          ..color=Colors.white.withValues(alpha:opacity));
+    }
+    middleLayer('arga_mid',1-wildAlpha);
+    middleLayer('arga_mid_wild',wildAlpha*(1-millAlpha));
+    middleLayer('arga_mid_mill',millAlpha);
+    final originalAtlas=images['arga_supports'];
+    final alternateAtlas=images['arga_supports_v2'];
+    if(originalAtlas==null)return;
+    for(var surfaceIndex=0;surfaceIndex<ArgaCourse.allSurfaces.length;surfaceIndex++) {
+      final footing=ArgaCourse.allSurfaces[surfaceIndex];
+      // Every third platform uses a distinct approved-candidate silhouette,
+      // with no change to world hitboxes or jump reach.
+      final alternate=alternateAtlas!=null && surfaceIndex%3==1;
+      final atlas=alternate?alternateAtlas:originalAtlas;
+      final slice=atlas.width/4.0;
+      final sx=footing.leftAt(time)-cameraX;
+      if(sx>viewW+30 || sx+footing.width< -30)continue;
+      final index=switch(footing.kind) {
+        ArgaSurfaceKind.rock || ArgaSurfaceKind.sinkingRock => 1,
+        ArgaSurfaceKind.log || ArgaSurfaceKind.movingLog => 2,
+        ArgaSurfaceKind.timber => 3,
+      };
+      // Keep the final wide safe bank at normal sprite scale.
+      // Stretching one rock to 500+px would destroy its SNES pixel density.
+      final count=footing.width>260 ? (footing.width/190).ceil() : 1;
+      for(var i=0;i<count;i++) {
+        final width=footing.width/count;
+        final x=sx+i*width;
+        if(x>viewW+20 || x+width< -20)continue;
+        // Alpha diagnostics of the approved candidate atlas (threshold 20%):
+        // rock y=257, log y=280, timber y=296 in the 724px source.
+        // Align the first visible pixel with the actual collision top.
+        final opaqueTop=alternate
+          ? switch(index) {1=>281.0,2=>280.0,3=>293.0,_=>265.0}
+          : switch(index) {1=>257.0,2=>280.0,3=>296.0,_=>271.0};
+        final top=footing.topAt(time,
+            identical(argaSupport,footing)?time-argaSupportSince:0);
+        final visualOffset=(opaqueTop-240)/290*100;
+        final occupied=identical(argaSupport,footing)
+            ? time-argaSupportSince : 0.0;
+        // Brief visible trembling warns before a sinking rock descends;
+        // visual-only, collision remains at its exact world coordinate.
+        final warning=footing.kind==ArgaSurfaceKind.sinkingRock &&
+            occupied>=.30 && occupied<.60;
+        final shake=warning ? (math.sin(time*30)>=0 ? 1.0 : -1.0) : 0.0;
+        canvas.drawImageRect(atlas,
+          Rect.fromLTWH(index*slice,240,slice,290),
+          Rect.fromLTWH(x+shake,top-visualOffset,width,100),
+          Paint()..filterQuality=FilterQuality.none);
+      }
+    }
+  }
+
   void _background(Canvas canvas) {
+    if (stage == 7) {
+      _argaPrototypeBackground(canvas);
+      return; // Never index the seven original ground/mid art arrays.
+    }
     // The approved detailed backdrop is a DISTANT vista. Its limited camera
     // pan cannot wrap the same clock, cathedral, car or kiosk indefinitely.
     // Foreground structures scroll at full world speed, just like sprites.
-    if(stage == 0) {
+    if(stage == 3 && qaQuioscoPrototype != null) {
+      // TEST ONLY. Draw at 1:1 over local 5,782px candidate: no repetition,
+      // no stretching and no fallback to the existing 39 bad-art panels.
+      final candidate=qaQuioscoPrototype!;
+      canvas.drawRect(Rect.fromLTWH(0,0,viewW,groundY),
+          Paint()..color=const Color(0xff78b4ed));
+      final double sourceLeft=cameraX.clamp(0.0,
+          math.max(0.0,candidate.width.toDouble()-viewW)).toDouble();
+      final sourceWidth=math.min(viewW,candidate.width.toDouble());
+      canvas.drawImageRect(candidate,
+          Rect.fromLTWH(sourceLeft,0,sourceWidth,groundY),
+          Rect.fromLTWH(0,0,sourceWidth,groundY),
+          Paint()..filterQuality=FilterQuality.none);
+    } else if(stage == 0) {
       _neighborhoodBackground(canvas);
+    } else if (stage == 1 && twcAyuntamientoRC7ArtworkEnabled) {
+      _ayuntamientoBackgroundRC7(canvas);
+    } else if (stage == 3 && twcQuioscoRC7ArtworkEnabled) {
+      _quioscoBackgroundRC7(canvas);
+    } else if (stage == 2 && twcEstafetaRC7ArtworkEnabled) {
+      _estafetaBackgroundRC7(canvas);
     } else if(stage == 4) {
       _footballBackgroundTWC(canvas);
     } else if(stage == 5 || stage == 6) {
@@ -1787,30 +3504,48 @@ class StagePainter extends CustomPainter {
       }
     }
     if(stage == 4 || stage == 5) _activityProps(canvas);
-    if(stage==6) {
+    // New school master already has authentic desks, computers and shelves
+    // inside each room. Never overlay old clipout furniture on top.
+    // Default remains compatible with RC5 until the new art has been
+    // installed and visually checked in Flutter.
+    if(stage==6 && !schoolHifiArtworkEnabled) {
       final desk=images['interior_school_mesa_aula'];
       if(desk!=null) {
         // Mesas sobre el suelo a la velocidad 1:1, solo en las aulas.
         for(final room in [1,2]) {
           final start=interiorZoneEdgesTWC[room];
           final end=interiorZoneEdgesTWC[room+1];
-          final first=((cameraX-start)/570).floor()-1;
-          for(var n=math.max(0,first);n<first+5;n++) {
-            final worldX=start+260+n*570;
-            if(worldX>end-180)break;
-            final x=worldX-cameraX;
-            if(x+desk.width<0||x>=viewW)continue;
-            canvas.drawImageRect(desk,
-              Rect.fromLTWH(0,0,desk.width.toDouble(),desk.height.toDouble()),
-              Rect.fromLTWH(x,286,desk.width.toDouble(),desk.height.toDouble()),
-              Paint()..filterQuality=FilterQuality.none);
-            if(room==2) {
-              final pc=images['interior_school_ordenador_aula'];
-              if(pc!=null) {
-                canvas.drawImageRect(pc,
-                  Rect.fromLTWH(0,0,pc.width.toDouble(),pc.height.toDouble()),
-                  Rect.fromLTWH(x+34,233,pc.width.toDouble(),pc.height.toDouble()),
-                  Paint()..filterQuality=FilterQuality.none);
+          // Approved desks in varied classroom groupings, no permanent
+          // 570px infinite repeat. Empty modules become school corridors.
+          final first=math.max(0,((cameraX-start)/interiorModuleWidthTWC)
+              .floor()-1);
+          final last=((cameraX+viewW-start)/interiorModuleWidthTWC)
+              .floor()+1;
+          for(var n=first;n<=last;n++) {
+            final moduleStart=start+n*interiorModuleWidthTWC;
+            if(moduleStart>=end)break;
+            // Furnish the ACTUAL panel source, not merely its broad zone.
+            // A corridor must stay empty; a computer lab needs PCs even
+            // when it appears as a transition within the maths wing.
+            final roomType=interiorSchoolRoomTypeTWC(room,n);
+            if(roomType==0)continue;
+            for(final dx in interiorSchoolDeskOffsetsTWC(room,n)) {
+              final worldX=moduleStart+dx;
+              if(worldX+desk.width>end)continue;
+              final x=worldX-cameraX;
+              if(x+desk.width<0||x>=viewW)continue;
+              canvas.drawImageRect(desk,
+                Rect.fromLTWH(0,0,desk.width.toDouble(),desk.height.toDouble()),
+                Rect.fromLTWH(x,286,desk.width.toDouble(),desk.height.toDouble()),
+                Paint()..filterQuality=FilterQuality.none);
+              if(roomType==2) {
+                final pc=images['interior_school_ordenador_aula'];
+                if(pc!=null) {
+                  canvas.drawImageRect(pc,
+                    Rect.fromLTWH(0,0,pc.width.toDouble(),pc.height.toDouble()),
+                    Rect.fromLTWH(x+34,198,pc.width.toDouble(),pc.height.toDouble()),
+                    Paint()..filterQuality=FilterQuality.none);
+                }
               }
             }
           }

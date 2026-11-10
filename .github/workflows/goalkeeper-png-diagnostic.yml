@@ -1,0 +1,69 @@
+name: Goalkeeper damaged PNG diagnostic
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - 'tools/diagnose_goalkeeper_pngs.py'
+      - 'tools/goalkeeper_visual_review.py'
+      - 'tools/goalkeeper_replacement_candidates.py'
+      - 'tools/build_goalkeeper_atlas.py'
+      - 'tools/audit_goalkeeper_art_quality.py'
+      - '.github/workflows/goalkeeper-png-diagnostic.yml'
+  pull_request:
+    paths:
+      - 'tools/diagnose_goalkeeper_pngs.py'
+      - 'tools/audit_goalkeeper_history.py'
+      - '.github/workflows/goalkeeper-png-diagnostic.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install 'Pillow>=10,<13'
+      - name: Audit all historical goalkeeper PNG versions
+        run: python tools/audit_goalkeeper_history.py
+      - name: Inspect all masters and recover diagnostic copies
+        run: python tools/diagnose_goalkeeper_pngs.py
+      - name: Create visual review sheet with damaged poses marked
+        run: python tools/goalkeeper_visual_review.py
+      - name: Produce reversible substitutes for six damaged sources
+        run: python tools/goalkeeper_replacement_candidates.py
+      - name: Build full temporary atlas with cleanly decoded substitute frames
+        env:
+          GOALKEEPER_USE_TEMPORARY_SUBSTITUTES: '1'
+        run: python tools/build_goalkeeper_atlas.py
+      - name: Reject duplicate frames in technical atlas (expected until art is rebuilt)
+        continue-on-error: true
+        run: python tools/audit_goalkeeper_art_quality.py
+      - name: Build provisional atlas using isolated recovery copies
+        continue-on-error: true
+        run: python tools/build_goalkeeper_atlas.py
+      - name: Upload diagnostics, never publish as game art
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: goalkeeper-png-diagnostic-unapproved
+          path: |
+            qa/goalkeeper_rebuild_20261109/goalkeeper_art_quality_audit.json
+            qa/goalkeeper_rebuild_20261109/replacement_candidates/
+            qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_temporary_rgba.png
+            qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_temporary_manifest.json
+            qa/goalkeeper_rebuild_20261109/history_audit.json
+            qa/goalkeeper_rebuild_20261109/diagnostic_recovery/
+            qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_rgba.png
+            qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_manifest.json
+          retention-days: 7
+          if-no-files-found: error

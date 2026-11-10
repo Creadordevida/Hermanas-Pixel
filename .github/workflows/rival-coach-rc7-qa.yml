@@ -1,0 +1,48 @@
+name: Rival coach RC7 real Flutter gameplay QA
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  flutter-coach:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - run: flutter analyze lib/main.dart lib/four_enemy_behaviors.dart test/rival_coach_rc7_gameplay_test.dart test/rival_coach_rc7_render_test.dart test/rival_coach_rc7_release_test.dart
+      - run: flutter test test/four_enemy_behaviors_test.dart
+      - run: flutter test test/rival_coach_rc7_release_test.dart
+      - run: flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/rival_coach_rc7_gameplay_test.dart
+      - name: Capture real football coach StagePainter 20:9
+        run: flutter test --dart-define=TWC_GAMEPLAY_PLAYTEST=true test/rival_coach_rc7_render_test.dart
+      - name: Verify and preserve six coach screenshots
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from struct import unpack
+          files=sorted(Path('qa/rival_coach_flutter').glob('*.png'))
+          assert len(files)==6, f'Expected 6 captures, got {len(files)}'
+          for p in files:
+              b=p.read_bytes()
+              assert b[:8]==bytes.fromhex('89504e470d0a1a0a'),str(p)
+              assert unpack('>II',b[16:24])==(1000,450),str(p)
+              assert len(b)>10000,str(p)
+          print('COACH_STAGEPAINTER_PNG_PASS',len(files))
+          PY
+          if [ "$GITHUB_EVENT_NAME" != "push" ]; then exit 0; fi
+          git config user.name 'twc-coach-qa[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qa/rival_coach_flutter/*.png
+          if ! git diff --cached --quiet; then
+            git commit -m 'qa(rc7): preserve coach StagePainter screenshots'
+            git fetch origin work/revision-visual-20261028-continuidad
+            git rebase origin/work/revision-visual-20261028-continuidad
+            git push origin HEAD:work/revision-visual-20261028-continuidad
+          fi

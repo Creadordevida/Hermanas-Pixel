@@ -13,7 +13,8 @@ REPORT=ROOT/'qa/ENEMY_VISIBLE_BOUNDS.json'
 characters=['goalkeeper','rival','referee','novice','breakdancer','pigeon','cat','rat','bully','teacher','statue']
 all_data={}
 for character in characters:
- for frame in range(5):
+ # Referee and breakdancer have authentic sixth 'hit' illustrations.
+ for frame in range(6 if character in ('referee','breakdancer','rival','bully') else 5):
   file=ASSETS/f'{character}_{frame}.png'
   with Image.open(file) as im:
    im=im.convert('RGBA')

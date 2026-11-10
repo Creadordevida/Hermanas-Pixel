@@ -1,0 +1,52 @@
+name: Ayuntamiento RC7 - baseline Flutter sin APK
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: ayuntamiento-rc7-baseline
+  cancel-in-progress: false
+jobs:
+  actual-stage-1:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Analyze original stage
+        run: flutter analyze --no-pub lib
+      - name: Render 18 genuine stage 1 frames
+        timeout-minutes: 18
+        run: flutter test --no-pub --reporter expanded test/ayuntamiento_rc7_baseline_real_render_test.dart
+      - name: Verify all PNG frame dimensions
+        run: |
+          python3 - <<'PY'
+          import struct
+          from pathlib import Path
+          root=Path('qa/ayuntamiento_rc7_flutter')
+          files=sorted(root.glob('baseline_*.png'))
+          assert len(files)==18,f'Expected 18 stage 1 captures, got {len(files)}'
+          for p in files:
+              data=p.read_bytes()
+              assert len(data)>10000 and data.startswith(b'\x89PNG\r\n\x1a\n'),p
+              w,h=struct.unpack('>II',data[16:24])
+              assert w in (800,975,1000) and h==450,(p,w,h)
+          print('18 authentic StagePainter baseline PNG files verified')
+          PY
+      - name: Save real before-captures to same branch, no APK
+        run: |
+          set -euo pipefail
+          git config user.name "twc-ayuntamiento-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa/ayuntamiento_rc7_flutter/baseline_*.png
+          git diff --cached --check
+          git commit -m "qa(ayuntamiento): retain 18 real Flutter baseline frames for visual comparison"
+          git pull --rebase origin "$GITHUB_REF_NAME"
+          git push origin HEAD:"$GITHUB_REF_NAME"

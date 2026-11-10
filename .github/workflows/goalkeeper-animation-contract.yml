@@ -1,0 +1,21 @@
+name: Goalkeeper animation contract (manual)
+# Manual only: avoid spending CI minutes on every art/document commit.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  animation-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Analyze goalkeeper animation and contract
+        run: flutter analyze lib/goalkeeper_animation.dart test/goalkeeper_animation_contract_test.dart
+      - name: Verify dive, warning, impact and defeat frames
+        run: flutter test test/goalkeeper_animation_contract_test.dart

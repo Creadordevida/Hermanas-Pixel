@@ -1,0 +1,97 @@
+{
+  "schema": 1,
+  "chapter": "Plaza del Castillo / Quiosco",
+  "art_status": "RECONSTRUCTION_PENDING_NOT_APPROVED",
+  "world_width": 37440,
+  "tile_width": 960,
+  "tile_height": 390,
+  "landmark": {
+    "type": "quiosco_de_musica",
+    "world_x": 17920,
+    "width": 1170,
+    "count": 1
+  },
+  "layers": [
+    {
+      "id": "far",
+      "content": "cielo, nubes y tejados distantes no físicos",
+      "parallax": 0.3,
+      "rendering": "independent candidate layer, not currently present in StagePainter"
+    },
+    {
+      "id": "middle",
+      "content": "vegetación, siluetas y arquitectura exclusivamente distante y sin contacto con el suelo jugable",
+      "parallax": 0.56,
+      "rendering": "independent candidate layer, not currently present in StagePainter"
+    },
+    {
+      "id": "near",
+      "content": "fachadas de la plaza, quiosco único, suelo, bancos, plataformas, enemigos y obstáculos, anclados a coordenadas del mundo",
+      "parallax": 1,
+      "rendering": "physical near tiles worldX-cameraX"
+    }
+  ],
+  "sectors": [
+    {
+      "id": "entrada",
+      "start": 0,
+      "end": 7200,
+      "art": "fachadas originales de acceso, arcos y dos zonas de terrazas"
+    },
+    {
+      "id": "plaza_poniente",
+      "start": 7200,
+      "end": 14400,
+      "art": "arquitectura diferente, espacios abiertos, arboles a distancia variada"
+    },
+    {
+      "id": "aproximacion",
+      "start": 14400,
+      "end": 17920,
+      "art": "apertura visual gradual hacia el quiosco, sin copiar fachadas anteriores"
+    },
+    {
+      "id": "quiosco_central",
+      "start": 17920,
+      "end": 20800,
+      "art": "quiosco completo unico, cupula, columnas y escalinatas; hito continuo visible"
+    },
+    {
+      "id": "plaza_oriente",
+      "start": 20800,
+      "end": 28000,
+      "art": "edificios completos distintos, terrazas y bancos sin repeticiones obvias"
+    },
+    {
+      "id": "salida",
+      "start": 28000,
+      "end": 37440,
+      "art": "otro extremo de la plaza con variedad arquitectonica y cierre natural"
+    }
+  ],
+  "requirements": {
+    "existing_gameplay_unchanged": true,
+    "all_38_panel_joins_reviewed": true,
+    "internal_facade_joins_reviewed": true,
+    "landmark_visible_in_real_scrolling": true,
+    "originals_preserved": true,
+    "no_duplicated_scene_3_mid_3": true,
+    "real_stagepainter_captures_required": true,
+    "android_review_pending": true
+  },
+  "current_renderer": "flattened quiosco_rc7 tiles at worldX-cameraX; new 3-layer renderer NOT integrated",
+  "connector_system": {
+    "method": "pixel_identical_overlap_single_copy",
+    "overlap_px": 256,
+    "boundary_connector_types": [
+      "A",
+      "B",
+      "C",
+      "A",
+      "B"
+    ],
+    "description": "cada panoramica posterior empieza con los 256 px finales de la anterior; se descarta la copia izquierda para no duplicar el edificio",
+    "source_width_rule": "first=end-start; subsequent=end-start+256",
+    "art_gate": "las piezas centrales deben ser distintas, edificios completos, compatible cornisa/acera/perspectiva; la verificacion pixel a pixel no prueba calidad visual"
+  }
+}

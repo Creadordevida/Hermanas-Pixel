@@ -1,0 +1,7 @@
+User-authorized exclusive RC5 fullscreen regression repair and Android APK test.
+Viewport 16:9 19.5:9 20:9, native landscape; screenshots real Flutter all chapters.
+One-shot run; no merge, no Google Play, do not modify RC4 release.
+
+Retry 2: 2026-10-30; preflight expected-version logic corrected. No other changes.
+
+Retry 3: wait real Image.asset decode before screenshot edge validation; no gate removed.

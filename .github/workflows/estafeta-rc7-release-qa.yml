@@ -1,0 +1,110 @@
+name: RC7 Estafeta - Release readiness checks NO APK
+# Pausado 2026-11-08 por solicitud del propietario: ejecución manual únicamente.
+# No activar mientras GitHub Actions esté bloqueado por presupuesto.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: estafeta-release-qa-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  estafeta-release-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - name: Verify 39 image files and manifest
+        run: |
+          python3 -m pip install --user pillow numpy
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import json,hashlib
+          root=Path('assets/images/estafeta_rc7')
+          m=json.loads((root/'manifest.json').read_text())
+          entries=m['tiles']
+          assert len(entries)==39
+          assert m['tile_width']==960 and m['tile_height']==390
+          for i,e in enumerate(entries):
+              assert e['tile']==i and e['world_start']==960*i
+              p=root/f'estafeta_{i:02d}.webp'
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==e['sha256'],p
+              with Image.open(p) as im: assert im.size==(960,390)
+          print('39/39 RC7 art assets verified')
+          PY
+      - run: flutter pub get
+      - name: Dart analysis
+        run: flutter analyze --no-pub lib
+      - name: Title regression checks
+        run: flutter test --no-pub --reporter expanded test/adaptive_title_screen_test.dart
+      - name: Release visibility contract
+        run: flutter test --no-pub --reporter expanded test/estafeta_rc7_contract_test.dart
+      - name: 18 authentic StagePainter captures
+        timeout-minutes: 17
+        run: flutter test --no-pub --reporter expanded test/estafeta_rc7_real_render_test.dart
+      - name: Validate screenshot set
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import hashlib
+          root=Path('qa/estafeta_rc7_flutter')
+          for w in (800,975,1000):
+              for x in (1200,1260,9200,18700,18760,35700):
+                  p=root/f'{w}x450_{x}.png'
+                  assert p.is_file() and p.stat().st_size>10000,p
+                  with Image.open(p) as im: assert im.size==(w,450),p
+          # Static facades MUST move exactly 60 screen pixels when camera does.
+          import numpy as np
+          for w in (800,975,1000):
+              for a,b in ((1200,1260),(18700,18760)):
+                  first=np.asarray(Image.open(root/f'{w}x450_{a}.png').convert('RGB'),dtype=np.int16)
+                  moved=np.asarray(Image.open(root/f'{w}x450_{b}.png').convert('RGB'),dtype=np.int16)
+                  x0,x1=180,w-100
+                  wall=float(np.abs(first[95:245,x0+60:x1]-moved[95:245,x0:x1-60]).mean())
+                  unchanged=float(np.abs(first[95:245,x0:x1]-moved[95:245,x0:x1]).mean())
+                  print('ESTAFETA_CAMERA_60',w,a,round(wall,2),round(unchanged,2))
+                  if wall>=unchanged or wall>20:
+                      raise AssertionError(f'Facade motion is not 1:1 at {w}, {a}: {wall}')
+          print('18 real captures and six camera-motion checks passed')
+          PY
+      - name: Capture all playable facade joints in real Flutter
+        timeout-minutes: 17
+        run: flutter test --no-pub --reporter expanded test/estafeta_rc7_all_joins_render_test.dart
+      - name: Verify all seam captures
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          root=Path('qa/estafeta_rc7_joins')
+          files=sorted(root.glob('join_*.png'))
+          assert len(files)==38, f'Expected 38 seam screenshots; found {len(files)}'
+          for f in files:
+              assert f.stat().st_size>10000,f
+              with Image.open(f) as im: assert im.size==(1000,450),f
+          print('All 38 real Flutter seam captures exist; artistic review is separate')
+          PY
+      # Actions artifact storage quota is exhausted. Persist the genuine PNGs
+      # in the PR working branch instead, without creating an APK or merge.
+      - name: Commit only verified real captures to PR branch
+        if: github.event_name == 'push'
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = "work/revision-visual-20261028-continuidad"
+          git config user.name "twc-estafeta-qa[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qa/estafeta_rc7_joins/*.png qa/estafeta_rc7_flutter/*.png
+          git diff --cached --check
+          if ! git diff --cached --quiet; then
+            git commit -m "qa(estafeta): retain 56 genuine Flutter images for RC7 review"
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin HEAD:"$GITHUB_REF_NAME"
+          fi
+      - name: Status
+        run: echo 'No APK, no merge; visual artistic approval remains separate.'

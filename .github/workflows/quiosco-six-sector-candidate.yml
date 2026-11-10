@@ -1,0 +1,62 @@
+name: Quiosco six sector candidate - inspect only
+
+on:
+  push:
+    branches:
+      - work/revision-visual-20261028-continuidad
+    paths:
+      - 'qa/quiosco_inbox/quiosco_prototipo_seis_composiciones.zip'
+      - 'test/quiosco_candidate_flutter_preview_test.dart'
+      - 'test/quiosco_candidate_stage_painter_test.dart'
+      - 'lib/main.dart'
+      - '.github/workflows/quiosco-six-sector-candidate.yml'
+
+concurrency:
+  group: quiosco-six-sector-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Pillow
+        run: python3 -m pip install --break-system-packages Pillow
+      - name: Verify exact six-sector candidate
+        run: |
+          python3 tools/check_quiosco_six_sector_prototype.py \
+            qa/quiosco_inbox/quiosco_prototipo_seis_composiciones.zip \
+            qa-output/quiosco_six_sector_candidate
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.47.8'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Capture seven REAL Flutter raster views of the candidate (NOT StagePainter)
+        run: flutter test --no-pub --reporter expanded test/quiosco_candidate_flutter_preview_test.dart
+      - name: Publish Flutter-captured candidate evidence (not game capture)
+        uses: actions/upload-artifact@v4
+        with:
+          name: quiosco-six-sector-flutter-candidate-NOT-gameplay
+          path: qa-output/quiosco_candidate_flutter/*.png
+          retention-days: 14
+      - name: Capture REAL StagePainter with candidate art and game characters (QA only)
+        timeout-minutes: 16
+        run: flutter test --no-pub --reporter expanded test/quiosco_candidate_stage_painter_test.dart
+      - name: Publish authentic StagePainter candidate images (NOT final stage)
+        uses: actions/upload-artifact@v4
+        with:
+          name: quiosco-candidate-ACTUAL-StagePainter-NOT-final
+          path: qa-output/quiosco_candidate_stagepainter/*.png
+          retention-days: 14
+      - name: Publish candidate evidence ONLY
+        uses: actions/upload-artifact@v4
+        with:
+          name: quiosco-six-sector-candidate-qa-not-flutter
+          path: qa-output/quiosco_six_sector_candidate/
+          retention-days: 14

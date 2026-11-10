@@ -1,11 +1,12 @@
-name: Miren y Sara RC3 - Capitulo 1 fisico - APK y auditoria
+name: Miren y Sara PR5 - Candidata Android y auditoria
 on:
-  push:
-    branches: [main]
+  # Las compilaciones se ejecutan SOLO bajo orden expresa del usuario.
   workflow_dispatch:
 
 jobs:
   android-apk-candidato:
+    # Do not spend Android build minutes if real Flutter visual QA has failed.
+    needs: qa-graficos-flutter
     runs-on: ubuntu-24.04
     timeout-minutes: 24
     steps:
@@ -23,6 +24,32 @@ jobs:
           flutter --version --machine | python3 -c 'import json,sys; f=json.load(sys.stdin); assert f["frameworkVersion"]=="3.47.8", f'
       - name: Dependencias auditoría
         run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Generar capas revisadas de fútbol, danza y colegio
+        run: |
+          python3 tools/build_interiors_parallax_twc.py
+          # OBLIGATORIO: nueve PNG nuevos antes de compilar / capturar.
+          # Una presencia de PNG antiguos no basta; test contra fuentes genuinas.
+          python3 tools/build_dance_panels_twc.py
+          python3 -m unittest qa.test_dance_proportions
+          python3 qa/audit_school_visual_quality.py
+          python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
+          python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+          python3 qa/check_four_classic_enemies.py
+          python3 qa/check_new_enemy_artifacts.py
+          # No activar ninguno de los seis por un PNG válido sin firma artística.
+          python3 qa/check_new_enemy_signoff.py
+          python3 qa/create_six_enemy_review.py
+          python3 tools/extract_twc_title_logo.py
+          python3 qa/verify_adaptive_title_art.py
+          python3 qa/verify_integration_before_apk.py --strict
+          python3 qa/next_version_preflight.py --strict-assets
+          python3 -m unittest qa/test_visual_revision_contract.py
+      # Redundant ~12 MB graphics artifact intentionally removed.
+      # The final visual QA contains the authoritative Flutter screenshots.
       - name: Integridad base 0.8.0 y de todos los assets de la candidata
         shell: bash
         run: |
@@ -49,19 +76,21 @@ jobs:
           sed -i 's/android:label="hermanas_aventura"/android:label="Miren y Sara"/' android/app/src/main/AndroidManifest.xml
       - name: Descargar dependencias del juego
         run: flutter pub get
-      - name: Guardar resolucion de dependencias
-        uses: actions/upload-artifact@v4
-        with:
-          name: Pubspec-Lock-0.9.1-RC3
-          path: pubspec.lock
-          if-no-files-found: error
+      # Resolución de dependencias disponible en el log de pub get.
+      # No consumir almacenamiento de Actions con un lockfile redundante.
       - name: Analizar Dart del juego
         run: flutter analyze --no-pub lib
       # Dart y los tests rápidos se comprueban ANTES de la costosa compilación
       # Android. RC8 REV2 gastó seis minutos compilando para después fallar
       # por tres avisos de `unawaited_return_in_try_block` detectables en 9 s.
+      - name: Verificar coordenadas y áreas táctiles de la portada (16:9 a 20:9)
+        run: flutter test --no-pub test/adaptive_title_screen_test.dart
+      - name: Verificar variedad del colegio y parallax de ventanas
+        run: flutter test --no-pub test/school_interior_variety_test.dart
       - name: Analizar Dart de las pruebas
         run: flutter analyze --no-pub test
+      - name: Probar IA y colisiones físicas de los seis enemigos antes de Android
+        run: flutter test --no-pub test/new_enemy_behaviors_test.dart test/new_enemy_hitboxes_test.dart
       - name: Probar mecánicas, composición, saltos, sombras y carga de imágenes
         run: flutter test test/asset_integrity_test.dart test/dog_mechanics_test.dart test/wildlife_mechanics_test.dart test/jump_visuals_test.dart test/hero_hearts_test.dart test/neighborhood_scene_engine_test.dart test/neighborhood_visual_contract_test.dart test/chapter_one_world_tiles_test.dart test/widget_test.dart
       - name: Construir APK Android de PRUEBA (sin aprobación artística)
@@ -70,16 +99,16 @@ jobs:
       - name: Publicar APK de prueba en cuanto esté construido
         uses: actions/upload-artifact@v4
         with:
-          name: Miren-y-Sara-0.9.1-RC3-APK-PRUEBAS
+          retention-days: 1
+          name: Miren-y-Sara-revision-visual-PR5-APK-PRUEBAS
           path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
 
-  # La compilación de Android tiene su propio resultado: puede terminar VERDE
-  # aunque una prueba visual posterior esté en ROJO. No se ocultan los errores.
-  # Las capturas se ejecutan en otro runner, sin competir con el compilador.
+  # BLOQUEANTE: primero comprobar las capturas auténticas del motor. Una
+  # prueba visual roja impide llegar al job de Android. Este pipeline
+  # sigue siendo EXCLUSIVAMENTE MANUAL (workflow_dispatch).
   qa-graficos-flutter:
     name: Capturas y auditoría gráfica real Flutter
-    needs: android-apk-candidato
     runs-on: ubuntu-24.04
     timeout-minutes: 25
     steps:
@@ -93,15 +122,44 @@ jobs:
           cache: true
       - name: Dependencias de comprobación visual
         run: python3 -m pip install --user pillow numpy pyyaml
+      - name: Regenerar recursos de revisión para capturas Flutter
+        run: |
+          python3 tools/build_interiors_parallax_twc.py
+          # OBLIGATORIO: nueve PNG nuevos antes de compilar / capturar.
+          # Una presencia de PNG antiguos no basta; test contra fuentes genuinas.
+          python3 tools/build_dance_panels_twc.py
+          python3 -m unittest qa.test_dance_proportions
+          python3 tools/build_football_parallax_twc.py
+          python3 tools/generate_new_enemy_sprites.py
+          python3 tools/generate_navarre_king.py
+          python3 tools/generate_estafeta_enemies.py
+          python3 tools/refine_four_classic_enemies.py
+          python3 tools/export_sprite_bounds.py
+          python3 qa/check_four_classic_enemies.py
+          python3 qa/create_six_enemy_review.py
+          python3 tools/extract_twc_title_logo.py
+          python3 qa/verify_adaptive_title_art.py
+          python3 qa/verify_integration_before_apk.py --strict
+      - name: Preparar comparativa REAL de 27 módulos del colegio (Python, no Flutter)
+        run: python3 qa/build_school_contact.py
       - name: Descargar dependencias Flutter para las capturas
         run: flutter pub get
       - name: Capturar mapa y chapter 1 (Flutter real)
         timeout-minutes: 10
         # La salida expandida muestra el fallo completo en los registros de GitHub.
         run: flutter test --reporter expanded --concurrency=1 --timeout=9m test/qa_render_capture_test.dart
+      - name: Capturar portada REAL Flutter en cuatro relaciones de aspecto
+        timeout-minutes: 4
+        run: flutter test --reporter expanded --concurrency=1 --timeout=3m test/qa_adaptive_title_render_test.dart
       - name: Capturar uniformes de Miren y Sara
         timeout-minutes: 5
         run: flutter test --reporter expanded --concurrency=1 --timeout=4m test/qa_outfits_capture_test.dart
+      - name: Capturar cuatro enemigos clásicos con StagePainter REAL
+        timeout-minutes: 5
+        run: flutter test --reporter expanded --concurrency=1 --timeout=4m test/qa_four_classic_enemy_render_test.dart
+      - name: Capturar los cuatro enemigos nuevos en StagePainter REAL
+        timeout-minutes: 5
+        run: flutter test --reporter expanded --concurrency=1 --timeout=4m test/qa_new_enemy_real_render_test.dart
       - name: Capturar rata y gato
         timeout-minutes: 3
         run: flutter test --concurrency=1 --timeout=2m test/qa_creature_render_test.dart
@@ -119,6 +177,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 1
           name: Capturas-REALES-Flutter-0.9.1-RC3
           path: qa/rendered_from_flutter/*.png
           if-no-files-found: warn
@@ -132,9 +191,18 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
+          retention-days: 1
           name: Informe-QA-0.9.1-RC3
           path: |
             qa/RESULTADO_PUERTAS.txt
+            qa/interiors_twc_lab/CONTACTO_COLEGIO_*_9_MODULOS_PYTHON.jpg
+            qa/interiors_twc_lab/VENTANA_CIELO_*_PYTHON.png
+            # Evidencia reproducible de los nueve PNG realmente usados en la candidata.
+            qa/interiors_twc_lab/DANCE_PANEL_GENERATION.json
+            assets/images/interiors_parallax/dance/z*_panel_*.png
+            qa/art_review/seis_enemigos_vs_miren_sara_RECURSOS.png
+            qa/art_review/*_original_vs_polished.png
             qa/CANDIDATE_ASSET_INVENTORY.json
+            qa/PREAPK_INTEGRATION_G.json
             qa/SCENE_SEAMS_REPORT.json
           if-no-files-found: warn

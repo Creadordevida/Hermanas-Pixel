@@ -1,0 +1,57 @@
+Disparador único autorizado por el propietario, 2026-11-08. QA del Arga con cuatro atlas 4x6; sin APK ni merge.
+Segunda ejecución: corregido test de transición swim -> accelerate -> warning -> leap.
+Tercera ejecución: captura cuatro fotogramas reales de pinzazo del cangrejo.
+
+QA crab strict pixel-byte comparison 2026-11-08 run 4
+
+Quinta ejecución: cuatro poses del cangrejo sin oclusión y comparación ROI.
+
+Sexta ejecución: cuatro fotogramas reales de lanzamiento del pescador.
+
+Séptima ejecución: recolocación vertical del pescador para apoyar pies.
+
+Octava ejecución: secuencia de cuatro fotogramas del niño gamberro.
+
+Novena ejecución: cuatro poses sucesivas de la trucha en salto.
+
+Décima ejecución: seis poses del cangrejo en capturas reales.
+
+Undécima ejecución: último fotograma de derrota del cangrejo.
+
+Duodécima ejecución: las seis poses del pescador.
+
+Decimotercera ejecución: seis poses del niño gamberro.
+
+Decimocuarta ejecución: seis estados del atlas de trucha.
+
+Decimoquinta ejecución: batería ampliada de daño y proyectiles.
+
+Decimosexta ejecución: caída letal en agua y reaparición mediante bucle Flutter.
+
+Decimoséptima ejecución: corregido tipo de velocidad vertical del test.
+
+Decimoctava ejecución: pinzazo del cangrejo en bucle real Flutter.
+
+Decimonovena ejecución: anzuelo natural del pescador y daño real.
+
+Vigésima ejecución: piedra natural del niño y daño real.
+
+Run natural trout gameplay contact test and screenshot.
+
+Run alternate heroine Sara trout contact check.
+
+Run Sara against crab, fisher and boy in full game loop.
+
+Run all 96 StagePainter atlas frame continuity test.
+
+Rerun 96-frame Flutter test with runAsync readback fix.
+
+Validate eighth Arga chapter next-version map entry.
+
+Repeat Arga next-version selection after real panorama asset fix.
+
+Capture genuine next release map with eighth chapter access.
+
+Verify map screenshot only after bitmap has decoded.
+
+Validate and capture unobscured Arga map button.

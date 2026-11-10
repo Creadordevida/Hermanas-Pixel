@@ -1,0 +1,102 @@
+{
+  "source_sheet_sha256": "4d660f5de1cdb1522adcef65e94cf0f976f011c26af3bdeea492e921bff079a4",
+  "reference": "18 original intact masters in qa/goalkeeper_rebuild_20261109",
+  "source_grid": [
+    3,
+    2
+  ],
+  "alpha_threshold": 170,
+  "scale_to_master": 2.35,
+  "poses": [
+    {
+      "name": "shuffle_step_b",
+      "source_cell": 0,
+      "bbox": [
+        151,
+        64,
+        402,
+        447
+      ],
+      "rgba_size": [
+        622,
+        932
+      ],
+      "sha256": "436f212050d6fd074bc0764bd6fd1ec5cc35872b94b9ea87cab2d041b9c656f5"
+    },
+    {
+      "name": "dive",
+      "source_cell": 1,
+      "bbox": [
+        37,
+        81,
+        421,
+        439
+      ],
+      "rgba_size": [
+        934,
+        873
+      ],
+      "sha256": "d8e9bb4ace55cceba9290f4a9d2b1b160139100da0ec093aff287d13ef64577a"
+    },
+    {
+      "name": "dive_extension",
+      "source_cell": 2,
+      "bbox": [
+        37,
+        87,
+        472,
+        409
+      ],
+      "rgba_size": [
+        1054,
+        789
+      ],
+      "sha256": "7f748464a6788a86636da050d9e79674c953832ea2851c297bd17b5070cbbca3"
+    },
+    {
+      "name": "hurt",
+      "source_cell": 3,
+      "bbox": [
+        119,
+        68,
+        404,
+        464
+      ],
+      "rgba_size": [
+        702,
+        963
+      ],
+      "sha256": "6b72690f979850fb5edcd5f11e1d3b0b6d747ec683924a9a18bd4aa40b729cb0"
+    },
+    {
+      "name": "defeat_side",
+      "source_cell": 4,
+      "bbox": [
+        17,
+        148,
+        432,
+        400
+      ],
+      "rgba_size": [
+        1007,
+        624
+      ],
+      "sha256": "7d391a37019c86c3a0744688e18e729092b1dcba7b0494bf07892e18357b0440"
+    },
+    {
+      "name": "defeated",
+      "source_cell": 5,
+      "bbox": [
+        11,
+        211,
+        496,
+        387
+      ],
+      "rgba_size": [
+        1172,
+        446
+      ],
+      "sha256": "46ddb5c063b67150ed63075fc9bb4a47c62bacb7a2a0426367a18cf42ea7f541"
+    }
+  ]
+}

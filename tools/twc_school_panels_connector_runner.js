@@ -1,0 +1,50 @@
+// TWC SCHOOL ART BRIDGE: deliberately authored for ChatGPT-connected GitHub.
+// Manual tool invocation only. Never uses Actions, APK builds or network JS.
+// The caller provides "tools", "start", "end", "text" and "image" callbacks.
+// 0<=start<=end<=26. Source PNGs always from the approved repository.
+// IMPORTANT: generated atlas geometry is technical. Artistic signoff requires
+// the separate human/Flutter review; don't mark images approved automatically.
+const repo="Creadordevida/Hermanas-Pixel";
+const br="work/revision-visual-20261028-continuidad";
+const alpha="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+if(start<0||end>26||end<start||end-start>=13)throw Error("batch must contain <=13 panels");
+function un64(s){const a=[];let v=0,n=0;for(const c of s){const k=alpha.indexOf(c);if(k<0)continue;v=(v<<6)|k;n+=6;if(n>=8){n-=8;a.push((v>>n)&255)}}return a}
+function num(a,i){return (a[i]*16777216+a[i+1]*65536+a[i+2]*256+a[i+3])>>>0}
+class Bit{constructor(a){this.a=a;this.i=16}read(n){let v=0;for(let j=0;j<n;j++,this.i++)v|=((this.a[this.i>>3]>>(this.i&7))&1)<<j;return v}align(){this.i=(this.i+7)&~7}}
+function tree(a){const c=Array(16).fill(0),n=Array(16).fill(0),m=Array.from({length:16},()=>new Map());for(const x of a)if(x)c[x]++;let z=0;for(let i=1;i<=15;i++){z=(z+c[i-1])*2;n[i]=z}for(let i=0;i<a.length;i++)if(a[i])m[a[i]].set(n[a[i]]++,i);return m}
+function sym(b,m){let v=0;for(let i=1;i<=15;i++){v=(v<<1)|b.read(1);if(m[i].has(v))return m[i].get(v)}throw Error("bad Huffman")}
+const LEN=[3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258],LB=[0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0],DST=[1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577],DB=[0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+function decode(s){const data=un64(s),w=num(data,16),h=num(data,20);if(data[25]!==2)throw Error("school source must be RGB PNG");let z=[],p=8;while(p<data.length){const len=num(data,p),name=String.fromCharCode(...data.slice(p+4,p+8));if(name==="IDAT")z.push(...data.slice(p+8,p+8+len));p+=len+12;if(name==="IEND")break}const b=new Bit(z),out=[];let last=0;while(!last){last=b.read(1);let t=b.read(2);if(t===0){b.align();let k=b.i>>3,len=z[k]|z[k+1]<<8;b.i+=32;for(let j=0;j<len;j++)out.push(z[(b.i>>3)+j]);b.i+=8*len;continue}let a,d;if(t===1){a=tree(Array.from({length:288},(_,i)=>i<144?8:i<256?9:i<280?7:8));d=tree(Array(32).fill(5))}else if(t===2){const nl=257+b.read(5),nd=1+b.read(5),nc=4+b.read(4),order=[16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15],ls=Array(19).fill(0);for(let i=0;i<nc;i++)ls[order[i]]=b.read(3);const tmp=tree(ls),all=[];while(all.length<nl+nd){const x=sym(b,tmp);if(x<16)all.push(x);else if(x===16){let n=3+b.read(2),v=all[all.length-1];while(n--)all.push(v)}else if(x===17){let n=3+b.read(3);while(n--)all.push(0)}else{let n=11+b.read(7);while(n--)all.push(0)}}a=tree(all.slice(0,nl));d=tree(all.slice(nl,nl+nd))}else throw Error("invalid zlib block");for(;;){const x=sym(b,a);if(x<256){out.push(x);continue}if(x===256)break;const k=x-257;let len=LEN[k]+b.read(LB[k]),di=sym(b,d),dist=DST[di]+b.read(DB[di]);while(len--)out.push(out[out.length-dist])}}
+const px=new Uint8Array(w*h*3);let at=0,prev=new Uint8Array(w*3);for(let y=0;y<h;y++){const f=out[at++],row=new Uint8Array(w*3);for(let x=0;x<w*3;x++){let v=out[at++],a=x>=3?row[x-3]:0,c=prev[x],d=x>=3?prev[x-3]:0;if(f===1)v+=a;else if(f===2)v+=c;else if(f===3)v+=Math.floor((a+c)/2);else if(f===4){const p=a+c-d,da=Math.abs(p-a),db=Math.abs(p-c),dc=Math.abs(p-d);v+=da<=db&&da<=dc?a:db<=dc?c:d}row[x]=v&255}px.set(row,y*w*3);prev=row}return{w,h,px}}
+const sources=[];for(const name of ["school","school_classroom","school_computers"]){const r=await tools.mcp__GitHub__fetch_file({repository_full_name:repo,path:"assets/images/scenes/"+name+".png",ref:br,encoding:"base64"});sources.push(decode(r.result.content))}
+const crcT=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let i=0;i<8;i++)c=c&1?(0xedb88320^(c>>>1)):(c>>>1);crcT[n]=c>>>0}
+function chunk(type,data){const b=[...type].map(c=>c.charCodeAt(0)).concat(data);let c=0xffffffff;for(const x of b)c=crcT[(c^x)&255]^(c>>>8);c=(c^0xffffffff)>>>0;const n=data.length;return[n>>>24&255,n>>>16&255,n>>>8&255,n&255,...b,c>>>24&255,c>>>16&255,c>>>8&255,c&255]}
+function encode(px,w,h){const raw=new Uint8Array(h*(w*4+1));for(let y=0;y<h;y++)raw.set(px.subarray(y*w*4,(y+1)*w*4),y*(w*4+1)+1);const z=[120,1];let A=1,B=0;for(let i=0;i<raw.length;i+=65535){const n=Math.min(65535,raw.length-i),end=i+n>=raw.length;z.push(end?1:0,n&255,n>>8,(~n)&255,((~n)>>8)&255);for(let j=i;j<i+n;j++){const v=raw[j];z.push(v);A=(A+v)%65521;B=(B+A)%65521}}z.push(B>>8&255,B&255,A>>8&255,A&255);return[137,80,78,71,13,10,26,10,...chunk("IHDR",[w>>>24&255,w>>>16&255,w>>>8&255,w&255,h>>>24&255,h>>>16&255,h>>>8&255,h&255,8,6,0,0,0]),...chunk("IDAT",z),...chunk("IEND",[])]}
+function to64(p){let s="";for(let i=0;i<p.length;i+=3){const a=p[i],b=p[i+1],c=p[i+2],v=a<<16|(b??0)<<8|(c??0);s+=alpha[v>>>18&63]+alpha[v>>>12&63]+(b===undefined?"=":alpha[v>>>6&63])+(c===undefined?"=":alpha[v&63])}return s}
+function panel(z,v){const plan=[[0,0,0,1,0,0,0,2,0],[1,1,0,1,1,0,1,1,2],[2,2,0,2,2,0,2,2,1]],source=plan[z][v],im=sources[source],hall=sources[0],W=880,H=278;
+const left=source===0?Math.round(65+(im.w-W-65)*v/8):Math.round(145+(Math.min(im.w-W-15,325)-145)*v/8);
+const px=new Uint8Array(W*H*4);
+for(let y=0;y<H;y++){const original=source!==0&&y>=251?hall:im;for(let x=0;x<W;x++){const sx=x+left,p=(y*original.w+sx)*3,q=(y*W+x)*4;let R=original.px[p],G=original.px[p+1],B=original.px[p+2];
+// Hallway-only AULAS sign must NOT ghost under classroom/ICT blackboards.
+// For the 27px base strip, fill only the source sign's real bounding region
+// from a sign-free native-size section of the SAME original painting.
+// Feather both edges; no stretching or repainting master files.
+if(source!==0&&y>=251&&sx>=750&&sx<=955){
+ const opacity=Math.max(0,Math.min(1,(sx-750)/18,(955-sx)/18));
+ const alt=(y*hall.w+sx+200)*3;
+ R=Math.round(R*(1-opacity)+hall.px[alt]*opacity);
+ G=Math.round(G*(1-opacity)+hall.px[alt+1]*opacity);
+ B=Math.round(B*(1-opacity)+hall.px[alt+2]*opacity);
+}
+px[q]=R;px[q+1]=G;px[q+2]=B;px[q+3]=y<210&&R>=80&&G>130&&B>=148&&B>R+21&&B>G+12?12:255}}
+function rect(x1,y1,x2,y2,c){for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++)px.set(c,(y*W+x)*4)}
+const trims=[[115,94,78,255],[92,101,99,255],[80,91,111,255]],lights=[[218,196,158,255],[191,209,194,255],[178,193,219,255]];
+rect(0,8,W-1,15,trims[z]);rect(0,15,W-1,16,lights[z]);rect(0,H-35,W-1,H-29,trims[z]);rect(0,H-36,W-1,H-35,lights[z]);rect(0,0,W-1,7,[143,120,102,255]);rect(0,0,10,H-1,[143,120,102,255]);rect(0,0,2,H-1,[224,201,169,255]);rect(8,0,10,H-1,[94,79,68,255]);rect(W-11,0,W-1,H-1,[143,120,102,255]);rect(W-11,0,W-9,H-1,[224,201,169,255]);rect(W-3,0,W-1,H-1,[94,79,68,255]);rect(0,H-10,W-1,H-1,[143,120,102,255]);rect(0,H-11,W-1,H-10,[224,201,169,255]);return encode(px,W,H)}
+const files=[],previews=[];
+for(let idx=start;idx<=end;idx++){const z=Math.floor(idx/9),v=idx%9,raw=panel(z,v),data=to64(raw);const b=await tools.mcp__GitHub__create_blob({repository_full_name:repo,content:data,encoding:"base64"});files.push({path:"assets/images/interiors_parallax/school/z"+z+"_panel_"+v+".png",mode:"100644",type:"blob",sha:b.result.sha});if((idx===3)||(idx===9)||(idx===19)||(idx===25))previews.push({label:z+"/"+v,data})}
+const headR=await tools.mcp__GitHub__fetch({url:"https://api.github.com/repos/"+repo+"/commits/"+br}),head=JSON.parse(headR.result.content);
+const tr=await tools.mcp__GitHub__create_tree({repository_full_name:repo,base_tree_sha:head.commit.tree.sha,tree_elements:files});
+const c=await tools.mcp__GitHub__create_commit({repository_full_name:repo,message:"assets(school): commit genuine native-scale PNG room panels "+start+".."+end+" with complete blackboards and alpha windows; artistic signoff pending",tree_sha:tr.result.sha,parent_sha:head.sha});
+const update=await tools.mcp__GitHub__update_ref({repository_full_name:repo,branch_name:br,sha:c.result.sha,expected_sha:head.sha});
+text({commit:c.result.sha,success:update.result.success,batch:[start,end],files:files.map(x=>x.path)});
+for(const p of previews){text("Authentic PNG room panel "+p.label);image("data:image/png;base64,"+p.data)}

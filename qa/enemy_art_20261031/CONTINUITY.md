@@ -1,0 +1,9 @@
+# Enemy execution checkpoint — 2026-10-31
+
+Previous run 41208615610 passed Flutter analysis, behavior/hitbox/pose tests and actual StagePainter capture tests. Visual inspection found undersized new sprites: atlas transparent padding was treated as body height. Fix uses canonical opaque idle height and ONE scale across all poses, preserving aspect and ground baseline. Defeat columns now clamp rather than loop.
+
+All six new atlas PNGs are integrated or reproduced from checksum-protected source art. Robot and runner direction is user-approved; animation and game appearance still require review. Other four illustrated sets are candidates, not artistically approved. New complete bully and referee poses are drawn from original character references; all 5 bully and 6 referee frames were newly drawn, then alpha-cleaned and uniformly nearest-neighbor scaled. Original backups remain qa/enemy_originals_rc5. Legacy bully shoe patch and referee collage cannot overwrite them.
+
+This checkpoint triggers QA only. 24 real StagePainter samples per new enemy cover six states, both protagonists are loaded, selected protagonist alternates by state. GIFs are sequences of controlled engine render states, NOT device gameplay recordings. Classic captures include real backgrounds and protagonists. No APK, merge or publication. Do not mark complete solely because tests pass: inspect evidence, attack timing, locomotion, collisions and remaining integration. Art activation flags remain false pending user artistic approval; gameplay test mode is separate.
+
+Reusable learning: inspect opaque bounds before assigning world height; never stretch cells to arbitrary rectangles. Commit deterministic PNGs and protect legacy tools. Derive compact contact sheets/GIFs from real engine captures instead of consuming exhausted Actions artifact storage. Batch QA after related changes. Preserve concurrent school/dance work with branch-head lease.
