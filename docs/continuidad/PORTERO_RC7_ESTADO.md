@@ -24,3 +24,12 @@ NO TERMINADO; no afirmar que el atlas nuevo está integrado ni validado en Flutt
 6. Actualizar este documento con hashes, commits y evidencias antes de declarar terminado.
 
 No habilitar un recurso inexistente ni afirmar que una prueba no ejecutada ha pasado.
+
+## Microfase 12 — fallo real de CI localizado (10 noviembre 2026)
+
+- Workflow `Goalkeeper atlas candidate QA`, run [42760061458](https://github.com/Creadordevida/Hermanas-Pixel/actions/runs/42760061458), job 129643389777: **failure**, no atlas generado.
+- `qa/check_goalkeeper_master_poses.py` procesó correctamente ready, idle_shift_a/b/c, shuffle y shuffle_step_a.
+- El siguiente archivo en el orden del verificador es `qa/goalkeeper_rebuild_20261109/pose_shuffle_step_b_rgba.png`. Pillow 12.3.0 falló al decodificarlo con `OSError: unrecognized data stream contents when reading image file`.
+- **Acción necesaria:** reparar o sustituir ese PNG con una imagen RGBA válida y conservar la fuente original para comparación. No activar `ImageFile.LOAD_TRUNCATED_IMAGES` ni silenciar errores de imagen: ocultaría defectos gráficos.
+- Después repetir el verificador completo de 24 imágenes y la generación del atlas. Pueden existir otros PNG corruptos posteriores aún no evaluados.
+- La integración Flutter y APK siguen pendientes; no afirmar éxito del QA.
