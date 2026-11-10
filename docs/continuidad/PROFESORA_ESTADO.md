@@ -1,5 +1,7 @@
 # Profesora del Colegio — renovación
 
+**Estado vigente.** El atlas nuevo está habilitado en la ruta normal del Colegio y preparado en la rama para la próxima APK. Pendiente la comprobación en Android físico.
+
 ## Microfase 1 — diagnóstico y contrato visual
 
 Base verificada `a7383d5d7cc88432043a00d02b9a8fe0044e6dd4`. La ruta normal abre El colegio y crea 14 profesoras. En Flutter se probaron la goma y la derrota al tercer impacto con Miren y Sara. Cinco PNG actuales, cuatro poses de pie con la misma base de piernas y una derrota fija. El motor alterna fotogramas de pie durante el reposo, reutiliza uno en impacto y muestra la goma saliendo hacia el lado opuesto al brazo. La hoja aprobada `reference/profesora_colegio_arte_aprobado.png` fija gafas, moño castaño, traje morado, blusa blanca, tacones y examen con F roja.
@@ -28,3 +30,21 @@ Se revisaron las tres hojas fuente y el atlas completo a escala de juego. La hoj
 La entrada de vista previa carga el atlas candidato en `StagePainter` y usa el mismo reloj de preparación que el combate. La goma aparece al entrar en la primera pose de suelta, en las coordenadas de los dedos y con el espejo correcto. La trayectoria inicial desciende para permitir la esquiva desde la nueva altura de la mano. Se conservan los 195 px/s horizontales, el aviso de 0,75 s, los 3,6 s de recarga y los tres impactos. Un golpe durante el aviso interrumpe la suelta.
 
 La prueba de widget entra por Nueva partida y selecciona El colegio. Con balón y peine comprueba los cuatro fotogramas de aviso, la suelta en ambas direcciones, un corazón de daño, la esquiva con el botón de salto, la interrupción, el impacto y la derrota completa al tercer golpe. La prueba pasó en Flutter 3.47.8. Se revisaron las capturas en contexto, incluido el nuevo signo de aviso de píxel sobre la cabeza. Siguiente acción: activar la ruta normal, repetir la prueba sin vista previa y archivar las capturas.
+
+## Microfase 4 — ruta normal y evidencia final
+
+`enemyArtValidated['teacher']` queda activo y se elimina la entrada temporal de vista previa. La prueba normal inicia Nueva partida, selecciona El colegio y comprueba las 14 apariciones del nivel, el atlas decodificado y el combate de ambas protagonistas en ambos sentidos. Pasaron 15 pruebas en Flutter 3.47.8: la escena de la profesora, integridad de recursos y regresión de selección de poses del portero y de los clásicos. El análisis de los tres archivos Dart modificados terminó sin incidencias.
+
+Se revisaron catorce capturas originales de `StagePainter` de 1000 × 450 obtenidas con `TEACHER_QA_OUTPUT`.
+
+| Momento | Miren | Sara |
+| --- | --- | --- |
+| Reposo | [PNG](../../qa/teacher_rc7/stagepainter/miren_01_reposo.png) | [PNG](../../qa/teacher_rc7/stagepainter/sara_01_reposo.png) |
+| Aviso | [PNG](../../qa/teacher_rc7/stagepainter/miren_02_aviso.png) | [PNG](../../qa/teacher_rc7/stagepainter/sara_02_aviso.png) |
+| Suelta de la goma | [PNG](../../qa/teacher_rc7/stagepainter/miren_03_suelta.png) | [PNG](../../qa/teacher_rc7/stagepainter/sara_03_suelta.png) |
+| Recuperación | [PNG](../../qa/teacher_rc7/stagepainter/miren_04_recuperacion.png) | [PNG](../../qa/teacher_rc7/stagepainter/sara_04_recuperacion.png) |
+| Impacto | [PNG](../../qa/teacher_rc7/stagepainter/miren_05_impacto.png) | [PNG](../../qa/teacher_rc7/stagepainter/sara_05_impacto.png) |
+| Inicio de caída | [PNG](../../qa/teacher_rc7/stagepainter/miren_06_caida.png) | [PNG](../../qa/teacher_rc7/stagepainter/sara_06_caida.png) |
+| Derrota completa | [PNG](../../qa/teacher_rc7/stagepainter/miren_07_derrota.png) | [PNG](../../qa/teacher_rc7/stagepainter/sara_07_derrota.png) |
+
+Commits de continuidad: `5377375` (diagnóstico), `990ed9c` (atlas y fuentes) y `a228be9` (integración y combate en vista previa). La activación normal y las capturas están en el commit de esta entrada. Pendiente en Redmi Note 14: lectura del aviso a distancia de juego, esquiva con controles táctiles y caída completa en la próxima APK.

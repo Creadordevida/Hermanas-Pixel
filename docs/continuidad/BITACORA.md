@@ -408,3 +408,7 @@ El diagnóstico y la tabla de poses se guardaron en `5377375`. Atlas de 24 celda
 ## 2026-11-10 — Profesora del Colegio, combate validado en Flutter
 
 Atlas confirmado en `990ed9c`. Integración candidata probada en el Colegio con ambos personajes. Goma desde la mano en ambos sentidos, salto, interrupción y derrota tras tres proyectiles reales. Capturas revisadas y aviso corregido. Siguiente acción: habilitar la ruta normal y archivar la evidencia final. [Profesora](PROFESORA_ESTADO.md).
+
+## 2026-11-10 — Profesora del Colegio habilitada para la próxima APK
+
+Integración y combate de vista previa en `a228be9`. La ruta normal carga el atlas de 24 fotogramas con preparación, suelta desde la mano, recuperación, impacto y caída al suelo. Pasaron 15 pruebas Flutter en configuración normal y el análisis Dart. Catorce PNG auténticos 20:9 y trazabilidad en [Profesora](PROFESORA_ESTADO.md). Siguiente acción: comprobar la próxima APK en Redmi Note 14.

@@ -12,6 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() {
   testWidgets('La profesora avisa, suelta la goma y cae en el Colegio',
       (tester) async {
+    expect(hasApprovedEnemyArtwork('teacher'), isTrue);
     SharedPreferences.setMockInitialValues({});
     await tester.binding.setSurfaceSize(const Size(1000, 450));
     final output = Platform.environment['TEACHER_QA_OUTPUT'];

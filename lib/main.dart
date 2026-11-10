@@ -56,7 +56,7 @@ const Map<String,bool> enemyArtValidated = {
   'comparsa_caravinagre': true,
   'comparsa_zaldiko': true,
   'goalkeeper': true,
-  'teacher': false,
+  'teacher': true,
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
@@ -703,8 +703,7 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       if (hasApprovedEnemyArtwork('goalkeeper')) {
         paths['enemy_goalkeeper_atlas'] = 'assets/images/enemies_new/goalkeeper_atlas.png';
       }
-      if (hasApprovedEnemyArtwork('teacher') ||
-          const bool.fromEnvironment('TWC_TEACHER_ART_PREVIEW')) {
+      if (hasApprovedEnemyArtwork('teacher')) {
         paths['enemy_teacher_atlas'] = 'assets/images/enemies_new/teacher_atlas.png';
       }
       paths['slipper'] = 'assets/images/enemies_new/green_slipper.png';
