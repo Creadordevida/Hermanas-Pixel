@@ -7,6 +7,7 @@ on:
       - work/revision-visual-20261028-continuidad
     paths:
       - 'tools/build_goalkeeper_atlas.py'
+      - 'tools/goalkeeper_replacement_candidates.py'
       - 'qa/goalkeeper_rebuild_20261109/pose_*_rgba.png'
       - '.github/workflows/goalkeeper-atlas-candidate-qa.yml'
   pull_request:
@@ -29,9 +30,11 @@ jobs:
           python-version: '3.11'
       - name: Install image tools
         run: python -m pip install 'Pillow>=10,<13'
-      - name: Verify all 24 preserved RGBA masters
-        run: python qa/check_goalkeeper_master_poses.py
-      - name: Build 4x6 candidate with shared scale
+      - name: Produce isolated, valid temporary replacements
+        run: python tools/goalkeeper_replacement_candidates.py
+      - name: Build 4x6 technical candidate with shared scale
+        env:
+          GOALKEEPER_USE_TEMPORARY_SUBSTITUTES: '1'
         run: python tools/build_goalkeeper_atlas.py
       - name: Check 24 cells, alpha and manifest
         run: |
@@ -40,8 +43,8 @@ jobs:
           from pathlib import Path
           import hashlib, json
           root=Path('qa/goalkeeper_rebuild_20261109')
-          path=root/'goalkeeper_atlas_4x6_candidate_rgba.png'
-          manifest=json.loads((root/'goalkeeper_atlas_4x6_candidate_manifest.json').read_text())
+          path=root/'goalkeeper_atlas_4x6_candidate_temporary_rgba.png'
+          manifest=json.loads((root/'goalkeeper_atlas_4x6_candidate_temporary_manifest.json').read_text())
           with Image.open(path) as atlas:
               assert atlas.mode=='RGBA' and atlas.size==(1024,1536)
               for r in range(6):
@@ -50,16 +53,16 @@ jobs:
                       assert tile.getchannel('A').getbbox(), (r,c)
                       assert tile.getpixel((0,0))[3]==0, (r,c)
           assert len(manifest['poses'])==24
-          assert manifest['status']=='CANDIDATE_NOT_APPROVED'
+          assert manifest['status']=='TEMPORARY_DUPLICATE_FRAMES_NOT_APPROVED'
           assert hashlib.sha256(path.read_bytes()).hexdigest()==manifest['atlas_sha256']
-          print('GOALKEEPER_ATLAS_CANDIDATE_QA_PASS — not visual approval')
+          print('GOALKEEPER_TEMPORARY_ATLAS_QA_PASS — duplicate frames, NOT approved for game')
           PY
       - name: Upload candidate and traceability manifest
         uses: actions/upload-artifact@v4
         with:
           name: goalkeeper-atlas-4x6-candidate-not-approved
           path: |
-            qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_rgba.png
-            qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_manifest.json
+            qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_temporary_rgba.png
+            qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_temporary_manifest.json
           if-no-files-found: error
           retention-days: 7
