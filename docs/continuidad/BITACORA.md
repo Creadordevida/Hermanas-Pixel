@@ -404,3 +404,7 @@ Confirmada en Flutter la ruta normal, la goma y la derrota con ambas protagonist
 ## 2026-11-10 — Profesora del Colegio, atlas candidato
 
 El diagnóstico y la tabla de poses se guardaron en `5377375`. Atlas de 24 celdas, pivotes y alfa auditados. Se conservan las fuentes y el montador reproducible. Siguiente acción en [Profesora](PROFESORA_ESTADO.md): comprobar la escena, el lanzamiento y la caída antes de habilitar la ruta normal.
+
+## 2026-11-10 — Profesora del Colegio, combate validado en Flutter
+
+Atlas confirmado en `990ed9c`. Integración candidata probada en el Colegio con ambos personajes. Goma desde la mano en ambos sentidos, salto, interrupción y derrota tras tres proyectiles reales. Capturas revisadas y aviso corregido. Siguiente acción: habilitar la ruta normal y archivar la evidencia final. [Profesora](PROFESORA_ESTADO.md).

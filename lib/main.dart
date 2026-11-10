@@ -35,6 +35,7 @@ import 'new_enemy_hitboxes.dart';
 import 'classic_enemy_pose.dart';
 import 'rival_player_atlas.dart';
 import 'goalkeeper_animation.dart';
+import 'teacher_animation.dart';
 import 'adaptive_title_screen.dart';
 
 // Puerta artística conservadora, evaluada en tiempo de ejecución para evitar
@@ -55,6 +56,7 @@ const Map<String,bool> enemyArtValidated = {
   'comparsa_caravinagre': true,
   'comparsa_zaldiko': true,
   'goalkeeper': true,
+  'teacher': false,
 };
 bool hasApprovedEnemyArtwork(String kind) => enemyArtValidated[kind] ?? false;
 // A gameplay-only playtest does NOT constitute artistic approval.
@@ -701,6 +703,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
       if (hasApprovedEnemyArtwork('goalkeeper')) {
         paths['enemy_goalkeeper_atlas'] = 'assets/images/enemies_new/goalkeeper_atlas.png';
       }
+      if (hasApprovedEnemyArtwork('teacher') ||
+          const bool.fromEnvironment('TWC_TEACHER_ART_PREVIEW')) {
+        paths['enemy_teacher_atlas'] = 'assets/images/enemies_new/teacher_atlas.png';
+      }
       paths['slipper'] = 'assets/images/enemies_new/green_slipper.png';
       paths['enemy_navarre_king_atlas'] = 'assets/images/enemies_new/navarre_king_atlas.png';
       for (final kind in ['estafeta_bull','sanfermin_runner']) {
@@ -1338,6 +1344,10 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
               foe.launched=false;foe.meleeWarning=0;
               foe.attackCooldown=math.max(foe.attackCooldown,1.0);
             }
+            if (foe.kind == 'teacher' && images.containsKey('enemy_teacher_atlas')) {
+              foe.launched = false;
+              foe.attackCooldown = math.max(foe.attackCooldown, 1.0);
+            }
             particlesUntil=time+.4;
             if(foe.rivalCoach) {
               final motion=foe.coachMotion ??= FourEnemyMotion('rival_coach',foe.home);
@@ -1544,17 +1554,29 @@ class _HermanasGameState extends State<HermanasGame> with SingleTickerProviderSt
           if((foe.x-foe.home).abs()>95)foe.facing=-foe.facing;
         }
       } else if(foe.ranged) {
+        final usesTeacherAtlas =
+            foe.kind == 'teacher' && images.containsKey('enemy_teacher_atlas');
         if(absDist<390 && foe.attackCooldown<=0) {
           // No machine-gun projectiles: one visible wind-up, one projectile, long recovery.
           if(!foe.launched){foe.launched=true;foe.t=0;foe.facing=distance>=0?1:-1;}
-          if(foe.t>=.75) {
+          if(foe.t >= (usesTeacherAtlas ? teacherThrowTime : .75)) {
             final kind=switch(foe.kind){'referee'=>'red_card','breakdancer'=>'shoe','teacher'=>'eraser',_=>'coin'};
             // Do not overlap a second projectile of the same kind.
             if(!shots.any((s)=>s.fromEnemy && s.kind==kind)) {
-              shots.add(Projectile(x:foe.x+foe.facing*27,y:groundY-71,
-                vx:foe.facing*195.0,kind:kind,fromEnemy:true));
+              final handX = usesTeacherAtlas ? teacherReleaseX : 27.0;
+              final handHeight = usesTeacherAtlas ? teacherReleaseHeight : 71.0;
+              final shot = Projectile(
+                x: foe.x + foe.facing * handX,
+                y: groundY - handHeight,
+                vx: foe.facing * 195.0,
+                kind: kind,
+                fromEnemy: true,
+              );
+              if (usesTeacherAtlas) shot.vy = teacherReleaseVerticalSpeed;
+              shots.add(shot);
             }
-            foe.launched=false;foe.t=0;foe.attackCooldown=3.6;
+            foe.launched=false;foe.t=0;
+            foe.attackCooldown=usesTeacherAtlas ? teacherAttackCooldown : 3.6;
           }
         } else if(absDist>390)foe.launched=false;
       } else if(foe.kind=='rival' || foe.kind=='bully') {
@@ -2007,7 +2029,9 @@ class StagePainter extends CustomPainter {
       if(foe.defeated && time-foe.deathAt>.85)continue;
       // Give the final landing poses time to reach the floor before fading.
       final keeperAtlas = foe.kind == 'goalkeeper' ? images['enemy_goalkeeper_atlas'] : null;
-      final fadeStart = keeperAtlas != null ? .62 : foe.aerial ? .58 : .32;
+      final teacherAtlas = foe.kind == 'teacher' ? images['enemy_teacher_atlas'] : null;
+      final fadeStart = teacherAtlas != null
+        ? .68 : keeperAtlas != null ? .62 : foe.aerial ? .58 : .32;
       final deathOpacity=foe.defeated
         ? (1-(time-foe.deathAt-fadeStart)/(.85-fadeStart)).clamp(0.0,1.0).toDouble()
         : 1.0;
@@ -2272,6 +2296,40 @@ class StagePainter extends CustomPainter {
             ..color = Colors.white.withValues(alpha: deathOpacity),
         );
         canvas.restore();
+        continue;
+      }
+      if (teacherAtlas != null) {
+        final frame = teacherAtlasFrame(
+          elapsed: foe.t,
+          preparing: foe.launched,
+          cooldown: foe.attackCooldown,
+          stunned: foe.stunned > 0,
+          defeatElapsed: foe.defeated ? time - foe.deathAt : null,
+        );
+        const cell = teacherAtlasCell;
+        canvas.save();
+        if (foe.facing < 0) {
+          canvas.translate(2 * x, 0);
+          canvas.scale(-1, 1);
+        }
+        canvas.drawImageRect(
+          teacherAtlas,
+          Rect.fromLTWH(frame.column * cell, frame.row * cell, cell, cell),
+          Rect.fromLTWH(x - cell / 2, groundY - teacherAtlasFootY, cell, cell),
+          Paint()..filterQuality = FilterQuality.none
+            ..color = Colors.white.withValues(alpha: deathOpacity),
+        );
+        canvas.restore();
+        if (foe.launched && foe.stunned <= 0 && !foe.defeated) {
+          final left = x.roundToDouble() - 3;
+          const top = groundY - 168;
+          final outline = Paint()..color = const Color(0xff382136);
+          final gold = Paint()..color = const Color(0xffffdc58);
+          canvas.drawRect(Rect.fromLTWH(left - 1, top - 1, 8, 13), outline);
+          canvas.drawRect(Rect.fromLTWH(left, top, 6, 11), gold);
+          canvas.drawRect(Rect.fromLTWH(left - 1, top + 13, 8, 7), outline);
+          canvas.drawRect(Rect.fromLTWH(left, top + 14, 6, 5), gold);
+        }
         continue;
       }
       if (keeperAtlas != null) {
