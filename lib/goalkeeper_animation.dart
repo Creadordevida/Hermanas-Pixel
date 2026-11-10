@@ -39,8 +39,12 @@ GoalkeeperFrame goalkeeperAtlasFrame({
       return GoalkeeperFrame(
           GoalkeeperPose.warning, boundedFrame(elapsed, 12));
     }
-    return GoalkeeperFrame(
-        GoalkeeperPose.dive, boundedFrame(elapsed - .27, 9));
+    // The keeper's original attack lasts about .75 s. Map the full dive
+    // window to four distinct frames, including landing/recovery. The old
+    // 9-fps clamp never reached column 3 before the attack ended.
+    final diveElapsed = (elapsed - .27).clamp(0.0, .48).toDouble();
+    final diveColumn = (diveElapsed / .48 * 4).floor().clamp(0, 3);
+    return GoalkeeperFrame(GoalkeeperPose.dive, diveColumn);
   }
   if (moving) {
     return GoalkeeperFrame(
