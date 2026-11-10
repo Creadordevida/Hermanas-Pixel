@@ -31,6 +31,7 @@ jobs:
       - name: Build provisional atlas using isolated recovery copies
         run: python tools/build_goalkeeper_atlas.py
       - name: Upload diagnostics, never publish as game art
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: goalkeeper-png-diagnostic-unapproved
