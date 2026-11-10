@@ -10,6 +10,7 @@ on:
       - 'tools/goalkeeper_visual_review.py'
       - 'tools/goalkeeper_replacement_candidates.py'
       - 'tools/build_goalkeeper_atlas.py'
+      - 'tools/audit_goalkeeper_art_quality.py'
       - '.github/workflows/goalkeeper-png-diagnostic.yml'
   pull_request:
     paths:
@@ -44,6 +45,9 @@ jobs:
         env:
           GOALKEEPER_USE_TEMPORARY_SUBSTITUTES: '1'
         run: python tools/build_goalkeeper_atlas.py
+      - name: Reject duplicate frames in technical atlas (expected until art is rebuilt)
+        continue-on-error: true
+        run: python tools/audit_goalkeeper_art_quality.py
       - name: Build provisional atlas using isolated recovery copies
         continue-on-error: true
         run: python tools/build_goalkeeper_atlas.py
@@ -53,6 +57,7 @@ jobs:
         with:
           name: goalkeeper-png-diagnostic-unapproved
           path: |
+            qa/goalkeeper_rebuild_20261109/goalkeeper_art_quality_audit.json
             qa/goalkeeper_rebuild_20261109/replacement_candidates/
             qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_temporary_rgba.png
             qa/goalkeeper_rebuild_20261109/goalkeeper_atlas_4x6_candidate_temporary_manifest.json
