@@ -8,10 +8,13 @@ from pathlib import Path
 from PIL import Image
 import hashlib
 import json
+import os
 
 ROOT = Path("qa/goalkeeper_rebuild_20261109")
-OUT = ROOT / "goalkeeper_atlas_4x6_candidate_rgba.png"
-MANIFEST = ROOT / "goalkeeper_atlas_4x6_candidate_manifest.json"
+USE_SUBSTITUTES = os.environ.get("GOALKEEPER_USE_TEMPORARY_SUBSTITUTES") == "1"
+SUFFIX = "_temporary" if USE_SUBSTITUTES else ""
+OUT = ROOT / f"goalkeeper_atlas_4x6_candidate{SUFFIX}_rgba.png"
+MANIFEST = ROOT / f"goalkeeper_atlas_4x6_candidate{SUFFIX}_manifest.json"
 ROWS = (
     ("ready", "idle_shift_a", "idle_shift_b", "idle_shift_c"),
     ("shuffle", "shuffle_step_a", "shuffle_step_b", "shuffle_step_c"),
@@ -38,8 +41,9 @@ def main():
     for row in ROWS:
         for name in row:
             path = ROOT / f"pose_{name}_rgba.png"
+            chosen = ROOT / "replacement_candidates" / path.name if USE_SUBSTITUTES and (ROOT / "replacement_candidates" / path.name).exists() else path
             try:
-                with Image.open(path) as src:
+                with Image.open(chosen) as src:
                     im = src.convert("RGBA")
                     im.load()
             except OSError:
@@ -54,7 +58,7 @@ def main():
                 raise ValueError(f"Empty pose: {name}")
             if not (box[0] > 0 and box[1] > 0 and box[2] < im.width and box[3] < im.height):
                 raise ValueError(f"Clipped source: {name}")
-            masters[name] = (im, box, hashlib.sha256(path.read_bytes()).hexdigest())
+            masters[name] = (im, box, hashlib.sha256(chosen.read_bytes()).hexdigest())
 
     upright = [masters[n][1][3] - masters[n][1][1]
                for row in ROWS[:3] for n in row]
@@ -86,7 +90,7 @@ def main():
         raise AssertionError("Expected exactly 24 poses")
     OUT.parent.mkdir(parents=True, exist_ok=True)
     atlas.save(OUT, optimize=True)
-    manifest = {"status": "CANDIDATE_NOT_APPROVED", "cell": CELL,
+    manifest = {"status": "TEMPORARY_DUPLICATE_FRAMES_NOT_APPROVED" if USE_SUBSTITUTES else "CANDIDATE_NOT_APPROVED", "cell": CELL,
                 "size": list(atlas.size), "scale": scale,
                 "atlas_sha256": hashlib.sha256(OUT.read_bytes()).hexdigest(),
                 "poses": records,
