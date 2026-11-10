@@ -1,0 +1,1 @@
+Solicitud expresa del usuario: generar APK privada de pruebas RC8 con todos los cambios acumulados desde RC7, incluyendo Arga (4 enemigos), Ayuntamiento (3 enemigos), portero y profesora renovados. GitHub Actions debe compilar el commit de esta solicitud. No publicar en Google Play.
